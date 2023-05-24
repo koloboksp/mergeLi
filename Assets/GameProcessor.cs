@@ -8,23 +8,31 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
+public interface IRules
+{
+    int MinimalBallsInLine { get; }
+}
 
-public class GameProcessor : MonoBehaviour
+public class GameProcessor : MonoBehaviour, IRules
 {
     [SerializeField] private Field _field;
     [SerializeField] private StepMachine _stepMachine;
         
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
-
+    [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
+    [SerializeField] private int _minimalBallsInLine = 5;
+    
     [FormerlySerializedAs("undoBtn")] [SerializeField] private Button _undoBtn;
     
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
-    
+    private PointsCalculator _pointsCalculator;
+
     void Awake()
     {
         _undoBtn.onClick.AddListener(Undo);
+        _pointsCalculator = new PointsCalculator(this);
     }
 
     private void Undo()
@@ -89,38 +97,26 @@ public class GameProcessor : MonoBehaviour
             {
                 _stepFinishState = Field.StepFinishState.Merge;
                 userStepFinished = true;
-                
-               // var generateOperationData = step.GetData<GenerateOperationData>();
-               // var mergeOperationData = step.GetData<MergeOperationData>();
-               // var moveOperationData = step.GetData<MoveOperationData>();
-               // _stepMachine.AddUndoStep(new Step("UndoMerge",
-               //     new RemoveGeneratedItems(generateOperationData.NewPositions, _field),
-               //     new UnmergeOperation(mergeOperationData.Position, mergeOperationData.Points, mergeOperationData.MergeablesCount, _field),
-               //     new MoveOperation(mergeOperationData.Position, moveOperationData.StartPosition, _field)));
-                
-                var operations = step.Operations.Reverse();
-                var inverseOperations = operations.Select(operation => operation.GetInverseOperation()).ToArray();
+           
+                var inverseOperations = step.Operations
+                    .Reverse()
+                    .Select(operation => operation.GetInverseOperation()).ToArray();
                 _stepMachine.AddUndoStep(new Step("UndoMerge", inverseOperations));
             }
+            
             if (step.Tag == "Move")
             {
                 _stepFinishState = Field.StepFinishState.Move;
                 userStepFinished = true;
 
-                var operations = step.Operations.Reverse();
-                var inverseOperations = operations.Select(operation => operation.GetInverseOperation()).ToArray();
+                var inverseOperations = step.Operations
+                    .Reverse()
+                    .Select(operation => operation.GetInverseOperation()).ToArray();
                 _stepMachine.AddUndoStep(new Step("UndoMove", inverseOperations));
-                
-                //var col = step.GetData<CollapseOperationData>();
-                //var generateOperationData = step.GetData<GenerateOperationData>();
-                //var moveOperationData = step.GetData<MoveOperationData>();
-                //_stepMachine.AddUndoStep(new Step("UndoMove",
-                //    new UncollapseOperation(col, _field),
-                //    generateOperationData != null ? new RemoveGeneratedItems(generateOperationData.NewPositions, _field) : null,
-                //    new MoveOperation(moveOperationData.EndPosition, moveOperationData.StartPosition, _field)));
             }
         }
     }
+
     
     void Field_OnClick(Vector3Int pointerGridPosition)
     {
@@ -153,9 +149,12 @@ public class GameProcessor : MonoBehaviour
                                 new MergeOperation(pointerGridPosition, _field),
                                 new SelectOperation(pointerGridPosition, false, _field)
                                     .SubscribeCompleted(OnDeselectBall),
-                                new CollapseOperation(pointerGridPosition, _destroyBallEffectPrefab, _field),
-                                new GenerateOperation(1, _field),
-                                new CollapseOperation(_destroyBallEffectPrefab, _field)));
+                                new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator),
+                                new CollapseCheckOperation(
+                                    null,
+                                    new List<Operation>(){
+                                        new GenerateOperation(1, _field),
+                                        new CollapseOperation( _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)})));
                         }
                         else
                         {
@@ -174,12 +173,12 @@ public class GameProcessor : MonoBehaviour
                         new MoveOperation(_selectedBall.IntPosition, pointerGridPosition, _field),
                         new SelectOperation(pointerGridPosition, false, _field)
                             .SubscribeCompleted(OnDeselectBall),
-                        new CollapseOperation(pointerGridPosition, _destroyBallEffectPrefab, _field),
+                        new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator),
                         new CollapseCheckOperation(
                             null,
                             new List<Operation>(){
                                 new GenerateOperation(4, _field),
-                                new CollapseOperation(_destroyBallEffectPrefab, _field)})));
+                                new CollapseOperation( _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)})));
                 }
                 else
                 {
@@ -217,4 +216,6 @@ public class GameProcessor : MonoBehaviour
     {
         _undoBtn.interactable = true;
     }
+
+    public int MinimalBallsInLine => _minimalBallsInLine;
 }

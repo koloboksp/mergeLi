@@ -581,6 +581,9 @@ MonoBehaviour:
     type: 3}
   _noPathEffectPrefab: {fileID: -6999720306982994079, guid: 44ff0d0d6eb6a924c8dfd8bab846454c,
     type: 3}
+  _collapsePointsEffectPrefab: {fileID: -5618361174370767863, guid: 6a50e804299be03449a816f343e09ec9,
+    type: 3}
+  _minimalBallsInLine: 5
   _undoBtn: {fileID: 1535109123}
 --- !u!4 &391481346
 Transform:
