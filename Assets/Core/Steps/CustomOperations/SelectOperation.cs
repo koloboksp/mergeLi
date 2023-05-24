@@ -18,10 +18,10 @@ namespace Core.Steps.CustomOperations
         protected override void InnerExecute()
         {
             var selectables = _field.GetSomething<IFieldSelectable>(_position).ToList();
-            var selectable = selectables[0];
-            selectable.Select(_selectState);
+            var firstSelectable = selectables[0];
+            firstSelectable.Select(_selectState);
 
-            Complete(selectable);   
+            Complete(firstSelectable);   
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Core.Steps.CustomOperations
         private readonly DestroyBallEffect _destroyBallEffectPrefab;
     
         private readonly List<Ball> _ballsToRemove = new List<Ball>();
-
+        private readonly List<List<(Vector3Int, int)>> _collapseLines = new List<List<(Vector3Int, int)>>();
         public CollapseOperation(Vector3Int position, DestroyBallEffect destroyBallEffectPrefab, IField field)
         {
             _positionSource = PositionSource.Fixed;
@@ -38,36 +38,52 @@ namespace Core.Steps.CustomOperations
             else if (_positionSource == PositionSource.FromData)
                 checkingPositions.AddRange(Owner.GetData<GenerateOperationData>().NewPositions);
 
+            var data = new CollapseOperationData();
+
+            
             foreach (var checkingPosition in checkingPositions)
             {
-                var collapseLines = _field.CheckCollapse(checkingPosition);
-        
+                List<List<Ball>> collapseLines = _field.CheckCollapse(checkingPosition);
+                foreach (var collapseLine in collapseLines)
+                {
+                    _collapseLines.Add(new List<(Vector3Int, int)>());
+                    foreach (var ball in collapseLine)
+                        _collapseLines[_collapseLines.Count-1].Add((ball.IntPosition, ball.Points));
+                }
+           
                 foreach (var line in collapseLines)
-                foreach (var ball in line)
-                    if(!_ballsToRemove.Contains(ball))
-                        _ballsToRemove.Add(ball);
+                    foreach (var ball in line)
+                        if(!_ballsToRemove.Contains(ball))
+                            _ballsToRemove.Add(ball);
             }
-        
-            OperationWaiter.WaitForSecond(_destroyBallEffectPrefab.Duration, Effect_OnComplete);
-        
+
+            data.CollapseLines = _collapseLines;
+            Owner.SetData(data);
+            
             foreach (var ball in _ballsToRemove)
             {
                 var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab, ball.transform.position, ball.transform.rotation, ball.transform.parent);
                 destroyBallEffect.Run();
             }
+            
+            _field.DestroyBalls(_ballsToRemove);
+            Complete(null); 
         }
 
-        private void Effect_OnComplete(OperationWaiter sender)
+        public override Operation GetInverseOperation()
         {
-            _field.DestroyBalls(_ballsToRemove);
-        
-            Complete(null);  
+            return new UncollapseOperation(_collapseLines, _field);
         }
-    
+
         public enum PositionSource
         {
             Fixed,
             FromData,
         }
+    }
+
+    public class CollapseOperationData 
+    {
+        public List<List<(Vector3Int position, int points)>> CollapseLines = new();
     }
 }

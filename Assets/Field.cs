@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 
 
 
-public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IField
+public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IField, IFieldView
 {
     public enum StepFinishState
     {
@@ -158,7 +158,13 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     {
         return Vector3.Scale(position, _cellSize);
     }
+    
+    public Vector3 GetPosition(Vector3Int position)
+    {
+        return Vector3.Scale(position, _cellSize);
+    }
 
+   
     public int GetIndex(Vector3 position)
     {
         return (int)position.y * _size + (int)position.x;
@@ -245,4 +251,6 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
         }
     }
 
+    public IFieldView FieldView => this;
+    public Transform FieldRoot => _fieldRoot;
 }

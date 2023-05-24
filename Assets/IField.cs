@@ -8,4 +8,11 @@ public interface IField
     void DestroyBalls(List<Ball> ballsToRemove);
     List<Vector3Int> GenerateBalls(int count);
     Vector3Int CreateBall(Vector3Int position, int points);
+    Vector3 GetPosition(Vector3Int position);
+    public IFieldView FieldView { get; }
+}
+
+public interface IFieldView
+{
+    Transform FieldRoot { get; }
 }

@@ -21,9 +21,9 @@ namespace Core.Steps.CustomOperations
     
         protected override void InnerExecute()
         {
-            var meargeables = _field.GetSomething<Ball>(_position).ToList();
-            _field.DestroyBalls(meargeables);
-            for (int i = 0; i < _mergeablesNum; i++)
+            var foundBalls = _field.GetSomething<Ball>(_position).ToList();
+            _field.DestroyBalls(foundBalls);
+            for (int ballI = 0; ballI < _mergeablesNum; ballI++)
                 _field.CreateBall(_position, _points);
             
             Complete(null);

@@ -2,7 +2,7 @@ using System;
 
 namespace Core.Steps
 {
-    public class Operation
+    public abstract class Operation
     {
         public event Action<Operation, object> OnComplete;
 
@@ -40,5 +40,7 @@ namespace Core.Steps
             OnComplete += action;
             return this;
         }
+
+        public virtual Operation GetInverseOperation() => null;
     }
 }

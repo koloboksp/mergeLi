@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Core.Steps
@@ -7,24 +8,35 @@ namespace Core.Steps
     {
         public event Action<Step> OnComplete;
 
-        private string _tag;
-        private List<Operation> _operations = new List<Operation>();
+        private readonly string _tag;
+        private readonly List<Operation> _operations = new List<Operation>();
+        private int _executeOperationIndex = 0;
         private bool _completed = false;
         private bool _launched = false;
-        private Dictionary<Type, object> _operationsData = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _operationsData = new Dictionary<Type, object>();
 
         public string Tag => _tag;
         public bool Completed => _completed;
         public bool Launched => _launched;
+
+        public IEnumerable<Operation> Operations => _operations;
+        
         public Step(string tag, params Operation[] operations)
         {
             _tag = tag;
-            if(operations != null)
-                _operations.AddRange(operations);
-        
+            AddOperations(operations);
+        }
+
+        public void AddOperations(IEnumerable<Operation> operations)
+        {
+            if (operations != null)
+                foreach (var operation in operations)
+                    if(operation != null)
+                        _operations.Add(operation);
+            
             _operations.ForEach(i => i.Owner = this);
         }
-    
+        
         public void Execute()
         {
             if(_launched) return;
@@ -36,9 +48,9 @@ namespace Core.Steps
 
         private void RunNext()
         {
-            if (_operations.Count > 0)
+            if (_executeOperationIndex < _operations.Count)
             {
-                var operation = _operations[0];
+                var operation = _operations[_executeOperationIndex];
                 if (!operation.Launched)
                 {
                     operation.OnComplete += Operation_OnCompleted;
@@ -49,14 +61,10 @@ namespace Core.Steps
     
         void Operation_OnCompleted(Operation sender, object data)
         {
-            var foundI = _operations.IndexOf(sender);
-            if (foundI >= 0)
-            {
-                _operations[foundI].OnComplete -= Operation_OnCompleted;
-                _operations.RemoveAt(foundI);
-            }
-
-            if (_operations.Count == 0)
+            sender.OnComplete -= Operation_OnCompleted;
+            _executeOperationIndex += 1;
+            
+            if (_executeOperationIndex == _operations.Count)
             {
                 _launched = false;
                 _completed = true;
@@ -75,7 +83,9 @@ namespace Core.Steps
     
         public T GetData<T>() where T : class
         {
-            return _operationsData[typeof(T)] as T;
+            if(_operationsData.TryGetValue(typeof(T), out var value))
+                return value as T;
+            return null;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Steps;
 using Core.Steps.CustomOperations;
@@ -14,6 +15,7 @@ public class GameProcessor : MonoBehaviour
     [SerializeField] private StepMachine _stepMachine;
         
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
+    [SerializeField] private NoPathEffect _noPathEffectPrefab;
 
     [FormerlySerializedAs("undoBtn")] [SerializeField] private Button _undoBtn;
     
@@ -88,24 +90,34 @@ public class GameProcessor : MonoBehaviour
                 _stepFinishState = Field.StepFinishState.Merge;
                 userStepFinished = true;
                 
-                var generateOperationData = step.GetData<GenerateOperationData>();
-                var mergeOperationData = step.GetData<MergeOperationData>();
-                var moveOperationData = step.GetData<MoveOperationData>();
-                _stepMachine.AddUndoStep(new Step("UndoMerge",
-                    new RemoveGeneratedItems(generateOperationData.NewPositions, _field),
-                    new UnmergeOperation(mergeOperationData.Position, mergeOperationData.Points, mergeOperationData.MergeablesCount, _field),
-                    new MoveOperation(mergeOperationData.Position, moveOperationData.StartPosition, _field)));
+               // var generateOperationData = step.GetData<GenerateOperationData>();
+               // var mergeOperationData = step.GetData<MergeOperationData>();
+               // var moveOperationData = step.GetData<MoveOperationData>();
+               // _stepMachine.AddUndoStep(new Step("UndoMerge",
+               //     new RemoveGeneratedItems(generateOperationData.NewPositions, _field),
+               //     new UnmergeOperation(mergeOperationData.Position, mergeOperationData.Points, mergeOperationData.MergeablesCount, _field),
+               //     new MoveOperation(mergeOperationData.Position, moveOperationData.StartPosition, _field)));
+                
+                var operations = step.Operations.Reverse();
+                var inverseOperations = operations.Select(operation => operation.GetInverseOperation()).ToArray();
+                _stepMachine.AddUndoStep(new Step("UndoMerge", inverseOperations));
             }
             if (step.Tag == "Move")
             {
                 _stepFinishState = Field.StepFinishState.Move;
                 userStepFinished = true;
 
-                var generateOperationData = step.GetData<GenerateOperationData>();
-                var moveOperationData = step.GetData<MoveOperationData>();
-                _stepMachine.AddUndoStep(new Step("UndoMove",
-                    new RemoveGeneratedItems(generateOperationData.NewPositions, _field),
-                    new MoveOperation(moveOperationData.EndPosition, moveOperationData.StartPosition, _field)));
+                var operations = step.Operations.Reverse();
+                var inverseOperations = operations.Select(operation => operation.GetInverseOperation()).ToArray();
+                _stepMachine.AddUndoStep(new Step("UndoMove", inverseOperations));
+                
+                //var col = step.GetData<CollapseOperationData>();
+                //var generateOperationData = step.GetData<GenerateOperationData>();
+                //var moveOperationData = step.GetData<MoveOperationData>();
+                //_stepMachine.AddUndoStep(new Step("UndoMove",
+                //    new UncollapseOperation(col, _field),
+                //    generateOperationData != null ? new RemoveGeneratedItems(generateOperationData.NewPositions, _field) : null,
+                //    new MoveOperation(moveOperationData.EndPosition, moveOperationData.StartPosition, _field)));
             }
         }
     }
@@ -148,20 +160,32 @@ public class GameProcessor : MonoBehaviour
                         else
                         {
                             _stepMachine.AddStep(new Step("NoPath",
-                                new PathNotFoundOperation(_selectedBall.IntPosition, pointerGridPosition, _field)));
+                                new PathNotFoundOperation(pointerGridPosition, _noPathEffectPrefab, _field)));
                         }
                     }
                 }
             }
             else
             {
-                _stepMachine.AddStep(new Step("Move", 
-                    new MoveOperation(_selectedBall.IntPosition, pointerGridPosition, _field),
-                    new SelectOperation(pointerGridPosition, false, _field)
-                        .SubscribeCompleted(OnDeselectBall),
-                    new CollapseOperation(pointerGridPosition, _destroyBallEffectPrefab, _field),
-                    new GenerateOperation(4, _field),
-                    new CollapseOperation(_destroyBallEffectPrefab, _field)));
+                var path = _field.GetPath(_selectedBall.IntPosition, pointerGridPosition);
+                if (path.Count > 0)
+                {
+                    _stepMachine.AddStep(new Step("Move", 
+                        new MoveOperation(_selectedBall.IntPosition, pointerGridPosition, _field),
+                        new SelectOperation(pointerGridPosition, false, _field)
+                            .SubscribeCompleted(OnDeselectBall),
+                        new CollapseOperation(pointerGridPosition, _destroyBallEffectPrefab, _field),
+                        new CollapseCheckOperation(
+                            null,
+                            new List<Operation>(){
+                                new GenerateOperation(4, _field),
+                                new CollapseOperation(_destroyBallEffectPrefab, _field)})));
+                }
+                else
+                {
+                    _stepMachine.AddStep(new Step("NoPath",
+                        new PathNotFoundOperation(pointerGridPosition, _noPathEffectPrefab, _field)));
+                }
             }
         }
         else

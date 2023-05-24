@@ -10,6 +10,8 @@ namespace Core.Steps.CustomOperations
         private readonly int _count;
         private readonly IField _field;
 
+        private readonly List<Vector3Int> _generatedItems = new List<Vector3Int>();
+        
         public GenerateOperation(int count, IField field)
         {
             _count = count;
@@ -18,15 +20,15 @@ namespace Core.Steps.CustomOperations
     
         protected override void InnerExecute()
         {
-            List<Vector3Int> generateBalls = _field.GenerateBalls(_count);
-            Owner.SetData(new GenerateOperationData(){ NewPositions = generateBalls });
+            _generatedItems.AddRange(_field.GenerateBalls(_count));
+            Owner.SetData(new GenerateOperationData(){ NewPositions = _generatedItems});
 
-            OperationWaiter.WaitForSecond(1, Effect_OnComplete);
+            Complete(null);
         }
 
-        private void Effect_OnComplete(OperationWaiter sender)
+        public override Operation GetInverseOperation()
         {
-            Complete(null);
+            return new RemoveGeneratedItemsOperation(_generatedItems, _field);
         }
     }
 

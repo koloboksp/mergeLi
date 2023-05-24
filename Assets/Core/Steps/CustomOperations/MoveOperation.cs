@@ -5,8 +5,8 @@ namespace Core.Steps.CustomOperations
 {
     public class MoveOperation : Operation
     {
-        private Vector3Int _startPosition;
-        private Vector3Int _endPosition;
+        private readonly Vector3Int _startPosition;
+        private readonly Vector3Int _endPosition;
         private readonly IField _field;
     
         public MoveOperation(Vector3Int startPosition, Vector3Int endPosition, IField field)
@@ -20,24 +20,18 @@ namespace Core.Steps.CustomOperations
         protected override void InnerExecute()
         {
             var movable = _field.GetSomething<IFieldMovable>(_startPosition).ToList();
-            movable[0].StartMove(_endPosition, OnMovingComplete);
-            
-            Owner.SetData(new MoveOperationData()
-            {
-                StartPosition = _startPosition,
-                EndPosition = _endPosition,
-            });
+            var firstMovable = movable[0];
+            firstMovable.StartMove(_endPosition, OnMovingComplete);
         }
 
         private void OnMovingComplete(IFieldMovable sender, bool pathFound)
         {
             Complete(null);
         }
-    }
 
-    public class MoveOperationData
-    {
-        public Vector3Int StartPosition;
-        public Vector3Int EndPosition;
+        public override Operation GetInverseOperation()
+        {
+            return new MoveOperation(_endPosition, _startPosition, _field);
+        }
     }
 }

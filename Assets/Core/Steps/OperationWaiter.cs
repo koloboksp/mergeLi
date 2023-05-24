@@ -24,6 +24,7 @@ namespace Core.Steps
         {
             yield return new WaitForSeconds(time);
             effectOnComplete?.Invoke(this);
+            Destroy(gameObject);
         }
     }
 }

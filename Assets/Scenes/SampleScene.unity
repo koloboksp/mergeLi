@@ -579,7 +579,9 @@ MonoBehaviour:
   _stepMachine: {fileID: 1844453385}
   _destroyBallEffectPrefab: {fileID: 5600580805448456366, guid: 14a662a9344a3274c9fabd6bac889aa0,
     type: 3}
-  undoBtn: {fileID: 1535109123}
+  _noPathEffectPrefab: {fileID: -6999720306982994079, guid: 44ff0d0d6eb6a924c8dfd8bab846454c,
+    type: 3}
+  _undoBtn: {fileID: 1535109123}
 --- !u!4 &391481346
 Transform:
   m_ObjectHideFlags: 0
