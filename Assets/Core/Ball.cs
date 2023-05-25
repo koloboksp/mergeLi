@@ -81,8 +81,8 @@ public class Ball : MonoBehaviour, IFieldMovable, IFieldSelectable, IFieldMergea
 
         foreach (var other in others)
             _field.DestroySomething(other as Ball);
-        
-        yield return new WaitForSeconds(0.5f);
+
+        yield return null;
         
         UpdateView();
         

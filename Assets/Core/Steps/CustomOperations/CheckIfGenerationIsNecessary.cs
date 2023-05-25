@@ -2,11 +2,11 @@
 
 namespace Core.Steps.CustomOperations
 {
-    public class CollapseCheckOperation : Operation
+    public class CheckIfGenerationIsNecessary : Operation
     {
         private readonly List<Operation> _onSuccess = new List<Operation>();
         private readonly List<Operation> _onFail = new List<Operation>();
-        public CollapseCheckOperation(List<Operation> onSuccess, List<Operation> onFail)
+        public CheckIfGenerationIsNecessary(List<Operation> onSuccess, List<Operation> onFail)
         {
             if(onSuccess != null)
                 _onSuccess.AddRange(onSuccess);

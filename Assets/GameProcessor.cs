@@ -21,8 +21,12 @@ public class GameProcessor : MonoBehaviour, IRules
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
     [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
+   
     [SerializeField] private int _minimalBallsInLine = 5;
-    
+    [SerializeField] private int _generatedBallsCountAfterMerge = 1;
+    [SerializeField] private int _generatedBallsCountAfterMove = 4;
+    [SerializeField] private int _generatedBallsCountOnStart = 5;
+
     [FormerlySerializedAs("undoBtn")] [SerializeField] private Button _undoBtn;
     
     private Ball _selectedBall;
@@ -57,7 +61,7 @@ public class GameProcessor : MonoBehaviour, IRules
         
         bool userStep = false;
         bool userStepFinished = false;
-        _field.GenerateBalls(5);
+        _field.GenerateBalls(_generatedBallsCountOnStart);
         Field.StepFinishState _stepFinishState = Field.StepFinishState.Move;
         while (_field.IsEmpty)
         {
@@ -149,12 +153,14 @@ public class GameProcessor : MonoBehaviour, IRules
                                 new MergeOperation(pointerGridPosition, _field),
                                 new SelectOperation(pointerGridPosition, false, _field)
                                     .SubscribeCompleted(OnDeselectBall),
-                                new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator),
-                                new CollapseCheckOperation(
+                                new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)
+                                    .SubscribeCompleted(Collapse_OnComplete),
+                                new CheckIfGenerationIsNecessary(
                                     null,
                                     new List<Operation>(){
-                                        new GenerateOperation(1, _field),
-                                        new CollapseOperation( _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)})));
+                                        new GenerateOperation(_generatedBallsCountAfterMerge, _field),
+                                        new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)
+                                            .SubscribeCompleted(Collapse_OnComplete)})));
                         }
                         else
                         {
@@ -173,12 +179,14 @@ public class GameProcessor : MonoBehaviour, IRules
                         new MoveOperation(_selectedBall.IntPosition, pointerGridPosition, _field),
                         new SelectOperation(pointerGridPosition, false, _field)
                             .SubscribeCompleted(OnDeselectBall),
-                        new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator),
-                        new CollapseCheckOperation(
+                        new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)
+                            .SubscribeCompleted(Collapse_OnComplete),
+                        new CheckIfGenerationIsNecessary(
                             null,
                             new List<Operation>(){
-                                new GenerateOperation(4, _field),
-                                new CollapseOperation( _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)})));
+                                new GenerateOperation(_generatedBallsCountAfterMove, _field),
+                                new CollapseOperation( _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)
+                                    .SubscribeCompleted(Collapse_OnComplete)})));
                 }
                 else
                 {
@@ -195,6 +203,11 @@ public class GameProcessor : MonoBehaviour, IRules
                     .SubscribeCompleted(OnSelectBall)));
             }
         }
+    }
+
+    private void Collapse_OnComplete(Operation arg1, object arg2)
+    {
+        
     }
 
     private void OnSelectBall(Operation sender, object result)
