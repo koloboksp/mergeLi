@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using AStar;
 using AStar.Options;
+using Core;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,6 +12,20 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 
+public class Scene : MonoBehaviour
+{
+    private SkinsLibrary _skinsLibrary;
+    
+    public void SetSkin(string skinName)
+    {
+        var skinContainer = _skinsLibrary.GetContainer(skinName);
+        var skinChangeables = this.GetComponents<ISkinChangeable>();
+        foreach (var skinChangeable in skinChangeables)
+        {
+            skinChangeable.ChangeSkin(skinContainer);
+        }
+    }
+}
 
 public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IField, IFieldView
 {

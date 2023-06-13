@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Core;
 using Core.Steps;
 using Core.Steps.CustomOperations;
 using UnityEngine;
@@ -15,6 +16,9 @@ public interface IRules
 
 public class GameProcessor : MonoBehaviour, IRules
 {
+    public Action<Step> OnStepCompleted;
+    public Action<Step> OnStepExecute;
+
     [SerializeField] private Field _field;
     [SerializeField] private StepMachine _stepMachine;
         
@@ -26,29 +30,26 @@ public class GameProcessor : MonoBehaviour, IRules
     [SerializeField] private int _generatedBallsCountAfterMerge = 1;
     [SerializeField] private int _generatedBallsCountAfterMove = 4;
     [SerializeField] private int _generatedBallsCountOnStart = 5;
-
-    [FormerlySerializedAs("undoBtn")] [SerializeField] private Button _undoBtn;
     
+    [SerializeField] private RectTransform _uiScreensRoot;
+
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
 
     void Awake()
     {
-        _undoBtn.onClick.AddListener(Undo);
         _pointsCalculator = new PointsCalculator(this);
     }
-
-    private void Undo()
-    {
-        _stepMachine.Undo();
-    }
-
+    
     private void Start()
     {
         _field.OnClick += Field_OnClick;
-        _stepMachine.OnStepExecute += OnStepExecute;
-        _stepMachine.OnStepCompleted += OnStepCompleted;
+        _stepMachine.OnStepExecute += StepMachine_OnStepExecute;
+        _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
+
+        ApplicationController.Instance.UIScreenController.SetScreensRoot(_uiScreensRoot);
+        ApplicationController.Instance.UIScreenController.PushScreen(typeof(UIGameScreen), new UIScreenData());
         StartCoroutine(InnerProcess());
     }
 
@@ -220,15 +221,21 @@ public class GameProcessor : MonoBehaviour, IRules
         _selectedBall = null;
     }
     
-    private void OnStepExecute(Step step)
+    private void StepMachine_OnStepExecute(Step step)
     {
-        _undoBtn.interactable = false;
+        OnStepExecute?.Invoke(step);
     }
     
-    private void OnStepCompleted(Step step)
+    private void StepMachine_OnStepCompleted(Step step)
     {
-        _undoBtn.interactable = true;
+        OnStepCompleted?.Invoke(step);
     }
+    
+    public void Undo()
+    {
+        _stepMachine.Undo();
+    }
+
 
     public int MinimalBallsInLine => _minimalBallsInLine;
 }
