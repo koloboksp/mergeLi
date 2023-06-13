@@ -38,7 +38,7 @@ namespace Core
 
             if (_stack.Count > 0)
             {
-                var lastItem = _items[_items.Count - 1];
+                var lastItem = _stack.GetLast();
                 lastItem.Screen.Activate();
             }
         }

@@ -12,21 +12,6 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 
-public class Scene : MonoBehaviour
-{
-    private SkinsLibrary _skinsLibrary;
-    
-    public void SetSkin(string skinName)
-    {
-        var skinContainer = _skinsLibrary.GetContainer(skinName);
-        var skinChangeables = this.GetComponents<ISkinChangeable>();
-        foreach (var skinChangeable in skinChangeables)
-        {
-            skinChangeable.ChangeSkin(skinContainer);
-        }
-    }
-}
-
 public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IField, IFieldView
 {
     public enum StepFinishState
@@ -55,8 +40,9 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     private int _size = 10;
     private int _minimalBallsCount = 5;
 
-    public RectTransform _fieldRoot;
-
+    [SerializeField] private RectTransform _fieldRoot;
+    [SerializeField] private Scene _scene;
+    
     private List<int> _busyIndexes = new List<int>();
     private List<Ball> _balls = new List<Ball>();
     
@@ -66,6 +52,9 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     public int size => _size;
 
     public Ball _ballPrefab;
+
+    public Scene Scene => _scene;
+    
     // Start is called before the first frame update
 
     private void Awake()
@@ -140,9 +129,13 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
         var newBall = Instantiate(_ballPrefab, _fieldRoot);
         _balls.Add(newBall);
         _busyIndexes.Add(GetIndex(position));
-        
+
         newBall.SetData(this, position, points);
+        var subComponents = newBall.GetComponents<ISubComponent>();
+        foreach (var subComponent in subComponents)
+            subComponent.SetData();
         
+
         return position;
     }
 

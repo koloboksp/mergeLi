@@ -24,7 +24,8 @@ namespace Core
         public Vector3 Position => _position;
     
         public Vector3Int IntPosition => new Vector3Int(Mathf.FloorToInt(_position.x), Mathf.FloorToInt(_position.y));
-        
+        public Field Field => _field;
+
         public IEnumerator InnerMove(Vector3Int to, Action<bool> onComplete)
         {
             var path = _field.GetPath(new Vector3Int((int)_position.x, (int)_position.y), to);
@@ -85,6 +86,7 @@ namespace Core
         void UpdateTransformPosition(Vector3 position)
         {
             _position = position;
+            transform.localPosition = _field.GetPosition(_position);
         }
 
         public void StartMove(Vector3Int endPosition, Action<IFieldMovable, bool> onMovingComplete)
