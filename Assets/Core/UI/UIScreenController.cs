@@ -21,10 +21,13 @@ namespace Core
             AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
             handle.Completed += senderHandle => 
             {
-                var screenObject = senderHandle.Result;
+                var screenObject = Object.Instantiate(senderHandle.Result);
                 var screen = screenObject.GetComponent<UIScreen>();
-            
+                screen.Root.parent = _screensRoot;
+                screen.Root.offsetMin = Vector2.zero;
+                screen.Root.offsetMax = Vector2.zero;
                 _stack.Push(senderHandle, screen, data);
+                
             };
         }
 
@@ -50,7 +53,9 @@ namespace Core
 
             public void Push(AsyncOperationHandle<GameObject> handle, UIScreen screen, UIScreenData data)
             {
-                _items.Add(new StackItem(handle, screen, data));
+                var stackItem = new StackItem(handle, screen, data);
+                _items.Add(stackItem);
+                stackItem.Screen.SetData(data);
             }
 
             public StackItem PopScreen(UIScreen screen)

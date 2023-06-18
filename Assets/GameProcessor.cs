@@ -19,6 +19,7 @@ public class GameProcessor : MonoBehaviour, IRules
     public Action<Step> OnStepCompleted;
     public Action<Step> OnStepExecute;
 
+    [SerializeField] private Scene _scene;
     [SerializeField] private Field _field;
     [SerializeField] private StepMachine _stepMachine;
         
@@ -36,6 +37,7 @@ public class GameProcessor : MonoBehaviour, IRules
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
+    public Scene Scene => _scene;
 
     void Awake()
     {
@@ -49,7 +51,7 @@ public class GameProcessor : MonoBehaviour, IRules
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
 
         ApplicationController.Instance.UIScreenController.SetScreensRoot(_uiScreensRoot);
-        ApplicationController.Instance.UIScreenController.PushScreen(typeof(UIGameScreen), new UIScreenData());
+        ApplicationController.Instance.UIScreenController.PushScreen(typeof(UIGameScreen), new UIGameScreenData(){GameProcessor = this,});
         StartCoroutine(InnerProcess());
     }
 

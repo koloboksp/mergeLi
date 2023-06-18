@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Core.Steps;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,7 +46,11 @@ namespace Core
         
         private void ShowSkinBtn_OnClick()
         {
-            ApplicationController.Instance.UIScreenController.PushScreen(typeof(UISkinScreen), new UISkinScreenData());
+            var skinScreenData = new UISkinScreen.UISkinScreenData();
+            skinScreenData.SelectedSkin = _data.GameProcessor.Scene.ActiveSkin.Name;
+            skinScreenData.Skins = _data.GameProcessor.Scene.Library.Containers.Select(i => i.Name);
+            skinScreenData.SkinChanger = _data.GameProcessor.Scene;
+            ApplicationController.Instance.UIScreenController.PushScreen(typeof(UISkinScreen), skinScreenData);
         }
     }
 

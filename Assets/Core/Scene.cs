@@ -1,12 +1,15 @@
 using System;
 using UnityEngine;
 
-public class Scene : MonoBehaviour
+public class Scene : MonoBehaviour, ISkinChanger
 {
     [SerializeField]
     private SkinsLibrary _skinsLibrary;
 
     private SkinContainer _activeSkin;
+
+
+    public SkinsLibrary Library => _skinsLibrary;
     public SkinContainer ActiveSkin => _activeSkin;
 
     public void SetSkin(string skinName)
@@ -23,4 +26,9 @@ public class Scene : MonoBehaviour
     {
         _activeSkin = _skinsLibrary.GetContainer("default");
     }
+}
+
+public interface ISkinChanger
+{
+    public void SetSkin(string skinName);
 }

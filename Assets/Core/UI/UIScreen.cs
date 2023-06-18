@@ -4,6 +4,10 @@ namespace Core
 {
     public class UIScreen : MonoBehaviour
     {
+        [SerializeField] private RectTransform _root;
+
+        public RectTransform Root => _root;
+        
         public virtual void SetData(UIScreenData data)
         {
             
