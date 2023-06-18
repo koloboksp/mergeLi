@@ -31,6 +31,11 @@ namespace Core
         {
             
         }
+
+        public void Deactivate()
+        {
+            
+        }
     }
 
     public class UIScreenData

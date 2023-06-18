@@ -27,10 +27,23 @@ namespace Core
                 screen.Root.offsetMin = Vector2.zero;
                 screen.Root.offsetMax = Vector2.zero;
                 _stack.Push(senderHandle, screen, data);
-                
             };
         }
 
+        public void PushPopupScreen(Type screenType, UIScreenData data)
+        {
+            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
+            handle.Completed += senderHandle => 
+            {
+                var screenObject = Object.Instantiate(senderHandle.Result);
+                var screen = screenObject.GetComponent<UIScreen>();
+                screen.Root.parent = _screensRoot;
+                screen.Root.offsetMin = Vector2.zero;
+                screen.Root.offsetMax = Vector2.zero;
+                _stack.PushPopup(senderHandle, screen, data);
+            };
+        }
+        
         public void PopScreen(UIScreen screen)
         {
             var stackItem = _stack.PopScreen(screen);
@@ -51,8 +64,21 @@ namespace Core
             private List<StackItem> _items = new List<StackItem>();
             public int Count => _items.Count;
 
+            public void PushPopup(AsyncOperationHandle<GameObject> handle, UIScreen screen, UIScreenData data)
+            {
+                var stackItem = new StackItem(handle, screen, data);
+                _items.Add(stackItem);
+                stackItem.Screen.SetData(data);
+            }
+            
             public void Push(AsyncOperationHandle<GameObject> handle, UIScreen screen, UIScreenData data)
             {
+                if (_items.Count > 0)
+                {
+                    StackItem lastItem = _items[_items.Count - 1];
+                    _items.RemoveAt(_items.Count - 1);
+                    lastItem.Screen.Deactivate();
+                }
                 var stackItem = new StackItem(handle, screen, data);
                 _items.Add(stackItem);
                 stackItem.Screen.SetData(data);
@@ -65,6 +91,7 @@ namespace Core
                 {
                     StackItem stackItem = _items[stackI];
                     _items.RemoveAt(stackI);
+                    stackItem.Screen.Deactivate();
                     return stackItem;
                 }
                 

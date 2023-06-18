@@ -50,7 +50,7 @@ namespace Core
             skinScreenData.SelectedSkin = _data.GameProcessor.Scene.ActiveSkin.Name;
             skinScreenData.Skins = _data.GameProcessor.Scene.Library.Containers.Select(i => i.Name);
             skinScreenData.SkinChanger = _data.GameProcessor.Scene;
-            ApplicationController.Instance.UIScreenController.PushScreen(typeof(UISkinScreen), skinScreenData);
+            ApplicationController.Instance.UIScreenController.PushPopupScreen(typeof(UISkinScreen), skinScreenData);
         }
     }
 
