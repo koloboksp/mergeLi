@@ -14,15 +14,24 @@ public interface IRules
     int MinimalBallsInLine { get; }
 }
 
-public class GameProcessor : MonoBehaviour, IRules
+public interface IPointsChangeListener
 {
-    public Action<Step> OnStepCompleted;
-    public Action<Step> OnStepExecute;
+    void AddPoints(int points);
+    void RemovePoints(int points);
+}
 
+public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
+{
+    public event Action<Step> OnStepCompleted;
+    public event Action<Step> OnStepExecute;
+    public event Action OnScoreChanged;
+    
     [SerializeField] private Scene _scene;
     [SerializeField] private Field _field;
     [SerializeField] private StepMachine _stepMachine;
-        
+    [SerializeField] private PlayerInfo _playerInfo;
+    [SerializeField] private DefaultMarket _market;
+
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
     [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
@@ -39,8 +48,13 @@ public class GameProcessor : MonoBehaviour, IRules
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
+    private int _score;
+    
     public Scene Scene => _scene;
-
+    public PlayerInfo PlayerInfo => _playerInfo;
+    public int Score => _score;
+    public IMarket Market => _market;
+    
     void Awake()
     {
         _pointsCalculator = new PointsCalculator(this);
@@ -169,14 +183,12 @@ public class GameProcessor : MonoBehaviour, IRules
                                 new MergeOperation(pointerGridPosition, _field),
                                 new SelectOperation(pointerGridPosition, false, _field)
                                     .SubscribeCompleted(OnDeselectBall),
-                                new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)
-                                    .SubscribeCompleted(Collapse_OnComplete),
+                                new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this),
                                 new CheckIfGenerationIsNecessary(
                                     null,
                                     new List<Operation>(){
                                         new GenerateOperation(_generatedBallsCountAfterMerge, _field),
-                                        new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)
-                                            .SubscribeCompleted(Collapse_OnComplete)})));
+                                        new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)})));
                         }
                         else
                         {
@@ -195,14 +207,13 @@ public class GameProcessor : MonoBehaviour, IRules
                         new MoveOperation(_selectedBall.IntPosition, pointerGridPosition, _field),
                         new SelectOperation(pointerGridPosition, false, _field)
                             .SubscribeCompleted(OnDeselectBall),
-                        new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)
-                            .SubscribeCompleted(Collapse_OnComplete),
+                        new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this),
                         new CheckIfGenerationIsNecessary(
                             null,
                             new List<Operation>(){
                                 new GenerateOperation(_generatedBallsCountAfterMove, _field),
-                                new CollapseOperation( _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator)
-                                    .SubscribeCompleted(Collapse_OnComplete)})));
+                                new CollapseOperation( _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)
+                            })));
                 }
                 else
                 {
@@ -220,12 +231,7 @@ public class GameProcessor : MonoBehaviour, IRules
             }
         }
     }
-
-    private void Collapse_OnComplete(Operation arg1, object arg2)
-    {
-        
-    }
-
+    
     private void OnSelectBall(Operation sender, object result)
     {
         _selectedBall = (Ball)result;
@@ -254,11 +260,25 @@ public class GameProcessor : MonoBehaviour, IRules
 
     public int MinimalBallsInLine => _minimalBallsInLine;
     public List<Buff> Buffs => _buffs;
+   
 
     public void Explode(List<Vector3Int> ballsIndexes)
     {
         _stepMachine.AddStep(
             new Step("Explode", 
                 new RemoveOperation(ballsIndexes, _field)));
+    }
+
+
+    public void AddPoints(int points)
+    {
+        _score += points;
+        OnScoreChanged?.Invoke();
+    }
+
+    public void RemovePoints(int points)
+    {
+        _score -= points;
+        OnScoreChanged?.Invoke();
     }
 }

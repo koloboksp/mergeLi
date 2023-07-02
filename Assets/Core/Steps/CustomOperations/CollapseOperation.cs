@@ -12,28 +12,33 @@ namespace Core.Steps.CustomOperations
         private readonly bool _selectState;
         private readonly IField _field;
         private readonly IPointsCalculator _pointsCalculator;
+        private readonly IPointsChangeListener _pointsChangeListener;
         private readonly DestroyBallEffect _destroyBallEffectPrefab;
         private readonly CollapsePointsEffect _collapsePointsEffectPrefab;
 
         private readonly List<Ball> _ballsToRemove = new List<Ball>();
         private readonly List<List<(Vector3Int position, int points)>> _collapseLines = new List<List<(Vector3Int, int)>>();
-        
+        private int _pointsAdded;
+
         public CollapseOperation(Vector3Int position, CollapsePointsEffect collapsePointsEffectPrefab,
-            DestroyBallEffect destroyBallEffectPrefab, IField field, IPointsCalculator pointsCalculator)
+            DestroyBallEffect destroyBallEffectPrefab, IField field, IPointsCalculator pointsCalculator, IPointsChangeListener pointsChangeListener)
         {
             _positionSource = PositionSource.Fixed;
             _position = position;
             _field = field;
             _pointsCalculator = pointsCalculator;
+            _pointsChangeListener = pointsChangeListener;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
             _destroyBallEffectPrefab = destroyBallEffectPrefab;
         }
 
-        public CollapseOperation(CollapsePointsEffect collapsePointsEffectPrefab, DestroyBallEffect destroyBallEffectPrefab, IField field, IPointsCalculator pointsCalculator)
+        public CollapseOperation(CollapsePointsEffect collapsePointsEffectPrefab, DestroyBallEffect destroyBallEffectPrefab, IField field, 
+            IPointsCalculator pointsCalculator, IPointsChangeListener pointsChangeListener)
         {
             _positionSource = PositionSource.FromData;
             _field = field;
             _pointsCalculator = pointsCalculator;
+            _pointsChangeListener = pointsChangeListener;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
             _destroyBallEffectPrefab = destroyBallEffectPrefab;
         }
@@ -78,7 +83,8 @@ namespace Core.Steps.CustomOperations
                     _field.FieldView.FieldRoot);
                 destroyBallEffect.Run();
             }
-            
+
+            var sumPoints = 0;
             foreach (var collapseLine in collapseLineWithResultPoints)
             {
                 var groupsByPoints = collapseLine.GroupBy(i => i.points);
@@ -86,28 +92,31 @@ namespace Core.Steps.CustomOperations
                 {
                     var valueTuples = groupByPoints.ToList();
                     var centerPosition = Vector3.zero;
-                    var sumPoints = 0;
+                    var sumGroupPoints = 0;
                     foreach (var tuple in valueTuples)
                     {
                         centerPosition += _field.GetPosition(tuple.position) / valueTuples.Count;
-                        sumPoints += tuple.points;
+                        sumGroupPoints += tuple.points;
                     }
                     
                     var collapsePointsEffect = Object.Instantiate(_collapsePointsEffectPrefab, 
                         _field.FieldView.FieldRoot.TransformPoint(centerPosition), Quaternion.identity, 
                         _field.FieldView.FieldRoot);
                     
-                    collapsePointsEffect.Run(sumPoints);
+                    sumPoints += sumGroupPoints;
+                    collapsePointsEffect.Run(sumGroupPoints);
                 }
             }
- 
             _field.DestroyBalls(_ballsToRemove);
+            _pointsAdded = sumPoints;
+
+            _pointsChangeListener.AddPoints(_pointsAdded);
             Complete(null); 
         }
 
         public override Operation GetInverseOperation()
         {
-            return new UncollapseOperation(_collapseLines, _field);
+            return new UncollapseOperation(_collapseLines, _pointsAdded, _field, _pointsChangeListener);
         }
 
         public enum PositionSource

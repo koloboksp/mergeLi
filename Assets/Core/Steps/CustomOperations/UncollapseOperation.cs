@@ -6,12 +6,18 @@ namespace Core.Steps.CustomOperations
     public class UncollapseOperation : Operation
     {
         private readonly IField _field;
-        private List<List<(Vector3Int position, int points)>> _uncollapseBallsLines;
+        private readonly IPointsChangeListener _pointsChangeListener;
+
+        private readonly List<List<(Vector3Int position, int points)>> _uncollapseBallsLines;
+        private readonly int _pointsToRemove;
         
-        public UncollapseOperation(List<List<(Vector3Int position, int points)>> uncollapseBallsLines, IField field)
+        public UncollapseOperation(List<List<(Vector3Int position, int points)>> uncollapseBallsLines, int pointsToRemove,
+            IField field, IPointsChangeListener pointsChangeListener)
         {
             _uncollapseBallsLines = uncollapseBallsLines;
+            _pointsToRemove = pointsToRemove;
             _field = field;
+            _pointsChangeListener = pointsChangeListener;
         }
 
         protected override void InnerExecute()
@@ -28,6 +34,8 @@ namespace Core.Steps.CustomOperations
             foreach (var uniqueBall in uniqueBalls)
                 _field.CreateBall(uniqueBall.position, uniqueBall.points);
 
+            _pointsChangeListener.RemovePoints(_pointsToRemove);
+            
             Complete(null);
         }
     }

@@ -1,3 +1,4 @@
+using Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,7 @@ public class UIUndoBuff : UIBuff
 
     private void ClickArea_OnClick()
     {
-        _onClick?.Invoke();
+        if(!ShowShopScreenRequired())
+            _onClick?.Invoke();
     }
 }

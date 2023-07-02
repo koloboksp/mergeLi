@@ -2,8 +2,9 @@
 
 public class UndoBuff : Buff
 {
-    protected override void OnClick()
+    protected override void InnerOnClick()
     {
         _gameProcessor.Undo();
+       
     }
 }

@@ -3,36 +3,18 @@ using UnityEngine.EventSystems;
 
 public class Buff : MonoBehaviour
 {
-    private GameObject _cursorPrefab;
-    private GameObject _cursor;
-
     [SerializeField] protected GameProcessor _gameProcessor;
     [SerializeField] private UIBuff _controlPrefab;
+    [SerializeField] private int _cost = 1;
 
     private UIBuff _control;
-
-    void OnDragStarted()
-    {
-        CreateCursor();
-    }
-
-    private void CreateCursor()
-    {
-     //   _cursor = Instantiate(_cursorPrefab, CursorPosition);
-    }
-
-    public Vector3 CursorPosition { get; set; }
-    public UIBuff Control => _control;
+    public GameProcessor GameProcessor => _gameProcessor;
     
-    private void UpdateCursorPosition()
-    {
-        _cursor.transform.position = CursorPosition;
-    }
-
     public UIBuff CreateControl()
     {
         _control = Instantiate(_controlPrefab);
         _control
+            .SetModel(this) 
             .OnClick(OnClick)
             .OnBeginDrag(OnBeginDrag)
             .OnEndDrag(OnEndDrag)
@@ -40,23 +22,42 @@ public class Buff : MonoBehaviour
         return _control;
     }
     
-    protected virtual void OnClick()
+    protected void OnClick()
     {
+        if(!IsAvailable) return;
         
+        InnerOnClick();
+
+        _gameProcessor.PlayerInfo.ConsumeCoins(_cost);
     }
     
-    protected virtual void OnEndDrag(PointerEventData eventData)
+    protected void OnEndDrag(PointerEventData eventData)
     {
+        if(!IsAvailable) return;
+
+        InnerOnEndDrag(eventData);
         
+        _gameProcessor.PlayerInfo.ConsumeCoins(_cost);
     }
 
-    protected virtual void OnBeginDrag(PointerEventData eventData)
+    protected void OnBeginDrag(PointerEventData eventData)
     {
-        
+        if(!IsAvailable) return;
+
+        InnerOnBeginDrag(eventData);
     }
     
-    protected virtual void OnDrag(PointerEventData eventData)
+    protected void OnDrag(PointerEventData eventData)
     {
-        
+        if(!IsAvailable) return;
+
+        InnerOnDrag(eventData);
     }
+    
+    protected virtual void InnerOnClick() { }
+    protected virtual void InnerOnEndDrag(PointerEventData eventData) { }
+    protected virtual void InnerOnBeginDrag(PointerEventData eventData) { }
+    protected virtual void InnerOnDrag(PointerEventData eventData) { }
+
+    public virtual bool IsAvailable => _gameProcessor.PlayerInfo.GetAvailableCoins() > _cost;
 }

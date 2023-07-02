@@ -1,4 +1,5 @@
 using System;
+using Core.Steps.CustomOperations;
 using UnityEngine;
 
 public class Scene : MonoBehaviour, ISkinChanger
@@ -6,6 +7,7 @@ public class Scene : MonoBehaviour, ISkinChanger
     [SerializeField] private SkinsLibrary _skinsLibrary;
     [SerializeField] private Field _field;
     [SerializeField] private Transform _sceneRoot;
+    [SerializeField] private PurchasesLibrary _purchasesLibrary;
 
     private SkinContainer _activeSkin;
     public Field Field => _field;
@@ -13,6 +15,7 @@ public class Scene : MonoBehaviour, ISkinChanger
     
     public SkinsLibrary Library => _skinsLibrary;
     public SkinContainer ActiveSkin => _activeSkin;
+    public PurchasesLibrary PurchasesLibrary => _purchasesLibrary;
 
     public void SetSkin(string skinName)
     {

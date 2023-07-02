@@ -13,9 +13,9 @@ namespace Core.Buffs
         private BuffCursor _cursorInstance;
         private readonly List<AffectingBuffArea> _affectingAreaInstances = new();
         
-        protected override void OnBeginDrag(PointerEventData eventData)
+        protected override void InnerOnBeginDrag(PointerEventData eventData)
         {
-            base.OnBeginDrag(eventData);
+            base.InnerOnBeginDrag(eventData);
 
             _cursorInstance = Instantiate(_cursorPrefab, _gameProcessor.Scene.SceneRoot);
             _cursorInstance.transform.position = eventData.position;
@@ -25,9 +25,9 @@ namespace Core.Buffs
                 _affectingAreaInstances.Add(Instantiate(_areaPrefab, _gameProcessor.Scene.SceneRoot));
         }
 
-        protected override void OnDrag(PointerEventData eventData)
+        protected override void InnerOnDrag(PointerEventData eventData)
         {
-            base.OnDrag(eventData);
+            base.InnerOnDrag(eventData);
 
             var pointerPosition = _gameProcessor.Scene.Field.GetPointIndex(eventData.position);
             
@@ -42,9 +42,9 @@ namespace Core.Buffs
             _cursorInstance.transform.position = eventData.position;
         }
 
-        protected override void OnEndDrag(PointerEventData eventData)
+        protected override void InnerOnEndDrag(PointerEventData eventData)
         {
-            base.OnEndDrag(eventData);
+            base.InnerOnEndDrag(eventData);
            
             Destroy(_cursorInstance.gameObject);
             _cursorInstance = null;
