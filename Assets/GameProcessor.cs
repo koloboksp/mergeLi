@@ -34,6 +34,8 @@ public class GameProcessor : MonoBehaviour, IRules
     
     [SerializeField] private RectTransform _uiScreensRoot;
 
+    [SerializeField] private List<Buff> _buffs;
+
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
@@ -120,6 +122,17 @@ public class GameProcessor : MonoBehaviour, IRules
                     .Reverse()
                     .Select(operation => operation.GetInverseOperation()).ToArray();
                 _stepMachine.AddUndoStep(new Step("UndoMove", inverseOperations));
+            }
+            
+            if (step.Tag == "Explode")
+            {
+                _stepFinishState = Field.StepFinishState.Move;
+                userStepFinished = true;
+
+                var inverseOperations = step.Operations
+                    .Reverse()
+                    .Select(operation => operation.GetInverseOperation()).ToArray();
+                _stepMachine.AddUndoStep(new Step("UndoExplode", inverseOperations));
             }
         }
     }
@@ -240,4 +253,12 @@ public class GameProcessor : MonoBehaviour, IRules
 
 
     public int MinimalBallsInLine => _minimalBallsInLine;
+    public List<Buff> Buffs => _buffs;
+
+    public void Explode(List<Vector3Int> ballsIndexes)
+    {
+        _stepMachine.AddStep(
+            new Step("Explode", 
+                new RemoveOperation(ballsIndexes, _field)));
+    }
 }

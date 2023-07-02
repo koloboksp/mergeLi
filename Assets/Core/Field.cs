@@ -171,7 +171,10 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     {
         return Vector3.Scale(position, _cellSize);
     }
-
+    public Vector3 GetPositionFromWorld(Vector3 position)
+    {
+        return Vector3.Scale(position, new Vector3(1.0f / _cellSize.x, 1.0f / _cellSize.y, 1.0f / _cellSize.z));
+    }
    
     public int GetIndex(Vector3 position)
     {
@@ -180,6 +183,21 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     public Vector3Int GetPositionFromIndex(int index)
     {
         return new Vector3Int(index % size, index / size); 
+    }
+
+    public Vector3Int GetPointIndex(Vector3 position)
+    {
+        var pointerLocalPosition = transform.InverseTransformPoint(position);
+        var pointerFloatPosition = GetPositionFromWorld(pointerLocalPosition);
+
+        var pointerIndex = GetIndex(pointerFloatPosition);
+        return GetPositionFromIndex(pointerIndex);
+    }
+
+    public Vector3 GetPointPosition(Vector3Int positionIndex)
+    {
+        var areaFloatPosition = GetPosition(positionIndex);
+        return transform.TransformPoint(areaFloatPosition);
     }
     
     public IEnumerable<T> GetSomething<T>(Vector3Int position) where T : class

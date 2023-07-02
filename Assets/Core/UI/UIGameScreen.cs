@@ -9,14 +9,14 @@ namespace Core
 {
     public class UIGameScreen : UIScreen
     {
-        [SerializeField] private Button _undoBtn;
         [SerializeField] private Button _showSkinBtn;
+        [SerializeField] private ScrollRect _buffsContainer;
 
         private UIGameScreenData _data;
 
+       
         public void Awake()
         {
-            _undoBtn.onClick.AddListener(UndoBtn_OnClick);
             _showSkinBtn.onClick.AddListener(ShowSkinBtn_OnClick);
         }
 
@@ -27,16 +27,22 @@ namespace Core
             _data = data as UIGameScreenData;
             _data.GameProcessor.OnStepCompleted += OnStepCompleted;
             _data.GameProcessor.OnStepExecute += OnStepExecute;
+
+            foreach (var buff in _data.GameProcessor.Buffs)
+            {
+                var control = buff.CreateControl();
+                control.transform.SetParent(_buffsContainer.content);
+            }
         }
 
         private void OnStepExecute(Step sender)
         {
-            _undoBtn.interactable = false;
+            //_undoBtn.interactable = false;
         }
 
         private void OnStepCompleted(Step sender)
         {
-            _undoBtn.interactable = true;
+            //_undoBtn.interactable = true;
         }
 
         private void UndoBtn_OnClick()

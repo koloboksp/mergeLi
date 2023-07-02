@@ -3,12 +3,14 @@ using UnityEngine;
 
 public class Scene : MonoBehaviour, ISkinChanger
 {
-    [SerializeField]
-    private SkinsLibrary _skinsLibrary;
+    [SerializeField] private SkinsLibrary _skinsLibrary;
+    [SerializeField] private Field _field;
+    [SerializeField] private Transform _sceneRoot;
 
     private SkinContainer _activeSkin;
-
-
+    public Field Field => _field;
+    public Transform SceneRoot => _sceneRoot;
+    
     public SkinsLibrary Library => _skinsLibrary;
     public SkinContainer ActiveSkin => _activeSkin;
 
