@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Steps;
@@ -11,22 +12,21 @@ namespace Core
     public class UIGameScreen : UIScreen
     {
         [SerializeField] private Button _showSkinBtn;
+        [SerializeField] private CanvasGroup _buffsContainerRoot;
         [SerializeField] private ScrollRect _buffsContainer;
         [SerializeField] private UIScore _score;
         [SerializeField] private UICoins _coins;
 
         private UIGameScreenData _data;
-
-       
+        private PointsGoal _currentPointsGoal = null;
+        
         public void Awake()
         {
             _showSkinBtn.onClick.AddListener(ShowSkinBtn_OnClick);
             
             _coins.OnClick += Coins_OnClick;
         }
-
         
-
         public override void SetData(UIScreenData data)
         {
             base.SetData(data);
@@ -48,27 +48,37 @@ namespace Core
 
         private void OnStepExecute(Step sender)
         {
-            //_undoBtn.interactable = false;
+            _buffsContainerRoot.interactable = false;
         }
 
         private void OnStepCompleted(Step sender)
         {
-            //_undoBtn.interactable = true;
+            _buffsContainerRoot.interactable = true;
         }
 
+        
         private void OnScoreChanged()
         {
-            _score.SetScore(_data.GameProcessor.Score);
+            var nextPointsGoal = _data.GameProcessor.GoalsLibrary.PointsGoals.GetNextGoal(_data.GameProcessor.Score);
+            
+            _score.SetScore(_data.GameProcessor.Score, nextPointsGoal.Threshold);
+            if (_currentPointsGoal != nextPointsGoal)
+            {
+                if (_currentPointsGoal != null)
+                    StartCoroutine(ShowGoalReachAnimation());
+                
+                _currentPointsGoal = nextPointsGoal;
+            }
+        }
+
+        private IEnumerator ShowGoalReachAnimation()
+        {
+            yield return null;
         }
 
         private void OnCoinsChanged()
         {
             _coins.SetCoins(_data.GameProcessor.PlayerInfo.GetAvailableCoins());
-        }
-        
-        private void UndoBtn_OnClick()
-        {
-            _data.GameProcessor.Undo();
         }
         
         private void ShowSkinBtn_OnClick()

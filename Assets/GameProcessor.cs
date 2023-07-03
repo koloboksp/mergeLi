@@ -31,7 +31,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private StepMachine _stepMachine;
     [SerializeField] private PlayerInfo _playerInfo;
     [SerializeField] private DefaultMarket _market;
-
+    [SerializeField] private GoalsLibrary _goalsLibrary;
+    
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
     [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
@@ -54,6 +55,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     public PlayerInfo PlayerInfo => _playerInfo;
     public int Score => _score;
     public IMarket Market => _market;
+    public GoalsLibrary GoalsLibrary => _goalsLibrary;
     
     void Awake()
     {

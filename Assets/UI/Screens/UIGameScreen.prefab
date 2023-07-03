@@ -384,6 +384,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _root: {fileID: 7104141350609223302}
   _showSkinBtn: {fileID: 2637769873765130055}
+  _buffsContainerRoot: {fileID: 7425829141263939423}
   _buffsContainer: {fileID: 1044764078765523264}
   _score: {fileID: 4155178967740643421}
   _coins: {fileID: 7751034290328399452}
@@ -569,7 +570,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 98, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &347507402408059436
@@ -683,6 +684,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bestScoreLabel: {fileID: 7521564856840919020}
   _scoreLabel: {fileID: 8298556639947050905}
+  _nextGoalScoreLabel: {fileID: 3973245141816255099}
   _bar: {fileID: 7914074095134405709}
 --- !u!1 &3745372734587475752
 GameObject:
@@ -697,7 +699,7 @@ GameObject:
   - component: {fileID: 3973245141816255099}
   - component: {fileID: 4537866491042147808}
   m_Layer: 5
-  m_Name: targetScore
+  m_Name: goalScore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -720,7 +722,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 161.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5950928626697732899
@@ -815,7 +817,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 46, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1197580459088640987
@@ -1034,7 +1036,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 8213650031293106282}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.63069284
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1304,6 +1306,7 @@ GameObject:
   - component: {fileID: 6691100996513773013}
   - component: {fileID: 566761686631806167}
   - component: {fileID: 5413759855385433291}
+  - component: {fileID: 7425829141263939423}
   m_Layer: 5
   m_Name: buffs
   m_TagString: Untagged
@@ -1370,6 +1373,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &7425829141263939423
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6418596441018557054}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6693689840508035062
 GameObject:
   m_ObjectHideFlags: 0
@@ -1778,7 +1793,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.07914347}
+  m_AnchoredPosition: {x: 0, y: 0.000045445875}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2376053151767172566

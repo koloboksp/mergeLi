@@ -608,6 +608,7 @@ MonoBehaviour:
   _stepMachine: {fileID: 1844453385}
   _playerInfo: {fileID: 647029505}
   _market: {fileID: 38590912}
+  _goalsLibrary: {fileID: 502955407}
   _destroyBallEffectPrefab: {fileID: 5600580805448456366, guid: 14a662a9344a3274c9fabd6bac889aa0,
     type: 3}
   _noPathEffectPrefab: {fileID: -6999720306982994079, guid: 44ff0d0d6eb6a924c8dfd8bab846454c,
@@ -966,6 +967,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 391481346}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &502955406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 502955408}
+  - component: {fileID: 502955407}
+  m_Layer: 0
+  m_Name: goals
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &502955407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502955406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb613d819954465da4e47ba4243245c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pointsGoals: {fileID: 1368609245}
+--- !u!4 &502955408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502955406}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 321.00006, y: 49, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1368609246}
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &532319860
 GameObject:
@@ -2550,6 +2597,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1253282455}
   m_CullTransparentMesh: 1
+--- !u!1 &1368609244
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1368609246}
+  - component: {fileID: 1368609245}
+  m_Layer: 0
+  m_Name: pointsGoals
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1368609245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368609244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1cafe45d06b42d9bc37581da2a5d81d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Goals:
+  - _threshold: 0
+    _achievementId: firstLine
+  - _threshold: 0
+    _achievementId: pointsMaker
+  - _threshold: 0
+    _achievementId: pointsLiker
+  - _threshold: 0
+    _achievementId: pointsLover
+--- !u!4 &1368609246
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368609244}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 502955408}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1412968059
 GameObject:
   m_ObjectHideFlags: 0
