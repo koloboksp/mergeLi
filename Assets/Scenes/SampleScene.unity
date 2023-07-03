@@ -2627,13 +2627,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Goals:
-  - _threshold: 0
+  - _threshold: 10
     _achievementId: firstLine
-  - _threshold: 0
+  - _threshold: 50
     _achievementId: pointsMaker
-  - _threshold: 0
+  - _threshold: 100
     _achievementId: pointsLiker
-  - _threshold: 0
+  - _threshold: 200
     _achievementId: pointsLover
 --- !u!4 &1368609246
 Transform:
