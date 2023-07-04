@@ -14,6 +14,8 @@ namespace Core
         {
             _scoreLabel.text = score.ToString();
             _nextGoalScoreLabel.text = nextGoalScore.ToString();
+
+            _bar.fillAmount = (float)score / (float)nextGoalScore;
         }
     }
 }

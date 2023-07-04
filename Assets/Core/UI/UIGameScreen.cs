@@ -11,19 +11,18 @@ namespace Core
 {
     public class UIGameScreen : UIScreen
     {
-        [SerializeField] private Button _showSkinBtn;
         [SerializeField] private CanvasGroup _buffsContainerRoot;
         [SerializeField] private ScrollRect _buffsContainer;
         [SerializeField] private UIScore _score;
         [SerializeField] private UICoins _coins;
+        [SerializeField] private RectTransform _fieldContainer;
 
         private UIGameScreenData _data;
         private PointsGoal _currentPointsGoal = null;
+        public UIGameScreenData Data => _data;
         
         public void Awake()
         {
-            _showSkinBtn.onClick.AddListener(ShowSkinBtn_OnClick);
-            
             _coins.OnClick += Coins_OnClick;
         }
         
@@ -43,6 +42,21 @@ namespace Core
             {
                 var control = buff.CreateControl();
                 control.transform.SetParent(_buffsContainer.content);
+            }
+
+            var fieldRoot = _data.GameProcessor.Scene.Field.FieldRoot;
+            if (fieldRoot is RectTransform)
+            {
+                var fieldRootRect = fieldRoot as RectTransform;
+                var containerRect = _fieldContainer.rect;
+                var rect = fieldRootRect.rect;
+                fieldRootRect.parent = _fieldContainer;
+                //fieldRootRect.anchorMin = Vector2.zero;
+                //fieldRootRect.anchorMax = Vector2.one;
+                //fieldRootRect.offsetMin = Vector2.zero;
+                //fieldRootRect.offsetMax = Vector2.zero;
+                fieldRootRect.localPosition = Vector3.zero;
+                fieldRootRect.localScale = new Vector3(containerRect.width/rect.width, containerRect.height/rect.height, 1);
             }
         }
 

@@ -65,19 +65,18 @@ namespace Core
             private IMarket _market;
             private readonly List<UIShopScreen_PurchaseItem.Model> _items = new();
           
-            public void SetData( IMarket market, IEnumerable<PurchaseItem> purchaseItems)
+            public void SetData(IMarket market, IEnumerable<PurchaseItem> purchaseItems)
             {
                 _market = market;
                 _items.AddRange(purchaseItems
                     .Select(i => new UIShopScreen_PurchaseItem.Model(this)
-                        .SetName(i.InAppId)
-                        .SetInAppId(i.InAppId)));
+                        .Init(i.PurchaseType == PurchaseType.Market ? i.InAppId : $"ShowAds{i.CurrencyAmount}", i.InAppId, i.PurchaseType)));
                 _onItemsUpdated?.Invoke(_items);
             }
             
             public async Task<bool> Buy(UIShopScreen_PurchaseItem.Model model)
             {
-                bool success = await _market.Buy(model.InAppId);
+                var success = await _market.Buy(model.InAppId, model.PurchaseType);
                 if(success)
                     _onBoughtSomething?.Invoke();
                 return success;

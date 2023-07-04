@@ -24,8 +24,11 @@ namespace Core
                 var screenObject = Object.Instantiate(senderHandle.Result);
                 var screen = screenObject.GetComponent<UIScreen>();
                 screen.Root.parent = _screensRoot;
+                screen.Root.anchorMin = Vector2.zero;
+                screen.Root.anchorMax = Vector2.one;
                 screen.Root.offsetMin = Vector2.zero;
                 screen.Root.offsetMax = Vector2.zero;
+                screen.Root.localScale = Vector3.one;
                 _stack.Push(senderHandle, screen, data);
             };
         }
@@ -38,8 +41,11 @@ namespace Core
                 var screenObject = Object.Instantiate(senderHandle.Result);
                 var screen = screenObject.GetComponent<UIScreen>();
                 screen.Root.parent = _screensRoot;
+                screen.Root.anchorMin = Vector2.zero;
+                screen.Root.anchorMax = Vector2.one;
                 screen.Root.offsetMin = Vector2.zero;
                 screen.Root.offsetMax = Vector2.zero;
+                screen.Root.localScale = Vector3.one;
                 _stack.PushPopup(senderHandle, screen, data);
             };
         }

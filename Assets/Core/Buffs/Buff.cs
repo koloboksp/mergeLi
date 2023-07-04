@@ -9,6 +9,7 @@ public class Buff : MonoBehaviour
 
     private UIBuff _control;
     public GameProcessor GameProcessor => _gameProcessor;
+    public int Cost => _cost;
     
     public UIBuff CreateControl()
     {

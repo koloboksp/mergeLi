@@ -4,6 +4,7 @@ using Core;
 using Core.Steps.CustomOperations;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIBuff : MonoBehaviour
 {
@@ -13,12 +14,20 @@ public class UIBuff : MonoBehaviour
     protected Action<PointerEventData> _onDrag;
 
     [SerializeField] protected Buff _model;
-    
+    [SerializeField] protected Text _costLabel;
+
     public UIBuff SetModel(Buff model)
     {
         _model = model;
+        SetCost();
         return this;
     }
+
+    private void SetCost()
+    {
+        _costLabel.text = _model.Cost.ToString();
+    }
+
     public UIBuff OnClick(Action action)
     {
         _onClick = action;

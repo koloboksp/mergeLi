@@ -12,7 +12,7 @@ namespace Core
 
         [SerializeField] private PurchasesLibrary _purchasesLibrary;
         
-        public async Task<bool> Buy(string inAppId)
+        public async Task<bool> Buy(string inAppId, PurchaseType modelPurchaseType)
         {
             var purchaseItem = _purchasesLibrary.Items.FirstOrDefault(i => string.Equals(i.InAppId, inAppId, StringComparison.Ordinal));
 

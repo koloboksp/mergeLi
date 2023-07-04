@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Steps.CustomOperations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,7 +40,8 @@ namespace Core
             private string _name;
             private bool _selected;
             private string _inAppId;
-
+            private PurchaseType _purchaseType;
+            
             public Model(UIShopScreen.Model owner)
             {
                 _owner = owner;
@@ -47,16 +49,14 @@ namespace Core
 
             public string Name => _name;
             public string InAppId => _inAppId;
+            public PurchaseType PurchaseType => _purchaseType;
 
-            public Model SetName(string name)
+            public Model Init(string name, string inAppId, PurchaseType purchaseType)
             {
                 _name = name;
-                return this;
-            }
-            
-            public Model SetInAppId(string inAppId)
-            {
                 _inAppId = inAppId;
+                _purchaseType = purchaseType;
+                
                 return this;
             }
 

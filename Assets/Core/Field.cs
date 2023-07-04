@@ -47,7 +47,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     private List<Ball> _balls = new List<Ball>();
     
  
-    private Vector3 _cellSize = new Vector3(107, 107);
+    private Vector3 _cellSize = new Vector3(256, 256);
     public bool IsEmpty => _balls.Count < _size * _size;
     public int size => _size;
 
@@ -279,4 +279,9 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
 
     public IFieldView FieldView => this;
     public Transform FieldRoot => _fieldRoot;
+
+    public void AdaptSize(Vector3 leftBottomCorner, Vector3 rightTopCorner, Vector2 rectSize)
+    {
+       
+    }
 }
