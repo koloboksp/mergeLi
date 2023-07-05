@@ -17,12 +17,17 @@ namespace Core.Buffs
         {
             base.InnerOnBeginDrag(eventData);
 
-            _cursorInstance = Instantiate(_cursorPrefab, _gameProcessor.Scene.SceneRoot);
+            _cursorInstance = Instantiate(_cursorPrefab, _gameProcessor.Scene.Field.View.Root);
             _cursorInstance.transform.position = eventData.position;
-
+            _cursorInstance.transform.localScale = Vector3.one;
+            
             var size = GetSize(_halfSize);
             for (int i = 0; i < size * size; i++)
-                _affectingAreaInstances.Add(Instantiate(_areaPrefab, _gameProcessor.Scene.SceneRoot));
+            {
+                var affectingBuffArea = Instantiate(_areaPrefab, _gameProcessor.Scene.Field.View.Root);
+                _affectingAreaInstances.Add(affectingBuffArea);
+                affectingBuffArea.transform.localScale = Vector3.one;
+            }
         }
 
         protected override void InnerOnDrag(PointerEventData eventData)
