@@ -79,8 +79,8 @@ namespace Core.Steps.CustomOperations
             foreach (var ball in _ballsToRemove)
             {
                 var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab, 
-                    _field.FieldView.FieldRoot.TransformPoint(_field.GetPosition(ball.IntPosition)), Quaternion.identity, 
-                    _field.FieldView.FieldRoot);
+                    _field.View.Root.TransformPoint(_field.GetPosition(ball.IntPosition)), Quaternion.identity, 
+                    _field.View.Root);
                 destroyBallEffect.Run();
             }
 
@@ -100,8 +100,8 @@ namespace Core.Steps.CustomOperations
                     }
                     
                     var collapsePointsEffect = Object.Instantiate(_collapsePointsEffectPrefab, 
-                        _field.FieldView.FieldRoot.TransformPoint(centerPosition), Quaternion.identity, 
-                        _field.FieldView.FieldRoot);
+                        _field.View.Root.TransformPoint(centerPosition), Quaternion.identity, 
+                        _field.View.Root);
                     
                     sumPoints += sumGroupPoints;
                     collapsePointsEffect.Run(sumGroupPoints);

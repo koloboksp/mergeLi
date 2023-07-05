@@ -1733,6 +1733,7 @@ GameObject:
   m_Component:
   - component: {fileID: 916964708}
   - component: {fileID: 916964707}
+  - component: {fileID: 916964709}
   m_Layer: 5
   m_Name: field
   m_TagString: Untagged
@@ -1752,7 +1753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c49241158d5e2d4dac21f2bcc50fb41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fieldRoot: {fileID: 916964708}
+  _view: {fileID: 916964709}
   _scene: {fileID: 37189759}
   _ballPrefab: {fileID: 7271366859707694706, guid: 8a617f3c8c5a34c4cbdb55eb8bed6668,
     type: 3}
@@ -1777,6 +1778,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 2560, y: 2560}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &916964709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916964706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e91ea1c397942b19c4dcbd0e301ac4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _model: {fileID: 916964707}
+  _root: {fileID: 916964708}
+  _gridColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _gridThickness: 8
 --- !u!1 &918669750
 GameObject:
   m_ObjectHideFlags: 0

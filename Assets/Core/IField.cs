@@ -10,10 +10,10 @@ public interface IField
     List<Vector3Int> GenerateBalls(int count);
     Vector3Int CreateBall(Vector3Int position, int points);
     Vector3 GetPosition(Vector3Int position);
-    public IFieldView FieldView { get; }
+    public IFieldView View { get; }
 }
 
 public interface IFieldView
 {
-    Transform FieldRoot { get; }
+    Transform Root { get; }
 }

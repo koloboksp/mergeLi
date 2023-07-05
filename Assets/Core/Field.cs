@@ -8,11 +8,10 @@ using Core;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 
-public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IField, IFieldView
+public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IField
 {
     public enum StepFinishState
     {
@@ -37,40 +36,37 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     
     public event Action<Vector3Int> OnClick;
     
-    private int _size = 10;
-    private int _minimalBallsCount = 5;
+    private Vector2Int _size = new(10, 10);
+    private int _minimalBallsCountForCollapse = 5;
 
-    [SerializeField] private RectTransform _fieldRoot;
+    [SerializeField] private FieldView _view;
     [SerializeField] private Scene _scene;
+    [SerializeField] private Ball _ballPrefab;
+   
+    private readonly List<int> _busyIndexes = new List<int>();
+    private readonly List<Ball> _balls = new List<Ball>();
     
-    private List<int> _busyIndexes = new List<int>();
-    private List<Ball> _balls = new List<Ball>();
-    
- 
     private Vector3 _cellSize = new Vector3(256, 256);
-    public bool IsEmpty => _balls.Count < _size * _size;
-    public int size => _size;
-
-    public Ball _ballPrefab;
-
-    public Scene Scene => _scene;
+    public bool IsEmpty => _balls.Count < _size.x * _size.y;
+    public Vector2Int Size => _size;
     
-    // Start is called before the first frame update
-
+    public Scene Scene => _scene;
+    public IFieldView View => _view;
     private void Awake()
-    {
-        var cellSize = _fieldRoot.rect.size.x / _size;
-        _cellSize = new Vector3(cellSize, cellSize);
+    { 
+        _cellSize = _view.CellSize();
     }
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        var inverseTransformPoint = _fieldRoot.InverseTransformPoint(eventData.position);
+        var localPosition = _view.Root.InverseTransformPoint(eventData.position);
 
-        var rect = _fieldRoot.rect;
-        Vector3Int pointerGridPosition = new Vector3Int((int)((inverseTransformPoint.x /rect.width) * _size), (int)((inverseTransformPoint.y /rect.height) * _size));
+        var fieldSize = _view.Size;
+        var gridPosition = new Vector3Int(
+            (int)((localPosition.x / fieldSize.x) * _size.x), 
+            (int)((localPosition.y / fieldSize.y) * _size.y));
        
-        OnClick?.Invoke(pointerGridPosition);
+        OnClick?.Invoke(gridPosition);
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -88,10 +84,10 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
             UseDiagonals = false, 
         };
 
-        var tiles = new short[_size,_size];
-        for (int x = 0; x < _size; x++)
-            for (int y = 0; y < _size; y++)
-                tiles[x, y] = 1;
+        var tiles = new short[_size.x,_size.y];
+        for (var x = 0; x < _size.x; x++)
+        for (var y = 0; y < _size.y; y++)
+            tiles[x, y] = 1;
 
         foreach (var ball in _balls)
         {
@@ -126,7 +122,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
 
     public Vector3Int CreateBall(Vector3Int position, int points)
     {
-        var newBall = Instantiate(_ballPrefab, _fieldRoot);
+        var newBall = Instantiate(_ballPrefab, _view.Root);
         _balls.Add(newBall);
         _busyIndexes.Add(GetIndex(position));
 
@@ -146,17 +142,17 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
         for (int i = 0; i < num; i++)
         {
             List<int> freeIndexes = new List<int>();
-            for (int x = 0; x < _size; x++)
-                for (int y = 0; y < _size; y++)
-                    freeIndexes.Add(GetIndex(new Vector3(x, y)));
+            for (int x = 0; x < _size.x; x++)
+            for (int y = 0; y < _size.y; y++)
+                freeIndexes.Add(GetIndex(new Vector3(x, y)));
             foreach (var ball in _balls)
                 freeIndexes.Remove(GetIndex(ball.Position));
-            
+
             var randomElementIndex = Random.Range(0, freeIndexes.Count);
             var freeIndex = freeIndexes[randomElementIndex];
-           // _busyIndexes.Add(freeIndex);
-           var position = GetPositionFromIndex(freeIndex);
-           ballsPositions.Add(CreateBall(position, (int)Mathf.Pow(2, Random.Range(0, 5))));
+            var position = GetPositionFromIndex(freeIndex);
+            
+            ballsPositions.Add(CreateBall(position, (int)Mathf.Pow(2, Random.Range(0, 5))));
         }
 
         return ballsPositions;
@@ -178,11 +174,11 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
    
     public int GetIndex(Vector3 position)
     {
-        return (int)position.y * _size + (int)position.x;
+        return (int)position.y * _size.x + (int)position.x;
     }
     public Vector3Int GetPositionFromIndex(int index)
     {
-        return new Vector3Int(index % size, index / size); 
+        return new Vector3Int(index % _size.x, index / _size.y); 
     }
 
     public Vector3Int GetPointIndex(Vector3 position)
@@ -222,7 +218,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     
     public List<List<Ball>> CheckCollapse(Vector3Int checkingPosition)
     {
-        return Check(checkingPosition, _minimalBallsCount);
+        return Check(checkingPosition, _minimalBallsCountForCollapse);
     }
 
     List<List<Ball>> Check(Vector3Int position, int requiredCount)
@@ -241,7 +237,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
                 {
                     Vector3Int checkingPosition = position + Directions[directionI] *  Sides[sideI] * distance;
                     if (checkingPosition.x < 0 || checkingPosition.y < 0
-                                               || checkingPosition.x >= _size || checkingPosition.x >= _size)
+                                               || checkingPosition.x >= _size.x || checkingPosition.y >= _size.y)
                         break;
                     
                     var foundBall = GetBall(checkingPosition);
@@ -276,10 +272,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
             Destroy(ball.gameObject);
         }
     }
-
-    public IFieldView FieldView => this;
-    public Transform FieldRoot => _fieldRoot;
-
+    
     public void AdaptSize(Vector3 leftBottomCorner, Vector3 rightTopCorner, Vector2 rectSize)
     {
        

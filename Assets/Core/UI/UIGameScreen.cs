@@ -44,7 +44,7 @@ namespace Core
                 control.transform.SetParent(_buffsContainer.content);
             }
 
-            var fieldRoot = _data.GameProcessor.Scene.Field.FieldRoot;
+            var fieldRoot = _data.GameProcessor.Scene.Field.View.Root;
             if (fieldRoot is RectTransform)
             {
                 var fieldRootRect = fieldRoot as RectTransform;
