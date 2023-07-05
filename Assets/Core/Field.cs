@@ -55,13 +55,15 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     private void Awake()
     { 
         _cellSize = _view.CellSize();
+        
+        _view.RegenerateField();
     }
     
     public void OnPointerDown(PointerEventData eventData)
     {
         var localPosition = _view.Root.InverseTransformPoint(eventData.position);
 
-        var fieldSize = _view.Size;
+        var fieldSize = _view.SizeDelta;
         var gridPosition = new Vector3Int(
             (int)((localPosition.x / fieldSize.x) * _size.x), 
             (int)((localPosition.y / fieldSize.y) * _size.y));
