@@ -17,7 +17,7 @@ namespace Core.Steps.CustomOperations
 
         protected override void InnerExecute()
         {
-            var position = _field.View.Root.TransformPoint(_field.GetPosition(_endPosition));
+            var position = _field.View.Root.TransformPoint(_field.GetPositionFromGrid(_endPosition));
             var noPathEffect = Object.Instantiate(_noPathEffect, position, Quaternion.identity, _field.View.Root);
             noPathEffect.Run();
             

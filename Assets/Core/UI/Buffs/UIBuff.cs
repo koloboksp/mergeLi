@@ -19,8 +19,16 @@ public class UIBuff : MonoBehaviour
     public UIBuff SetModel(Buff model)
     {
         _model = model;
+        _model
+            .OnAvailableStateChanged(AvailableStateChanged);
+        
         SetCost();
         return this;
+    }
+
+    protected virtual void AvailableStateChanged()
+    {
+        
     }
 
     private void SetCost()

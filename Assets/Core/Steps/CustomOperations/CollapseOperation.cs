@@ -17,7 +17,7 @@ namespace Core.Steps.CustomOperations
         private readonly CollapsePointsEffect _collapsePointsEffectPrefab;
 
         private readonly List<Ball> _ballsToRemove = new List<Ball>();
-        private readonly List<List<(Vector3Int position, int points)>> _collapseLines = new List<List<(Vector3Int, int)>>();
+        private readonly List<List<(Vector3Int intPosition, int points)>> _collapseLines = new List<List<(Vector3Int, int)>>();
         private int _pointsAdded;
 
         public CollapseOperation(Vector3Int position, CollapsePointsEffect collapsePointsEffectPrefab,
@@ -50,7 +50,7 @@ namespace Core.Steps.CustomOperations
             if (_positionSource == PositionSource.Fixed)
                 checkingPositions.Add(_position);
             else if (_positionSource == PositionSource.FromData)
-                checkingPositions.AddRange(Owner.GetData<GenerateOperationData>().NewPositions);
+                checkingPositions.AddRange(Owner.GetData<GenerateOperationData>().NewBallsData.Select(i => i.position));
 
             var data = new CollapseOperationData();
             
@@ -59,9 +59,9 @@ namespace Core.Steps.CustomOperations
                 List<List<Ball>> collapseLines = _field.CheckCollapse(checkingPosition);
                 foreach (var collapseLine in collapseLines)
                 {
-                    _collapseLines.Add(new List<(Vector3Int, int)>());
+                    _collapseLines.Add(new List<(Vector3Int intPosition, int points)>());
                     foreach (var ball in collapseLine)
-                        _collapseLines[_collapseLines.Count-1].Add((ball.IntPosition, ball.Points));
+                        _collapseLines[_collapseLines.Count-1].Add((ball.IntGridPosition, ball.Points));
                 }
            
                 foreach (var line in collapseLines)
@@ -79,7 +79,7 @@ namespace Core.Steps.CustomOperations
             foreach (var ball in _ballsToRemove)
             {
                 var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab, 
-                    _field.View.Root.TransformPoint(_field.GetPosition(ball.IntPosition)), Quaternion.identity, 
+                    _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ball.IntGridPosition)), Quaternion.identity, 
                     _field.View.Root);
                 destroyBallEffect.Run();
             }
@@ -95,7 +95,7 @@ namespace Core.Steps.CustomOperations
                     var sumGroupPoints = 0;
                     foreach (var tuple in valueTuples)
                     {
-                        centerPosition += _field.GetPosition(tuple.position) / valueTuples.Count;
+                        centerPosition += _field.GetPositionFromGrid(tuple.intPosition) / valueTuples.Count;
                         sumGroupPoints += tuple.points;
                     }
                     
@@ -128,6 +128,6 @@ namespace Core.Steps.CustomOperations
 
     public class CollapseOperationData 
     {
-        public List<List<(Vector3Int position, int points)>> CollapseLines = new();
+        public List<List<(Vector3Int intPosition, int points)>> CollapseLines = new();
     }
 }

@@ -34,7 +34,7 @@ namespace Core.Buffs
         {
             base.InnerOnDrag(eventData);
 
-            var pointerPosition = _gameProcessor.Scene.Field.GetPointIndex(eventData.position);
+            var pointerPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(eventData.position);
             
             var size = GetSize(_halfSize);
             for (int x = 0; x < size; x++)
@@ -58,7 +58,7 @@ namespace Core.Buffs
                 Destroy(affectingAreaInstance.gameObject);
             _affectingAreaInstances.Clear();
             
-            var pointerPosition = _gameProcessor.Scene.Field.GetPointIndex(eventData.position);
+            var pointerPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(eventData.position);
             var size = GetSize(_halfSize);
             List<Vector3Int> ballsIndexes = new List<Vector3Int>();
             for (int x = 0; x < size; x++)

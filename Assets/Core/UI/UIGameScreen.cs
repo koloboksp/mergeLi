@@ -50,7 +50,7 @@ namespace Core
                 var fieldRootRect = fieldRoot as RectTransform;
                 var containerRect = _fieldContainer.rect;
                 var rect = fieldRootRect.rect;
-                fieldRootRect.parent = _fieldContainer;
+                fieldRootRect.SetParent(_fieldContainer);
                 //fieldRootRect.anchorMin = Vector2.zero;
                 //fieldRootRect.anchorMax = Vector2.one;
                 //fieldRootRect.offsetMin = Vector2.zero;

@@ -23,7 +23,7 @@ namespace Core
             {
                 var screenObject = Object.Instantiate(senderHandle.Result);
                 var screen = screenObject.GetComponent<UIScreen>();
-                screen.Root.parent = _screensRoot;
+                screen.Root.SetParent(_screensRoot);
                 screen.Root.anchorMin = Vector2.zero;
                 screen.Root.anchorMax = Vector2.one;
                 screen.Root.offsetMin = Vector2.zero;
@@ -40,7 +40,7 @@ namespace Core
             {
                 var screenObject = Object.Instantiate(senderHandle.Result);
                 var screen = screenObject.GetComponent<UIScreen>();
-                screen.Root.parent = _screensRoot;
+                screen.Root.SetParent(_screensRoot);
                 screen.Root.anchorMin = Vector2.zero;
                 screen.Root.anchorMax = Vector2.one;
                 screen.Root.offsetMin = Vector2.zero;

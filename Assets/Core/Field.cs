@@ -43,15 +43,21 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     [SerializeField] private Scene _scene;
     [SerializeField] private Ball _ballPrefab;
    
-    private readonly List<int> _busyIndexes = new List<int>();
     private readonly List<Ball> _balls = new List<Ball>();
     
     private Vector3 _cellSize = new Vector3(256, 256);
+    
+    private readonly List<(Vector3Int intPosition, int points)> _nextBallsData = new();
+
     public bool IsEmpty => _balls.Count < _size.x * _size.y;
     public Vector2Int Size => _size;
     
     public Scene Scene => _scene;
     public IFieldView View => _view;
+
+    public List<(Vector3Int intPosition, int points)> NextBallsData => _nextBallsData;
+    public object BallPrefab => _ballPrefab;
+
     private void Awake()
     { 
         _cellSize = _view.CellSize();
@@ -93,8 +99,8 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
 
         foreach (var ball in _balls)
         {
-            var ballPosition = ball.IntPosition;
-            if (ball.IntPosition == from || ball.IntPosition == to) continue;
+            var ballPosition = ball.IntGridPosition;
+            if (ball.IntGridPosition == from || ball.IntGridPosition == to) continue;
             
             tiles[ballPosition.x, ballPosition.y] = 0;
         }
@@ -117,93 +123,118 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
         return CalculatePath(from, to);
     }
 
-    public List<Vector3Int> GenerateBalls(int num)
+    public List<(Vector3Int intPosition, int points)> GenerateBalls(int num, Vector2Int valueRange)
     {
-        return AddBalls(num);
+        return AddBalls(num, valueRange);
     }
 
     public Vector3Int CreateBall(Vector3Int position, int points)
     {
-        var newBall = Instantiate(_ballPrefab, _view.Root);
+        var newBall = PureCreateBall(position, points);
         _balls.Add(newBall);
-        _busyIndexes.Add(GetIndex(position));
-
+        
+        return position;
+    }
+    
+    public Ball PureCreateBall(Vector3Int position, int points)
+    {
+        var newBall = Instantiate(_ballPrefab, _view.Root);
         newBall.SetData(this, position, points);
         var subComponents = newBall.GetComponents<ISubComponent>();
         foreach (var subComponent in subComponents)
             subComponent.SetData();
         
-
-        return position;
-    }
-
-    public List<Vector3Int> AddBalls(int num)
-    {
-        var ballsPositions = new List<Vector3Int>();
-        
-        for (int i = 0; i < num; i++)
-        {
-            List<int> freeIndexes = new List<int>();
-            for (int x = 0; x < _size.x; x++)
-            for (int y = 0; y < _size.y; y++)
-                freeIndexes.Add(GetIndex(new Vector3(x, y)));
-            foreach (var ball in _balls)
-                freeIndexes.Remove(GetIndex(ball.Position));
-
-            var randomElementIndex = Random.Range(0, freeIndexes.Count);
-            var freeIndex = freeIndexes[randomElementIndex];
-            var position = GetPositionFromIndex(freeIndex);
-            
-            ballsPositions.Add(CreateBall(position, (int)Mathf.Pow(2, Random.Range(0, 5))));
-        }
-
-        return ballsPositions;
-    }
-
-    public Vector3 GetPosition(Vector3 position)
-    {
-        return Vector3.Scale(position, _cellSize);
+        return newBall;
     }
     
-    public Vector3 GetPosition(Vector3Int position)
+    public void GenerateNextBallPositions(int count, Vector2Int valueRange)
     {
-        return Vector3.Scale(position, _cellSize);
+        var freeIndexes = new List<Vector3Int>();
+        for (int x = 0; x < _size.x; x++)
+        for (int y = 0; y < _size.y; y++)
+            freeIndexes.Add(new Vector3Int(x, y, 0));
+        foreach (var ball in _balls)
+            freeIndexes.Remove(ball.IntGridPosition);
+        
+        for (int i = 0; i < count; i++)
+        {
+            var randomElementIndex = Random.Range(0, freeIndexes.Count);
+            var freeIndex = freeIndexes[randomElementIndex];
+            freeIndexes.RemoveAt(randomElementIndex);
+            _nextBallsData.Add((freeIndex, (int)Mathf.Pow(2, Random.Range(valueRange.x, valueRange.y))));
+        }
     }
-    public Vector3 GetPositionFromWorld(Vector3 position)
+    
+    public List<(Vector3Int intPosition, int points)> AddBalls(int amount, Vector2Int valueRange)
+    {
+        foreach (var ball in _balls)
+            _nextBallsData.RemoveAll(i => i.intPosition == ball.IntGridPosition);
+
+        if (_nextBallsData.Count < amount)
+            GenerateNextBallPositions(amount - _nextBallsData.Count, valueRange);
+        else
+        {
+            if (_nextBallsData.Count > amount)
+            {
+                var numToRemove = _nextBallsData.Count - amount;
+                for (var i = 0; i < numToRemove; i++)
+                    _nextBallsData.RemoveAt(_nextBallsData.Count - 1);
+            }
+        }
+        
+        var newBallsData = new List<(Vector3Int intPosition, int points)>();
+        foreach (var ballData in _nextBallsData)
+            newBallsData.Add((ballData.intPosition, ballData.points));
+        
+
+        _nextBallsData.Clear();
+
+        foreach (var ballsPosition in newBallsData)
+            CreateBall(ballsPosition.intPosition, ballsPosition.points);
+        
+        return newBallsData;
+    }
+
+    public Vector3 GetPositionFromGrid(Vector3 gridPosition)
+    {
+        return Vector3.Scale(gridPosition + Vector3.one * 0.5f, _cellSize);
+    }
+    
+    public Vector3 GetPositionFromGrid(Vector3Int gridPosition)
+    {
+        return Vector3.Scale(gridPosition + Vector3.one * 0.5f, _cellSize);
+    }
+    
+    public Vector3Int TransformToIntPosition(Vector3 position)
+    {
+        return  new Vector3Int(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y), 0);
+    }
+    
+    public Vector3 GetGridPositionFromWorld(Vector3 position)
     {
         return Vector3.Scale(position, new Vector3(1.0f / _cellSize.x, 1.0f / _cellSize.y, 1.0f / _cellSize.z));
     }
-   
-    public int GetIndex(Vector3 position)
-    {
-        return (int)position.y * _size.x + (int)position.x;
-    }
-    public Vector3Int GetPositionFromIndex(int index)
-    {
-        return new Vector3Int(index % _size.x, index / _size.y); 
-    }
 
-    public Vector3Int GetPointIndex(Vector3 position)
+    public Vector3Int GetPointGridIntPosition(Vector3 worldPosition)
     {
-        var pointerLocalPosition = transform.InverseTransformPoint(position);
-        var pointerFloatPosition = GetPositionFromWorld(pointerLocalPosition);
+        var pointerLocalPosition = transform.InverseTransformPoint(worldPosition);
+        var pointerGridPosition = GetGridPositionFromWorld(pointerLocalPosition);
 
-        var pointerIndex = GetIndex(pointerFloatPosition);
-        return GetPositionFromIndex(pointerIndex);
+        return TransformToIntPosition(pointerGridPosition);
     }
 
     public Vector3 GetPointPosition(Vector3Int positionIndex)
     {
-        var areaFloatPosition = GetPosition(positionIndex);
+        var areaFloatPosition = GetPositionFromGrid(positionIndex);
         return transform.TransformPoint(areaFloatPosition);
     }
     
-    public IEnumerable<T> GetSomething<T>(Vector3Int position) where T : class
+    public IEnumerable<T> GetSomething<T>(Vector3Int intPosition) where T : class
     {
         List<T> result = new List<T>();
         foreach (var ball in _balls)
         {
-            if(ball.IntPosition != position) continue;
+            if(ball.IntGridPosition != intPosition) continue;
             if(!(ball is T)) continue;
             
             result.Add(ball as T);
@@ -260,7 +291,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     private Ball GetBall(Vector3Int position)
     {
         foreach (var ball in _balls)
-            if (ball.IntPosition == position)
+            if (ball.IntGridPosition == position)
                 return ball;
 
         return null;

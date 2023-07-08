@@ -12,18 +12,18 @@ namespace Core.Steps.CustomOperations
             _rules = rules;
         }
         
-        public List<List<(Vector3Int position, int points)>> GetPoints(List<List<(Vector3Int position, int points)>> ballsInLines)
+        public List<List<(Vector3Int intPosition, int points)>> GetPoints(List<List<(Vector3Int intPosition, int points)>> ballsInLines)
         {
-            var resultBallsInLinesPoints = new List<List<(Vector3Int position, int points)>>();
+            var resultBallsInLinesPoints = new List<List<(Vector3Int intPosition, int points)>>();
             for (var lineI = 0; lineI < ballsInLines.Count; lineI++)
                 resultBallsInLinesPoints.Add(GetLinePoints(ballsInLines[lineI], lineI, _rules.MinimalBallsInLine));
 
             return resultBallsInLinesPoints;
         }
         
-        List<(Vector3Int position, int points)> GetLinePoints(List<(Vector3Int position, int points)> ballsInLine, int lineIndex, int minimalBallsInLine)
+        List<(Vector3Int intPosition, int points)> GetLinePoints(List<(Vector3Int intPosition, int points)> ballsInLine, int lineIndex, int minimalBallsInLine)
         {
-            var resultBallsInLinePoints = new List<(Vector3Int position, int points)>();
+            var resultBallsInLinePoints = new List<(Vector3Int intPosition, int points)>();
             for (var index = 0; index < ballsInLine.Count; index++)
             {
                 var ballInLine = ballsInLine[index];
@@ -31,7 +31,7 @@ namespace Core.Steps.CustomOperations
                 if (index >= minimalBallsInLine)
                     overPointsCoef = (index - minimalBallsInLine + 1) + 1;
                 
-                resultBallsInLinePoints.Add((ballInLine.position, ballInLine.points * overPointsCoef * (lineIndex + 1)));
+                resultBallsInLinePoints.Add((position: ballInLine.intPosition, ballInLine.points * overPointsCoef * (lineIndex + 1)));
             }
 
             return resultBallsInLinePoints;

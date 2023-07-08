@@ -20,7 +20,7 @@ namespace Core.Steps.CustomOperations
         protected override void InnerExecute()
         {
             var foundBalls = _indexes.SelectMany(i => _field.GetSomething<Ball>(i)).ToList();
-            _removedBalls = new List<(Vector3Int, int)>(foundBalls.Select(i => (i.IntPosition, i.Points)));
+            _removedBalls = new List<(Vector3Int, int)>(foundBalls.Select(i => (IntPosition: i.IntGridPosition, i.Points)));
             _field.DestroyBalls(foundBalls);
             
             Complete(null);

@@ -19,10 +19,11 @@ namespace Core
         {
             _ball.OnPointsChanged += Ball_OnPointsChanged;
             _ball.OnSelectedChanged += Ball_OnSelectedChanged;
-            
+            _ball.OnTransparencyChanged += Ball_TransparencyChanged;
+
             ChangeSkin(_ball.Field.Scene.ActiveSkin);
         }
-        
+
         public void ChangeSkin(SkinContainer container)
         {
             if (_ballSkin != null)
@@ -35,6 +36,7 @@ namespace Core
            
             Ball_OnPointsChanged(_ball.Points);
             Ball_OnSelectedChanged();
+            Ball_TransparencyChanged();
         }
         
         private void Ball_OnSelectedChanged()
@@ -45,6 +47,11 @@ namespace Core
         private void Ball_OnPointsChanged(int oldPoints)
         {
             _ballSkin.Points = _ball.Points;
+        }
+        
+        private void Ball_TransparencyChanged()
+        {
+            _ballSkin.Transparency = _ball.Transparency;
         }
     }
 }

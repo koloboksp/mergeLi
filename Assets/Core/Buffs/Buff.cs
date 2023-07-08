@@ -1,13 +1,19 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Buff : MonoBehaviour
 {
+    public Action AvailableStateChanged;
+    
     [SerializeField] protected GameProcessor _gameProcessor;
     [SerializeField] private UIBuff _controlPrefab;
     [SerializeField] private int _cost = 1;
 
     private UIBuff _control;
+    private bool _available = true;
+    
     public GameProcessor GameProcessor => _gameProcessor;
     public int Cost => _cost;
     
@@ -60,5 +66,23 @@ public class Buff : MonoBehaviour
     protected virtual void InnerOnBeginDrag(PointerEventData eventData) { }
     protected virtual void InnerOnDrag(PointerEventData eventData) { }
 
-    public virtual bool IsAvailable => _gameProcessor.PlayerInfo.GetAvailableCoins() > _cost;
+    public bool Available
+    {
+        get => _available;
+        set
+        {
+            if (_available != value)
+            {
+                _available = value;
+                AvailableStateChanged?.Invoke();
+            }
+        }
+    }
+    public virtual bool IsAvailable => _gameProcessor.PlayerInfo.GetAvailableCoins() >= _cost;
+
+    public Buff OnAvailableStateChanged(Action onChanged)
+    {
+        AvailableStateChanged = onChanged;
+        return this;
+    }
 }

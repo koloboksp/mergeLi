@@ -23,7 +23,7 @@ public class FieldView : MonoBehaviour, IFieldView
             image.color = _gridColor;
 
             var lineTransform = line.GetComponent<RectTransform>();
-            lineTransform.parent = _backgroundRoot;
+            lineTransform.SetParent(_backgroundRoot);
             lineTransform.pivot = Vector2.zero;
             lineTransform.anchorMin = Vector2.zero;
             lineTransform.anchorMax = Vector2.zero;
@@ -40,7 +40,7 @@ public class FieldView : MonoBehaviour, IFieldView
             image.color = _gridColor;
 
             var lineTransform = line.GetComponent<RectTransform>();
-            lineTransform.parent = _backgroundRoot;
+            lineTransform.SetParent(_backgroundRoot);
             lineTransform.pivot = Vector2.zero;
             lineTransform.anchorMin = Vector2.zero;
             lineTransform.anchorMax = Vector2.zero;

@@ -41,7 +41,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private int _generatedBallsCountAfterMerge = 1;
     [SerializeField] private int _generatedBallsCountAfterMove = 4;
     [SerializeField] private int _generatedBallsCountOnStart = 5;
-    
+    [SerializeField] private Vector2Int _generatedBallsPointsRange = new Vector2Int(0, 5);
+
     [SerializeField] private RectTransform _uiScreensRoot;
 
     [SerializeField] private List<Buff> _buffs;
@@ -72,21 +73,18 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         ApplicationController.Instance.UIScreenController.PushScreen(typeof(UIGameScreen), new UIGameScreenData(){GameProcessor = this,});
         StartCoroutine(InnerProcess());
     }
-
     
-
-
     IEnumerator InnerProcess()
     {
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
         
         bool userStep = false;
         bool userStepFinished = false;
-        _field.GenerateBalls(_generatedBallsCountOnStart);
+        _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
+        _field.GenerateNextBallPositions(_generatedBallsCountAfterMove, _generatedBallsPointsRange);
         Field.StepFinishState _stepFinishState = Field.StepFinishState.Move;
         while (_field.IsEmpty)
         {
-            userStep = false;
             userStepFinished = false;
 
             while (!userStepFinished)
@@ -110,12 +108,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
             }
 
         }
-
-        void Field_OnUserStep()
-        {
-            userStep = true;
-        }
-
+        
         void StepMachine_OnStepCompleted(Step step)
         {
             if (step.Tag == "Merge")
@@ -177,11 +170,11 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                     if (_selectedBall.Points == ball.Points)
                     {
                         _otherSelectedBall = ball;
-                        var path = _field.GetPath(_selectedBall.IntPosition, pointerGridPosition);
+                        var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);
                         if (path.Count > 0)
                         {
                             _stepMachine.AddStep(new Step("Merge",
-                                new MoveOperation(_selectedBall.IntPosition, pointerGridPosition, _field),
+                                new MoveOperation(_selectedBall.IntGridPosition, pointerGridPosition, _field),
                                 new MergeOperation(pointerGridPosition, _field),
                                 new SelectOperation(pointerGridPosition, false, _field)
                                     .SubscribeCompleted(OnDeselectBall),
@@ -189,7 +182,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                                 new CheckIfGenerationIsNecessary(
                                     null,
                                     new List<Operation>(){
-                                        new GenerateOperation(_generatedBallsCountAfterMerge, _field),
+                                        new GenerateOperation(_generatedBallsCountAfterMerge, _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
                                         new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)})));
                         }
                         else
@@ -202,18 +195,18 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
             }
             else
             {
-                var path = _field.GetPath(_selectedBall.IntPosition, pointerGridPosition);
+                var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);
                 if (path.Count > 0)
                 {
                     _stepMachine.AddStep(new Step("Move", 
-                        new MoveOperation(_selectedBall.IntPosition, pointerGridPosition, _field),
+                        new MoveOperation(_selectedBall.IntGridPosition, pointerGridPosition, _field),
                         new SelectOperation(pointerGridPosition, false, _field)
                             .SubscribeCompleted(OnDeselectBall),
                         new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this),
                         new CheckIfGenerationIsNecessary(
                             null,
                             new List<Operation>(){
-                                new GenerateOperation(_generatedBallsCountAfterMove, _field),
+                                new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
                                 new CollapseOperation( _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)
                             })));
                 }

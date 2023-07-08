@@ -22,13 +22,11 @@ namespace Core
         [SerializeField] private BallSelectionEffect _selectionEffect;
         [SerializeField] private Text _valueLabel;
         [SerializeField] private Image _ballIcon;
+        [SerializeField] private CanvasGroup _canvasGroup;
 
         public override bool Selected
         {
-            set
-            {
-                _selectionEffect.SetActiveState(value);
-            }
+            set => _selectionEffect.SetActiveState(value);
         }
 
         public override int Points
@@ -40,6 +38,11 @@ namespace Core
                 
                 _valueLabel.text = value.ToString();
             }
+        }
+
+        public override float Transparency
+        {
+            set => _canvasGroup.alpha = 1.0f - value;
         }
     }
 }

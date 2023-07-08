@@ -9,7 +9,7 @@ namespace Core.Steps.CustomOperations
         private readonly List<Vector3Int> _itemsPositions;
         private readonly IField _field;
 
-        private readonly List<Ball> _balls = new List<Ball>();
+        private readonly List<Ball> _balls = new();
         
         public RemoveGeneratedItemsOperation(IEnumerable<Vector3Int> itemsPositions, IField field)
         {
