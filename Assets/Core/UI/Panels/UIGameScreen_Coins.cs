@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Core
 {
-    public class UICoins : MonoBehaviour
+    public class UIGameScreen_Coins : MonoBehaviour
     {
         public event Action OnClick;
         

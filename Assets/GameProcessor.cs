@@ -71,8 +71,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         _stepMachine.OnStepExecute += StepMachine_OnStepExecute;
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
 
-        ApplicationController.Instance.UIScreenController.SetScreensRoot(_uiScreensRoot);
-        ApplicationController.Instance.UIScreenController.PushScreen(typeof(UIGameScreen), new UIGameScreenData(){GameProcessor = this,});
+        ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
+        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIGameScreen), new UIGameScreenData(){GameProcessor = this,});
         StartCoroutine(InnerProcess());
     }
     

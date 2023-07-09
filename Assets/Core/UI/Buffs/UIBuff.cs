@@ -61,7 +61,7 @@ public class UIBuff : MonoBehaviour
     {
         if (!_model.IsAvailable)
         {
-            ApplicationController.Instance.UIScreenController.PushPopupScreen(typeof(UIShopScreen),
+            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UIShopPanel),
                 new UIShopScreenData()
                 {
                     Market = _model.GameProcessor.Market,

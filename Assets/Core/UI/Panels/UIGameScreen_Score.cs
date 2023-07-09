@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Core
 {
-    public class UIScore : MonoBehaviour
+    public class UIGameScreen_Score : MonoBehaviour
     {
         [SerializeField] private Text _bestScoreLabel;
         [SerializeField] private Text _scoreLabel;

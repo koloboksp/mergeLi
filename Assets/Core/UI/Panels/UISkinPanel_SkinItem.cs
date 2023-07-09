@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace Core
 {
-    public class UISkinScreen_SkinItem : MonoBehaviour
+    public class UISkinPanel_SkinItem : MonoBehaviour
     {
         [SerializeField] private Button _button;
         [SerializeField] private Image _icon;
@@ -40,11 +40,11 @@ namespace Core
         {
             private Action _onSelectedStateChanged;
             
-            private UISkinScreen.Model _owner;
+            private UISkinPanel.Model _owner;
             private string _name;
             private bool _selected;
             
-            public Model(UISkinScreen.Model owner)
+            public Model(UISkinPanel.Model owner)
             {
                 _owner = owner;
             }

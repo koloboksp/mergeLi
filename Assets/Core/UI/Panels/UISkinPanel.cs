@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 namespace Core
 {
-    public class UISkinScreen : UIScreen
+    public class UISkinPanel : UIPanel
     {
         [SerializeField] private Button _closeBtn;
         [SerializeField] private ScrollRect _skinsContainer;
-        [SerializeField] private UISkinScreen_SkinItem _itemPrefab;
+        [SerializeField] private UISkinPanel_SkinItem _itemPrefab;
         
         private Model _model;
 
@@ -21,7 +21,7 @@ namespace Core
 
         private void CloseBtn_OnClick()
         {
-            ApplicationController.Instance.UIScreenController.PopScreen(this);
+            ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
 
         public override void SetData(UIScreenData undefinedData)
@@ -34,9 +34,9 @@ namespace Core
             _model.SetData(data.Skins, data.SelectedSkin, data.SkinChanger);
         }
 
-        private void OnItemsUpdated(IEnumerable<UISkinScreen_SkinItem.Model> items)
+        private void OnItemsUpdated(IEnumerable<UISkinPanel_SkinItem.Model> items)
         {
-            var oldViews = _skinsContainer.content.GetComponents<UISkinScreen_SkinItem>();
+            var oldViews = _skinsContainer.content.GetComponents<UISkinPanel_SkinItem>();
             foreach (var oldView in oldViews)
                 Destroy(oldView.gameObject);
 
@@ -58,9 +58,9 @@ namespace Core
         
         public class Model
         {
-            private Action<IEnumerable<UISkinScreen_SkinItem.Model>> _onItemsUpdated;
+            private Action<IEnumerable<UISkinPanel_SkinItem.Model>> _onItemsUpdated;
             
-            private readonly List<UISkinScreen_SkinItem.Model> _items = new List<UISkinScreen_SkinItem.Model>();
+            private readonly List<UISkinPanel_SkinItem.Model> _items = new List<UISkinPanel_SkinItem.Model>();
             private ISkinChanger _skinChanger;
             
             public void SetData(IEnumerable<string> skins, string selectedSkin, ISkinChanger skinChanger)
@@ -68,21 +68,21 @@ namespace Core
                 _skinChanger = skinChanger;
                 
                 _items.AddRange(skins
-                    .Select(i => new UISkinScreen_SkinItem.Model(this)
+                    .Select(i => new UISkinPanel_SkinItem.Model(this)
                         .SetName(i)));
                 _onItemsUpdated?.Invoke(_items);
 
                 TrySelect(_items.Find(i => i.Name == selectedSkin));
             }
 
-            public Model OnItemsUpdated(Action<IEnumerable<UISkinScreen_SkinItem.Model>> onItemsUpdated)
+            public Model OnItemsUpdated(Action<IEnumerable<UISkinPanel_SkinItem.Model>> onItemsUpdated)
             {
                 _onItemsUpdated = onItemsUpdated;
                 _onItemsUpdated?.Invoke(_items);
                 return this;
             }
 
-            internal void TrySelect(UISkinScreen_SkinItem.Model newSelected)
+            internal void TrySelect(UISkinPanel_SkinItem.Model newSelected)
             {
                 foreach (var item in _items)
                     item.SetSelectedState(item == newSelected);

@@ -475,7 +475,7 @@ GameObject:
   - component: {fileID: 7104141350609223302}
   - component: {fileID: 3886935297801031348}
   m_Layer: 5
-  m_Name: UIShopScreen
+  m_Name: UIShopPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

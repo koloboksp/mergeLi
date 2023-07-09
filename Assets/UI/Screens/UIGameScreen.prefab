@@ -278,6 +278,7 @@ MonoBehaviour:
   _score: {fileID: 4155178967740643421}
   _coins: {fileID: 7751034290328399452}
   _fieldContainer: {fileID: 4840618613103210845}
+  _showSettingsBtn: {fileID: 4584576575249581389}
 --- !u!114 &8823478071722631822
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,13 +9,14 @@ using UnityEngine.UI;
 
 namespace Core
 {
-    public class UIGameScreen : UIScreen
+    public class UIGameScreen : UIPanel
     {
         [SerializeField] private CanvasGroup _buffsContainerRoot;
         [SerializeField] private ScrollRect _buffsContainer;
-        [SerializeField] private UIScore _score;
-        [SerializeField] private UICoins _coins;
+        [SerializeField] private UIGameScreen_Score _score;
+        [SerializeField] private UIGameScreen_Coins _coins;
         [SerializeField] private RectTransform _fieldContainer;
+        [SerializeField] private Button _showSettingsBtn;
 
         private UIGameScreenData _data;
         private PointsGoal _currentPointsGoal = null;
@@ -24,8 +25,9 @@ namespace Core
         public void Awake()
         {
             _coins.OnClick += Coins_OnClick;
+            _showSettingsBtn.onClick.AddListener(ShowSettingsBtn_OnClick); 
         }
-        
+
         public override void SetData(UIScreenData data)
         {
             base.SetData(data);
@@ -51,10 +53,6 @@ namespace Core
                 var containerRect = _fieldContainer.rect;
                 var rect = fieldRootRect.rect;
                 fieldRootRect.SetParent(_fieldContainer);
-                //fieldRootRect.anchorMin = Vector2.zero;
-                //fieldRootRect.anchorMax = Vector2.one;
-                //fieldRootRect.offsetMin = Vector2.zero;
-                //fieldRootRect.offsetMax = Vector2.zero;
                 fieldRootRect.localPosition = Vector3.zero;
                 fieldRootRect.localScale = new Vector3(containerRect.width/rect.width, containerRect.height/rect.height, 1);
             }
@@ -95,18 +93,16 @@ namespace Core
             _coins.SetCoins(_data.GameProcessor.PlayerInfo.GetAvailableCoins());
         }
         
-        private void ShowSkinBtn_OnClick()
+        private void ShowSettingsBtn_OnClick()
         {
-            var skinScreenData = new UISkinScreen.UISkinScreenData();
-            skinScreenData.SelectedSkin = _data.GameProcessor.Scene.ActiveSkin.Name;
-            skinScreenData.Skins = _data.GameProcessor.Scene.Library.Containers.Select(i => i.Name);
-            skinScreenData.SkinChanger = _data.GameProcessor.Scene;
-            ApplicationController.Instance.UIScreenController.PushPopupScreen(typeof(UISkinScreen), skinScreenData);
+            var skinScreenData = new UISettingsPanel.UISettingsPanelData();
+            skinScreenData.GameProcessor = _data.GameProcessor;
+            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UISettingsPanel), skinScreenData);
         }
         
         private void Coins_OnClick()
         {
-            ApplicationController.Instance.UIScreenController.PushPopupScreen(typeof(UIShopScreen),
+            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UIShopPanel),
                 new UIShopScreenData()
                 {
                     Market = _data.GameProcessor.Market,

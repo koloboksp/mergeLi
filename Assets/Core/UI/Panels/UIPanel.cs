@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Core
 {
-    public class UIScreen : MonoBehaviour
+    public class UIPanel : MonoBehaviour
     {
         [SerializeField] private RectTransform _root;
 

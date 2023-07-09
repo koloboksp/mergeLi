@@ -18,11 +18,9 @@ public class Scene : MonoBehaviour, ISkinChanger
     public void SetSkin(string skinName)
     {
         _activeSkin = _skinsLibrary.GetContainer(skinName);
-        var skinChangeables = this.GetComponentsInChildren<ISkinChangeable>();
+        var skinChangeables = _field.gameObject.GetComponentsInChildren<ISkinChangeable>();
         foreach (var skinChangeable in skinChangeables)
-        {
             skinChangeable.ChangeSkin(_activeSkin);
-        }
     }
 
     public void Awake()

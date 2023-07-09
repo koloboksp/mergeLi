@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Core
 {
-    public class UIShopScreen_PurchaseItem : MonoBehaviour
+    public class UIShopPanel_PurchaseItem : MonoBehaviour
     {
         [SerializeField] private Button _button;
         [SerializeField] private Image _icon;
@@ -36,13 +36,13 @@ namespace Core
         
         public class Model
         {
-            private UIShopScreen.Model _owner;
+            private UIShopPanel.Model _owner;
             private string _name;
             private bool _selected;
             private string _inAppId;
             private PurchaseType _purchaseType;
             
-            public Model(UIShopScreen.Model owner)
+            public Model(UIShopPanel.Model owner)
             {
                 _owner = owner;
             }

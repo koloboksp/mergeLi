@@ -477,7 +477,7 @@ GameObject:
   - component: {fileID: 7104141350609223302}
   - component: {fileID: 5645014736441488925}
   m_Layer: 5
-  m_Name: UISkinScreen
+  m_Name: UISkinPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

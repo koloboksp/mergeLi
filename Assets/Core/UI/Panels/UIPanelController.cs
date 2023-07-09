@@ -9,7 +9,7 @@ using Object = UnityEngine.Object;
 
 namespace Core
 {
-    public class UIScreenController
+    public class UIPanelController
     {
         private readonly ScreenStack _stack = new ScreenStack();
         private Transform _screensRoot;
@@ -22,7 +22,7 @@ namespace Core
             handle.Completed += senderHandle => 
             {
                 var screenObject = Object.Instantiate(senderHandle.Result);
-                var screen = screenObject.GetComponent<UIScreen>();
+                var screen = screenObject.GetComponent<UIPanel>();
                 screen.Root.SetParent(_screensRoot);
                 screen.Root.anchorMin = Vector2.zero;
                 screen.Root.anchorMax = Vector2.one;
@@ -39,7 +39,7 @@ namespace Core
             handle.Completed += senderHandle => 
             {
                 var screenObject = Object.Instantiate(senderHandle.Result);
-                var screen = screenObject.GetComponent<UIScreen>();
+                var screen = screenObject.GetComponent<UIPanel>();
                 screen.Root.SetParent(_screensRoot);
                 screen.Root.anchorMin = Vector2.zero;
                 screen.Root.anchorMax = Vector2.one;
@@ -50,7 +50,7 @@ namespace Core
             };
         }
         
-        public void PopScreen(UIScreen screen)
+        public void PopScreen(UIPanel screen)
         {
             var stackItem = _stack.PopScreen(screen);
 
@@ -70,14 +70,14 @@ namespace Core
             private List<StackItem> _items = new List<StackItem>();
             public int Count => _items.Count;
 
-            public void PushPopup(AsyncOperationHandle<GameObject> handle, UIScreen screen, UIScreenData data)
+            public void PushPopup(AsyncOperationHandle<GameObject> handle, UIPanel screen, UIScreenData data)
             {
                 var stackItem = new StackItem(handle, screen, data);
                 _items.Add(stackItem);
                 stackItem.Screen.SetData(data);
             }
             
-            public void Push(AsyncOperationHandle<GameObject> handle, UIScreen screen, UIScreenData data)
+            public void Push(AsyncOperationHandle<GameObject> handle, UIPanel screen, UIScreenData data)
             {
                 if (_items.Count > 0)
                 {
@@ -90,7 +90,7 @@ namespace Core
                 stackItem.Screen.SetData(data);
             }
 
-            public StackItem PopScreen(UIScreen screen)
+            public StackItem PopScreen(UIPanel screen)
             {
                 var stackI = _items.FindIndex(i => i.Screen == screen);
                 if (stackI >= 0)
@@ -117,13 +117,13 @@ namespace Core
             public class StackItem
             {
                 private AsyncOperationHandle<GameObject> _handle;
-                private UIScreen _screen;
+                private UIPanel _screen;
                 private UIScreenData _data;
 
                 public AsyncOperationHandle<GameObject> Handle => _handle;
-                public UIScreen Screen => _screen;
+                public UIPanel Screen => _screen;
 
-                public StackItem(AsyncOperationHandle<GameObject> handle, UIScreen screen, UIScreenData data)
+                public StackItem(AsyncOperationHandle<GameObject> handle, UIPanel screen, UIScreenData data)
                 {
                     _handle = handle;
                     _screen = screen;
