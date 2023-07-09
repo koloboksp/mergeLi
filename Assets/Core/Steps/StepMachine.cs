@@ -63,7 +63,11 @@ namespace Core.Steps
                 _undoSteps.Remove(undoStep);
                 _steps.Add(undoStep);
             }
-            
+        }
+
+        public bool HasUndoSteps()
+        {
+            return _undoSteps.Count > 0;
         }
     }
 }

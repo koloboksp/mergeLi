@@ -6,8 +6,8 @@ using UnityEngine.EventSystems;
 
 public class Buff : MonoBehaviour
 {
-    private Action AvailableStateChanged;
-    private Action RestCooldownChanged;
+    protected Action _availableStateChanged;
+    private Action _restCooldownChanged;
 
     [SerializeField] protected GameProcessor _gameProcessor;
     [SerializeField] private UIBuff _controlPrefab;
@@ -20,7 +20,12 @@ public class Buff : MonoBehaviour
 
     public GameProcessor GameProcessor => _gameProcessor;
     public int Cost => _cost;
-    
+
+    public void Awake()
+    {
+        _gameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
+    }
+
     public UIBuff CreateControl()
     {
         _control = Instantiate(_controlPrefab);
@@ -35,8 +40,9 @@ public class Buff : MonoBehaviour
     
     protected void OnClick()
     {
-        if(!IsAvailable) return;
-        
+        if(!IsCurrencyEnough) return;
+        if(!Available) return;
+
         InnerOnClick();
 
         ProcessUsing();
@@ -44,14 +50,16 @@ public class Buff : MonoBehaviour
     
     protected void OnBeginDrag(PointerEventData eventData)
     {
-        if(!IsAvailable) return;
+        if(!IsCurrencyEnough) return;
+        if(!Available) return;
 
         InnerOnBeginDrag(eventData);
     }
     
     protected void OnEndDrag(PointerEventData eventData)
     {
-        if(!IsAvailable) return;
+        if(!IsCurrencyEnough) return;
+        if(!Available) return;
 
         InnerOnEndDrag(eventData);
 
@@ -60,33 +68,30 @@ public class Buff : MonoBehaviour
     
     protected void OnDrag(PointerEventData eventData)
     {
-        if(!IsAvailable) return;
+        if(!IsCurrencyEnough) return;
+        if(!Available) return;
 
         InnerOnDrag(eventData);
     }
 
-    void ProcessUsing()
+    private void ProcessUsing()
     {
         _restCooldown = _cooldown;
-        RestCooldownChanged?.Invoke();
+        _restCooldownChanged?.Invoke();
         
         if (_restCooldown != 0)
-        {
             Available = false;
-            _gameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
-        }
         else
-        {
             Available = true;
-        }
         _gameProcessor.PlayerInfo.ConsumeCoins(_cost);
     }
+    
     protected virtual void InnerOnClick() { }
     protected virtual void InnerOnEndDrag(PointerEventData eventData) { }
     protected virtual void InnerOnBeginDrag(PointerEventData eventData) { }
     protected virtual void InnerOnDrag(PointerEventData eventData) { }
 
-    public bool Available
+    public virtual bool Available
     {
         get => _available;
         set
@@ -94,11 +99,13 @@ public class Buff : MonoBehaviour
             if (_available != value)
             {
                 _available = value;
-                AvailableStateChanged?.Invoke();
+                _availableStateChanged?.Invoke();
             }
         }
     }
-    public virtual bool IsAvailable => _gameProcessor.PlayerInfo.GetAvailableCoins() >= _cost;
+    
+    public virtual bool IsCurrencyEnough => _gameProcessor.PlayerInfo.GetAvailableCoins() >= _cost;
+
     public int Cooldown => _cooldown;
     public int RestCooldown => _restCooldown;
 
@@ -112,28 +119,28 @@ public class Buff : MonoBehaviour
             {
                 _restCooldown--;
                 Inner_OnRestCooldownChanged();
-                RestCooldownChanged?.Invoke();
+                _restCooldownChanged?.Invoke();
+                
+                if (_restCooldown == 0)
+                    Available = true;
             }
             
-            if (_restCooldown == 0)
-            {
-                _gameProcessor.OnStepCompleted -= GameProcessor_OnStepCompleted;
-                Available = true;
-            }
+            Inner_OnStepCompleted();
         }
     }
 
     protected virtual void Inner_OnRestCooldownChanged() { }
-    
+    protected virtual void Inner_OnStepCompleted() { }
+
     public Buff OnAvailableStateChanged(Action onChanged)
     {
-        AvailableStateChanged = onChanged;
+        _availableStateChanged = onChanged;
         return this;
     }
     
     public Buff OnRestCooldownChanged(Action onChanged)
     {
-        RestCooldownChanged = onChanged;
+        _restCooldownChanged = onChanged;
         return this;
     }
 }

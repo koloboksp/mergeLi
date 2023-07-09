@@ -39,7 +39,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
    
     [SerializeField] private int _minimalBallsInLine = 5;
     [SerializeField] private int _generatedBallsCountAfterMerge = 2;
-    [SerializeField] private int _generatedBallsCountAfterMove = 4;
+    [SerializeField] private int _generatedBallsCountAfterMove = 3;
     [SerializeField] private int _generatedBallsCountOnStart = 5;
     [SerializeField] private Vector2Int _generatedBallsPointsRange = new Vector2Int(0, 10);
 
@@ -75,76 +75,21 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIGameScreen), new UIGameScreenData(){GameProcessor = this,});
         StartCoroutine(InnerProcess());
     }
+    bool _userStepFinished = false;
     
     IEnumerator InnerProcess()
     {
-        _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
-        
         bool userStep = false;
-        bool userStepFinished = false;
+       
         _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
         _field.GenerateNextBallPositions(_generatedBallsCountAfterMove, _generatedBallsPointsRange);
-        Field.StepFinishState _stepFinishState = Field.StepFinishState.Move;
+        
         while (_field.IsEmpty)
         {
-            userStepFinished = false;
+            _userStepFinished = false;
 
-            while (!userStepFinished)
+            while (!_userStepFinished)
                 yield return null;
-
-            
-            if (_stepFinishState == Field.StepFinishState.Move)
-            {
-                
-            }
-            else
-            {
-                if (_stepFinishState == Field.StepFinishState.Merge)
-                {
-                  
-                }
-                else if (_stepFinishState == Field.StepFinishState.MoveAndRemove)
-                {
-
-                }
-            }
-
-        }
-        
-        void StepMachine_OnStepCompleted(Step step)
-        {
-            if (step.Tag == "Merge")
-            {
-                _stepFinishState = Field.StepFinishState.Merge;
-                userStepFinished = true;
-           
-                var inverseOperations = step.Operations
-                    .Reverse()
-                    .Select(operation => operation.GetInverseOperation()).ToArray();
-                _stepMachine.AddUndoStep(new Step("UndoMerge", inverseOperations));
-            }
-            
-            if (step.Tag == "Move")
-            {
-                _stepFinishState = Field.StepFinishState.Move;
-                userStepFinished = true;
-
-                var inverseOperations = step.Operations
-                    .Reverse()
-                    .Select(operation => operation.GetInverseOperation()).ToArray();
-                _stepMachine.AddUndoStep(new Step("UndoMove", inverseOperations));
-            }
-            
-            if (step.Tag == "Explode")
-            {
-                _stepFinishState = Field.StepFinishState.Move;
-                userStepFinished = true;
-
-                var inverseOperations = step.Operations
-                    .Reverse()
-                    .Select(operation => operation.GetInverseOperation()).ToArray();
-                _stepMachine.AddUndoStep(new Step("UndoExplode", inverseOperations));
-            }
         }
     }
 
@@ -246,7 +191,42 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     
     private void StepMachine_OnStepCompleted(Step step)
     {
+        StepMachine_OnStepCompleted1(step);
+        
         OnStepCompleted?.Invoke(step);
+    }
+    
+    void StepMachine_OnStepCompleted1(Step step)
+    {
+        if (step.Tag == "Merge")
+        {
+            _userStepFinished = true;
+           
+            var inverseOperations = step.Operations
+                .Reverse()
+                .Select(operation => operation.GetInverseOperation()).ToArray();
+            _stepMachine.AddUndoStep(new Step("UndoMerge", inverseOperations));
+        }
+            
+        if (step.Tag == "Move")
+        {
+            _userStepFinished = true;
+
+            var inverseOperations = step.Operations
+                .Reverse()
+                .Select(operation => operation.GetInverseOperation()).ToArray();
+            _stepMachine.AddUndoStep(new Step("UndoMove", inverseOperations));
+        }
+            
+        if (step.Tag == "Explode")
+        {
+            _userStepFinished = true;
+
+            var inverseOperations = step.Operations
+                .Reverse()
+                .Select(operation => operation.GetInverseOperation()).ToArray();
+            _stepMachine.AddUndoStep(new Step("UndoExplode", inverseOperations));
+        }
     }
     
     public void Undo()
@@ -254,6 +234,10 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         _stepMachine.Undo();
     }
 
+    public bool HasUndoSteps()
+    {
+        return _stepMachine.HasUndoSteps();
+    }
 
     public int MinimalBallsInLine => _minimalBallsInLine;
     public List<Buff> Buffs => _buffs;

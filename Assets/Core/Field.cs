@@ -36,7 +36,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     
     public event Action<Vector3Int> OnClick;
     
-    private Vector2Int _size = new(10, 10);
+    private Vector2Int _size = new(9, 9);
     private int _minimalBallsCountForCollapse = 5;
 
     [SerializeField] private FieldView _view;

@@ -70,7 +70,7 @@ public class UIBuff : MonoBehaviour
 
     protected bool ShowShopScreenRequired()
     {
-        if (!_model.IsAvailable)
+        if (!_model.IsCurrencyEnough)
         {
             ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UIShopPanel),
                 new UIShopScreenData()

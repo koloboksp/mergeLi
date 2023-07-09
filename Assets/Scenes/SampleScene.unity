@@ -184,7 +184,7 @@ MonoBehaviour:
     type: 3}
   _minimalBallsInLine: 5
   _generatedBallsCountAfterMerge: 2
-  _generatedBallsCountAfterMove: 4
+  _generatedBallsCountAfterMove: 3
   _generatedBallsCountOnStart: 5
   _generatedBallsPointsRange: {x: 0, y: 10}
   _uiScreensRoot: {fileID: 816789381}
@@ -925,7 +925,6 @@ MonoBehaviour:
     type: 3}
   _cost: 5
   _cooldown: 3
-  _stepsCount: 3
 --- !u!1 &1844453384
 GameObject:
   m_ObjectHideFlags: 0
