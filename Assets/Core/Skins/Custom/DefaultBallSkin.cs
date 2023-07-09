@@ -6,19 +6,7 @@ namespace Core
 {
     public class DefaultBallSkin : BallSkin
     {
-        public static Dictionary<int, Color> _colors = new Dictionary<int,Color>()
-        {
-            {1, Color.yellow},
-            {2, Color.green},
-            {4, Color.magenta},
-            {8, Color.red},
-            {16, Color.white},
-            {32, Color.cyan},
-            {64, Color.gray},
-            {128, Color.blue},
-            {256, Color.black},
-        };
-
+        [SerializeField] private List<Color> _colors;
         [SerializeField] private BallSelectionEffect _selectionEffect;
         [SerializeField] private Text _valueLabel;
         [SerializeField] private Image _ballIcon;
@@ -33,9 +21,10 @@ namespace Core
         {
             set
             {
-                if(_colors.ContainsKey(value))
-                    _ballIcon.color = _colors[value];
-                
+                var colorIndex = Mathf.RoundToInt(Mathf.Log(value, 2));
+                colorIndex %= _colors.Count;
+                _ballIcon.color = _colors[colorIndex];
+
                 _valueLabel.text = value.ToString();
             }
         }

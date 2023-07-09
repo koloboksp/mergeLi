@@ -41,7 +41,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private int _generatedBallsCountAfterMerge = 1;
     [SerializeField] private int _generatedBallsCountAfterMove = 4;
     [SerializeField] private int _generatedBallsCountOnStart = 5;
-    [SerializeField] private Vector2Int _generatedBallsPointsRange = new Vector2Int(0, 5);
+    [SerializeField] private Vector2Int _generatedBallsPointsRange = new Vector2Int(0, 10);
 
     [SerializeField] private RectTransform _uiScreensRoot;
 
