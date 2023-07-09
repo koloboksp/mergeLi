@@ -65,7 +65,7 @@ public class UIBuff : MonoBehaviour
                 new UIShopScreenData()
                 {
                     Market = _model.GameProcessor.Market,
-                    PurchaseItems = new List<PurchaseItem>(_model.GameProcessor.Scene.PurchasesLibrary.Items)
+                    PurchaseItems = new List<PurchaseItem>(_model.GameProcessor.PurchasesLibrary.Items)
                 });
             return true;
         }

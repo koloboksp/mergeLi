@@ -38,7 +38,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
    
     [SerializeField] private int _minimalBallsInLine = 5;
-    [SerializeField] private int _generatedBallsCountAfterMerge = 1;
+    [SerializeField] private int _generatedBallsCountAfterMerge = 2;
     [SerializeField] private int _generatedBallsCountAfterMove = 4;
     [SerializeField] private int _generatedBallsCountOnStart = 5;
     [SerializeField] private Vector2Int _generatedBallsPointsRange = new Vector2Int(0, 10);
@@ -46,6 +46,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private RectTransform _uiScreensRoot;
 
     [SerializeField] private List<Buff> _buffs;
+    [SerializeField] private PurchasesLibrary _purchasesLibrary;
 
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
@@ -57,7 +58,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     public int Score => _score;
     public IMarket Market => _market;
     public GoalsLibrary GoalsLibrary => _goalsLibrary;
-    
+    public PurchasesLibrary PurchasesLibrary => _purchasesLibrary;
+
     void Awake()
     {
         _pointsCalculator = new PointsCalculator(this);

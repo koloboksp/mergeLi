@@ -110,7 +110,7 @@ namespace Core
                 new UIShopScreenData()
                 {
                     Market = _data.GameProcessor.Market,
-                    PurchaseItems = new List<PurchaseItem>(_data.GameProcessor.Scene.PurchasesLibrary.Items)
+                    PurchaseItems = new List<PurchaseItem>(_data.GameProcessor.PurchasesLibrary.Items)
                 });
         }
     }
