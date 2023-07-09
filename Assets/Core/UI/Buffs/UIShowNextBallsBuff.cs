@@ -9,12 +9,7 @@ public class UIShowNextBallsBuff : UIBuff
     {
         _clickArea.onClick.AddListener(ClickArea_OnClick);
     }
-
-    protected override void AvailableStateChanged()
-    {
-        _clickArea.interactable = _model.Available;
-    }
-
+    
     private void ClickArea_OnClick()
     {
         if(!ShowShopScreenRequired())

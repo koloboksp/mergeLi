@@ -15,22 +15,33 @@ public class UIBuff : MonoBehaviour
 
     [SerializeField] protected Buff _model;
     [SerializeField] protected Text _costLabel;
+    [SerializeField] protected CanvasGroup _commonCanvasGroup;
+    [SerializeField] protected Image _cooldownImage;
 
     public UIBuff SetModel(Buff model)
     {
         _model = model;
         _model
-            .OnAvailableStateChanged(AvailableStateChanged);
-        
+            .OnAvailableStateChanged(AvailableStateChanged)
+            .OnRestCooldownChanged(RestCooldownChanged);
+
         SetCost();
+        AvailableStateChanged();
+        RestCooldownChanged();
         return this;
     }
 
     protected virtual void AvailableStateChanged()
     {
-        
+        _commonCanvasGroup.interactable = _model.Available;
     }
 
+    protected virtual void RestCooldownChanged()
+    {
+        var fillAmount = (_model.Cooldown == 0) ? 0.0f : (float)_model.RestCooldown / (float)_model.Cooldown;
+        _cooldownImage.fillAmount = fillAmount;
+    }
+    
     private void SetCost()
     {
         _costLabel.text = _model.Cost.ToString();

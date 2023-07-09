@@ -262,6 +262,7 @@ MonoBehaviour:
   _controlPrefab: {fileID: 5195995245139343535, guid: 7e988115fe0279447aed78a8e6e82004,
     type: 3}
   _cost: 45
+  _cooldown: 6
   _cursorPrefab: {fileID: 5189292232281773292, guid: c75c68b8272f5f34bb868836db500f7b,
     type: 3}
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
@@ -300,6 +301,7 @@ MonoBehaviour:
   _controlPrefab: {fileID: 2213048521644801866, guid: ebb7497fa3f2dfd488b54271679fc293,
     type: 3}
   _cost: 1
+  _cooldown: 0
 --- !u!4 &502298967
 Transform:
   m_ObjectHideFlags: 0
@@ -868,6 +870,7 @@ MonoBehaviour:
   _controlPrefab: {fileID: 5195995245139343535, guid: 7e988115fe0279447aed78a8e6e82004,
     type: 3}
   _cost: 5
+  _cooldown: 3
   _cursorPrefab: {fileID: 5189292232281773292, guid: c75c68b8272f5f34bb868836db500f7b,
     type: 3}
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
@@ -921,6 +924,7 @@ MonoBehaviour:
   _controlPrefab: {fileID: 289039251854693768, guid: d0f01e9d51de75a45b3d968d45e11506,
     type: 3}
   _cost: 5
+  _cooldown: 3
   _stepsCount: 3
 --- !u!1 &1844453384
 GameObject:
