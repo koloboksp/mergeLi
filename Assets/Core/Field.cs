@@ -13,13 +13,6 @@ using Random = UnityEngine.Random;
 
 public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IField
 {
-    public enum StepFinishState
-    {
-        Move,
-        Merge,
-        MoveAndRemove
-    }
-    
     static readonly List<Vector3Int> Directions = new List<Vector3Int>()
     {
         new Vector3Int(1, 0, 0),

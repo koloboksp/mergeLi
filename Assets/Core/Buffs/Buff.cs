@@ -35,6 +35,7 @@ public class Buff : MonoBehaviour
             .OnBeginDrag(OnBeginDrag)
             .OnEndDrag(OnEndDrag)
             .OnDrag(OnDrag);
+        
         return _control;
     }
     
@@ -83,7 +84,6 @@ public class Buff : MonoBehaviour
             Available = false;
         else
             Available = true;
-        _gameProcessor.PlayerInfo.ConsumeCoins(_cost);
     }
     
     protected virtual void InnerOnClick() { }
@@ -108,12 +108,11 @@ public class Buff : MonoBehaviour
 
     public int Cooldown => _cooldown;
     public int RestCooldown => _restCooldown;
-
-
+    
     private void GameProcessor_OnStepCompleted(Step step)
     {
-        if (step.Tag == "Move"
-            || step.Tag == "Merge")
+        if (step.Tag == GameProcessor.MoveStepTag
+            || step.Tag == GameProcessor.MergeStepTag)
         {
             if (_restCooldown != 0)
             {
@@ -124,13 +123,12 @@ public class Buff : MonoBehaviour
                 if (_restCooldown == 0)
                     Available = true;
             }
-            
-            Inner_OnStepCompleted();
         }
+        Inner_OnStepCompleted(step);
     }
 
     protected virtual void Inner_OnRestCooldownChanged() { }
-    protected virtual void Inner_OnStepCompleted() { }
+    protected virtual void Inner_OnStepCompleted(Step step) { }
 
     public Buff OnAvailableStateChanged(Action onChanged)
     {

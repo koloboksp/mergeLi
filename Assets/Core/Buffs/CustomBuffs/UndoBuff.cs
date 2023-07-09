@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Core.Steps;
+using UnityEngine;
 
 public class UndoBuff : Buff
 {
     private bool _hasUndoSteps = false;
     protected override void InnerOnClick()
     {
-        _gameProcessor.Undo();
+        _gameProcessor.UseUndoBuff(Cost);
     }
 
     public override bool Available
@@ -14,14 +15,19 @@ public class UndoBuff : Buff
         set => base.Available = value;
     }
 
-    protected override void Inner_OnStepCompleted()
+    protected override void Inner_OnStepCompleted(Step step)
     {
-        var hasUndoStepsNewState = _gameProcessor.HasUndoSteps();
-        if (_hasUndoSteps != hasUndoStepsNewState)
+        if (step.Tag == GameProcessor.MoveStepTag
+            || step.Tag == GameProcessor.MergeStepTag
+            || step.Tag == GameProcessor.UndoMoveStepTag
+            || step.Tag == GameProcessor.UndoMergeStepTag)
         {
-            _hasUndoSteps = hasUndoStepsNewState;
-            _availableStateChanged?.Invoke();
+            var hasUndoStepsNewState = _gameProcessor.HasUndoSteps();
+            if (_hasUndoSteps != hasUndoStepsNewState)
+            {
+                _hasUndoSteps = hasUndoStepsNewState;
+                _availableStateChanged?.Invoke();
+            }
         }
-        base.Inner_OnStepCompleted();
     }
 }

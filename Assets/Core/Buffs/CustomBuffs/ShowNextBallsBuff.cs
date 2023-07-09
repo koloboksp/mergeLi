@@ -9,6 +9,8 @@ public class ShowNextBallsBuff : Buff
 
     protected override void InnerOnClick()
     {
+        _gameProcessor.UseShowNextBallsBuff(Cost);
+        
         ClearBalls();
         ShowNextBalls();
     }

@@ -22,6 +22,14 @@ public interface IPointsChangeListener
 
 public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
 {
+    public const string MoveStepTag = "Move";
+    public const string MergeStepTag = "Merge";
+    public const string UndoMoveStepTag = "UndoMove";
+    public const string UndoMergeStepTag = "UndoMerge";
+    public const string ExplodeStepTag = "Explode";
+    public const string UndoExplodeStepTag = "UndoExplode";
+    public const string UndoStepTag = "Undo";
+
     public event Action<Step> OnStepCompleted;
     public event Action<Step> OnStepExecute;
     public event Action OnScoreChanged;
@@ -120,7 +128,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                         var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);
                         if (path.Count > 0)
                         {
-                            _stepMachine.AddStep(new Step("Merge",
+                            _stepMachine.AddStep(new Step(GameProcessor.MergeStepTag,
                                 new MoveOperation(_selectedBall.IntGridPosition, pointerGridPosition, _field),
                                 new MergeOperation(pointerGridPosition, _field),
                                 new SelectOperation(pointerGridPosition, false, _field)
@@ -145,7 +153,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                 var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);
                 if (path.Count > 0)
                 {
-                    _stepMachine.AddStep(new Step("Move", 
+                    _stepMachine.AddStep(new Step(GameProcessor.MoveStepTag, 
                         new MoveOperation(_selectedBall.IntGridPosition, pointerGridPosition, _field),
                         new SelectOperation(pointerGridPosition, false, _field)
                             .SubscribeCompleted(OnDeselectBall),
@@ -191,49 +199,39 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     
     private void StepMachine_OnStepCompleted(Step step)
     {
-        StepMachine_OnStepCompleted1(step);
-        
-        OnStepCompleted?.Invoke(step);
-    }
-    
-    void StepMachine_OnStepCompleted1(Step step)
-    {
-        if (step.Tag == "Merge")
+        if (step.Tag == GameProcessor.MergeStepTag)
         {
             _userStepFinished = true;
            
             var inverseOperations = step.Operations
                 .Reverse()
                 .Select(operation => operation.GetInverseOperation()).ToArray();
-            _stepMachine.AddUndoStep(new Step("UndoMerge", inverseOperations));
+            _stepMachine.AddUndoStep(new Step(GameProcessor.UndoMergeStepTag, inverseOperations));
         }
             
-        if (step.Tag == "Move")
+        if (step.Tag == GameProcessor.MoveStepTag)
         {
             _userStepFinished = true;
 
             var inverseOperations = step.Operations
                 .Reverse()
                 .Select(operation => operation.GetInverseOperation()).ToArray();
-            _stepMachine.AddUndoStep(new Step("UndoMove", inverseOperations));
+            _stepMachine.AddUndoStep(new Step(GameProcessor.UndoMoveStepTag, inverseOperations));
         }
             
-        if (step.Tag == "Explode")
+        if (step.Tag == GameProcessor.ExplodeStepTag)
         {
             _userStepFinished = true;
 
             var inverseOperations = step.Operations
                 .Reverse()
                 .Select(operation => operation.GetInverseOperation()).ToArray();
-            _stepMachine.AddUndoStep(new Step("UndoExplode", inverseOperations));
+            _stepMachine.AddUndoStep(new Step(GameProcessor.UndoExplodeStepTag, inverseOperations));
         }
+        OnStepCompleted?.Invoke(step);
     }
     
-    public void Undo()
-    {
-        _stepMachine.Undo();
-    }
-
+    
     public bool HasUndoSteps()
     {
         return _stepMachine.HasUndoSteps();
@@ -242,13 +240,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     public int MinimalBallsInLine => _minimalBallsInLine;
     public List<Buff> Buffs => _buffs;
    
-
-    public void Explode(List<Vector3Int> ballsIndexes)
-    {
-        _stepMachine.AddStep(
-            new Step("Explode", 
-                new RemoveOperation(ballsIndexes, _field)));
-    }
+    
 
 
     public void AddPoints(int points)
@@ -261,5 +253,26 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     {
         _score -= points;
         OnScoreChanged?.Invoke();
+    }
+    
+    public void UseUndoBuff(int cost)
+    { 
+        _stepMachine.AddStep(
+            new Step(GameProcessor.UndoStepTag,
+                new SpendOperation(cost, _playerInfo, false),
+                new UndoOperation(_stepMachine)));
+    }
+
+    public void UseExplodeBuff(int cost, List<Vector3Int> ballsIndexes)
+    {
+        _stepMachine.AddStep(
+            new Step(GameProcessor.ExplodeStepTag, 
+                new SpendOperation(cost, _playerInfo, true),
+                new RemoveOperation(ballsIndexes, _field)));
+    }
+
+    public void UseShowNextBallsBuff(int cost)
+    {
+        
     }
 }

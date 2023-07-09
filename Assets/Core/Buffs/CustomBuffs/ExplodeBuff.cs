@@ -64,7 +64,8 @@ namespace Core.Buffs
             for (int x = 0; x < size; x++)
             for (int y = 0; y < size; y++)
                 ballsIndexes.Add(new Vector3Int(pointerPosition.x + x - _halfSize, pointerPosition.y + y - _halfSize, 0));
-            _gameProcessor.Explode(ballsIndexes);
+            
+            _gameProcessor.UseExplodeBuff(Cost, ballsIndexes);
         }
 
         private static int GetSize(int halfSize)
