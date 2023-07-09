@@ -5,43 +5,21 @@ using UnityEngine;
 
 public class ShowNextBallsBuff : Buff
 {
-    [SerializeField] private int _stepsCount = 3;
-    
-    private int _restSteps;
     private readonly List<Ball> _balls = new();
-    
-    
+
     protected override void InnerOnClick()
     {
-        Available = false;
-        
-        _gameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
-        _restSteps = _stepsCount - 1;
-        
         ClearBalls();
         ShowNextBalls();
     }
 
-    private void GameProcessor_OnStepCompleted(Step step)
+    protected override void Inner_OnRestCooldownChanged()
     {
-        if (step.Tag == "Move"
-            || step.Tag == "Merge")
-        {
-            ClearBalls();
-
-            if (_restSteps != 0)
-            {
-                ShowNextBalls();
-                _restSteps--;
-            }
-            else
-            {
-                _gameProcessor.OnStepCompleted -= GameProcessor_OnStepCompleted;
-                Available = true;
-            }
-        }
+        ClearBalls();
+        if(RestCooldown != 0)
+            ShowNextBalls();
     }
-
+    
     private void ClearBalls()
     {
         foreach (var ball in _balls)
@@ -69,7 +47,6 @@ public class ShowNextBallsBuff : Buff
                 ball.transform.localScale = Vector3.one * 0.3f;
                 ball.Transparency = 0.4f;
             }
-
         }
     }
 }

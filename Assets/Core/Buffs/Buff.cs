@@ -111,6 +111,7 @@ public class Buff : MonoBehaviour
             if (_restCooldown != 0)
             {
                 _restCooldown--;
+                Inner_OnRestCooldownChanged();
                 RestCooldownChanged?.Invoke();
             }
             
@@ -121,6 +122,8 @@ public class Buff : MonoBehaviour
             }
         }
     }
+
+    protected virtual void Inner_OnRestCooldownChanged() { }
     
     public Buff OnAvailableStateChanged(Action onChanged)
     {

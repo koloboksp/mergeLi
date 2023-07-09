@@ -9,14 +9,16 @@ public class UIExplosionBuff : UIBuff, IBeginDragHandler, IEndDragHandler, IDrag
     
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if(!_model.Available) return;
         _showShopScreenRequired = ShowShopScreenRequired();
         if(_showShopScreenRequired) return;
-
+        
         _onBeginDrag?.Invoke(eventData);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if(!_model.Available) return;
         if(_showShopScreenRequired) return;
         
         _onEndDrag?.Invoke(eventData);
@@ -24,8 +26,9 @@ public class UIExplosionBuff : UIBuff, IBeginDragHandler, IEndDragHandler, IDrag
 
     public void OnDrag(PointerEventData eventData)
     {
+        if(!_model.Available) return;
         if(_showShopScreenRequired) return;
-
+        
         _onDrag?.Invoke(eventData);
     }
 }
