@@ -13,13 +13,26 @@ Shader "Unlit/GameField"
         _CountY("Count Y", Range(3, 9)) = 9
 
         [Space(8)]
-        _Mid("Mid", Range(0, 1)) = .5
-        _Soft("Soft", Range(0, 1)) = 1
-        _Power("Power", Range(0, 1)) = 1
+        _Mid("Cell Mid", Range(0, 1)) = .5
+        _Soft("Cell Soft", Range(0, .2)) = 1
+        _Power("Cell Power", Range(0, 1)) = 1
+
+        [Space(8)]
+        _OutMid("Out Mid", Range(0, .1)) = 0
+        _OutSoft("Out Soft", Range(0, .1)) = .1
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+
+        Tags
+        {
+            "RenderType" = "Transparent"
+            "Queue" = "Transparent"
+            "PreviewType" = "Plane"
+        }
+
+
+        Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
@@ -52,31 +65,44 @@ Shader "Unlit/GameField"
             fixed _Soft;
             fixed _Power;
 
-            v2f vert (appdata v)
+            fixed _OutMid;
+            fixed _OutSoft;
+
+            v2f vert(appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv * _MainTile;
+                o.uv = v.uv;
 
                 o.uvChecker = v.uv * half2(_CountX, _CountY) / 2;
 
                 return o;
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            fixed4 frag(v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv);
+                fixed4 col = tex2D(_MainTex, i.uv * _MainTile);
+
+                fixed mask = max(col.r, max(col.g, col.b)) / 3;
+
                 col.rgb = lerp(col.rgb, _Color.rgb, _Color.a);
 
                 _Soft /= 2;
                 fixed checker = tex2D(_Checker, i.uvChecker).r;
-                checker *= col.a + checker;
+                checker *= mask + checker;
                 checker = smoothstep(_Mid - _Soft, _Mid + _Soft, checker);
                 checker = (checker - .5) * _Power + 1;
 
                 col.rgb *= checker;
 
-                // col.rgb = checker;
+                // calc out mask
+                fixed2 border = 1 - abs(i.uv * 2 - 1);
+                border.x = saturate(min(border.x, border.y) * 2);
+                border.x *= mask + border.x;
+                border.x = smoothstep(_OutMid - _OutSoft, _OutMid + _OutSoft, border.x);
+                col.a = border.x;
+
+                
 
                 return col;
             }

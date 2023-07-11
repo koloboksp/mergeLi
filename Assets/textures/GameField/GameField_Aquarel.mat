@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GameField
+  m_Name: GameField_Aquarel
   m_Shader: {fileID: 4800000, guid: f8b509e14c22b5d4fbc3203dbb06720b, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -45,7 +45,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 662e8e448d11f1e438c93a9395d17e7e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2d201b71100c4c849977e4350f53ae70, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -74,18 +74,18 @@ Material:
     - _MainSize: 4
     - _MainTile: 2
     - _Metallic: 0
-    - _Mid: 0.14
+    - _Mid: 0.275
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Power: 0.2
+    - _Power: 0.27
     - _SmoothnessTextureChannel: 0
-    - _Soft: 0.04
+    - _Soft: 0.01
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.41568628, g: 0.5490196, b: 0.12941173, a: 0.7490196}
+    - _Color: {r: 0.30196077, g: 0.40784314, b: 0.082352914, a: 0.6}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
