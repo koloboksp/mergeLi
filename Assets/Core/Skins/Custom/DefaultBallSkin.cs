@@ -1,20 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Core
 {
     public class DefaultBallSkin : BallSkin
     {
+        public enum BallState { Idle, Select, Move }
+        
         [SerializeField] private List<Color> _colors;
         [SerializeField] private BallSelectionEffect _selectionEffect;
         [SerializeField] private Text _valueLabel;
         [SerializeField] private Image _ballIcon;
         [SerializeField] private CanvasGroup _canvasGroup;
 
+        public UnityAction<BallState> ChangeStateEvent;
+
         public override bool Selected
         {
-            set => _selectionEffect.SetActiveState(value);
+            set => ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle); // _selectionEffect.SetActiveState(value);
         }
 
         public override int Points

@@ -495,6 +495,7 @@ GameObject:
   - component: {fileID: 6286026246937408137}
   - component: {fileID: 6286026246937408139}
   - component: {fileID: 2895532160096418560}
+  - component: {fileID: 7001601380504072199}
   m_Layer: 5
   m_Name: ball
   m_TagString: Untagged
@@ -548,7 +549,7 @@ MonoBehaviour:
   - {r: 0, g: 0.37647063, b: 0.21568629, a: 1}
   - {r: 0.28627452, g: 0.2509804, b: 0.5137255, a: 1}
   - {r: 0.24313727, g: 0.227451, b: 0.21568629, a: 1}
-  _selectionEffect: {fileID: 6286026248266250713}
+  _selectionEffect: {fileID: 0}
   _valueLabel: {fileID: 6286026247432176632}
   _ballIcon: {fileID: 6286026248266250712}
   _canvasGroup: {fileID: 6286026246937408139}
@@ -563,7 +564,7 @@ CanvasGroup:
   m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
+  m_IgnoreParentGroups: 1
 --- !u!111 &2895532160096418560
 Animation:
   m_ObjectHideFlags: 0
@@ -581,6 +582,24 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &7001601380504072199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6286026246937408142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6d70bb5428b9154797135e0e87465b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballSkin: {fileID: 6286026246937408137}
+  anim: {fileID: 2895532160096418560}
+  idle: {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
+  select: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
+  move: {fileID: 0}
+  idles: []
 --- !u!1 &6286026246992310969
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,7 +793,6 @@ GameObject:
   - component: {fileID: 6286026248266250718}
   - component: {fileID: 6286026248266250715}
   - component: {fileID: 6286026248266250712}
-  - component: {fileID: 6286026248266250713}
   m_Layer: 5
   m_Name: body
   m_TagString: Untagged
@@ -826,7 +844,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -842,49 +860,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6286026248266250713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6286026248266250719}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 301f3f5fc7d84f4d9bb1314e4f82e804, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _upMotionRoot: {fileID: 6286026248266250718}
-  _upMotion:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 3.2622197
-      outSlope: 3.2622197
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.49721324
-      value: 1.6220188
-      inSlope: 0.018081307
-      outSlope: 0.018081307
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -3.226057
-      outSlope: -3.226057
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
