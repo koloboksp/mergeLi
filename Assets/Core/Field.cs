@@ -62,7 +62,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     {
         var localPosition = _view.Root.InverseTransformPoint(eventData.position);
 
-        var fieldSize = _view.SizeDelta;
+        var fieldSize = _view.RectSize;
         var gridPosition = new Vector3Int(
             (int)((localPosition.x / fieldSize.x) * _size.x), 
             (int)((localPosition.y / fieldSize.y) * _size.y));

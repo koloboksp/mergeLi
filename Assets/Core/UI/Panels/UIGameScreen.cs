@@ -45,17 +45,6 @@ namespace Core
                 var control = buff.CreateControl();
                 control.transform.SetParent(_buffsContainer.content);
             }
-
-            var fieldRoot = _data.GameProcessor.Scene.Field.View.Root;
-            if (fieldRoot is RectTransform)
-            {
-                var fieldRootRect = fieldRoot as RectTransform;
-                var containerRect = _fieldContainer.rect;
-                var rect = fieldRootRect.rect;
-                fieldRootRect.SetParent(_fieldContainer);
-                fieldRootRect.localPosition = Vector3.zero;
-                fieldRootRect.localScale = new Vector3(containerRect.width/rect.width, containerRect.height/rect.height, 1);
-            }
         }
 
         private void OnStepExecute(Step sender)

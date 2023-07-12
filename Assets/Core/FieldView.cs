@@ -11,7 +11,7 @@ public class FieldView : MonoBehaviour, IFieldView
     [SerializeField] private float _gridThickness = 8.0f;
 
     public Transform Root => _root;
-    public Vector2 SizeDelta => _root.sizeDelta;
+    public Vector2 RectSize => _root.rect.size;
 
     public void RegenerateField()
     {
@@ -27,7 +27,7 @@ public class FieldView : MonoBehaviour, IFieldView
             lineTransform.pivot = Vector2.zero;
             lineTransform.anchorMin = Vector2.zero;
             lineTransform.anchorMax = Vector2.zero;
-            lineTransform.sizeDelta = new Vector2(_gridThickness, SizeDelta.y);
+            lineTransform.sizeDelta = new Vector2(_gridThickness, RectSize.y);
             lineTransform.anchoredPosition = new Vector2(x * CellSize().x, 0);
             lineTransform.localScale = Vector3.one;
         }
@@ -44,7 +44,7 @@ public class FieldView : MonoBehaviour, IFieldView
             lineTransform.pivot = Vector2.zero;
             lineTransform.anchorMin = Vector2.zero;
             lineTransform.anchorMax = Vector2.zero;
-            lineTransform.sizeDelta = new Vector2(SizeDelta.x, _gridThickness);
+            lineTransform.sizeDelta = new Vector2(RectSize.x, _gridThickness);
             lineTransform.anchoredPosition = new Vector2(0, y * CellSize().y);
             lineTransform.localScale = Vector3.one;
         }
