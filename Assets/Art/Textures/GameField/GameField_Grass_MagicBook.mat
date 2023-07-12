@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GameField_Ground
+  m_Name: GameField_Grass_MagicBook
   m_Shader: {fileID: 4800000, guid: f8b509e14c22b5d4fbc3203dbb06720b, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -45,7 +45,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 956acf7990d8be14b88abb40a836ea1c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 09d4911cc05361046b2c307ee071f17c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -72,22 +72,22 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _MainSize: 4
-    - _MainTile: 2
+    - _MainTile: 1
     - _Metallic: 0
-    - _Mid: 0.32
+    - _Mid: 0.33
     - _Mode: 0
     - _OcclusionStrength: 1
     - _OutMid: 0.004
     - _OutSoft: 0.001
     - _Parallax: 0.02
-    - _Power: 0.3
+    - _Power: 0.2
     - _SmoothnessTextureChannel: 0
-    - _Soft: 0.023
+    - _Soft: 0.02
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.454902, g: 0.29411763, b: 0.18431368, a: 0.8509804}
+    - _Color: {r: 0.4431373, g: 0.5411765, b: 0.12941177, a: 0.5019608}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
