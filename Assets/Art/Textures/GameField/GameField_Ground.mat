@@ -64,7 +64,7 @@ Material:
     m_Floats:
     - _BumpScale: 1
     - _CountX: 9
-    - _CountY: 9
+    - _CountY: 4
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0

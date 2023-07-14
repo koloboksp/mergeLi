@@ -24,10 +24,12 @@ public class BallAnimator : MonoBehaviour
 
         ballSkin.ChangeStateEvent += SetAnimationState;
 
-        clips = new Dictionary<Core.DefaultBallSkin.BallState, AnimationClip>();
-        clips.Add(Core.DefaultBallSkin.BallState.Idle, idle);
-        clips.TryAdd(Core.DefaultBallSkin.BallState.Select, select);
-        clips.TryAdd(Core.DefaultBallSkin.BallState.Move, move);
+        clips = new Dictionary<Core.DefaultBallSkin.BallState, AnimationClip>
+        {
+            { Core.DefaultBallSkin.BallState.Idle, idle },
+            { Core.DefaultBallSkin.BallState.Select, select },
+            { Core.DefaultBallSkin.BallState.Move, move }
+        };
 
         anim[idle.name].normalizedTime = Random.Range(0, 1f);
     }
@@ -42,6 +44,6 @@ public class BallAnimator : MonoBehaviour
     {
         string clipName = clips[ballState] != null ? clips[ballState].name : idle.name;
 
-        anim.CrossFadeQueued(clipName, FADE);
+        anim.CrossFade(clipName, FADE);
     }
 }

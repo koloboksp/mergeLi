@@ -77,7 +77,7 @@ Material:
     - _Mid: 0.33
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutMid: 0.004
+    - _OutMid: 0.0046
     - _OutSoft: 0.001
     - _Parallax: 0.02
     - _Power: 0.2
