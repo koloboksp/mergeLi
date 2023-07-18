@@ -110,7 +110,8 @@ namespace Core.Steps.CustomOperations
             _field.DestroyBalls(_ballsToRemove);
             _pointsAdded = sumPoints;
 
-            _pointsChangeListener.AddPoints(_pointsAdded);
+            if(_pointsAdded != 0)
+                _pointsChangeListener.AddPoints(_pointsAdded);
             Complete(null); 
         }
 

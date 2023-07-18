@@ -32,7 +32,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
 
     public event Action<Step> OnStepCompleted;
     public event Action<Step> OnStepExecute;
-    public event Action OnScoreChanged;
+    public event Action<int> OnScoreChanged;
     
     [SerializeField] private Scene _scene;
     [SerializeField] private Field _field;
@@ -55,7 +55,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
 
     [SerializeField] private List<Buff> _buffs;
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
-
+    [SerializeField] private CastleSelector _castleSelector;
+    
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
@@ -88,9 +89,19 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     IEnumerator InnerProcess()
     {
         bool userStep = false;
-       
+
+        _playerInfo.Load();
+        
+        var lastSelectedCastle = _playerInfo.GetLastSelectedCastle();
+        if (string.IsNullOrEmpty(lastSelectedCastle))
+            _playerInfo.SelectCastle(_castleSelector.Library.Castles[0].Name);
+        
+        _castleSelector.Init();
+        _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
+        
         _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
         _field.GenerateNextBallPositions(_generatedBallsCountAfterMove, _generatedBallsPointsRange);
+
         
         while (_field.IsEmpty)
         {
@@ -101,7 +112,12 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         }
     }
 
-    
+    private void CastleSelector_OnCastleCompleted()
+    {
+        SelectNextCastle();
+    }
+
+
     void Field_OnClick(Vector3Int pointerGridPosition)
     {
         var balls = _field.GetSomething<Ball>(pointerGridPosition).ToList();
@@ -246,13 +262,13 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     public void AddPoints(int points)
     {
         _score += points;
-        OnScoreChanged?.Invoke();
+        OnScoreChanged?.Invoke(points);
     }
 
     public void RemovePoints(int points)
     {
         _score -= points;
-        OnScoreChanged?.Invoke();
+        OnScoreChanged?.Invoke(points);
     }
     
     public void UseUndoBuff(int cost)
@@ -273,6 +289,21 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
 
     public void UseShowNextBallsBuff(int cost)
     {
+        
+    }
+
+    public void SelectNextCastle()
+    {
+        foreach (var castle in _castleSelector.Library.Castles)
+        {
+            var castleProgress = _playerInfo.GetCastleProgress(castle.Name);
+            
+            if (castleProgress == null || !castleProgress.IsCompleted)
+            {
+                _playerInfo.SelectCastle(castle.Name);
+                break;
+            }
+        }
         
     }
 }

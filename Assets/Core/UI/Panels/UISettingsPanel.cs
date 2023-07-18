@@ -10,6 +10,7 @@ namespace Core
     {
         [SerializeField] private Button _closeBtn;
         [SerializeField] private Button _changeSkinBtn;
+        [SerializeField] private Button _clearProgressBtn;
 
         private Model _model;
         private UISettingsPanelData _data;
@@ -19,6 +20,7 @@ namespace Core
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
             
             _changeSkinBtn.onClick.AddListener(ChangeSkinBtn_OnClick);
+            _clearProgressBtn.onClick.AddListener(ClearProgressBtn_OnClick);
         }
 
         private void ChangeSkinBtn_OnClick()
@@ -30,6 +32,11 @@ namespace Core
             ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UISkinPanel), skinScreenData);
         }
 
+        private void ClearProgressBtn_OnClick()
+        {
+            _data.GameProcessor.PlayerInfo.Clear();
+        }
+        
         private void CloseBtn_OnClick()
         {
             ApplicationController.Instance.UIPanelController.PopScreen(this);

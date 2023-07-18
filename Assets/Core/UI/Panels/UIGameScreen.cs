@@ -36,7 +36,7 @@ namespace Core
             _data.GameProcessor.OnStepCompleted += OnStepCompleted;
             _data.GameProcessor.OnStepExecute += OnStepExecute;
             _data.GameProcessor.OnScoreChanged += OnScoreChanged;
-            OnScoreChanged();
+            OnScoreChanged(0);
             _data.GameProcessor.PlayerInfo.OnCoinsChanged += OnCoinsChanged;
             OnCoinsChanged();
             
@@ -58,7 +58,7 @@ namespace Core
         }
 
         
-        private void OnScoreChanged()
+        private void OnScoreChanged(int additionalPoints)
         {
             var nextPointsGoal = _data.GameProcessor.GoalsLibrary.PointsGoals.GetNextGoal(_data.GameProcessor.Score);
             
