@@ -127,7 +127,259 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: hut
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 768
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3cce77a47252444a8d1d6fda41324cd
+      internalID: -1484511938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: back
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 769
+        width: 384
+        height: 255
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 398c926165e8fd34199e03ed2fce26b8
+      internalID: -433620738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: strawFence
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 641
+        width: 128
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6edc1f334899244ebb05e2b3597c6d1
+      internalID: 813949050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: strawHouse_left
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 449
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b490b36f7e58374f8de545c5f7a3c1f
+      internalID: 1663531027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: strawHouse_right
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 445
+        width: 127
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4acf9b4e881ebd44a739797824f5559
+      internalID: 1833228673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: strawHouse_center
+      rect:
+        serializedVersion: 2
+        x: 255
+        y: 446
+        width: 128
+        height: 129
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2ea7373c58b13a5498282c421d2a49b9
+      internalID: -1767204509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: clayHouse_center
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 128
+        width: 133
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e78a29305e77524a943a960ecf61602
+      internalID: -279620222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: clayHouse_roof
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 261
+        width: 237
+        height: 116
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36d6ddc4c67446d40be339b20fafa682
+      internalID: 2066287139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: clayHouse_left
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 130
+        width: 133
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b286a8b3ab8b0f42bb382c7c6ee5b67
+      internalID: -229160019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: clayHouse_right
+      rect:
+        serializedVersion: 2
+        x: 386
+        y: 129
+        width: 140
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db59ac74eb4f8d24d84f7ac9186b123b
+      internalID: -957413249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: clayHouse_small
+      rect:
+        serializedVersion: 2
+        x: 627
+        y: 128
+        width: 141
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6fb1efe10a8c9e4eb8db6b822226aff
+      internalID: -448350567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: clayFence
+      rect:
+        serializedVersion: 2
+        x: 632
+        y: 311
+        width: 139
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bdd544c9d7bd28b4599e918bc9fa7981
+      internalID: 1446788415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -138,7 +390,19 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      back: -433620738
+      clayFence: 1446788415
+      clayHouse_center: -279620222
+      clayHouse_left: -229160019
+      clayHouse_right: -957413249
+      clayHouse_roof: 2066287139
+      clayHouse_small: -448350567
+      hut: -1484511938
+      strawFence: 813949050
+      strawHouse_center: -1767204509
+      strawHouse_left: 1663531027
+      strawHouse_right: 1833228673
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 1
