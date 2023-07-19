@@ -26,7 +26,7 @@ namespace Core
 
         public override void SetData(UIScreenData undefinedData)
         {
-            var data = undefinedData as UISkinScreenData;
+            var data = undefinedData as UISkinPanelData;
             
             _model = new Model()
                 .OnItemsUpdated(OnItemsUpdated);
@@ -49,7 +49,7 @@ namespace Core
             }
         }
         
-        public class UISkinScreenData : UIScreenData
+        public class UISkinPanelData : UIScreenData
         {
             public string SelectedSkin;
             public IEnumerable<string> Skins;

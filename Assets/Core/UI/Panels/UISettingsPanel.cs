@@ -11,6 +11,7 @@ namespace Core
         [SerializeField] private Button _closeBtn;
         [SerializeField] private Button _changeSkinBtn;
         [SerializeField] private Button _clearProgressBtn;
+        [SerializeField] private Button _showCastlesBtn;
 
         private Model _model;
         private UISettingsPanelData _data;
@@ -21,11 +22,13 @@ namespace Core
             
             _changeSkinBtn.onClick.AddListener(ChangeSkinBtn_OnClick);
             _clearProgressBtn.onClick.AddListener(ClearProgressBtn_OnClick);
+            
+            _showCastlesBtn.onClick.AddListener(ShowCastlesBtn_OnClick);
         }
-
+        
         private void ChangeSkinBtn_OnClick()
         {
-            var skinScreenData = new UISkinPanel.UISkinScreenData();
+            var skinScreenData = new UISkinPanel.UISkinPanelData();
             skinScreenData.SelectedSkin = _data.GameProcessor.Scene.ActiveSkin.Name;
             skinScreenData.Skins = _data.GameProcessor.Scene.Library.Containers.Select(i => i.Name);
             skinScreenData.SkinChanger = _data.GameProcessor.Scene;
@@ -40,6 +43,15 @@ namespace Core
         private void CloseBtn_OnClick()
         {
             ApplicationController.Instance.UIPanelController.PopScreen(this);
+        }
+
+        private void ShowCastlesBtn_OnClick()
+        {
+            var data = new UICastlesLibraryPanel.UICastleLibraryPanelData();
+            data.Selected = _data.GameProcessor.PlayerInfo.GetLastSelectedCastle();
+            data.Castles = _data.GameProcessor.CastleSelector.Library.Castles;
+            data.GameProcessor = _data.GameProcessor;
+            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UICastlesLibraryPanel), data);
         }
 
         public override void SetData(UIScreenData undefinedData)

@@ -68,7 +68,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     public IMarket Market => _market;
     public GoalsLibrary GoalsLibrary => _goalsLibrary;
     public PurchasesLibrary PurchasesLibrary => _purchasesLibrary;
-
+    public CastleSelector CastleSelector => _castleSelector;
+    
     void Awake()
     {
         _pointsCalculator = new PointsCalculator(this);
