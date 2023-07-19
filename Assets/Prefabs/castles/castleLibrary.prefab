@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _castles:
   - {fileID: 1054850265026345781, guid: 2c5bf51886e65404fa6b6a6f50b4ce8c, type: 3}
-  - {fileID: 578368251854908847, guid: 553b01350b5c04c488996ca8c59b6511, type: 3}
-  - {fileID: 578368251854908847, guid: 78b5ced5c73dde14fad9fa2931a91e0b, type: 3}
+  - {fileID: 7047264570851907105, guid: 87c22f75a9f2fe746aab28575e6b735d, type: 3}
+  - {fileID: 8508746258051257583, guid: 95eeb7a3b4b34594b8c22c4c1c1fa4c8, type: 3}
