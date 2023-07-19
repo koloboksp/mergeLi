@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Core.Goals
 {
@@ -6,10 +7,14 @@ namespace Core.Goals
     {
         [SerializeField] private Vector2Int _gridPosition;
         [SerializeField] private int _cost;
-        [SerializeField] private Sprite _image;
-
+       
         public Vector2Int GridPosition => _gridPosition;
         public int Cost => _cost;
-        public Sprite Image => _image;
+        public Sprite Image => GetComponent<Image>().sprite;
+
+        public void EditorPartsDisable()
+        {
+            GetComponent<Image>().enabled = false;
+        }
     }
 }

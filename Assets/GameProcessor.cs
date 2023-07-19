@@ -95,6 +95,17 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         var lastSelectedCastle = _playerInfo.GetLastSelectedCastle();
         if (string.IsNullOrEmpty(lastSelectedCastle))
             _playerInfo.SelectCastle(_castleSelector.Library.Castles[0].Name);
+
+        var foundCastle = _castleSelector.Library.Castles.FirstOrDefault(i => i.Name == lastSelectedCastle);
+        if (foundCastle == null)
+        {
+            foreach (var castle in _castleSelector.Library.Castles)
+            {
+                var castleProgress = _playerInfo.GetCastleProgress(castle.Name);
+                if(castleProgress == null || !castleProgress.IsCompleted)
+                    _playerInfo.SelectCastle(castle.Name);
+            }
+        }
         
         _castleSelector.Init();
         _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;

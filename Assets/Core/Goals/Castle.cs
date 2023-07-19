@@ -11,8 +11,7 @@ namespace Core.Goals
         
         [SerializeField] private CastleView _view;
         [SerializeField] private CastlePart _partPrefab;
-        [SerializeField] private List<CastlePartDesc> _partsDesc;
-
+        
         private GameProcessor _gameProcessor;
         private List<CastlePart> _parts = new List<CastlePart>();
         private int _selectedPartIndex;
@@ -23,9 +22,11 @@ namespace Core.Goals
         public void Init(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;
-            
-            foreach (var partDesc in _partsDesc)
+
+            var partsDesc = gameObject.GetComponentsInChildren<CastlePartDesc>();
+            foreach (var partDesc in partsDesc)
             {
+                partDesc.EditorPartsDisable();
                 var part = Instantiate(_partPrefab, partDesc.transform);
                 _parts.Add(part);
                 part.View.Root.anchorMin = Vector2.zero;
