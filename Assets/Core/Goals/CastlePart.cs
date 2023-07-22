@@ -13,33 +13,50 @@ public class CastlePart : MonoBehaviour
     [SerializeField] private Vector2Int _gridPosition;
     [SerializeField] private int _cost;
     [SerializeField] private CastlePartView _view;
-
+    [SerializeField] private Sprite _icon;
     private int _points;
     private bool _selected;
-    private Sprite _icon;
+    
+    public CastlePartView View => _view;
 
-    public CastlePartView View => _view; 
+    public Castle Owner
+    {
+        get => _owner;
+        set => _owner = value;
+    }
 
-    public Vector2Int GridPosition => _gridPosition;
-    public int Cost => _cost;
+    public Vector2Int GridPosition
+    {
+        get => _gridPosition;
+        set => _gridPosition = value;
+    }
+
+    public int Cost
+    {
+        get => _cost;
+        set
+        {
+            _cost = value;
+            OnCostChanged?.Invoke();
+        }
+    }
+
     public int Points => _points;
     public bool Selected => _selected;
     public bool IsCompleted => _points >= _cost;
-    public Sprite Icon => _icon;
+    public Sprite Icon
+    {
+        get => _icon;
+        set
+        {
+            _icon = value;
+            OnIconChanged?.Invoke();
+        }
+    }
 
     private void Awake()
     {
         _view.OnClick += OnClick;
-    }
-
-    public void Init(Castle owner, Vector2Int gridPosition, Sprite icon, int cost)
-    {
-        _owner = owner;
-        _gridPosition = gridPosition;
-        _cost = cost;
-        OnCostChanged?.Invoke();
-        _icon = icon;
-        OnIconChanged?.Invoke();
     }
     
     public void ApplyProgress(CastlePartProgress partProgress)

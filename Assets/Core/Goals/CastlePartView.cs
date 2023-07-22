@@ -3,7 +3,11 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CastlePartView : MonoBehaviour
+public interface ISupportChangesInEditor
+{
+    void OnValueUpdatedInEditorMode();
+} 
+public class CastlePartView : MonoBehaviour, ISupportChangesInEditor
 {
     public event Action OnClick;
 
@@ -53,5 +57,10 @@ public class CastlePartView : MonoBehaviour
     private void OnProgressChanged()
     {
         _image.fillAmount = (float)_model.Points / (float)_model.Cost;
+    }
+    
+    public void OnValueUpdatedInEditorMode()
+    {
+        OnIconChanged();
     }
 }
