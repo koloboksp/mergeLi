@@ -750,6 +750,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Castle_0
       objectReference: {fileID: 0}
+    - target: {fileID: 1054850265026345783, guid: 2c5bf51886e65404fa6b6a6f50b4ce8c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c5bf51886e65404fa6b6a6f50b4ce8c, type: 3}
 --- !u!224 &834020025 stripped
@@ -925,7 +930,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1651605649
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1301,6 +1306,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Castle_1
       objectReference: {fileID: 0}
+    - target: {fileID: 7047264570851907107, guid: 87c22f75a9f2fe746aab28575e6b735d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87c22f75a9f2fe746aab28575e6b735d, type: 3}
 --- !u!1001 &6403544956202625161
@@ -1314,6 +1324,96 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UIGameScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434754260917083578, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434754260917083578, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434754260917083578, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434754260917083578, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434754260917083578, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 46
+      objectReference: {fileID: 0}
+    - target: {fileID: 2434754260917083578, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4476294536807094231, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4476294536807094231, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4476294536807094231, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4476294536807094231, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4476294536807094231, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 161.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4476294536807094231, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004681047263445593, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004681047263445593, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004681047263445593, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004681047263445593, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004681047263445593, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 98
+      objectReference: {fileID: 0}
+    - target: {fileID: 6004681047263445593, guid: e2635e57813f78b42a82b03289b32f22,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7104141350609223302, guid: e2635e57813f78b42a82b03289b32f22,
         type: 3}
@@ -1669,6 +1769,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Castle_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8508746258051257581, guid: 95eeb7a3b4b34594b8c22c4c1c1fa4c8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95eeb7a3b4b34594b8c22c4c1c1fa4c8, type: 3}
