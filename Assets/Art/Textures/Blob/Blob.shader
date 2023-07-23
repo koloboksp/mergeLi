@@ -50,16 +50,16 @@ Shader "Unlit/Blob"
 
             struct v2f
             {
-                float4 vertex   : SV_POSITION;
-                fixed4 color    : COLOR;
-                float2 uv  : TEXCOORD0;
+                float4 vertex : SV_POSITION;
+                fixed4 color  : COLOR;
+                float2 uv   : TEXCOORD0;
                 float2 wPos : TEXCOORD1;
-
-                half2 uvBoom : TEXCOORD2;
             };
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+
+            sampler2D_half _RampMap;
 
             fixed4 _Color;
             fixed4 _TextureSampleAdd;
@@ -80,8 +80,10 @@ Shader "Unlit/Blob"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                half4 col = (tex2D(_MainTex, i.uv) + _TextureSampleAdd) * (i.color + .2);
-                col.rgb = smoothstep(0, 1, col.rgb); // more contrast
+                half4 col = (tex2D(_MainTex, i.uv) + _TextureSampleAdd);
+                col.r = smoothstep(0, 1, col.r);
+                col.rgb = lerp(i.color, 1, col.r);
+                // col.rgb *= i.color * 2;
 
                 #ifdef UNITY_UI_CLIP_RECT
                 col.a *= UnityGet2DClipping(i.wPos, _ClipRect);
