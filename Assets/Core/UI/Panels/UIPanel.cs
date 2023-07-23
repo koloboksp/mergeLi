@@ -5,6 +5,8 @@ namespace Core
 {
     public class UIPanel : MonoBehaviour
     {
+        public event Action<UIPanel> OnHided;
+        
         [SerializeField] private RectTransform _root;
 
         public RectTransform Root => _root;
@@ -26,6 +28,8 @@ namespace Core
         public void Hide()
         {
             InnerHide();
+            
+            OnHided?.Invoke(this);
         }
 
         protected virtual void InnerHide()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Core.Goals
@@ -13,7 +14,7 @@ namespace Core.Goals
         [SerializeField] private CastlePart _partPrefab;
         
         private GameProcessor _gameProcessor;
-        private List<CastlePart> _parts = new List<CastlePart>();
+        private List<CastlePart> _parts = new();
         private int _selectedPartIndex;
     
         public string Name => gameObject.name;
@@ -23,19 +24,7 @@ namespace Core.Goals
         {
             _gameProcessor = gameProcessor;
 
-            var partsDesc = gameObject.GetComponentsInChildren<CastlePartDesc>();
-            foreach (var partDesc in partsDesc)
-            {
-                partDesc.EditorPartsDisable();
-                var part = Instantiate(_partPrefab, partDesc.transform);
-                _parts.Add(part);
-                part.View.Root.anchorMin = Vector2.zero;
-                part.View.Root.anchorMax = Vector2.one;
-                part.View.Root.offsetMin = Vector2.zero;
-                part.View.Root.offsetMax = Vector2.zero;
-                part.View.Root.localScale = Vector3.one;
-                part.Init(this, partDesc.GridPosition, partDesc.Image, partDesc.Cost);
-            }
+            this.gameObject.GetComponentsInChildren<CastlePart>(_parts);
             
             var castleProgress = gameProcessor.PlayerInfo.GetCastleProgress(Name);
             if(castleProgress != null)

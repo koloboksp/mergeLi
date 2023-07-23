@@ -5,6 +5,7 @@ using System.Linq;
 using Core;
 using Core.Steps;
 using Core.Steps.CustomOperations;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -33,7 +34,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     public event Action<Step> OnStepCompleted;
     public event Action<Step> OnStepExecute;
     public event Action<int> OnScoreChanged;
-    
+    public event Action<bool> OnLowEmptySpaceChanged;
+
     [SerializeField] private Scene _scene;
     [SerializeField] private Field _field;
     [SerializeField] private StepMachine _stepMachine;
@@ -82,20 +84,31 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
 
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
-        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIGameScreen), new UIGameScreenData(){GameProcessor = this,});
-        StartCoroutine(InnerProcess());
+       
+        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel), new UIStartPanelData(){GameProcessor = this}, UIStartPanel_OnScreenReady);
     }
+
+    private void UIStartPanel_OnScreenReady(UIPanel sender)
+    {
+        var startPanel = sender as UIStartPanel;
+        startPanel.OnStartPlay += () =>  StartCoroutine(InnerProcess());
+    }
+    
     bool _userStepFinished = false;
+    bool _notAllBallsGenerated = false;
     
     IEnumerator InnerProcess()
     {
-        bool userStep = false;
+        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIGameScreen), new UIGameScreenData(){GameProcessor = this});
 
         _playerInfo.Load();
         
         var lastSelectedCastle = _playerInfo.GetLastSelectedCastle();
         if (string.IsNullOrEmpty(lastSelectedCastle))
+        {
             _playerInfo.SelectCastle(_castleSelector.Library.Castles[0].Name);
+            lastSelectedCastle = _playerInfo.GetLastSelectedCastle();
+        }
 
         var foundCastle = _castleSelector.Library.Castles.FirstOrDefault(i => i.Name == lastSelectedCastle);
         if (foundCastle == null)
@@ -113,23 +126,46 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         
         _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
         _field.GenerateNextBallPositions(_generatedBallsCountAfterMove, _generatedBallsPointsRange);
-
         
-        while (_field.IsEmpty)
+        while (true)
         {
+            if(!_field.IsEmpty && _notAllBallsGenerated) break;
+            
             _userStepFinished = false;
-
+            _notAllBallsGenerated = false;
+            
             while (!_userStepFinished)
                 yield return null;
+            
+            CheckLowEmptySpace();
         }
+
+        var waitForGameFailPanelReady = new WaitForScreenReady<UIGameFailPanel>(new UIGameFailPanelData() { GameProcessor = this });
+        yield return waitForGameFailPanelReady;
+        
+        var waitForGameFailPanelClosed = new WaitForScreenClosed(waitForGameFailPanelReady.Panel);
+        yield return waitForGameFailPanelClosed;
+
+        _field.Clear();
+        
+        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel), new UIStartPanelData(){GameProcessor = this}, UIStartPanel_OnScreenReady);
+    }
+
+    private void Restart()
+    {
+      
+    }
+
+    private void OnScreenReady(UIPanel obj)
+    {
+        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel), new UIStartPanelData(){GameProcessor = this}, UIStartPanel_OnScreenReady);
     }
 
     private void CastleSelector_OnCastleCompleted()
     {
         SelectNextCastle();
     }
-
-
+    
     void Field_OnClick(Vector3Int pointerGridPosition)
     {
         var balls = _field.GetSomething<Ball>(pointerGridPosition).ToList();
@@ -224,37 +260,53 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     {
         OnStepExecute?.Invoke(step);
     }
+
+    private void CheckLowEmptySpace()
+    {
+        var emptyCellsCount = _field.CalculateEmptySpacesCount();
+        var threshold = Mathf.Max(_generatedBallsCountAfterMerge, _generatedBallsCountAfterMove);
+        bool lowSpace = emptyCellsCount <= threshold;
+        
+        OnLowEmptySpaceChanged?.Invoke(lowSpace);
+    }
     
     private void StepMachine_OnStepCompleted(Step step)
     {
         if (step.Tag == GameProcessor.MergeStepTag)
         {
-            _userStepFinished = true;
-           
             var inverseOperations = step.Operations
                 .Reverse()
                 .Select(operation => operation.GetInverseOperation()).ToArray();
             _stepMachine.AddUndoStep(new Step(GameProcessor.UndoMergeStepTag, inverseOperations));
+            
+            var generateOperationData = step.GetData<GenerateOperationData>();
+            if(generateOperationData != null)
+                _notAllBallsGenerated = generateOperationData.NewBallsData.Count < generateOperationData.RequiredAmount;
+            _userStepFinished = true;
         }
             
         if (step.Tag == GameProcessor.MoveStepTag)
         {
-            _userStepFinished = true;
-
             var inverseOperations = step.Operations
                 .Reverse()
                 .Select(operation => operation.GetInverseOperation()).ToArray();
+            
             _stepMachine.AddUndoStep(new Step(GameProcessor.UndoMoveStepTag, inverseOperations));
+           
+            var generateOperationData = step.GetData<GenerateOperationData>();
+            if(generateOperationData != null)
+                _notAllBallsGenerated = generateOperationData.NewBallsData.Count < generateOperationData.RequiredAmount;
+            _userStepFinished = true;
         }
             
         if (step.Tag == GameProcessor.ExplodeStepTag)
         {
-            _userStepFinished = true;
-
             var inverseOperations = step.Operations
                 .Reverse()
                 .Select(operation => operation.GetInverseOperation()).ToArray();
             _stepMachine.AddUndoStep(new Step(GameProcessor.UndoExplodeStepTag, inverseOperations));
+            
+            _userStepFinished = true;
         }
         OnStepCompleted?.Invoke(step);
     }
@@ -267,9 +319,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
 
     public int MinimalBallsInLine => _minimalBallsInLine;
     public List<Buff> Buffs => _buffs;
-   
     
-
 
     public void AddPoints(int points)
     {
