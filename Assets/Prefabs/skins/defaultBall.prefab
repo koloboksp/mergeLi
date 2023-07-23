@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 1bac9185b0cb5144fa267c1433cd0417, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -220,7 +220,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 865d5c82edd58c849a602507be8f3567, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b52db48104ea87a429942bf95eba4d7b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -325,6 +325,7 @@ Animation:
   m_Animations:
   - {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
   - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
+  - {fileID: 7400000, guid: b542c6eb5bb975c4eaf747ebfc2671a7, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -345,7 +346,7 @@ MonoBehaviour:
   anim: {fileID: 4603561023740904235}
   idle: {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
   select: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  move: {fileID: 0}
+  move: {fileID: 7400000, guid: b542c6eb5bb975c4eaf747ebfc2671a7, type: 2}
   idles: []
 --- !u!1 &4679713790568643541
 GameObject:
@@ -406,7 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -414,8 +415,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 50
+    m_Font: {fileID: 12800000, guid: f61221e3bbd783e4fb2255fde51f1ebb, type: 3}
+    m_FontSize: 70
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 1
