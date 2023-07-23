@@ -17,6 +17,7 @@ namespace Core
         [SerializeField] private UIGameScreen_Coins _coins;
         [SerializeField] private RectTransform _fieldContainer;
         [SerializeField] private Button _showSettingsBtn;
+        [SerializeField] private GameObject _lowSpaceWarning;
 
         private UIGameScreenData _data;
         private PointsGoal _currentPointsGoal = null;
@@ -35,6 +36,8 @@ namespace Core
             _data = data as UIGameScreenData;
             _data.GameProcessor.OnStepCompleted += OnStepCompleted;
             _data.GameProcessor.OnStepExecute += OnStepExecute;
+            _data.GameProcessor.OnLowEmptySpaceChanged += OnLowEmptySpaceChanged;
+            OnLowEmptySpaceChanged(false);
             _data.GameProcessor.OnScoreChanged += OnScoreChanged;
             OnScoreChanged(0);
             _data.GameProcessor.PlayerInfo.OnCoinsChanged += OnCoinsChanged;
@@ -57,6 +60,10 @@ namespace Core
             _buffsContainerRoot.interactable = true;
         }
 
+        private void OnLowEmptySpaceChanged(bool state)
+        {
+            _lowSpaceWarning.SetActive(state);
+        }
         
         private void OnScoreChanged(int additionalPoints)
         {

@@ -26,7 +26,11 @@ namespace Core.Steps.CustomOperations
         {
             _generatedItems.AddRange(_field.GenerateBalls(_amount, _pointsRange));
             _field.GenerateNextBallPositions(_maxAmount, _pointsRange);
-            Owner.SetData(new GenerateOperationData(){ NewBallsData = _generatedItems});
+            Owner.SetData(new GenerateOperationData()
+            {
+                RequiredAmount = _amount,
+                NewBallsData = _generatedItems
+            });
 
             Complete(null);
         }
@@ -39,6 +43,7 @@ namespace Core.Steps.CustomOperations
 
     public class GenerateOperationData
     {
+        public int RequiredAmount;
         public List<(Vector3Int position, int points)> NewBallsData;
     }
 }

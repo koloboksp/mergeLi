@@ -9,6 +9,47 @@ using Object = UnityEngine.Object;
 
 namespace Core
 {
+    public class WaitForScreenClosed : CustomYieldInstruction
+    {
+        private UIPanel _panel;
+        private bool _ready;
+        
+        public WaitForScreenClosed(UIPanel panel)
+        {
+            _panel = panel;
+            _panel.OnHided += Panel_OnHided;
+        }
+
+        private void Panel_OnHided(UIPanel sender)
+        {
+            _panel.OnHided -= Panel_OnHided;
+            _ready = true;
+        }
+
+        public override bool keepWaiting => !_ready;
+    }
+
+    public class WaitForScreenReady<T> : CustomYieldInstruction where T : UIPanel
+    {
+        private bool _ready;
+        private T _panel;
+        
+        public T Panel => _panel;
+        
+        public WaitForScreenReady(UIScreenData data)
+        {
+            ApplicationController.Instance.UIPanelController.PushScreen(typeof(T), data, OnScreenReady);
+        }
+
+        private void OnScreenReady(UIPanel sender)
+        {
+            _panel = sender as T;
+            _ready = true;
+        }
+
+        public override bool keepWaiting => !_ready;
+    }
+    
     public class UIPanelController
     {
         private readonly ScreenStack _stack = new ScreenStack();
@@ -16,7 +57,7 @@ namespace Core
 
         public void SetScreensRoot(RectTransform screensRoot) => _screensRoot = screensRoot;
         
-        public void PushScreen(Type screenType, UIScreenData data)
+        public void PushScreen(Type screenType, UIScreenData data, Action<UIPanel> onScreenReady = null)
         {
             AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
             handle.Completed += senderHandle => 
@@ -30,6 +71,8 @@ namespace Core
                 screen.Root.offsetMax = Vector2.zero;
                 screen.Root.localScale = Vector3.one;
                 _stack.Push(senderHandle, screen, data);
+                
+                onScreenReady?.Invoke(screen);
             };
         }
 

@@ -151,6 +151,8 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
         
         for (int i = 0; i < count; i++)
         {
+            if(freeIndexes.Count <= 0) break;
+            
             var randomElementIndex = Random.Range(0, freeIndexes.Count);
             var freeIndex = freeIndexes[randomElementIndex];
             freeIndexes.RemoveAt(randomElementIndex);
@@ -302,5 +304,16 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     public void AdaptSize(Vector3 leftBottomCorner, Vector3 rightTopCorner, Vector2 rectSize)
     {
        
+    }
+
+    public int CalculateEmptySpacesCount()
+    {
+        return _size.x * _size.y - _balls.Count;
+    }
+
+    public void Clear()
+    {
+        var ballsToRemove = new List<Ball>(_balls);
+        DestroyBalls(ballsToRemove);
     }
 }
