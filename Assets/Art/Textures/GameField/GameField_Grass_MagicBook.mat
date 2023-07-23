@@ -74,13 +74,13 @@ Material:
     - _MainSize: 4
     - _MainTile: 1
     - _Metallic: 0
-    - _Mid: 0.34
+    - _Mid: 0.37
     - _Mode: 0
     - _OcclusionStrength: 1
     - _OutMid: 0
     - _OutSoft: 0
     - _Parallax: 0.02
-    - _Power: 0.13
+    - _Power: 0.2
     - _SmoothnessTextureChannel: 0
     - _Soft: 0.2
     - _SpecularHighlights: 1
