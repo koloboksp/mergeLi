@@ -20,7 +20,6 @@ namespace Core
         [SerializeField] private GameObject _lowSpaceWarning;
 
         private UIGameScreenData _data;
-        private PointsGoal _currentPointsGoal = null;
         public UIGameScreenData Data => _data;
         
         public void Awake()
@@ -28,6 +27,8 @@ namespace Core
             _coins.OnClick += Coins_OnClick;
             _showSettingsBtn.onClick.AddListener(ShowSettingsBtn_OnClick); 
         }
+        
+        
 
         public override void SetData(UIScreenData data)
         {
@@ -50,6 +51,18 @@ namespace Core
             }
         }
 
+        protected override void InnerHide()
+        {
+            _data.GameProcessor.OnStepCompleted -= OnStepCompleted;
+            _data.GameProcessor.OnStepExecute -= OnStepExecute;
+            _data.GameProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
+            
+            _data.GameProcessor.OnScoreChanged -= OnScoreChanged;
+            _data.GameProcessor.PlayerInfo.OnCoinsChanged -= OnCoinsChanged;
+            
+            base.InnerHide();
+        }
+        
         private void OnStepExecute(Step sender)
         {
             _buffsContainerRoot.interactable = false;
@@ -67,16 +80,10 @@ namespace Core
         
         private void OnScoreChanged(int additionalPoints)
         {
-            var nextPointsGoal = _data.GameProcessor.GoalsLibrary.PointsGoals.GetNextGoal(_data.GameProcessor.Score);
+            var currentPointsGoal = _data.GameProcessor.CastleSelector.ActiveCastle.SelectedCastlePart.Points;
+            var nextPointsGoal = _data.GameProcessor.CastleSelector.ActiveCastle.SelectedCastlePart.Cost; 
             
-            _score.SetScore(_data.GameProcessor.Score, nextPointsGoal.Threshold);
-            if (_currentPointsGoal != nextPointsGoal)
-            {
-                if (_currentPointsGoal != null)
-                    StartCoroutine(ShowGoalReachAnimation());
-                
-                _currentPointsGoal = nextPointsGoal;
-            }
+            _score.SetScore(currentPointsGoal, nextPointsGoal);
         }
 
         private IEnumerator ShowGoalReachAnimation()

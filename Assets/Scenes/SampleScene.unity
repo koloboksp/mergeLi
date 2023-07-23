@@ -256,8 +256,6 @@ MonoBehaviour:
   _stepMachine: {fileID: 1844453385}
   _playerInfo: {fileID: 647029505}
   _market: {fileID: 7648675713994640519, guid: e24b670704c295f4898ac738b1d3275a, type: 3}
-  _goalsLibrary: {fileID: 8430920984382366789, guid: 48566113f8f9f784b859c3aab96136a9,
-    type: 3}
   _destroyBallEffectPrefab: {fileID: 5600580805448456366, guid: 14a662a9344a3274c9fabd6bac889aa0,
     type: 3}
   _noPathEffectPrefab: {fileID: -6999720306982994079, guid: 44ff0d0d6eb6a924c8dfd8bab846454c,
