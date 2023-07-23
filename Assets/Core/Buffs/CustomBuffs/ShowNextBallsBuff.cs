@@ -6,15 +6,7 @@ using UnityEngine;
 public class ShowNextBallsBuff : Buff
 {
     private readonly List<Ball> _balls = new();
-
-    protected override void InnerOnClick()
-    {
-        _gameProcessor.UseShowNextBallsBuff(Cost);
-        
-        ClearBalls();
-        ShowNextBalls();
-    }
-
+    
     protected override void Inner_OnRestCooldownChanged()
     {
         ClearBalls();
@@ -50,5 +42,12 @@ public class ShowNextBallsBuff : Buff
                 ball.Transparency = 0.4f;
             }
         }
+    }
+    
+    protected override void InnerProcessUsing()
+    {
+        _gameProcessor.UseShowNextBallsBuff(Cost);
+        ClearBalls();
+        ShowNextBalls();
     }
 }
