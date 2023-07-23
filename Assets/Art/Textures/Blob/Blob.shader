@@ -83,7 +83,7 @@ Shader "Unlit/Blob"
                 half4 col = (tex2D(_MainTex, i.uv) + _TextureSampleAdd);
                 col.r = smoothstep(0, 1, col.r);
                 col.rgb = lerp(i.color, 1, col.r);
-                // col.rgb *= i.color * 2;
+                col.rgb = col.rgb * 1.2 - .2;
 
                 #ifdef UNITY_UI_CLIP_RECT
                 col.a *= UnityGet2DClipping(i.wPos, _ClipRect);
