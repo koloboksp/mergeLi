@@ -7,7 +7,7 @@ namespace Core
 {
     public class DefaultBallSkin : BallSkin
     {
-        public enum BallState { Idle, Select, Move }
+        public enum BallState { Idle, Select, Move, PathNotFound }
         
         [SerializeField] private List<Color> _colors;
         [SerializeField] private BallSelectionEffect _selectionEffect;
@@ -42,6 +42,11 @@ namespace Core
         public override float Transparency
         {
             set => _canvasGroup.alpha = 1.0f - value;
+        }
+
+        public override void PathNotFount()
+        {
+            ChangeStateEvent?.Invoke(BallState.PathNotFound);
         }
     }
 }

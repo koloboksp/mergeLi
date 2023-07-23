@@ -28,7 +28,8 @@ public class BallAnimator : MonoBehaviour
         {
             { Core.DefaultBallSkin.BallState.Idle, idle },
             { Core.DefaultBallSkin.BallState.Select, select },
-            { Core.DefaultBallSkin.BallState.Move, move }
+            { Core.DefaultBallSkin.BallState.Move, move },
+            { Core.DefaultBallSkin.BallState.PathNotFound, move }
         };
 
         anim[idle.name].normalizedTime = Random.Range(0, 1f);

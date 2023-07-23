@@ -11,6 +11,7 @@ namespace Core
         public event Action OnMovingStateChanged;
         public event Action OnTransparencyChanged;
         public event Action<int> OnPointsChanged;
+        public event Action OnPathNotFound;
 
         [SerializeField] private Vector3 _gridPosition;
         [SerializeField] private Field _field;
@@ -46,7 +47,6 @@ namespace Core
             var pathFound = path.Count > 0;
             if (pathFound)
             {
-               
                 _moving = true;
                 OnMovingStateChanged?.Invoke();
                 
@@ -138,6 +138,11 @@ namespace Core
             var oldPoints = _points;
             _points = newPoints;
             OnPointsChanged?.Invoke(oldPoints);
+        }
+
+        public void PathNotFound()
+        {
+            OnPathNotFound?.Invoke();
         }
     }
     

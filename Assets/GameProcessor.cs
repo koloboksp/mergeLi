@@ -221,7 +221,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                         else
                         {
                             _stepMachine.AddStep(new Step("NoPath",
-                                new PathNotFoundOperation(pointerGridPosition, _noPathEffectPrefab, _field)));
+                                new PathNotFoundOperation(_selectedBall.IntGridPosition, pointerGridPosition, _noPathEffectPrefab, _field)));
                         }
                     }
                 }
@@ -246,7 +246,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                 else
                 {
                     _stepMachine.AddStep(new Step("NoPath",
-                        new PathNotFoundOperation(pointerGridPosition, _noPathEffectPrefab, _field)));
+                        new PathNotFoundOperation(_selectedBall.IntGridPosition, pointerGridPosition, _noPathEffectPrefab, _field)));
                 }
             }
         }

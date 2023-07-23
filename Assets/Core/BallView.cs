@@ -21,6 +21,7 @@ namespace Core
             _ball.OnSelectedChanged += Ball_OnSelectedChanged;
             _ball.OnMovingStateChanged += Ball_OnMovingStateChanged;
             _ball.OnTransparencyChanged += Ball_TransparencyChanged;
+            _ball.OnPathNotFound += Ball_OnPathNotFound;
 
             ChangeSkin(_ball.Field.Scene.ActiveSkin);
         }
@@ -58,6 +59,11 @@ namespace Core
         private void Ball_TransparencyChanged()
         {
             _ballSkin.Transparency = _ball.Transparency;
+        }
+        
+        private void Ball_OnPathNotFound()
+        {
+            _ballSkin.PathNotFount();
         }
     }
 }
