@@ -22,6 +22,11 @@ namespace Core
             set => ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle); // _selectionEffect.SetActiveState(value);
         }
 
+        public override bool Moving
+        {
+            set => ChangeStateEvent?.Invoke(value ? BallState.Move : BallState.Idle);
+        }
+
         public override int Points
         {
             set
