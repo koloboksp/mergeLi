@@ -8,6 +8,7 @@ namespace Core
     public class Ball : MonoBehaviour, IFieldMovable, IFieldSelectable, IFieldMergeable
     {
         public event Action OnSelectedChanged;
+        public event Action OnMovingStateChanged;
         public event Action OnTransparencyChanged;
         public event Action<int> OnPointsChanged;
 
@@ -17,12 +18,14 @@ namespace Core
     
         private int _points = 1;
         private bool _selected;
+        private bool _moving;
         private float _moveSpeed = 15.0f;
         private float _transparency = 0.0f;
         
         public int Points => _points;
         public bool Selected => _selected;
-        
+        public bool Moving => _moving;
+
         public Vector3 GridPosition => _gridPosition;
         public Vector3Int IntGridPosition => _field.TransformToIntPosition(_gridPosition);
         
@@ -43,8 +46,10 @@ namespace Core
             var pathFound = path.Count > 0;
             if (pathFound)
             {
-                bool moving = true;
-        
+               
+                _moving = true;
+                OnMovingStateChanged?.Invoke();
+                
                 float timer = 0;
                 for (int i = 0; i < path.Count - 1; i++)
                 {
@@ -66,6 +71,8 @@ namespace Core
                 }
         
                 UpdateGridPosition(new Vector3(to.x, to.y));
+                _moving = false;
+                OnMovingStateChanged?.Invoke();
             }
         
             onComplete?.Invoke(pathFound);

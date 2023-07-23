@@ -19,9 +19,15 @@ namespace Core
         {
             _ball.OnPointsChanged += Ball_OnPointsChanged;
             _ball.OnSelectedChanged += Ball_OnSelectedChanged;
+            _ball.OnMovingStateChanged += Ball_OnMovingStateChanged;
             _ball.OnTransparencyChanged += Ball_TransparencyChanged;
 
             ChangeSkin(_ball.Field.Scene.ActiveSkin);
+        }
+
+        private void Ball_OnMovingStateChanged()
+        {
+            _ballSkin.Moving = _ball.Moving;
         }
 
         public void ChangeSkin(SkinContainer container)
