@@ -4,11 +4,7 @@ using UnityEngine;
 public class UndoBuff : Buff
 {
     private bool _hasUndoSteps = false;
-    protected override void InnerOnClick()
-    {
-        _gameProcessor.UseUndoBuff(Cost);
-    }
-
+    
     public override bool Available
     {
         get => base.Available && _hasUndoSteps;
@@ -29,5 +25,10 @@ public class UndoBuff : Buff
                 _availableStateChanged?.Invoke();
             }
         }
+    }
+    
+    protected override void InnerProcessUsing()
+    {
+        _gameProcessor.UseUndoBuff(Cost);
     }
 }

@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf8baae82314efaafc1a84f0e3a2f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cost: 11
+  _cost: 30
   _sprite: {fileID: -1484511938, guid: 9f1b2948003e6584cbfcf6314da77685, type: 3}
 --- !u!1001 &4280092545379318744
 PrefabInstance:
@@ -251,7 +251,7 @@ PrefabInstance:
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
       propertyPath: _cost
-      value: 11
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}

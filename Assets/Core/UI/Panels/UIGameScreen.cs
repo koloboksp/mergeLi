@@ -27,9 +27,7 @@ namespace Core
             _coins.OnClick += Coins_OnClick;
             _showSettingsBtn.onClick.AddListener(ShowSettingsBtn_OnClick); 
         }
-        
-        
-
+  
         public override void SetData(UIScreenData data)
         {
             base.SetData(data);

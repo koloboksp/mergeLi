@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Buff : MonoBehaviour
+public abstract class Buff : MonoBehaviour
 {
     protected Action _availableStateChanged;
     private Action _restCooldownChanged;
@@ -62,9 +62,8 @@ public class Buff : MonoBehaviour
         if(!IsCurrencyEnough) return;
         if(!Available) return;
 
-        InnerOnEndDrag(eventData);
-
-        ProcessUsing();
+        if(InnerOnEndDrag(eventData))
+            ProcessUsing();
     }
     
     protected void OnDrag(PointerEventData eventData)
@@ -77,6 +76,8 @@ public class Buff : MonoBehaviour
 
     private void ProcessUsing()
     {
+        InnerProcessUsing();
+        
         _restCooldown = _cooldown;
         _restCooldownChanged?.Invoke();
         
@@ -85,9 +86,16 @@ public class Buff : MonoBehaviour
         else
             Available = true;
     }
+
+    protected abstract void InnerProcessUsing();
     
     protected virtual void InnerOnClick() { }
-    protected virtual void InnerOnEndDrag(PointerEventData eventData) { }
+
+    protected virtual bool InnerOnEndDrag(PointerEventData eventData)
+    {
+        return true;
+    }
+    
     protected virtual void InnerOnBeginDrag(PointerEventData eventData) { }
     protected virtual void InnerOnDrag(PointerEventData eventData) { }
 

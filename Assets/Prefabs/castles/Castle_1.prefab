@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf8baae82314efaafc1a84f0e3a2f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cost: 100
+  _cost: 300
   _sprite: {fileID: 813949050, guid: 9f1b2948003e6584cbfcf6314da77685, type: 3}
 --- !u!1 &5221499384276232679
 GameObject:
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf8baae82314efaafc1a84f0e3a2f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cost: 11
+  _cost: 100
   _sprite: {fileID: 1663531027, guid: 9f1b2948003e6584cbfcf6314da77685, type: 3}
 --- !u!1 &5709039516409710290
 GameObject:
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf8baae82314efaafc1a84f0e3a2f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cost: 10
+  _cost: 150
   _sprite: {fileID: 1833228673, guid: 9f1b2948003e6584cbfcf6314da77685, type: 3}
 --- !u!1 &6837262944059698341
 GameObject:
@@ -206,7 +206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf8baae82314efaafc1a84f0e3a2f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cost: 10
+  _cost: 200
   _sprite: {fileID: 813949050, guid: 9f1b2948003e6584cbfcf6314da77685, type: 3}
 --- !u!1 &6978730233405769033
 GameObject:
@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf8baae82314efaafc1a84f0e3a2f59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cost: 100
+  _cost: 50
   _sprite: {fileID: -1767204509, guid: 9f1b2948003e6584cbfcf6314da77685, type: 3}
 --- !u!1 &7047264570851907107
 GameObject:
@@ -463,7 +463,7 @@ PrefabInstance:
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
       propertyPath: _cost
-      value: 100
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
@@ -570,7 +570,7 @@ PrefabInstance:
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
       propertyPath: _cost
-      value: 11
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
@@ -727,7 +727,7 @@ PrefabInstance:
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
       propertyPath: _cost
-      value: 100
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
@@ -879,7 +879,7 @@ PrefabInstance:
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
       propertyPath: _cost
-      value: 10
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
@@ -1036,7 +1036,7 @@ PrefabInstance:
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
       propertyPath: _cost
-      value: 10
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
         type: 3}
