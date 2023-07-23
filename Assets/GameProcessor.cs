@@ -41,7 +41,6 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private StepMachine _stepMachine;
     [SerializeField] private PlayerInfo _playerInfo;
     [SerializeField] private DefaultMarket _market;
-    [SerializeField] private GoalsLibrary _goalsLibrary;
     
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
@@ -63,12 +62,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
     private int _score;
+    private bool _userStepFinished = false;
+    private bool _notAllBallsGenerated = false;
+
     
     public Scene Scene => _scene;
     public PlayerInfo PlayerInfo => _playerInfo;
     public int Score => _score;
     public IMarket Market => _market;
-    public GoalsLibrary GoalsLibrary => _goalsLibrary;
     public PurchasesLibrary PurchasesLibrary => _purchasesLibrary;
     public CastleSelector CastleSelector => _castleSelector;
     
@@ -84,8 +85,18 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
 
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
-       
+
+        Load();
+        SetDefaults();
+        Init();
+        
         ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel), new UIStartPanelData(){GameProcessor = this}, UIStartPanel_OnScreenReady);
+    }
+
+    private void Init()
+    {
+        _castleSelector.Init();
+        _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
     }
 
     private void UIStartPanel_OnScreenReady(UIPanel sender)
@@ -94,15 +105,13 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         startPanel.OnStartPlay += () =>  StartCoroutine(InnerProcess());
     }
     
-    bool _userStepFinished = false;
-    bool _notAllBallsGenerated = false;
-    
-    IEnumerator InnerProcess()
+    private void Load()
     {
-        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIGameScreen), new UIGameScreenData(){GameProcessor = this});
-
         _playerInfo.Load();
-        
+    }
+    
+    private void SetDefaults()
+    {
         var lastSelectedCastle = _playerInfo.GetLastSelectedCastle();
         if (string.IsNullOrEmpty(lastSelectedCastle))
         {
@@ -120,9 +129,12 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                     _playerInfo.SelectCastle(castle.Name);
             }
         }
+    } 
         
-        _castleSelector.Init();
-        _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
+    IEnumerator InnerProcess()
+    {
+        var waitForGameScreenReady = new PushAndWaitForScreenReady<UIGameScreen>(new UIGameScreenData() { GameProcessor = this });
+        yield return waitForGameScreenReady;
         
         _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
         _field.GenerateNextBallPositions(_generatedBallsCountAfterMove, _generatedBallsPointsRange);
@@ -140,14 +152,16 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
             CheckLowEmptySpace();
         }
 
-        var waitForGameFailPanelReady = new WaitForScreenReady<UIGameFailPanel>(new UIGameFailPanelData() { GameProcessor = this });
+        var waitForGameFailPanelReady = new PushPopupAndWaitForScreenReady<UIGameFailPanel>(new UIGameFailPanelData() { GameProcessor = this });
         yield return waitForGameFailPanelReady;
         
         var waitForGameFailPanelClosed = new WaitForScreenClosed(waitForGameFailPanelReady.Panel);
         yield return waitForGameFailPanelClosed;
 
         _field.Clear();
-        
+        CheckLowEmptySpace();
+
+        ApplicationController.Instance.UIPanelController.HideAll();
         ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel), new UIStartPanelData(){GameProcessor = this}, UIStartPanel_OnScreenReady);
     }
 

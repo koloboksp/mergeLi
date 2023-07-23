@@ -29,25 +29,35 @@ namespace Core
         public override bool keepWaiting => !_ready;
     }
 
-    public class WaitForScreenReady<T> : CustomYieldInstruction where T : UIPanel
+    public class PushPanelAndWaitForScreenReady<T> : CustomYieldInstruction where T : UIPanel
     {
         private bool _ready;
         private T _panel;
         
         public T Panel => _panel;
-        
-        public WaitForScreenReady(UIScreenData data)
-        {
-            ApplicationController.Instance.UIPanelController.PushScreen(typeof(T), data, OnScreenReady);
-        }
 
-        private void OnScreenReady(UIPanel sender)
+        protected void OnScreenReady(UIPanel sender)
         {
             _panel = sender as T;
             _ready = true;
         }
 
         public override bool keepWaiting => !_ready;
+    }
+    public class PushPopupAndWaitForScreenReady<T> : PushPanelAndWaitForScreenReady<T> where T : UIPanel
+    {
+        public PushPopupAndWaitForScreenReady(UIScreenData data)
+        {
+            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(T), data, OnScreenReady);
+        }
+
+    }
+    public class PushAndWaitForScreenReady<T> : PushPanelAndWaitForScreenReady<T> where T : UIPanel
+    {
+        public PushAndWaitForScreenReady(UIScreenData data)
+        {
+            ApplicationController.Instance.UIPanelController.PushScreen(typeof(T), data, OnScreenReady);
+        }
     }
     
     public class UIPanelController
@@ -76,7 +86,7 @@ namespace Core
             };
         }
 
-        public void PushPopupScreen(Type screenType, UIScreenData data)
+        public void PushPopupScreen(Type screenType, UIScreenData data, Action<UIPanel> onScreenReady = null)
         {
             AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
             handle.Completed += senderHandle => 
@@ -90,6 +100,8 @@ namespace Core
                 screen.Root.offsetMax = Vector2.zero;
                 screen.Root.localScale = Vector3.one;
                 _stack.PushPopup(senderHandle, screen, data);
+                
+                onScreenReady?.Invoke(screen);
             };
         }
         
@@ -176,32 +188,15 @@ namespace Core
                 
             }
         }
-        
-        IEnumerator LoadGameObjectAndMaterial()
+
+        public void HideAll()
         {
-            //Load a GameObject
-            AsyncOperationHandle<GameObject> goHandle = Addressables.LoadAssetAsync<GameObject>("gameObjectKey");
-            yield return goHandle;
-            if(goHandle.Status == AsyncOperationStatus.Succeeded)
+            var stackItem = _stack.GetLast();
+            while (stackItem != null)
             {
-                GameObject obj = goHandle.Result;
-                //etc...
+                PopScreen(stackItem.Screen);
+                stackItem = _stack.GetLast();
             }
-
-            //Load a Material
-            AsyncOperationHandle<IList<IResourceLocation>> locationHandle = Addressables.LoadResourceLocationsAsync("Assets/UIScreens/GameScreen.prefab");
-            yield return locationHandle;
-            AsyncOperationHandle<Material> matHandle = Addressables.LoadAssetAsync<Material>(locationHandle.Result[0]);
-            yield return matHandle;
-            if (matHandle.Status == AsyncOperationStatus.Succeeded)
-            {
-                Material mat = matHandle.Result;
-                //etc...
-            }
-
-            //Use this only when the objects are no longer needed
-            Addressables.Release(goHandle);
-            Addressables.Release(matHandle);
         }
     }
 }

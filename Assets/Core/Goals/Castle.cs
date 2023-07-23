@@ -20,6 +20,8 @@ namespace Core.Goals
         public string Name => gameObject.name;
         public CastleView View => _view;
 
+        public CastlePart SelectedCastlePart => _parts[_selectedPartIndex];
+        
         public void Init(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;

@@ -11,8 +11,9 @@ public class CastleSelector : MonoBehaviour
     [SerializeField] private Transform _castleRoot;
     
     private Castle _castleInstance;
-
+    
     public CastleLibrary Library => _library;
+    public Castle ActiveCastle => _castleInstance;
     
     private void PlayerInfo_OnCastleChanged()
     {
