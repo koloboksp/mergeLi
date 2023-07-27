@@ -177,7 +177,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4679713789189145076}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -326,6 +326,7 @@ Animation:
   - {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
   - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
   - {fileID: 7400000, guid: b542c6eb5bb975c4eaf747ebfc2671a7, type: 2}
+  - {fileID: 7400000, guid: cb84f86e5f16d4248aed24054ca922cd, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -347,6 +348,7 @@ MonoBehaviour:
   idle: {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
   select: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
   move: {fileID: 7400000, guid: b542c6eb5bb975c4eaf747ebfc2671a7, type: 2}
+  noPath: {fileID: 7400000, guid: cb84f86e5f16d4248aed24054ca922cd, type: 2}
   idles: []
 --- !u!1 &4679713790568643541
 GameObject:
