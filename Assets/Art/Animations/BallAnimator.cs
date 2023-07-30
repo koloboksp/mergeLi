@@ -28,7 +28,10 @@ public class BallAnimator : MonoBehaviour
 
         ball = GetComponentInParent<Ball>();
         if (ball != null)
+        {
             ball.OnPathNotFound += Ball_OnPathNotFound;
+            ball.OnMovingStateChanged += Ball_OnMovingStateChanged;
+        }
 
         clips = new Dictionary<DefaultBallSkin.BallState, AnimationClip>
         {
@@ -39,6 +42,14 @@ public class BallAnimator : MonoBehaviour
         };
 
         anim[idle.name].normalizedTime = Random.Range(0, 1f);
+    }
+
+    private void Ball_OnMovingStateChanged()
+    {
+        if (ball.Moving)
+            BlobTrail.ResetTail();
+
+        Follower.Follow(transform, ball.Moving);
     }
 
     private void Ball_OnPathNotFound()
@@ -53,7 +64,10 @@ public class BallAnimator : MonoBehaviour
             ballSkin.ChangeStateEvent -= SetAnimationState;
 
         if (ball != null)
+        {
             ball.OnPathNotFound -= Ball_OnPathNotFound;
+            ball.OnMovingStateChanged -= Ball_OnMovingStateChanged;
+        }
     }
 
     private void SetAnimationState(DefaultBallSkin.BallState ballState)
