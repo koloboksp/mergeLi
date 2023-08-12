@@ -57,11 +57,19 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
         
         _view.RegenerateField();
     }
+
+    public Vector3 ScreenPointToWorld(Vector3 screenPosition)
+    {
+        if (_view.Canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            return screenPosition;
+        
+        return _view.Canvas.worldCamera.ScreenToWorldPoint(screenPosition);
+    }
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        var localPosition = _view.Root.InverseTransformPoint(eventData.position);
-
+        var localPosition = _view.Root.InverseTransformPoint(ScreenPointToWorld(eventData.position));
+      
         var fieldSize = _view.RectSize;
         var gridPosition = new Vector3Int(
             (int)((localPosition.x / fieldSize.x) * _size.x), 

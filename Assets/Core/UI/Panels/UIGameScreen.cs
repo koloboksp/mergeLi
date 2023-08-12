@@ -45,7 +45,8 @@ namespace Core
             foreach (var buff in _data.GameProcessor.Buffs)
             {
                 var control = buff.CreateControl();
-                control.transform.SetParent(_buffsContainer.content);
+                control.transform.SetParent(_buffsContainer.content, false);
+                control.transform.localScale = Vector3.one;
             }
         }
 

@@ -30,7 +30,8 @@ namespace Core.Buffs
             
             _cursorInstance.transform.position = eventData.position;
             
-            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(eventData.position);
+            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(
+                _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
             var fieldSize = _gameProcessor.Scene.Field.Size;
             var size = GetSize(_halfSize);
             for (var x = 0; x < size; x++)
@@ -56,7 +57,8 @@ namespace Core.Buffs
                     return false;
             }
             
-            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(eventData.position);
+            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(
+                _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
             var fieldSize = _gameProcessor.Scene.Field.Size;
             var size = GetSize(_halfSize);
             

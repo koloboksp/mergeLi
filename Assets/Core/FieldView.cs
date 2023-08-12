@@ -3,13 +3,16 @@ using UnityEngine.UI;
 
 public class FieldView : MonoBehaviour, IFieldView
 {
+    
     [SerializeField] private Field _model;
+    [SerializeField] private Canvas _canvas;
     [SerializeField] private RectTransform _root;
     [SerializeField] private RectTransform _backgroundRoot;
 
     [SerializeField] private Color _gridColor = Color.gray;
     [SerializeField] private float _gridThickness = 8.0f;
 
+    public Canvas Canvas => _canvas;
     public Transform Root => _root;
     public Vector2 RectSize => _root.rect.size;
 
