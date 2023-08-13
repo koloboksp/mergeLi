@@ -276,6 +276,7 @@ MonoBehaviour:
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,
     type: 3}
   _castleSelector: {fileID: 391481347}
+  _castleOpenEffect: {fileID: 551278560}
 --- !u!4 &391481346
 Transform:
   m_ObjectHideFlags: 0
@@ -311,6 +312,7 @@ MonoBehaviour:
   _library: {fileID: 2231363127462039435, guid: 1bc7559ac84d0ee49bd208927b2e34f2,
     type: 3}
   _castleRoot: {fileID: 168487451}
+  _selectionMaterial: {fileID: 2100000, guid: b1a3101ae7f83b749a8cebfba1fd3a4d, type: 2}
 --- !u!1001 &403903755
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -352,6 +354,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1873154227423945301, guid: f1dcc6dba25b348c2844f558a626efc1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1873154227423952298, guid: f1dcc6dba25b348c2844f558a626efc1,
         type: 3}
@@ -518,6 +525,12 @@ Transform:
   m_Father: {fileID: 391481346}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!198 &551278560 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 1873154227423952299, guid: f1dcc6dba25b348c2844f558a626efc1,
+    type: 3}
+  m_PrefabInstance: {fileID: 403903755}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &623220713
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,7 +1045,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1651605649
 RectTransform:
   m_ObjectHideFlags: 0

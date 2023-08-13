@@ -58,6 +58,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     [SerializeField] private CastleSelector _castleSelector;
     
+    [SerializeField] private ParticleSystem _castleOpenEffect;
+
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
@@ -377,9 +379,16 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
             if (castleProgress == null || !castleProgress.IsCompleted)
             {
                 _playerInfo.SelectCastle(castle.Name);
+                StartCoroutine(PlayNewCastleSelectedFx());
                 break;
             }
         }
-        
+    }
+    
+    private IEnumerator PlayNewCastleSelectedFx()
+    {
+        _castleOpenEffect.gameObject.SetActive(true);
+        _castleOpenEffect.Play();
+        yield return new WaitForSeconds(_castleOpenEffect.main.duration);
     }
 }

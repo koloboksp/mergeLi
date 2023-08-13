@@ -42,6 +42,8 @@ namespace Core
             _data.GameProcessor.PlayerInfo.OnCoinsChanged += OnCoinsChanged;
             OnCoinsChanged();
             
+            _data.GameProcessor.CastleSelector.OnSelectedPartChanged += CastleSelector_OnSelectedPartChanged;
+            
             foreach (var buff in _data.GameProcessor.Buffs)
             {
                 var control = buff.CreateControl();
@@ -59,9 +61,12 @@ namespace Core
             _data.GameProcessor.OnScoreChanged -= OnScoreChanged;
             _data.GameProcessor.PlayerInfo.OnCoinsChanged -= OnCoinsChanged;
             
+            _data.GameProcessor.CastleSelector.OnSelectedPartChanged -= CastleSelector_OnSelectedPartChanged;
             base.InnerHide();
         }
+
         
+
         private void OnStepExecute(Step sender)
         {
             _buffsContainerRoot.interactable = false;
@@ -110,6 +115,14 @@ namespace Core
                     Market = _data.GameProcessor.Market,
                     PurchaseItems = new List<PurchaseItem>(_data.GameProcessor.PurchasesLibrary.Items)
                 });
+        }
+        
+        private void CastleSelector_OnSelectedPartChanged()
+        {
+            var currentPointsGoal = _data.GameProcessor.CastleSelector.ActiveCastle.SelectedCastlePart.Points;
+            var nextPointsGoal = _data.GameProcessor.CastleSelector.ActiveCastle.SelectedCastlePart.Cost; 
+            
+            _score.SetScore(currentPointsGoal, nextPointsGoal);
         }
     }
 

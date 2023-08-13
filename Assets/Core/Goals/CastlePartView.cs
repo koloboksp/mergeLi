@@ -13,7 +13,6 @@ public class CastlePartView : MonoBehaviour, ISupportChangesInEditor
 
     [SerializeField] private RectTransform _root;
     [SerializeField] private CastlePart _model;
-    [SerializeField] private Image _selectionFrame;
     [SerializeField] private Image _outlineImage;
     [SerializeField] private Image _image;
     [SerializeField] private Button _areaClick;
@@ -51,7 +50,6 @@ public class CastlePartView : MonoBehaviour, ISupportChangesInEditor
     
     private void OnSelectedStateChanged()
     {
-        _selectionFrame.gameObject.SetActive(_model.Selected);
     }
     
     private void OnProgressChanged()

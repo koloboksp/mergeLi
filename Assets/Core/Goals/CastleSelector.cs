@@ -1,15 +1,20 @@
 ﻿using System;
 using Core.Goals;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CastleSelector : MonoBehaviour
 {
     public event Action OnCastleCompleted;
-    
+    public event Action OnSelectedPartChanged;
+
     [SerializeField] private GameProcessor _gameProcessor;
     [SerializeField] private CastleLibrary _library;
     [SerializeField] private Transform _castleRoot;
     
+    [SerializeField] private Material _selectionMaterial;
+
     private Castle _castleInstance;
     
     public CastleLibrary Library => _library;
@@ -20,6 +25,7 @@ public class CastleSelector : MonoBehaviour
         if (_castleInstance != null)
         {
             _castleInstance.OnCompleted -= CastleInstance_OnCompleted;
+            _castleInstance.OnPartSelected -= CastleInstance_OnPartSelected;
             Destroy(_castleInstance.gameObject);
             _castleInstance = null;
         }
@@ -36,9 +42,50 @@ public class CastleSelector : MonoBehaviour
         _castleInstance.View.Root.localScale = Vector3.one;
         
         _castleInstance.Init(_gameProcessor);
+        
         _castleInstance.OnCompleted += CastleInstance_OnCompleted;
+        _castleInstance.OnPartSelected += CastleInstance_OnPartSelected;
+        CastleInstance_OnPartSelected();
     }
 
+    private GameObject _castlePart;
+    
+    private void CastleInstance_OnPartSelected()
+    {
+        if (_castlePart != null)
+        {
+            Destroy(_castlePart);
+            _castlePart = null;
+        }
+        
+        _castlePart = GameObject.Instantiate(_castleInstance.SelectedCastlePart.gameObject, _castleInstance.SelectedCastlePart.gameObject.transform.parent);
+        _castlePart.transform.SetSiblingIndex(0);
+        var images = _castlePart.GetComponentsInChildren<Image>();
+        foreach (var image in images)
+        {
+            image.material = _selectionMaterial;
+        }
+        
+        OnSelectedPartChanged?.Invoke();
+    }
+
+    // private void CloneObj(GameObject target)
+    // {
+    //     var targetClone = new GameObject();
+    //     
+    //     for (int i = 0; i < target.transform.childCount; i++)
+    //     {
+    //         var child = target.transform.GetChild(i);
+    //         var canvasRenderer = child.GetComponent<Image>();
+    //         if (canvasRenderer != null)
+    //         {
+    //             var rendererObj = new GameObject();
+    //             rendererObj.transform.SetParent();
+    //             var addComponent = rendererObj.AddComponent<Image>();
+    //             addComponent.sprite = canvasRenderer.sprite;
+    //         }
+    //     }
+    // }
     private void CastleInstance_OnCompleted()
     {
         OnCastleCompleted?.Invoke();

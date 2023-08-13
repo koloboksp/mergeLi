@@ -9,7 +9,8 @@ namespace Core.Goals
     public class Castle : MonoBehaviour
     {
         public event Action OnCompleted;
-        
+        public event Action OnPartSelected;
+
         [SerializeField] private CastleView _view;
         [SerializeField] private CastlePart _partPrefab;
         
@@ -34,6 +35,8 @@ namespace Core.Goals
             
             _gameProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
             GameProcessor_OnScoreChanged(0);
+            
+            SelectDefaultPart();
         }
 
         private void OnDestroy()
@@ -89,6 +92,8 @@ namespace Core.Goals
                 var part = _parts[partI];
                 part.Select(partI == _selectedPartIndex);
             }
+            
+            OnPartSelected?.Invoke();
         }
 
         private void AddProgress(int additionalProgress)
@@ -110,6 +115,17 @@ namespace Core.Goals
                 else
                     break;
             }
+        }
+        
+        public void SelectDefaultPart()
+        {
+            CastlePart newSelectedPart = null;
+            int minCost = int.MaxValue;
+            foreach (var part in _parts)
+                if (!part.IsCompleted && part.Points < minCost)
+                    newSelectedPart = part;
+
+            SelectPart(newSelectedPart);
         }
     }
 }
