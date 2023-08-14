@@ -104,13 +104,14 @@ namespace Core.Steps.CustomOperations
                         centerPosition += _field.GetPositionFromGrid(tuple.intPosition) / valueTuples.Count;
                         sumGroupPoints += tuple.points;
                     }
-                    
+
+                    var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
                     var collapsePointsEffect = Object.Instantiate(_collapsePointsEffectPrefab, 
                         _field.View.Root.TransformPoint(centerPosition), Quaternion.identity, 
                         _field.View.Root);
-                    
+                    collapsePointsEffect.transform.SetParent(findObjectOfType.transform);
                     sumPoints += sumGroupPoints;
-                    collapsePointsEffect.Run(sumGroupPoints);
+                    collapsePointsEffect.Run(sumGroupPoints, valueTuples.Count);
                 }
             }
             _field.DestroyBalls(_ballsToRemove.ConvertAll(i=>i.ball));
