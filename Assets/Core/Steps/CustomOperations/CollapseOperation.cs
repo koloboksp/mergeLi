@@ -17,7 +17,7 @@ namespace Core.Steps.CustomOperations
         private readonly DestroyBallEffect _destroyBallEffectPrefab;
         private readonly CollapsePointsEffect _collapsePointsEffectPrefab;
 
-        private readonly List<Ball> _ballsToRemove = new List<Ball>();
+        private readonly List<(Ball ball, float distance)> _ballsToRemove = new();
         private readonly List<List<(Vector3Int intPosition, int points)>> _collapseLines = new List<List<(Vector3Int, int)>>();
         private int _pointsAdded;
 
@@ -54,7 +54,8 @@ namespace Core.Steps.CustomOperations
                 checkingPositions.AddRange(Owner.GetData<GenerateOperationData>().NewBallsData.Select(i => i.position));
 
             var data = new CollapseOperationData();
-            
+
+            var maxDistanceToCheckingPosition = float.MinValue;
             foreach (var checkingPosition in checkingPositions)
             {
                 List<List<Ball>> collapseLines = _field.CheckCollapse(checkingPosition);
@@ -62,13 +63,16 @@ namespace Core.Steps.CustomOperations
                 {
                     _collapseLines.Add(new List<(Vector3Int intPosition, int points)>());
                     foreach (var ball in collapseLine)
-                        _collapseLines[_collapseLines.Count-1].Add((ball.IntGridPosition, ball.Points));
+                    {
+                        _collapseLines[_collapseLines.Count - 1].Add((ball.IntGridPosition, ball.Points));
+                        maxDistanceToCheckingPosition = Mathf.Max(maxDistanceToCheckingPosition, (ball.IntGridPosition - checkingPosition).magnitude);
+                    }
                 }
-           
+                
                 foreach (var line in collapseLines)
                     foreach (var ball in line)
-                        if(!_ballsToRemove.Contains(ball))
-                            _ballsToRemove.Add(ball);
+                        if(_ballsToRemove.FindIndex(i=>i.ball == ball) < 0)
+                            _ballsToRemove.Add((ball, (ball.IntGridPosition - checkingPosition).magnitude));
             }
 
             
@@ -77,13 +81,13 @@ namespace Core.Steps.CustomOperations
 
             var collapseLineWithResultPoints = _pointsCalculator.GetPoints(_collapseLines);
 
-            foreach (var ball in _ballsToRemove)
+            foreach (var ballPair in _ballsToRemove)
             {
                 var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab, 
-                    _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ball.IntGridPosition)), Quaternion.identity, 
+                    _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ballPair.ball.IntGridPosition)), Quaternion.identity, 
                     _field.View.Root);
 
-                destroyBallEffect.Run(ball);
+                destroyBallEffect.Run(ballPair.ball, ballPair.distance / maxDistanceToCheckingPosition);
             }
 
             var sumPoints = 0;
@@ -109,7 +113,7 @@ namespace Core.Steps.CustomOperations
                     collapsePointsEffect.Run(sumGroupPoints);
                 }
             }
-            _field.DestroyBalls(_ballsToRemove);
+            _field.DestroyBalls(_ballsToRemove.ConvertAll(i=>i.ball));
             _pointsAdded = sumPoints;
 
             if(_pointsAdded != 0)

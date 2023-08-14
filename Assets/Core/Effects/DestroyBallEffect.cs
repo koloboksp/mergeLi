@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Core;
 using UnityEngine;
@@ -8,14 +9,24 @@ namespace Core.Effects
     {
         [SerializeField] List<DestroyBallEffectColorVariant> _colorVariants;
         [SerializeField] private float _duration = 2.0f;
-        
-        public void Run(Ball ball)
+        [SerializeField] private float _delayScaler = 0.15f;
+
+        public void Run(Ball ball, float delay)
         {
             var colorIndex = ball.GetColorIndex(_colorVariants.Count);
-            var variantInstance = GameObject.Instantiate(_colorVariants[colorIndex], transform);
+            
+            StartCoroutine(StartEffect(_colorVariants[colorIndex], delay * _delayScaler));
+        }
+
+        IEnumerator StartEffect(DestroyBallEffectColorVariant variant, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            
+            var variantInstance = Instantiate(variant, transform);
             variantInstance.Run();
             
-            Destroy(this.gameObject, _duration);
+            yield return new WaitForSeconds(_duration);
+            Destroy(this.gameObject);
         }
     }
 }
