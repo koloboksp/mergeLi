@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class DestroyBallEffect : MonoBehaviour
 {
-    [SerializeField] private Animation _animation;
-    [SerializeField] private AnimationClip _clip;
+    [SerializeField] private ParticleSystem _particleSystem;
 
-    public float Duration => _clip.length;
+    public float Duration => _particleSystem.main.duration;
     
     public void Run()
     {
