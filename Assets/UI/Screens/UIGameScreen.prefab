@@ -400,6 +400,7 @@ GameObject:
   m_Component:
   - component: {fileID: 370210488831645893}
   - component: {fileID: 2081831353663764407}
+  - component: {fileID: 4933009404904431178}
   m_Layer: 5
   m_Name: currentScore
   m_TagString: Untagged
@@ -456,6 +457,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &4933009404904431178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2858566737352094124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c6b74ff6fb4f43b7e0a4fb36f9a57a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3159831559929219128
 GameObject:
   m_ObjectHideFlags: 0
@@ -920,7 +933,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 447135101054681759}
-  - component: {fileID: 4866570293729310484}
   - component: {fileID: 7751034290328399452}
   - component: {fileID: 5297330937264307940}
   m_Layer: 5
@@ -954,18 +966,6 @@ RectTransform:
   m_AnchoredPosition: {x: 540, y: -104.99999}
   m_SizeDelta: {x: 276.47998, y: 205.52728}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &4866570293729310484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5844819785010385830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3c6b74ff6fb4f43b7e0a4fb36f9a57a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7751034290328399452
 MonoBehaviour:
   m_ObjectHideFlags: 0
