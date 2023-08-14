@@ -208,9 +208,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d045b689d34321ab20261e11280aa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animation: {fileID: 5600580805448456365}
-  _clip: {fileID: 7400000, guid: b984ae4cf14a98b4abdec903559061af, type: 2}
   _points: {fileID: 1669837944706570845}
+  _duration: 0.5
+  _coinPrefab: {fileID: 7271366859707694709, guid: 34ec383426191864dab92e2b0faa3628,
+    type: 3}
+  _movingSpeed:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.011509772
+      outSlope: -0.011509772
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.22128792
+      value: -0.0025469735
+      inSlope: 0.09906027
+      outSlope: 0.09906027
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.29215264
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9517747
+      value: 0.93587506
+      inSlope: 1.4006537
+      outSlope: 1.4006537
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1.3296955
+      outSlope: 1.3296955
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!111 &5600580805448456365
 Animation:
   m_ObjectHideFlags: 0
