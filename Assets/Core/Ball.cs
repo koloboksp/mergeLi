@@ -23,6 +23,7 @@ namespace Core
         private float _moveSpeed = 15.0f;
         private float _transparency = 0.0f;
         
+        public BallView View => _view;
         public int Points => _points;
         public bool Selected => _selected;
         public bool Moving => _moving;
@@ -41,6 +42,7 @@ namespace Core
             }
         }
 
+       
         public IEnumerator InnerMove(Vector3Int to, Action<bool> onComplete)
         {
             var path = _field.GetPath(new Vector3Int((int)_gridPosition.x, (int)_gridPosition.y), to);
@@ -125,6 +127,20 @@ namespace Core
             {
                 onMergeComplete?.Invoke(this);
             }
+        }
+        
+        public int GetColorIndex(int count)
+        {
+            var colorIndex = Mathf.RoundToInt(Mathf.Log(_points, 2));
+            colorIndex %= count;
+            return colorIndex;
+        }
+        
+        public static int GetColorIndex(int points, int count)
+        {
+            var colorIndex = Mathf.RoundToInt(Mathf.Log(points, 2));
+            colorIndex %= count;
+            return colorIndex;
         }
         
         public void Select(bool state)

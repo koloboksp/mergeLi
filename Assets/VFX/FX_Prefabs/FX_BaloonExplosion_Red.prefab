@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1999945841352564024}
   - component: {fileID: 1999945841352564026}
   - component: {fileID: 1999945841352564027}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CenterShapeBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4882,7 +4882,7 @@ GameObject:
   - component: {fileID: 1999945842277934157}
   - component: {fileID: 1999945842277934159}
   - component: {fileID: 1999945842277934156}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9752,7 +9752,7 @@ GameObject:
   - component: {fileID: 1999945842856091191}
   - component: {fileID: 1999945842856091185}
   - component: {fileID: 1999945842856091190}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ShapesBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14622,9 +14622,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1999945842859427044}
+  - component: {fileID: 5038913654553134274}
   - component: {fileID: 1999945842859427045}
   - component: {fileID: 1999945842859427050}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: FX_BaloonExplosion_Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14650,6 +14651,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -35.136, y: -40.424, z: 0}
+--- !u!114 &5038913654553134274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999945842859427051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d96d35679de4a878a72654b24c536b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mainParticleSystem: {fileID: 1999945842859427045}
 --- !u!198 &1999945842859427045
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -19500,7 +19514,7 @@ GameObject:
   - component: {fileID: 1999945843267497276}
   - component: {fileID: 1999945843267497278}
   - component: {fileID: 1999945843267497279}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CenterShape
   m_TagString: Untagged
   m_Icon: {fileID: 0}

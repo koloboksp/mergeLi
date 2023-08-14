@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Core.Effects;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -81,7 +82,8 @@ namespace Core.Steps.CustomOperations
                 var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab, 
                     _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ball.IntGridPosition)), Quaternion.identity, 
                     _field.View.Root);
-                destroyBallEffect.Run();
+
+                destroyBallEffect.Run(ball);
             }
 
             var sumPoints = 0;

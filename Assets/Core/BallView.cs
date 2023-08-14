@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -12,7 +13,8 @@ namespace Core
     {
         [SerializeField] private Ball _ball;
         [SerializeField] private RectTransform _root;
- 
+        [SerializeField] private List<Color> _colors;
+        
         BallSkin _ballSkin;
 
         public void SetData()
@@ -54,6 +56,7 @@ namespace Core
         private void Ball_OnPointsChanged(int oldPoints)
         {
             _ballSkin.Points = _ball.Points;
+            _ballSkin.MainColor = _colors[Ball.GetColorIndex(_ball.Points, _colors.Count)];
         }
         
         private void Ball_TransparencyChanged()

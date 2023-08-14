@@ -256,7 +256,8 @@ MonoBehaviour:
   _stepMachine: {fileID: 1844453385}
   _playerInfo: {fileID: 647029505}
   _market: {fileID: 7648675713994640519, guid: e24b670704c295f4898ac738b1d3275a, type: 3}
-  _destroyBallEffectPrefab: {fileID: 1305546158}
+  _destroyBallEffectPrefab: {fileID: 5600580805448456366, guid: 14a662a9344a3274c9fabd6bac889aa0,
+    type: 3}
   _noPathEffectPrefab: {fileID: -6999720306982994079, guid: 44ff0d0d6eb6a924c8dfd8bab846454c,
     type: 3}
   _collapsePointsEffectPrefab: {fileID: -5618361174370767863, guid: 6a50e804299be03449a816f343e09ec9,
@@ -973,31 +974,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1305546154 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4190225522409640544, guid: 9413f2fce8a7b43acb90e2569a4fc18d,
-    type: 3}
-  m_PrefabInstance: {fileID: 2015903994}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &1305546156 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 4190225522409640558, guid: 9413f2fce8a7b43acb90e2569a4fc18d,
-    type: 3}
-  m_PrefabInstance: {fileID: 2015903994}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1305546158
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1305546154}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aa05bf90d2a4e648fc72186c02863d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _particleSystem: {fileID: 1305546156}
 --- !u!1 &1602322782
 GameObject:
   m_ObjectHideFlags: 0

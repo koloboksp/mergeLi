@@ -1,8 +1,11 @@
-﻿public abstract class BallSkin : Skin
+﻿using UnityEngine;
+
+public abstract class BallSkin : Skin
 {
     public abstract bool Selected { set; }
     public abstract bool Moving { set; }
     public abstract int Points { set; }
+    public abstract Color MainColor { set; }
     public abstract float Transparency { set; }
     public abstract void PathNotFount();
 }

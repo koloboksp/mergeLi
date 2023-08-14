@@ -1,13 +1,21 @@
+using System.Collections.Generic;
+using Core;
 using UnityEngine;
 
-public class DestroyBallEffect : MonoBehaviour
+namespace Core.Effects
 {
-    [SerializeField] private ParticleSystem _particleSystem;
-
-    public float Duration => _particleSystem.main.duration;
-    
-    public void Run()
+    public class DestroyBallEffect : MonoBehaviour
     {
-        Destroy(this.gameObject, Duration);
+        [SerializeField] List<DestroyBallEffectColorVariant> _colorVariants;
+        [SerializeField] private float _duration = 2.0f;
+        
+        public void Run(Ball ball)
+        {
+            var colorIndex = ball.GetColorIndex(_colorVariants.Count);
+            var variantInstance = GameObject.Instantiate(_colorVariants[colorIndex], transform);
+            variantInstance.Run();
+            
+            Destroy(this.gameObject, _duration);
+        }
     }
 }

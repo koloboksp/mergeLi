@@ -31,12 +31,13 @@ namespace Core
         {
             set
             {
-                var colorIndex = Mathf.RoundToInt(Mathf.Log(value, 2));
-                colorIndex %= _colors.Count;
-                _ballIcon.color = _colors[colorIndex];
-
                 _valueLabel.text = value.ToString();
             }
+        }
+
+        public override Color MainColor
+        {
+            set => _ballIcon.color = value;
         }
 
         public override float Transparency
