@@ -83,7 +83,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     
     private void Start()
     {
-        _field.OnClick += Field_OnClick;
+        _field.OnPointerDown += Field_OnPointerDown;
         _stepMachine.OnStepExecute += StepMachine_OnStepExecute;
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
 
@@ -183,7 +183,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         SelectNextCastle();
     }
     
-    void Field_OnClick(Vector3Int pointerGridPosition)
+    void Field_OnPointerDown(Vector3Int pointerGridPosition)
     {
         var balls = _field.GetSomething<Ball>(pointerGridPosition).ToList();
         Ball ball = null;
@@ -226,6 +226,13 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                             _stepMachine.AddStep(new Step("NoPath",
                                 new PathNotFoundOperation(_selectedBall.IntGridPosition, pointerGridPosition, _noPathEffectPrefab, _field)));
                         }
+                    }
+                    else
+                    {
+                        _stepMachine.AddStep(new Step("Deselect", new SelectOperation(_selectedBall.IntGridPosition, false, _field)
+                            .SubscribeCompleted(OnDeselectBall)));
+                        _stepMachine.AddStep(new Step("Select", new SelectOperation(pointerGridPosition, true, _field)
+                            .SubscribeCompleted(OnSelectBall)));
                     }
                 }
             }

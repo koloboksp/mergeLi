@@ -5,10 +5,13 @@ using UnityEngine;
 public class Scene : MonoBehaviour, ISkinChanger
 {
     [SerializeField] private SkinsLibrary _skinsLibrary;
+    [SerializeField] private GameProcessor _gameProcessor;
     [SerializeField] private Field _field;
     [SerializeField] private Transform _sceneRoot;
     
     private SkinContainer _activeSkin;
+    
+    public GameProcessor GameProcessor => _gameProcessor;
     public Field Field => _field;
     public Transform SceneRoot => _sceneRoot;
     

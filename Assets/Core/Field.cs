@@ -11,7 +11,7 @@ using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
 
-public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IField
+public class Field : MonoBehaviour, IField
 {
     static readonly List<Vector3Int> Directions = new List<Vector3Int>()
     {
@@ -27,7 +27,7 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
         -1,
     };
     
-    public event Action<Vector3Int> OnClick;
+    public event Action<Vector3Int> OnPointerDown;
     
     private Vector2Int _size = new(9, 9);
     private int _minimalBallsCountForCollapse = 5;
@@ -54,8 +54,6 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
     private void Awake()
     { 
         _cellSize = _view.CellSize();
-        
-        _view.RegenerateField();
     }
 
     public Vector3 ScreenPointToWorld(Vector3 screenPosition)
@@ -65,24 +63,12 @@ public class Field : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IFie
         
         return _view.Canvas.worldCamera.ScreenToWorldPoint(screenPosition);
     }
+
+    internal void InnerOnPointerDown(Vector3Int gridPosition)
+    {
+        OnPointerDown?.Invoke(gridPosition);
+    }
     
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        var localPosition = _view.Root.InverseTransformPoint(ScreenPointToWorld(eventData.position));
-      
-        var fieldSize = _view.RectSize;
-        var gridPosition = new Vector3Int(
-            (int)((localPosition.x / fieldSize.x) * _size.x), 
-            (int)((localPosition.y / fieldSize.y) * _size.y));
-       
-        OnClick?.Invoke(gridPosition);
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-       
-    }
-
     List<Vector2Int> CalculatePath(Vector3Int from, Vector3Int to)
     {
         Position dFrom = new Position(from.x, from.y);

@@ -1,60 +1,57 @@
+using System;
+using Core.Steps;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class FieldView : MonoBehaviour, IFieldView
+public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointerUpHandler
 {
-    
     [SerializeField] private Field _model;
     [SerializeField] private Canvas _canvas;
     [SerializeField] private RectTransform _root;
-    [SerializeField] private RectTransform _backgroundRoot;
 
-    [SerializeField] private Color _gridColor = Color.gray;
-    [SerializeField] private float _gridThickness = 8.0f;
-
+    private bool _stepExecuted = false;
     public Canvas Canvas => _canvas;
     public Transform Root => _root;
     public Vector2 RectSize => _root.rect.size;
 
-    public void RegenerateField()
+    private void Awake()
     {
-        for (int x = 0; x < _model.Size.x; x++)
-        {
-            GameObject line = new GameObject($"line_{x}", typeof(RectTransform));
+        _model.Scene.GameProcessor.OnStepExecute += GameProcessor_OnStepExecute;
+        _model.Scene.GameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
+    }
 
-            var image = line.AddComponent<Image>();
-            image.color = _gridColor;
+    private void GameProcessor_OnStepExecute(Step step)
+    {
+        _stepExecuted = true;
+    }
 
-            var lineTransform = line.GetComponent<RectTransform>();
-            lineTransform.SetParent(_backgroundRoot);
-            lineTransform.pivot = Vector2.zero;
-            lineTransform.anchorMin = Vector2.zero;
-            lineTransform.anchorMax = Vector2.zero;
-            lineTransform.sizeDelta = new Vector2(_gridThickness, RectSize.y);
-            lineTransform.anchoredPosition = new Vector2(x * CellSize().x, 0);
-            lineTransform.localScale = Vector3.one;
-        }
-        
-        for (int y = 0; y < _model.Size.x; y++)
-        {
-            GameObject line = new GameObject($"line_{y}", typeof(RectTransform));
-
-            var image = line.AddComponent<Image>();
-            image.color = _gridColor;
-
-            var lineTransform = line.GetComponent<RectTransform>();
-            lineTransform.SetParent(_backgroundRoot);
-            lineTransform.pivot = Vector2.zero;
-            lineTransform.anchorMin = Vector2.zero;
-            lineTransform.anchorMax = Vector2.zero;
-            lineTransform.sizeDelta = new Vector2(RectSize.x, _gridThickness);
-            lineTransform.anchoredPosition = new Vector2(0, y * CellSize().y);
-            lineTransform.localScale = Vector3.one;
-        }
+    private void GameProcessor_OnStepCompleted(Step step)
+    {
+        _stepExecuted = false;
     }
 
     public Vector3 CellSize()
     {
         return new Vector3(_root.rect.size.x / _model.Size.x, _root.rect.size.x / _model.Size.y, 0);
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if(_stepExecuted) return;
+        
+        var localPosition = Root.InverseTransformPoint(_model.ScreenPointToWorld(eventData.position));
+      
+        var fieldSize = RectSize;
+        var gridPosition = new Vector3Int(
+            (int)((localPosition.x / fieldSize.x) * _model.Size.x), 
+            (int)((localPosition.y / fieldSize.y) * _model.Size.y));
+       
+        _model.InnerOnPointerDown(gridPosition);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+       
     }
 }
