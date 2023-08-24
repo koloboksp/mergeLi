@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Effects;
 using Core.Goals;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -59,33 +60,16 @@ public class CastleSelector : MonoBehaviour
         }
         
         _castlePart = GameObject.Instantiate(_castleInstance.SelectedCastlePart.gameObject, _castleInstance.SelectedCastlePart.gameObject.transform.parent);
+        _castlePart.AddComponent<CoinsEffectReceiver>();
         _castlePart.transform.SetSiblingIndex(0);
         var images = _castlePart.GetComponentsInChildren<Image>();
+        
         foreach (var image in images)
-        {
             image.material = _selectionMaterial;
-        }
         
         OnSelectedPartChanged?.Invoke();
     }
-
-    // private void CloneObj(GameObject target)
-    // {
-    //     var targetClone = new GameObject();
-    //     
-    //     for (int i = 0; i < target.transform.childCount; i++)
-    //     {
-    //         var child = target.transform.GetChild(i);
-    //         var canvasRenderer = child.GetComponent<Image>();
-    //         if (canvasRenderer != null)
-    //         {
-    //             var rendererObj = new GameObject();
-    //             rendererObj.transform.SetParent();
-    //             var addComponent = rendererObj.AddComponent<Image>();
-    //             addComponent.sprite = canvasRenderer.sprite;
-    //         }
-    //     }
-    // }
+    
     private void CastleInstance_OnCompleted()
     {
         OnCastleCompleted?.Invoke();

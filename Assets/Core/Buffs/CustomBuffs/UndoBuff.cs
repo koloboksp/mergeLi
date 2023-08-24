@@ -15,8 +15,10 @@ public class UndoBuff : Buff
     {
         if (step.Tag == GameProcessor.MoveStepTag
             || step.Tag == GameProcessor.MergeStepTag
+            || step.Tag == GameProcessor.ExplodeStepTag
             || step.Tag == GameProcessor.UndoMoveStepTag
-            || step.Tag == GameProcessor.UndoMergeStepTag)
+            || step.Tag == GameProcessor.UndoMergeStepTag
+            || step.Tag == GameProcessor.UndoExplodeStepTag)
         {
             var hasUndoStepsNewState = _gameProcessor.HasUndoSteps();
             if (_hasUndoSteps != hasUndoStepsNewState)

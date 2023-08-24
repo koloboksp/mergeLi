@@ -10,10 +10,9 @@ namespace Core.Buffs
         
         [SerializeField] private BuffCursor _cursorPrefab;
         [SerializeField] private AffectingBuffArea _areaPrefab;
-        [SerializeField] private int _halfSize = 1;
-
+       
         private BuffCursor _cursorInstance;
-        private AffectingBuffArea[,] _affectingAreaInstances;
+        private List<AffectingBuffArea> _affectingBuffAreas = new List<AffectingBuffArea>();
         private readonly List<Vector3Int> _ballsIndexesToExplode = new();
         
         protected override void InnerOnBeginDrag(PointerEventData eventData)
@@ -21,7 +20,10 @@ namespace Core.Buffs
             base.InnerOnBeginDrag(eventData);
 
             CreateCursor(eventData.position);
-            CreateAffectingArea(eventData.position);
+            
+            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(_gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
+            var affectingArea = GetAffectingArea(pointerGridPosition);
+            UpdateAffectingArea(pointerGridPosition, affectingArea);
         }
 
         protected override void InnerOnDrag(PointerEventData eventData)
@@ -30,17 +32,9 @@ namespace Core.Buffs
             
             _cursorInstance.transform.position = eventData.position;
             
-            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(
-                _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
-            var fieldSize = _gameProcessor.Scene.Field.Size;
-            var size = GetSize(_halfSize);
-            for (var x = 0; x < size; x++)
-            for (var y = 0; y < size; y++)
-            {
-                var areaGridPosition = new Vector3Int(pointerGridPosition.x + x - _halfSize, pointerGridPosition.y + y - _halfSize, 0);
-                _affectingAreaInstances[x, y].transform.position = _gameProcessor.Scene.Field.GetPointPosition(areaGridPosition);
-                _affectingAreaInstances[x, y].gameObject.SetActive(IsAreaValid(areaGridPosition, fieldSize));
-            }
+            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(_gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
+            var affectingArea = GetAffectingArea(pointerGridPosition);
+            UpdateAffectingArea(pointerGridPosition, affectingArea);
         }
 
         protected override bool InnerOnEndDrag(PointerEventData eventData)
@@ -48,6 +42,12 @@ namespace Core.Buffs
             base.InnerOnEndDrag(eventData);
             
             DestroyCursor();
+            
+            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(_gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
+            _ballsIndexesToExplode.Clear();
+            foreach (var affectingBuffArea in _affectingBuffAreas)
+                _ballsIndexesToExplode.Add(pointerGridPosition + affectingBuffArea.LocalGridPosition);
+            
             DestroyAffectingArea();
             
             if (eventData.pointerCurrentRaycast.gameObject != null)
@@ -57,23 +57,14 @@ namespace Core.Buffs
                     return false;
             }
             
-            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(
-                _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
-            var fieldSize = _gameProcessor.Scene.Field.Size;
-            var size = GetSize(_halfSize);
-            
-            _ballsIndexesToExplode.Clear();
-            for (int x = 0; x < size; x++)
-            for (int y = 0; y < size; y++)
-            {
-                var areaGridPosition = new Vector3Int(pointerGridPosition.x + x - _halfSize, pointerGridPosition.y + y - _halfSize, 0);
-                if(IsAreaValid(areaGridPosition, fieldSize))
-                    _ballsIndexesToExplode.Add(areaGridPosition);
-            }
-            
             return _ballsIndexesToExplode.Count > 0;
         }
 
+        protected virtual List<Vector3Int> GetAffectingArea(Vector3Int pointerGridPosition)
+        {
+            return new List<Vector3Int>(){pointerGridPosition};
+        }
+        
         private void CreateCursor(Vector3 position)
         {
             DestroyCursor();
@@ -92,30 +83,39 @@ namespace Core.Buffs
             }
         }
         
-        private void CreateAffectingArea(Vector3 position)
+        private void UpdateAffectingArea(Vector3Int pointerGridPosition, List<Vector3Int> affectingArea)
         {
-            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(position);
-            var size = GetSize(_halfSize);
-            
-            _affectingAreaInstances = new AffectingBuffArea[size, size];
-            for (int x = 0; x < size ; x++)
+            for (int i = 0; i < affectingArea.Count ; i++)
             {
-                for (int y = 0; y < size; y++)
+                var localGridPosition = affectingArea[i];  
+                var affectingBuffArea = _affectingBuffAreas.Find(area => area.LocalGridPosition == localGridPosition);
+                if (affectingBuffArea == null)
                 {
-                    var areaGridPosition = new Vector3Int(pointerGridPosition.x + x - _halfSize, pointerGridPosition.y + y - _halfSize, 0);
-                    var affectingBuffArea = Instantiate(_areaPrefab, _gameProcessor.Scene.Field.View.Root);
-                    _affectingAreaInstances[x, y] = affectingBuffArea;
-                    _affectingAreaInstances[x, y].transform.position = _gameProcessor.Scene.Field.GetPointPosition(areaGridPosition);
-                    affectingBuffArea.transform.localScale = Vector3.one;
+                    affectingBuffArea = Instantiate(_areaPrefab, _gameProcessor.Scene.Field.View.Root);
+                    _affectingBuffAreas.Add(affectingBuffArea);
+                    affectingBuffArea.LocalGridPosition = localGridPosition;
+                }
+                
+                affectingBuffArea.transform.position = _gameProcessor.Scene.Field.GetPointPosition(pointerGridPosition + localGridPosition);
+                affectingBuffArea.transform.localScale = Vector3.one;
+            }
+
+            for (var index = _affectingBuffAreas.Count - 1; index >= 0; index--)
+            {
+                var affectingAreaInstance = _affectingBuffAreas[index];
+                if (affectingArea.FindIndex(i => i == affectingAreaInstance.LocalGridPosition) < 0)
+                {
+                    _affectingBuffAreas.RemoveAt(index);
+                    Destroy(affectingAreaInstance.gameObject);
                 }
             }
         }
 
         private void DestroyAffectingArea()
         {
-            foreach (var affectingAreaInstance in _affectingAreaInstances)
+            foreach (var affectingAreaInstance in _affectingBuffAreas)
                 Destroy(affectingAreaInstance.gameObject);
-            _affectingAreaInstances = null;
+            _affectingBuffAreas.Clear();
         }
         
         protected override void InnerProcessUsing()
@@ -123,12 +123,8 @@ namespace Core.Buffs
             _gameProcessor.UseExplodeBuff(Cost, _ballsIndexesToExplode);
         }
 
-        private static int GetSize(int halfSize)
-        {
-            return halfSize * 2 + 1;
-        }
-
-        private static bool IsAreaValid(Vector3Int areaGridPosition, Vector2Int fieldSize)
+       
+        protected static bool IsAreaValid(Vector3Int areaGridPosition, Vector2Int fieldSize)
         {
             return areaGridPosition.x >= 0
                              && areaGridPosition.x < fieldSize.x
