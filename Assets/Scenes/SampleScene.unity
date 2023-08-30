@@ -378,8 +378,8 @@ MonoBehaviour:
   _minimalBallsInLine: 5
   _generatedBallsCountAfterMerge: 2
   _generatedBallsCountAfterMove: 3
-  _generatedBallsCountOnStart: 10
-  _generatedBallsPointsRange: {x: 0, y: 4}
+  _generatedBallsCountOnStart: 5
+  _generatedBallsPointsRange: {x: 0, y: 7}
   _uiScreensRoot: {fileID: 1881252459}
   _buffs:
   - {fileID: 502298966}
