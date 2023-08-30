@@ -2,7 +2,7 @@
 
 namespace Core.Buffs
 {
-    public class BuffCursor : MonoBehaviour
+    public class UIBuffCursor : MonoBehaviour
     {
     
     }

@@ -58,16 +58,19 @@ public class CastleSelector : MonoBehaviour
             Destroy(_castlePart);
             _castlePart = null;
         }
+
+        if (_castleInstance.PartsCount > 0)
+        {
+            _castlePart = GameObject.Instantiate(_castleInstance.SelectedCastlePart.gameObject, _castleInstance.SelectedCastlePart.gameObject.transform.parent);
+            _castlePart.AddComponent<CoinsEffectReceiver>();
+            _castlePart.transform.SetSiblingIndex(0);
+            var images = _castlePart.GetComponentsInChildren<Image>();
         
-        _castlePart = GameObject.Instantiate(_castleInstance.SelectedCastlePart.gameObject, _castleInstance.SelectedCastlePart.gameObject.transform.parent);
-        _castlePart.AddComponent<CoinsEffectReceiver>();
-        _castlePart.transform.SetSiblingIndex(0);
-        var images = _castlePart.GetComponentsInChildren<Image>();
+            foreach (var image in images)
+                image.material = _selectionMaterial;
         
-        foreach (var image in images)
-            image.material = _selectionMaterial;
-        
-        OnSelectedPartChanged?.Invoke();
+            OnSelectedPartChanged?.Invoke();
+        }
     }
     
     private void CastleInstance_OnCompleted()

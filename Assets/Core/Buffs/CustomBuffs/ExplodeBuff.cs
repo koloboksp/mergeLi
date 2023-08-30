@@ -8,10 +8,10 @@ namespace Core.Buffs
     {
         private static readonly List<UIGameScreen_BuffArea> _noAllocFoundBuffAreas = new List<UIGameScreen_BuffArea>();
         
-        [SerializeField] private BuffCursor _cursorPrefab;
+        [SerializeField] private UIBuffCursor _cursorPrefab;
         [SerializeField] private AffectingBuffArea _areaPrefab;
        
-        private BuffCursor _cursorInstance;
+        private UIBuffCursor _cursorInstance;
         private List<AffectingBuffArea> _affectingBuffAreas = new List<AffectingBuffArea>();
         private readonly List<Vector3Int> _ballsIndexesToExplode = new();
         
@@ -19,9 +19,10 @@ namespace Core.Buffs
         {
             base.InnerOnBeginDrag(eventData);
 
+            var pointerPosition = _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position);
             CreateCursor(eventData.position);
             
-            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(_gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
+            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(pointerPosition);
             var affectingArea = GetAffectingArea(pointerGridPosition);
             UpdateAffectingArea(pointerGridPosition, affectingArea);
         }
@@ -29,10 +30,10 @@ namespace Core.Buffs
         protected override void InnerOnDrag(PointerEventData eventData)
         {
             base.InnerOnDrag(eventData);
+            var pointerPosition = _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position);
+            _cursorInstance.transform.position = pointerPosition;
             
-            _cursorInstance.transform.position = eventData.position;
-            
-            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(_gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
+            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(pointerPosition);
             var affectingArea = GetAffectingArea(pointerGridPosition);
             UpdateAffectingArea(pointerGridPosition, affectingArea);
         }

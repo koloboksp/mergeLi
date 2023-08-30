@@ -22,7 +22,8 @@ namespace Core.Goals
         public CastleView View => _view;
 
         public CastlePart SelectedCastlePart => _parts[_selectedPartIndex];
-        
+        public int PartsCount => _parts.Count;
+
         public void Init(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;

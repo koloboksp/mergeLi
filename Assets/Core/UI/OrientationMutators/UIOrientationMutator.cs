@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Core.UI.OrientationMutators
 {
-    [ExecuteInEditMode]
     public class UIOrientationMutator : MonoBehaviour
     {
         [SerializeField] private List<UIMutator> _mutators = new List<UIMutator>();
