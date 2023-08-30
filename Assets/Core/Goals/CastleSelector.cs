@@ -59,7 +59,7 @@ public class CastleSelector : MonoBehaviour
             _castlePart = null;
         }
 
-        if (_castleInstance.PartsCount > 0)
+        if (_castleInstance.SelectedCastlePart != null)
         {
             _castlePart = GameObject.Instantiate(_castleInstance.SelectedCastlePart.gameObject, _castleInstance.SelectedCastlePart.gameObject.transform.parent);
             _castlePart.AddComponent<CoinsEffectReceiver>();

@@ -21,9 +21,16 @@ namespace Core.Goals
         public string Name => gameObject.name;
         public CastleView View => _view;
 
-        public CastlePart SelectedCastlePart => _parts[_selectedPartIndex];
-        public int PartsCount => _parts.Count;
-
+        public CastlePart SelectedCastlePart
+        {
+            get
+            {
+                if (_selectedPartIndex < 0 || _selectedPartIndex >= _parts.Count) return null;
+                
+                return _parts[_selectedPartIndex];
+            }
+        }
+        
         public void Init(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;
@@ -124,7 +131,10 @@ namespace Core.Goals
             int minCost = int.MaxValue;
             foreach (var part in _parts)
                 if (!part.IsCompleted && part.Points < minCost)
+                {
+                    minCost = Mathf.Min(minCost, part.Points);
                     newSelectedPart = part;
+                }
 
             SelectPart(newSelectedPart);
         }
