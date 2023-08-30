@@ -356,12 +356,15 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         OnScoreChanged?.Invoke(points);
     }
     
-    public void UseUndoBuff(int cost)
-    { 
+    public bool UseUndoBuff(int cost)
+    {
+        if (!HasUndoSteps()) return false;
+        
         _stepMachine.AddStep(
             new Step(GameProcessor.UndoStepTag,
                 new SpendOperation(cost, _playerInfo, false),
                 new UndoOperation(_stepMachine)));
+        return true;
     }
 
     public void UseExplodeBuff(int cost, List<Vector3Int> ballsIndexes)
@@ -375,6 +378,22 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     public void UseShowNextBallsBuff(int cost)
     {
         
+    }
+    
+    public bool UseDowngradeBuff(int cost, List<Vector3Int> ballsIndexes)
+    {
+        var gradeLevel = -1;
+        var balls = ballsIndexes.SelectMany(i => _field.GetSomething<Ball>(i)).ToList();
+        var canGradeAny = balls.Any(ball => ball.CanGrade(gradeLevel));
+
+        if (!canGradeAny)
+            return false;
+
+        _stepMachine.AddStep(
+            new Step(GameProcessor.ExplodeStepTag,
+                new SpendOperation(cost, _playerInfo, true),
+                new GradeOperation(ballsIndexes, gradeLevel, _field)));
+        return true;
     }
 
     public void SelectNextCastle()

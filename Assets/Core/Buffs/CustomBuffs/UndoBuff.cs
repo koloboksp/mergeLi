@@ -29,8 +29,8 @@ public class UndoBuff : Buff
         }
     }
     
-    protected override void InnerProcessUsing()
+    protected override bool InnerProcessUsing()
     {
-        _gameProcessor.UseUndoBuff(Cost);
+        return _gameProcessor.UseUndoBuff(Cost);
     }
 }

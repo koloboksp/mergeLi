@@ -95,6 +95,49 @@ namespace Core
             onComplete?.Invoke();
         }
 
+        public bool CanGrade(int level)
+        {
+            var newPoints = _points;
+            var currentLevel = 0;
+            while (currentLevel < Math.Abs(level))
+            {
+                if(level > 0)
+                    newPoints *= 2;
+                else
+                {
+                    if(newPoints > 1)
+                        newPoints /= 2;
+                    else
+                        return false;
+                }
+                currentLevel++;
+            }
+
+            return true;
+        }
+        
+        public IEnumerator InnerGrade(int level, Action onComplete)
+        {
+           
+            var newPoints = _points;
+            var currentLevel = 0;
+            while (currentLevel < Math.Abs(level))
+            {
+                if(level > 0)
+                    newPoints *= 2;
+                else
+                    newPoints /= 2;
+                
+                currentLevel++;
+            }
+         
+            UpdatePoints(newPoints);
+            
+            yield return null;
+            
+            onComplete?.Invoke();
+        }
+
         public void SetData(Field field, Vector3 startPosition, int points)
         {
             _field = field;
@@ -126,6 +169,16 @@ namespace Core
             void OnComplete()
             {
                 onMergeComplete?.Invoke(this);
+            }
+        }
+        
+        public void StartGrade(int level, Action<Ball> onGradeComplete)
+        {
+            StartCoroutine(InnerGrade(level, OnComplete));
+
+            void OnComplete()
+            {
+                onGradeComplete?.Invoke(this);
             }
         }
         

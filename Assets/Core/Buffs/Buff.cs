@@ -63,7 +63,8 @@ public abstract class Buff : MonoBehaviour
         if(!IsCurrencyEnough) return;
         if(!Available) return;
 
-        if(InnerOnEndDrag(eventData))
+        var affectedOnSomething = InnerOnEndDrag(eventData);
+        if(affectedOnSomething)
             ProcessUsing();
     }
     
@@ -77,7 +78,8 @@ public abstract class Buff : MonoBehaviour
 
     private void ProcessUsing()
     {
-        InnerProcessUsing();
+        var buffUsedProcessed = InnerProcessUsing();
+        if(!buffUsedProcessed) return;
         
         _restCooldown = _cooldown;
         _restCooldownChanged?.Invoke();
@@ -88,7 +90,7 @@ public abstract class Buff : MonoBehaviour
             Available = true;
     }
 
-    protected abstract void InnerProcessUsing();
+    protected abstract bool InnerProcessUsing();
     
     protected virtual void InnerOnClick() { }
 

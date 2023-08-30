@@ -44,10 +44,11 @@ public class ShowNextBallsBuff : Buff
         }
     }
     
-    protected override void InnerProcessUsing()
+    protected override bool InnerProcessUsing()
     {
         _gameProcessor.UseShowNextBallsBuff(Cost);
         ClearBalls();
         ShowNextBalls();
+        return true;
     }
 }
