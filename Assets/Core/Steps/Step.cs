@@ -8,20 +8,20 @@ namespace Core.Steps
     {
         public event Action<Step> OnComplete;
 
-        private readonly string _tag;
+        private readonly StepTag _tag;
         private readonly List<Operation> _operations = new List<Operation>();
         private int _executeOperationIndex = 0;
         private bool _completed = false;
         private bool _launched = false;
         private readonly Dictionary<Type, object> _operationsData = new Dictionary<Type, object>();
 
-        public string Tag => _tag;
+        public StepTag Tag => _tag;
         public bool Completed => _completed;
         public bool Launched => _launched;
 
         public IEnumerable<Operation> Operations => _operations;
         
-        public Step(string tag, params Operation[] operations)
+        public Step(StepTag tag, params Operation[] operations)
         {
             _tag = tag;
             AddOperations(operations);
@@ -87,5 +87,11 @@ namespace Core.Steps
                 return value as T;
             return null;
         }
+    }
+
+    public enum StepExecutionType
+    {
+        Redo,
+        Undo
     }
 }

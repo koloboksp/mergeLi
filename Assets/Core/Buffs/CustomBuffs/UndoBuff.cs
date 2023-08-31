@@ -13,12 +13,7 @@ public class UndoBuff : Buff
 
     protected override void Inner_OnStepCompleted(Step step)
     {
-        if (step.Tag == GameProcessor.MoveStepTag
-            || step.Tag == GameProcessor.MergeStepTag
-            || step.Tag == GameProcessor.ExplodeStepTag
-            || step.Tag == GameProcessor.UndoMoveStepTag
-            || step.Tag == GameProcessor.UndoMergeStepTag
-            || step.Tag == GameProcessor.UndoExplodeStepTag)
+        //if ()
         {
             var hasUndoStepsNewState = _gameProcessor.HasUndoSteps();
             if (_hasUndoSteps != hasUndoStepsNewState)
@@ -28,7 +23,10 @@ public class UndoBuff : Buff
             }
         }
     }
-    
+
+    protected override bool UndoAvailable => false;
+    protected override StepTag UndoStepTag => StepTag.None;
+
     protected override bool InnerProcessUsing()
     {
         return _gameProcessor.UseUndoBuff(Cost);

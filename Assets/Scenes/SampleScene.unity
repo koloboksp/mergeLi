@@ -594,6 +594,7 @@ MonoBehaviour:
     type: 3}
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
+  _explodeType: 1
   _halfSize: 1
 --- !u!1 &502298965
 GameObject:
@@ -682,6 +683,7 @@ MonoBehaviour:
     type: 3}
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
+  _explodeType: 3
   _direction: 1
 --- !u!4 &548640613
 Transform:
@@ -857,6 +859,7 @@ MonoBehaviour:
     type: 3}
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
+  _explodeType: 2
   _direction: 0
 --- !u!4 &694036923
 Transform:
@@ -1307,6 +1310,7 @@ MonoBehaviour:
     type: 3}
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
+  _explodeType: 0
   _halfSize: 0
 --- !u!1 &1651605648
 GameObject:

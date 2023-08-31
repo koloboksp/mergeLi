@@ -3,7 +3,14 @@ using Core;
 using Core.Steps;
 using UnityEngine;
 
-public class ShowNextBallsBuff : Buff
+
+public interface INextBallsShower
+{
+    void Show();
+    void Hide();
+}
+
+public class ShowNextBallsBuff : Buff, INextBallsShower
 {
     private readonly List<Ball> _balls = new();
     
@@ -43,12 +50,24 @@ public class ShowNextBallsBuff : Buff
             }
         }
     }
-    
+
+    protected override bool UndoAvailable => true;
+    protected override StepTag UndoStepTag => StepTag.UndoNextBalls;
+
     protected override bool InnerProcessUsing()
     {
-        _gameProcessor.UseShowNextBallsBuff(Cost);
+        _gameProcessor.UseShowNextBallsBuff(Cost, this);
+        return true;
+    }
+
+    public void Show()
+    {
         ClearBalls();
         ShowNextBalls();
-        return true;
+    }
+
+    public void Hide()
+    {
+        ClearBalls();
     }
 }

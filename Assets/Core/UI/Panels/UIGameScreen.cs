@@ -67,12 +67,12 @@ namespace Core
 
         
 
-        private void OnStepExecute(Step sender)
+        private void OnStepExecute(Step sender, StepExecutionType executionType)
         {
             _buffsContainerRoot.interactable = false;
         }
 
-        private void OnStepCompleted(Step sender)
+        private void OnStepCompleted(Step sender, StepExecutionType executionType)
         {
             _buffsContainerRoot.interactable = true;
         }

@@ -21,12 +21,12 @@ public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointe
         _model.Scene.GameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
     }
 
-    private void GameProcessor_OnStepExecute(Step step)
+    private void GameProcessor_OnStepExecute(Step step, StepExecutionType executionType)
     {
         _stepExecuted = true;
     }
 
-    private void GameProcessor_OnStepCompleted(Step step)
+    private void GameProcessor_OnStepCompleted(Step step, StepExecutionType executionType)
     {
         _stepExecuted = false;
     }

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Core.Buffs;
 using Core.Steps;
 using Unity.VisualScripting;
@@ -14,14 +16,17 @@ public abstract class Buff : MonoBehaviour
     [SerializeField] private UIBuff _controlPrefab;
     [SerializeField] private int _cost = 1;
     [SerializeField] private int _cooldown = 3;
-
+    
     private UIBuff _control;
     private bool _available = true;
     private int _restCooldown;
-
+    
     public GameProcessor GameProcessor => _gameProcessor;
     public int Cost => _cost;
+    protected abstract bool UndoAvailable { get; }
 
+    protected abstract StepTag UndoStepTag { get; }
+    
     public void Awake()
     {
         _gameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
@@ -120,21 +125,47 @@ public abstract class Buff : MonoBehaviour
     public int Cooldown => _cooldown;
     public int RestCooldown => _restCooldown;
     
-    private void GameProcessor_OnStepCompleted(Step step)
+    private void GameProcessor_OnStepCompleted(Step step, StepExecutionType executionType)
     {
-        if (step.Tag == GameProcessor.MoveStepTag
-            || step.Tag == GameProcessor.MergeStepTag)
+        var restCooldownChanged = false;
+        
+        if (executionType == StepExecutionType.Redo)
         {
-            if (_restCooldown != 0)
-            {
-                _restCooldown--;
-                Inner_OnRestCooldownChanged();
-                _restCooldownChanged?.Invoke();
-                
-                if (_restCooldown == 0)
-                    Available = true;
-            }
+            if (GameProcessor.NewStepStepTags.Contains(step.Tag))
+                if (_restCooldown != 0)
+                {
+                    _restCooldown--;
+                    if (_restCooldown < 0)
+                        _restCooldown = 0;
+                    
+                    restCooldownChanged = true;
+                }
         }
+        
+        if (executionType == StepExecutionType.Undo)
+        {
+            var nextStepsUndoTags = GameProcessor.NewStepStepTags.ConvertAll(i => GameProcessor.UndoStepTags[i]);
+            if (UndoAvailable && (
+                    step.Tag == UndoStepTag || nextStepsUndoTags.FindIndex(i=> i == step.Tag) >= 0))
+                if (_restCooldown != 0)
+                {
+                    _restCooldown++;
+                    if (_restCooldown > _cooldown)
+                        _restCooldown = 0;
+
+                    restCooldownChanged = true;
+                }
+        }
+
+        if (restCooldownChanged)
+        {
+            Inner_OnRestCooldownChanged();
+            _restCooldownChanged?.Invoke();
+
+            if (_restCooldown == 0)
+                Available = true;
+        }
+
         Inner_OnStepCompleted(step);
     }
 

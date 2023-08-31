@@ -6,11 +6,11 @@ namespace Core.Steps
 {
     public class StepMachine : MonoBehaviour
     {
-        public Action<Step> OnStepCompleted;
-        public Action<Step> OnStepExecute;
+        public Action<Step, StepExecutionType> OnStepCompleted;
+        public Action<Step, StepExecutionType> OnStepExecute;
 
-        private List<Step> _steps = new List<Step>();
-        private List<Step> _undoSteps = new List<Step>();
+        private readonly List<(Step step, StepExecutionType executionType)> _steps = new ();
+        private readonly List<Step> _undoSteps = new ();
 
         public StepMachine()
         {
@@ -19,7 +19,7 @@ namespace Core.Steps
 
         public void AddStep(Step step)
         {
-            _steps.Add(step);
+            _steps.Add((step, StepExecutionType.Redo));
         }
         
         public void AddUndoStep(Step step)
@@ -32,26 +32,26 @@ namespace Core.Steps
             if (_steps.Count > 0)
             {
                 var step = _steps[0];
-                OnStepExecute?.Invoke(step);
+                OnStepExecute?.Invoke(step.step, step.executionType);
                
-                if (!step.Launched)
+                if (!step.step.Launched)
                 {
-                    step.OnComplete += Step_OnCompleted;
-                    step.Execute();
+                    step.step.OnComplete += Step_OnCompleted;
+                    step.step.Execute();
                 }
             }
         }
     
         void Step_OnCompleted(Step sender)
         {
-            var foundI = _steps.IndexOf(sender);
+            var foundI = _steps.FindIndex(i => i.step == sender);
             if (foundI >= 0)
             {
                 var step = _steps[foundI];
-                step.OnComplete -= Step_OnCompleted;
+                step.step.OnComplete -= Step_OnCompleted;
                 _steps.RemoveAt(foundI);
             
-                OnStepCompleted?.Invoke(step);
+                OnStepCompleted?.Invoke(step.step, step.executionType);
             }   
         }
 
@@ -61,7 +61,7 @@ namespace Core.Steps
             {
                 var undoStep = _undoSteps[_undoSteps.Count - 1];
                 _undoSteps.Remove(undoStep);
-                _steps.Add(undoStep);
+                _steps.Add((undoStep, StepExecutionType.Undo));
             }
         }
 
