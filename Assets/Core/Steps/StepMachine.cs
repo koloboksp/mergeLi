@@ -7,7 +7,7 @@ namespace Core.Steps
     public class StepMachine : MonoBehaviour
     {
         public Action<Step, StepExecutionType> OnStepCompleted;
-        public Action<Step, StepExecutionType> OnStepExecute;
+        public Action<Step, StepExecutionType> OnBeforeStepStarted;
 
         private readonly List<(Step step, StepExecutionType executionType)> _steps = new ();
         private readonly List<Step> _undoSteps = new ();
@@ -32,10 +32,11 @@ namespace Core.Steps
             if (_steps.Count > 0)
             {
                 var step = _steps[0];
-                OnStepExecute?.Invoke(step.step, step.executionType);
-               
+                
                 if (!step.step.Launched)
                 {
+                    OnBeforeStepStarted?.Invoke(step.step, step.executionType);
+
                     step.step.OnComplete += Step_OnCompleted;
                     step.step.Execute();
                 }

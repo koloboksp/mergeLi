@@ -59,10 +59,17 @@ namespace Core.Buffs
                 if (_noAllocFoundBuffAreas.Count > 0)
                     return false;
             }
+
+            if (!CanBuffBeUsed(pointerGridPosition, _affectedAreas))
+                return false;
             
             return _affectedAreas.Count > 0;
         }
 
+        protected virtual bool CanBuffBeUsed(Vector3Int pointerGridPosition, IEnumerable<Vector3Int> affectedAreas)
+        {
+            return true;
+        }
         
         protected virtual List<Vector3Int> GetAffectingArea(Vector3Int pointerGridPosition)
         {

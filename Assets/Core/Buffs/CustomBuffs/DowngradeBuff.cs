@@ -7,10 +7,15 @@ namespace Core.Buffs
     {
         protected override bool UndoAvailable => true;
         protected override StepTag UndoStepTag => StepTag.UndoDowngrade;
-
-        protected override bool InnerProcessUsing()
+        
+        protected override bool CanBuffBeUsed(Vector3Int pointerGridPosition, IEnumerable<Vector3Int> affectedAreas)
         {
-            return _gameProcessor.UseDowngradeBuff(Cost, AffectedAreas);
+            return _gameProcessor.CanGradeAny(affectedAreas);
+        }
+        
+        protected override void InnerProcessUsing()
+        {
+            _gameProcessor.UseDowngradeBuff(Cost, AffectedAreas, this);
         }
     }
 }

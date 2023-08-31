@@ -34,7 +34,7 @@ namespace Core
             
             _data = data as UIGameScreenData;
             _data.GameProcessor.OnStepCompleted += OnStepCompleted;
-            _data.GameProcessor.OnStepExecute += OnStepExecute;
+            _data.GameProcessor.OnBeforeStepStarted += OnBeforeStepStarted;
             _data.GameProcessor.OnLowEmptySpaceChanged += OnLowEmptySpaceChanged;
             OnLowEmptySpaceChanged(false);
             _data.GameProcessor.OnScoreChanged += OnScoreChanged;
@@ -55,7 +55,7 @@ namespace Core
         protected override void InnerHide()
         {
             _data.GameProcessor.OnStepCompleted -= OnStepCompleted;
-            _data.GameProcessor.OnStepExecute -= OnStepExecute;
+            _data.GameProcessor.OnBeforeStepStarted -= OnBeforeStepStarted;
             _data.GameProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
             
             _data.GameProcessor.OnScoreChanged -= OnScoreChanged;
@@ -67,7 +67,7 @@ namespace Core
 
         
 
-        private void OnStepExecute(Step sender, StepExecutionType executionType)
+        private void OnBeforeStepStarted(Step sender, StepExecutionType executionType)
         {
             _buffsContainerRoot.interactable = false;
         }

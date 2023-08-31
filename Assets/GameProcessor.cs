@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Core;
+using Core.Buffs;
 using Core.Effects;
 using Core.Steps;
 using Core.Steps.CustomOperations;
@@ -88,7 +89,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     };
     
     public event Action<Step, StepExecutionType> OnStepCompleted;
-    public event Action<Step, StepExecutionType> OnStepExecute;
+    public event Action<Step, StepExecutionType> OnBeforeStepStarted;
     public event Action<int> OnScoreChanged;
     public event Action<bool> OnLowEmptySpaceChanged;
 
@@ -139,7 +140,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     private void Start()
     {
         _field.OnPointerDown += Field_OnPointerDown;
-        _stepMachine.OnStepExecute += StepMachine_OnStepExecute;
+        _stepMachine.OnBeforeStepStarted += StepMachine_OnBeforeStepStarted;
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
 
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
@@ -334,9 +335,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         _selectedBall = null;
     }
     
-    private void StepMachine_OnStepExecute(Step step, StepExecutionType executionType)
+    private void StepMachine_OnBeforeStepStarted(Step step, StepExecutionType executionType)
     {
-        OnStepExecute?.Invoke(step, executionType);
+        OnBeforeStepStarted?.Invoke(step, executionType);
+
+        if (NewStepStepTags.Contains(step.Tag))
+            foreach (var buff in _buffs)
+                if (buff.RestCooldown != 0)
+                    step.AddOperations(new List<Operation>() { new ProcessBuffCooldownOperation(buff) });
     }
 
     private void CheckLowEmptySpace()
@@ -388,47 +394,48 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         OnScoreChanged?.Invoke(points);
     }
     
-    public bool UseUndoBuff(int cost)
+    public void UseUndoBuff(int cost, UndoBuff buff)
     {
-        if (!HasUndoSteps()) return false;
-        
         _stepMachine.AddStep(
             new Step(StepTag.Undo,
                 new SpendOperation(cost, _playerInfo, false),
-                new UndoOperation(_stepMachine)));
-        return true;
+                new UndoOperation(_stepMachine),
+                new ConfirmBuffUseOperation(buff)));
     }
 
-    public void UseExplodeBuff(int cost, ExplodeType explodeType, List<Vector3Int> ballsIndexes)
+    public void UseExplodeBuff(int cost, ExplodeType explodeType, List<Vector3Int> ballsIndexes, ExplodeBuff buff)
     {
         _stepMachine.AddStep(
             new Step(ExplodeTypeToStepTags[explodeType], 
                 new SpendOperation(cost, _playerInfo, true),
-                new RemoveOperation(ballsIndexes, _field)));
+                new RemoveOperation(ballsIndexes, _field),
+                new ConfirmBuffUseOperation(buff)));
     }
 
-    public void UseShowNextBallsBuff(int cost, INextBallsShower nextBallsShower)
+    public void UseShowNextBallsBuff(int cost, INextBallsShower nextBallsShower, ShowNextBallsBuff buff)
     {
         _stepMachine.AddStep(
             new Step(StepTag.NextBalls, 
                 new SpendOperation(cost, _playerInfo, true),
-                new NextBallsShowOperation(true, nextBallsShower)));
+                new NextBallsShowOperation(true, nextBallsShower),
+                new ConfirmBuffUseOperation(buff)));
     }
-    
-    public bool UseDowngradeBuff(int cost, List<Vector3Int> ballsIndexes)
+
+    public bool CanGradeAny(IEnumerable<Vector3Int> ballsIndexes)
     {
         var gradeLevel = -1;
         var balls = ballsIndexes.SelectMany(i => _field.GetSomething<Ball>(i)).ToList();
-        var canGradeAny = balls.Any(ball => ball.CanGrade(gradeLevel));
-
-        if (!canGradeAny)
-            return false;
-
+        return balls.Any(ball => ball.CanGrade(gradeLevel));
+    }
+    
+    public void UseDowngradeBuff(int cost, List<Vector3Int> ballsIndexes, DowngradeBuff buff)
+    {
+        var gradeLevel = -1;
         _stepMachine.AddStep(
             new Step(StepTag.Downgrade,
                 new SpendOperation(cost, _playerInfo, true),
-                new GradeOperation(ballsIndexes, gradeLevel, _field)));
-        return true;
+                new GradeOperation(ballsIndexes, gradeLevel, _field),
+                new ConfirmBuffUseOperation(buff)));
     }
 
     public void SelectNextCastle()

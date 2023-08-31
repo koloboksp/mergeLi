@@ -50,9 +50,9 @@ public abstract class Buff : MonoBehaviour
         if(!IsCurrencyEnough) return;
         if(!Available) return;
 
-        InnerOnClick();
-
-        ProcessUsing();
+        var readyToUse = InnerOnClick();
+        if(readyToUse)
+            ProcessUsing();
     }
     
     protected void OnBeginDrag(PointerEventData eventData)
@@ -68,8 +68,8 @@ public abstract class Buff : MonoBehaviour
         if(!IsCurrencyEnough) return;
         if(!Available) return;
 
-        var affectedOnSomething = InnerOnEndDrag(eventData);
-        if(affectedOnSomething)
+        var readyToUse = InnerOnEndDrag(eventData);
+        if(readyToUse)
             ProcessUsing();
     }
     
@@ -83,9 +83,6 @@ public abstract class Buff : MonoBehaviour
 
     private void ProcessUsing()
     {
-        var buffUsedProcessed = InnerProcessUsing();
-        if(!buffUsedProcessed) return;
-        
         _restCooldown = _cooldown;
         _restCooldownChanged?.Invoke();
         
@@ -93,11 +90,16 @@ public abstract class Buff : MonoBehaviour
             Available = false;
         else
             Available = true;
+        
+        InnerProcessUsing();
     }
 
-    protected abstract bool InnerProcessUsing();
-    
-    protected virtual void InnerOnClick() { }
+    protected abstract void InnerProcessUsing();
+
+    protected virtual bool InnerOnClick()
+    {
+        return true;
+    }
 
     protected virtual bool InnerOnEndDrag(PointerEventData eventData)
     {
@@ -127,48 +129,23 @@ public abstract class Buff : MonoBehaviour
     
     private void GameProcessor_OnStepCompleted(Step step, StepExecutionType executionType)
     {
-        var restCooldownChanged = false;
-        
-        if (executionType == StepExecutionType.Redo)
-        {
-            if (GameProcessor.NewStepStepTags.Contains(step.Tag))
-                if (_restCooldown != 0)
-                {
-                    _restCooldown--;
-                    if (_restCooldown < 0)
-                        _restCooldown = 0;
-                    
-                    restCooldownChanged = true;
-                }
-        }
-        
-        if (executionType == StepExecutionType.Undo)
-        {
-            var nextStepsUndoTags = GameProcessor.NewStepStepTags.ConvertAll(i => GameProcessor.UndoStepTags[i]);
-            if (UndoAvailable && (
-                    step.Tag == UndoStepTag || nextStepsUndoTags.FindIndex(i=> i == step.Tag) >= 0))
-                if (_restCooldown != 0)
-                {
-                    _restCooldown++;
-                    if (_restCooldown > _cooldown)
-                        _restCooldown = 0;
-
-                    restCooldownChanged = true;
-                }
-        }
-
-        if (restCooldownChanged)
-        {
-            Inner_OnRestCooldownChanged();
-            _restCooldownChanged?.Invoke();
-
-            if (_restCooldown == 0)
-                Available = true;
-        }
-
         Inner_OnStepCompleted(step);
     }
 
+    internal void ConsumeCooldown(int stepValue)
+    {
+        _restCooldown -= stepValue;
+        if (_restCooldown > _cooldown)
+            _restCooldown = 0;
+        if (_restCooldown < 0)
+            _restCooldown = 0;
+        
+        Inner_OnRestCooldownChanged();
+        _restCooldownChanged?.Invoke();
+
+        Available = _restCooldown == 0;
+    }
+    
     protected virtual void Inner_OnRestCooldownChanged() { }
     protected virtual void Inner_OnStepCompleted(Step step) { }
 
@@ -183,4 +160,6 @@ public abstract class Buff : MonoBehaviour
         _restCooldownChanged = onChanged;
         return this;
     }
+
+    
 }

@@ -54,10 +54,9 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
     protected override bool UndoAvailable => true;
     protected override StepTag UndoStepTag => StepTag.UndoNextBalls;
 
-    protected override bool InnerProcessUsing()
+    protected override void InnerProcessUsing()
     {
-        _gameProcessor.UseShowNextBallsBuff(Cost, this);
-        return true;
+        _gameProcessor.UseShowNextBallsBuff(Cost, this, this);
     }
 
     public void Show()

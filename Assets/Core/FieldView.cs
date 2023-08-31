@@ -17,11 +17,11 @@ public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointe
 
     private void Awake()
     {
-        _model.Scene.GameProcessor.OnStepExecute += GameProcessor_OnStepExecute;
+        _model.Scene.GameProcessor.OnBeforeStepStarted += GameProcessor_OnBeforeStepStarted;
         _model.Scene.GameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
     }
 
-    private void GameProcessor_OnStepExecute(Step step, StepExecutionType executionType)
+    private void GameProcessor_OnBeforeStepStarted(Step step, StepExecutionType executionType)
     {
         _stepExecuted = true;
     }

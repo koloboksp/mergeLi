@@ -9,10 +9,9 @@ namespace Core.Buffs
         protected override bool UndoAvailable => true;
         protected override StepTag UndoStepTag => GameProcessor.UndoStepTags[GameProcessor.ExplodeTypeToStepTags[_explodeType]];
 
-        protected override bool InnerProcessUsing()
+        protected override void InnerProcessUsing()
         {
-            _gameProcessor.UseExplodeBuff(Cost, _explodeType, AffectedAreas);
-            return true;
+            _gameProcessor.UseExplodeBuff(Cost, _explodeType, AffectedAreas, this);
         }
     }
 }
