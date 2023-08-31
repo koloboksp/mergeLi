@@ -14,13 +14,13 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
 {
     private readonly List<Ball> _balls = new();
     
-    protected override void Inner_OnRestCooldownChanged()
+    protected override void Inner_OnStepCompleted(Step step)
     {
         ClearBalls();
         if(RestCooldown != 0)
             ShowNextBalls();
     }
-    
+
     private void ClearBalls()
     {
         foreach (var ball in _balls)
