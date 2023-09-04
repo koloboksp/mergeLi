@@ -123,15 +123,21 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     private int _score;
     private bool _userStepFinished = false;
     private bool _notAllBallsGenerated = false;
+    private int _bestSessionScore;
 
-    
+
     public Scene Scene => _scene;
     public PlayerInfo PlayerInfo => _playerInfo;
     public int Score => _score;
     public IMarket Market => _market;
     public PurchasesLibrary PurchasesLibrary => _purchasesLibrary;
     public CastleSelector CastleSelector => _castleSelector;
-    
+
+    public int BestSessionScore
+    {
+        get => _bestSessionScore;
+    }
+
     void Awake()
     {
         _pointsCalculator = new PointsCalculator(this);
@@ -156,8 +162,10 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     {
         _castleSelector.Init();
         _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
+        
+        _bestSessionScore = PlayerInfo.GetBestSessionScore();
     }
-
+    
     private void UIStartPanel_OnScreenReady(UIPanel sender)
     {
         var startPanel = sender as UIStartPanel;
@@ -385,13 +393,19 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     public void AddPoints(int points)
     {
         _score += points;
+        
+        PlayerInfo.SetBestSessionScore(_score);
+        
         OnScoreChanged?.Invoke(points);
     }
 
     public void RemovePoints(int points)
     {
         _score -= points;
-        OnScoreChanged?.Invoke(points);
+        
+        PlayerInfo.SetBestSessionScore(_score);
+        
+        OnScoreChanged?.Invoke(-points);
     }
     
     public void UseUndoBuff(int cost, UndoBuff buff)

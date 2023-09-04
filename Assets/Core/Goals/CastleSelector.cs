@@ -9,6 +9,8 @@ public class CastleSelector : MonoBehaviour
 {
     public event Action OnCastleCompleted;
     public event Action OnSelectedPartChanged;
+    public event Action OnCastleChanged;
+
 
     [SerializeField] private GameProcessor _gameProcessor;
     [SerializeField] private CastleLibrary _library;
@@ -76,6 +78,7 @@ public class CastleSelector : MonoBehaviour
     private void CastleInstance_OnCompleted()
     {
         OnCastleCompleted?.Invoke();
+        OnCastleChanged?.Invoke();
     }
 
     public void Init()

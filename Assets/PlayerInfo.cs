@@ -76,6 +76,13 @@ public class PlayerInfo : MonoBehaviour
         
         Save();
     }
+    
+    public void SetBestSessionScore(int score)
+    {
+        _progress.BestSessionScore = score;
+        
+        Save();
+    }
 
     public void Save()
     {
@@ -117,12 +124,18 @@ public class PlayerInfo : MonoBehaviour
             Debug.LogError(e);
         }
     }
+
+    public int GetBestSessionScore()
+    {
+        return _progress.BestSessionScore;
+    }
 }
 
 [Serializable]
 public class Progress
 {
     public List<CastleProgress> CastleProgresses = new List<CastleProgress>();
+    public int BestSessionScore;
     public string LastSelectedCastle;
     public int Coins;
 }

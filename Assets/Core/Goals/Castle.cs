@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
@@ -20,7 +21,18 @@ namespace Core.Goals
     
         public string Name => gameObject.name;
         public CastleView View => _view;
-
+        public IEnumerable<CastlePart> Parts => _parts;
+        
+        public int GetCost()
+        {
+            return _parts.Sum(i => i.Cost);
+        }
+        
+        public int GetPoints()
+        {
+            return _parts.Sum(i => i.Points);
+        }
+        
         public CastlePart SelectedCastlePart
         {
             get
@@ -40,6 +52,7 @@ namespace Core.Goals
             var castleProgress = gameProcessor.PlayerInfo.GetCastleProgress(Name);
             if(castleProgress != null)
                 ApplyProgress(castleProgress);
+
             
             _gameProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
             GameProcessor_OnScoreChanged(0);
@@ -138,5 +151,7 @@ namespace Core.Goals
 
             SelectPart(newSelectedPart);
         }
+
+        
     }
 }
