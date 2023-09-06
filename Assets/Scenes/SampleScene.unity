@@ -220,7 +220,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: -4
   m_TargetDisplay: 0
 --- !u!224 &143379531
 RectTransform:
@@ -976,7 +976,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -6
   m_TargetDisplay: 0
 --- !u!1001 &834020024
 PrefabInstance:
@@ -1559,7 +1559,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: -5
   m_TargetDisplay: 0
 --- !u!224 &1881252459
 RectTransform:

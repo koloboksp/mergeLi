@@ -115,8 +115,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     [SerializeField] private CastleSelector _castleSelector;
     
-    [SerializeField] private ParticleSystem _castleOpenEffect;
-
+    
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
@@ -244,9 +243,24 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
 
     private void CastleSelector_OnCastleCompleted()
     {
-        SelectNextCastle();
+        ApplicationController.Instance.UIPanelController.PushScreen(
+            typeof(UICastleCompletePanel), 
+            new UICastleCompletePanel.UICastleCompletePanelData(){GameProcessor = this}, 
+            UICastleCompletePanel_OnScreenReady);
+        
     }
     
+    private void UICastleCompletePanel_OnScreenReady(UIPanel sender)
+    {
+        var startPanel = sender as UICastleCompletePanel;
+        startPanel.OnHided += StartPanelOnOnHided;
+    }
+
+    private void StartPanelOnOnHided(UIPanel obj)
+    {
+        SelectNextCastle();
+    }
+
     void Field_OnPointerDown(Vector3Int pointerGridPosition)
     {
         var balls = _field.GetSomething<Ball>(pointerGridPosition).ToList();
@@ -449,7 +463,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
             new Step(StepTag.Downgrade,
                 new SpendOperation(cost, _playerInfo, true),
                 new GradeOperation(ballsIndexes, gradeLevel, _field),
-                new ConfirmBuffUseOperation(buff)));
+                new ConfirmBuffUseOperation(buff),
+                new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)));
     }
 
     public void SelectNextCastle()
@@ -461,16 +476,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
             if (castleProgress == null || !castleProgress.IsCompleted)
             {
                 _playerInfo.SelectCastle(castle.Name);
-                StartCoroutine(PlayNewCastleSelectedFx());
                 break;
             }
         }
-    }
-    
-    private IEnumerator PlayNewCastleSelectedFx()
-    {
-        _castleOpenEffect.gameObject.SetActive(true);
-        _castleOpenEffect.Play();
-        yield return new WaitForSeconds(_castleOpenEffect.main.duration);
     }
 }
