@@ -60,14 +60,14 @@ public enum StepTag
     None,
 }
 
-public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
+public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISessionProgressHolder
 {
     public static readonly List<StepTag> NewStepStepTags = new()
     {
         { StepTag.Move },
         { StepTag.Merge },
     };
-    
+
     public static readonly Dictionary<StepTag, StepTag> UndoStepTags = new()
     {
         { StepTag.Move, StepTag.UndoMove },
@@ -79,17 +79,19 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         { StepTag.NextBalls, StepTag.UndoNextBalls },
         { StepTag.Downgrade, StepTag.UndoDowngrade },
     };
-    
-    public static readonly Dictionary<ExplodeType, StepTag> ExplodeTypeToStepTags = new ()
+
+    public static readonly Dictionary<ExplodeType, StepTag> ExplodeTypeToStepTags = new()
     {
         { ExplodeType.Explode1, StepTag.Explode1 },
         { ExplodeType.Explode3, StepTag.Explode3 },
         { ExplodeType.ExplodeHorizontal, StepTag.ExplodeHorizontal },
         { ExplodeType.ExplodeVertical, StepTag.ExplodeVertical },
     };
-    
+
     public event Action<Step, StepExecutionType> OnStepCompleted;
     public event Action<Step, StepExecutionType> OnBeforeStepStarted;
+    public event Action OnUndoStepsClear;
+    
     public event Action<int> OnScoreChanged;
     public event Action<bool> OnLowEmptySpaceChanged;
 
@@ -98,11 +100,11 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private StepMachine _stepMachine;
     [SerializeField] private PlayerInfo _playerInfo;
     [SerializeField] private DefaultMarket _market;
-    
+
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
     [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
-   
+
     [SerializeField] private int _minimalBallsInLine = 5;
     [SerializeField] private int _generatedBallsCountAfterMerge = 2;
     [SerializeField] private int _generatedBallsCountAfterMove = 3;
@@ -114,8 +116,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     [SerializeField] private List<Buff> _buffs;
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     [SerializeField] private CastleSelector _castleSelector;
-    
-    
+
+
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
@@ -141,41 +143,57 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
     {
         _pointsCalculator = new PointsCalculator(this);
     }
-    
+
     private void Start()
     {
         _field.OnPointerDown += Field_OnPointerDown;
         _stepMachine.OnBeforeStepStarted += StepMachine_OnBeforeStepStarted;
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
+        _stepMachine.OnUndoStepsClear += StepMachine_OnUndoStepsClear;
 
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
 
         Load();
         SetDefaults();
         Init();
-        
-        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel), new UIStartPanelData(){GameProcessor = this}, UIStartPanel_OnScreenReady);
+
+        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel),
+            new UIStartPanelData() { GameProcessor = this }, UIStartPanel_OnScreenReady);
     }
 
     private void Init()
     {
         _castleSelector.Init();
         _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
-        
+
         _bestSessionScore = PlayerInfo.GetBestSessionScore();
+
+        var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
+        if (lastSessionProgress != null)
+        {
+            var ballsProgressData = lastSessionProgress.SessionField.Balls.Select(i => (i.GridPosition, i.Points));
+            _field.AddBalls(ballsProgressData);
+
+            foreach (var buffProgress in lastSessionProgress.Buffs)
+            {
+                var foundBuff = _buffs.Find(i => i.Id == buffProgress.Id);
+                foundBuff.SetRestCooldown(buffProgress.RestCooldown);
+            }
+        }
     }
-    
+
     private void UIStartPanel_OnScreenReady(UIPanel sender)
     {
         var startPanel = sender as UIStartPanel;
-        startPanel.OnStartPlay += () =>  StartCoroutine(InnerProcess());
+        startPanel.OnStartPlay += () => StartCoroutine(InnerProcess(true));
+        startPanel.OnContinuePlay += () => StartCoroutine(InnerProcess(false));
     }
-    
+
     private void Load()
     {
         _playerInfo.Load();
     }
-    
+
     private void SetDefaults()
     {
         var lastSelectedCastle = _playerInfo.GetLastSelectedCastle();
@@ -191,36 +209,44 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
             foreach (var castle in _castleSelector.Library.Castles)
             {
                 var castleProgress = _playerInfo.GetCastleProgress(castle.Name);
-                if(castleProgress == null || !castleProgress.IsCompleted)
+                if (castleProgress == null || !castleProgress.IsCompleted)
                     _playerInfo.SelectCastle(castle.Name);
             }
         }
-    } 
-        
-    IEnumerator InnerProcess()
+    }
+
+    IEnumerator InnerProcess(bool newGame)
     {
-        var waitForGameScreenReady = new PushAndWaitForScreenReady<UIGameScreen>(new UIGameScreenData() { GameProcessor = this });
+        var waitForGameScreenReady =
+            new PushAndWaitForScreenReady<UIGameScreen>(new UIGameScreenData() { GameProcessor = this });
         yield return waitForGameScreenReady;
-        
-        _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
+
+        if (newGame)
+        {
+            _playerInfo.ClearLastSessionProgress();
+            _field.Clear();
+            _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
+        }
+
         _field.GenerateNextBallPositions(_generatedBallsCountAfterMove, _generatedBallsPointsRange);
-        
+
         while (true)
         {
-            if(!_field.IsEmpty && _notAllBallsGenerated) break;
-            
+            if (!_field.IsEmpty && _notAllBallsGenerated) break;
+
             _userStepFinished = false;
             _notAllBallsGenerated = false;
-            
+
             while (!_userStepFinished)
                 yield return null;
-            
+
             CheckLowEmptySpace();
         }
 
-        var waitForGameFailPanelReady = new PushPopupAndWaitForScreenReady<UIGameFailPanel>(new UIGameFailPanelData() { GameProcessor = this });
+        var waitForGameFailPanelReady =
+            new PushPopupAndWaitForScreenReady<UIGameFailPanel>(new UIGameFailPanelData() { GameProcessor = this });
         yield return waitForGameFailPanelReady;
-        
+
         var waitForGameFailPanelClosed = new WaitForScreenClosed(waitForGameFailPanelReady.Panel);
         yield return waitForGameFailPanelClosed;
 
@@ -228,56 +254,61 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         CheckLowEmptySpace();
 
         ApplicationController.Instance.UIPanelController.HideAll();
-        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel), new UIStartPanelData(){GameProcessor = this}, UIStartPanel_OnScreenReady);
+        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel),
+            new UIStartPanelData() { GameProcessor = this }, UIStartPanel_OnScreenReady);
     }
 
     private void Restart()
     {
-      
+
     }
 
     private void OnScreenReady(UIPanel obj)
     {
-        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel), new UIStartPanelData(){GameProcessor = this}, UIStartPanel_OnScreenReady);
+        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel),
+            new UIStartPanelData() { GameProcessor = this }, UIStartPanel_OnScreenReady);
     }
 
     private void CastleSelector_OnCastleCompleted()
     {
         ApplicationController.Instance.UIPanelController.PushScreen(
-            typeof(UICastleCompletePanel), 
-            new UICastleCompletePanel.UICastleCompletePanelData(){GameProcessor = this}, 
+            typeof(UICastleCompletePanel),
+            new UICastleCompletePanel.UICastleCompletePanelData() { GameProcessor = this },
             UICastleCompletePanel_OnScreenReady);
-        
-    }
-    
-    private void UICastleCompletePanel_OnScreenReady(UIPanel sender)
-    {
-        var startPanel = sender as UICastleCompletePanel;
-        startPanel.OnHided += StartPanelOnOnHided;
+
     }
 
-    private void StartPanelOnOnHided(UIPanel obj)
+    private void UICastleCompletePanel_OnScreenReady(UIPanel sender)
+    {
+        var completePanel = sender as UICastleCompletePanel;
+        completePanel.OnHided += StartPanel_OnHided;
+
+    }
+
+    private void StartPanel_OnHided(UIPanel obj)
     {
         SelectNextCastle();
+
     }
 
     void Field_OnPointerDown(Vector3Int pointerGridPosition)
     {
         var balls = _field.GetSomething<Ball>(pointerGridPosition).ToList();
         Ball ball = null;
-        if(balls.Count != 0)
+        if (balls.Count != 0)
             ball = balls[0];
-            
+
         _otherSelectedBall = null;
-    
+
         if (_selectedBall != null)
         {
             if (ball != null)
             {
                 if (_selectedBall == ball)
                 {
-                    _stepMachine.AddStep(new Step(StepTag.Deselect, new SelectOperation(pointerGridPosition, false, _field)
-                        .SubscribeCompleted(OnDeselectBall)));
+                    _stepMachine.AddStep(new Step(StepTag.Deselect,
+                        new SelectOperation(pointerGridPosition, false, _field)
+                            .SubscribeCompleted(OnDeselectBall)));
                 }
                 else
                 {
@@ -292,23 +323,30 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                                 new MergeOperation(pointerGridPosition, _field),
                                 new SelectOperation(pointerGridPosition, false, _field)
                                     .SubscribeCompleted(OnDeselectBall),
-                                new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this),
+                                new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab,
+                                    _destroyBallEffectPrefab, _field, _pointsCalculator, this),
                                 new CheckIfGenerationIsNecessary(
                                     null,
-                                    new List<Operation>(){
-                                        new GenerateOperation(_generatedBallsCountAfterMerge, _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
-                                        new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)})));
+                                    new List<Operation>()
+                                    {
+                                        new GenerateOperation(_generatedBallsCountAfterMerge,
+                                            _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
+                                        new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab,
+                                            _field, _pointsCalculator, this)
+                                    })));
                         }
                         else
                         {
                             _stepMachine.AddStep(new Step(StepTag.NoPath,
-                                new PathNotFoundOperation(_selectedBall.IntGridPosition, pointerGridPosition, _noPathEffectPrefab, _field)));
+                                new PathNotFoundOperation(_selectedBall.IntGridPosition, pointerGridPosition,
+                                    _noPathEffectPrefab, _field)));
                         }
                     }
                     else
                     {
-                        _stepMachine.AddStep(new Step(StepTag.ChangeSelected, 
-                            new SelectOperation(_selectedBall.IntGridPosition, false, _field).SubscribeCompleted(OnDeselectBall),
+                        _stepMachine.AddStep(new Step(StepTag.ChangeSelected,
+                            new SelectOperation(_selectedBall.IntGridPosition, false, _field).SubscribeCompleted(
+                                OnDeselectBall),
                             new SelectOperation(pointerGridPosition, true, _field).SubscribeCompleted(OnSelectBall)));
                     }
                 }
@@ -318,22 +356,27 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                 var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);
                 if (path.Count > 0)
                 {
-                    _stepMachine.AddStep(new Step(StepTag.Move, 
+                    _stepMachine.AddStep(new Step(StepTag.Move,
                         new MoveOperation(_selectedBall.IntGridPosition, pointerGridPosition, _field),
                         new SelectOperation(pointerGridPosition, false, _field)
                             .SubscribeCompleted(OnDeselectBall),
-                        new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this),
+                        new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab,
+                            _destroyBallEffectPrefab, _field, _pointsCalculator, this),
                         new CheckIfGenerationIsNecessary(
                             null,
-                            new List<Operation>(){
-                                new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
-                                new CollapseOperation( _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)
+                            new List<Operation>()
+                            {
+                                new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove,
+                                    _generatedBallsPointsRange, _field),
+                                new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field,
+                                    _pointsCalculator, this)
                             })));
                 }
                 else
                 {
                     _stepMachine.AddStep(new Step(StepTag.NoPath,
-                        new PathNotFoundOperation(_selectedBall.IntGridPosition, pointerGridPosition, _noPathEffectPrefab, _field)));
+                        new PathNotFoundOperation(_selectedBall.IntGridPosition, pointerGridPosition,
+                            _noPathEffectPrefab, _field)));
                 }
             }
         }
@@ -346,17 +389,17 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
             }
         }
     }
-    
+
     private void OnSelectBall(Operation sender, object result)
     {
         _selectedBall = (Ball)result;
     }
-    
+
     private void OnDeselectBall(Operation sender, object result)
     {
         _selectedBall = null;
     }
-    
+
     private void StepMachine_OnBeforeStepStarted(Step step, StepExecutionType executionType)
     {
         OnBeforeStepStarted?.Invoke(step, executionType);
@@ -372,10 +415,10 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
         var emptyCellsCount = _field.CalculateEmptySpacesCount();
         var threshold = Mathf.Max(_generatedBallsCountAfterMerge, _generatedBallsCountAfterMove);
         bool lowSpace = emptyCellsCount <= threshold;
-        
+
         OnLowEmptySpaceChanged?.Invoke(lowSpace);
     }
-    
+
     private void StepMachine_OnStepCompleted(Step step, StepExecutionType executionType)
     {
         if (UndoStepTags.ContainsKey(step.Tag))
@@ -384,17 +427,24 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                 .Reverse()
                 .Select(operation => operation.GetInverseOperation()).ToArray();
             _stepMachine.AddUndoStep(new Step(UndoStepTags[step.Tag], inverseOperations));
-            
+
             var generateOperationData = step.GetData<GenerateOperationData>();
-            if(generateOperationData != null)
+            if (generateOperationData != null)
                 _notAllBallsGenerated = generateOperationData.NewBallsData.Count < generateOperationData.RequiredAmount;
             _userStepFinished = true;
         }
+
+        _playerInfo.SaveSessionProgress(this);
         
         OnStepCompleted?.Invoke(step, executionType);
     }
-    
-    
+
+    private void StepMachine_OnUndoStepsClear()
+    {
+        OnUndoStepsClear?.Invoke();
+    }
+
+
     public bool HasUndoSteps()
     {
         return _stepMachine.HasUndoSteps();
@@ -402,7 +452,15 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
 
     public int MinimalBallsInLine => _minimalBallsInLine;
     public List<Buff> Buffs => _buffs;
-    
+
+    public bool HasPreviousSessionGame
+    {
+        get
+        {
+            return _playerInfo.GetLastSessionProgress() != null;
+        }
+    }
+
 
     public void AddPoints(int points)
     {
@@ -479,5 +537,20 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener
                 break;
             }
         }
+    }
+
+    public void ClearUndoSteps()
+    {
+        _stepMachine.ClearUndoSteps();
+    }
+
+    public IField GetField()
+    {
+        return _field;
+    }
+
+    public IEnumerable<IBuff> GetBuffs()
+    {
+        return _buffs;
     }
 }

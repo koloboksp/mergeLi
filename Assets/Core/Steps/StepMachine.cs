@@ -8,6 +8,7 @@ namespace Core.Steps
     {
         public Action<Step, StepExecutionType> OnStepCompleted;
         public Action<Step, StepExecutionType> OnBeforeStepStarted;
+        public Action OnUndoStepsClear;
 
         private readonly List<(Step step, StepExecutionType executionType)> _steps = new ();
         private readonly List<Step> _undoSteps = new ();
@@ -69,6 +70,12 @@ namespace Core.Steps
         public bool HasUndoSteps()
         {
             return _undoSteps.Count > 0;
+        }
+
+        public void ClearUndoSteps()
+        {
+            _undoSteps.Clear();
+            OnUndoStepsClear?.Invoke();
         }
     }
 }

@@ -13,16 +13,18 @@ public class UndoBuff : Buff
 
     protected override void Inner_OnStepCompleted(Step step)
     {
-        var hasUndoStepsNewState = _gameProcessor.HasUndoSteps();
-        if (_hasUndoSteps != hasUndoStepsNewState)
-        {
-            _hasUndoSteps = hasUndoStepsNewState;
-            _availableStateChanged?.Invoke();
-        }
+        UpdateAvailability();
+    }
+    
+    protected override void Inner_OnUndoStepsClear()
+    {
+        UpdateAvailability();
     }
 
-    protected override bool UndoAvailable => false;
-    protected override StepTag UndoStepTag => StepTag.None;
+    public override string Id => "Undo";
+
+    protected virtual bool UndoAvailable => false;
+    protected virtual StepTag UndoStepTag => StepTag.None;
 
     protected override bool InnerOnClick()
     {
@@ -32,5 +34,15 @@ public class UndoBuff : Buff
     protected override void InnerProcessUsing()
     {
         _gameProcessor.UseUndoBuff(Cost, this);
+    }
+    
+    private void UpdateAvailability()
+    {
+        var hasUndoStepsNewState = _gameProcessor.HasUndoSteps();
+        if (_hasUndoSteps != hasUndoStepsNewState)
+        {
+            _hasUndoSteps = hasUndoStepsNewState;
+            _availableStateChanged?.Invoke();
+        }
     }
 }

@@ -50,7 +50,10 @@ namespace Core
             yield return new WaitForSeconds(_completeClipPart2.length);
             
             activeCastle.transform.SetParent(castleOriginalParent);
+
+            _data.GameProcessor.ClearUndoSteps();
         }
+        
         public class UICastleCompletePanelData : UIScreenData
         {
             public GameProcessor GameProcessor { get; set; }

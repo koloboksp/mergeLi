@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Core
 {
-    public class Ball : MonoBehaviour, IFieldMovable, IFieldSelectable, IFieldMergeable
+    
+    public class Ball : MonoBehaviour, IBall
     {
         public event Action OnSelectedChanged;
         public event Action OnMovingStateChanged;
@@ -84,7 +85,13 @@ namespace Core
         {
             var newPoints = _points;
             foreach (var other in others)
-                newPoints += other.Points;
+            {
+                if (other is IBall otherBall)
+                {
+                    newPoints += otherBall.Points;
+                }
+            }
+                
             UpdatePoints(newPoints);
             
             foreach (var other in others)

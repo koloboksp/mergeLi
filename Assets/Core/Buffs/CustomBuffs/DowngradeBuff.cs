@@ -5,8 +5,8 @@ namespace Core.Buffs
 {
     public class DowngradeBuff : AreaEffect
     {
-        protected override bool UndoAvailable => true;
-        protected override StepTag UndoStepTag => StepTag.UndoDowngrade;
+        protected virtual bool UndoAvailable => true;
+        protected virtual StepTag UndoStepTag => StepTag.UndoDowngrade;
         
         protected override bool CanBuffBeUsed(Vector3Int pointerGridPosition, IEnumerable<Vector3Int> affectedAreas)
         {
@@ -17,5 +17,7 @@ namespace Core.Buffs
         {
             _gameProcessor.UseDowngradeBuff(Cost, AffectedAreas, this);
         }
+
+        public override string Id => "Downgrade";
     }
 }

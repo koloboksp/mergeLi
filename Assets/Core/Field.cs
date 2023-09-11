@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using AStar;
 using AStar.Options;
 using Core;
@@ -153,7 +154,14 @@ public class Field : MonoBehaviour, IField
             _nextBallsData.Add((freeIndex, (int)Mathf.Pow(2, Random.Range(valueRange.x, valueRange.y))));
         }
     }
-    
+
+    public IEnumerable<T> GetAll<T>()
+    {
+        var result = _balls.Where(i => i is T).Cast<T>();
+        
+        return result;
+    }
+
     public List<(Vector3Int intPosition, int points)> AddBalls(int amount, Vector2Int valueRange)
     {
         foreach (var ball in _balls)
@@ -182,6 +190,18 @@ public class Field : MonoBehaviour, IField
             CreateBall(ballsPosition.intPosition, ballsPosition.points);
         
         return newBallsData;
+    }
+
+    public List<(Vector3Int gridPosition, int points)> AddBalls(IEnumerable<(Vector3Int gridPosition, int points)> newBallsData)
+    {
+        var result = new List<(Vector3Int gridPosition, int points)>();
+        foreach (var ballData in newBallsData)
+        {
+            var gridPosition = CreateBall(ballData.gridPosition, ballData.points);
+            result.Add((gridPosition, ballData.points));
+        }
+
+        return result;
     }
 
     public Vector3 GetPositionFromGrid(Vector3 gridPosition)
@@ -309,5 +329,10 @@ public class Field : MonoBehaviour, IField
     {
         var ballsToRemove = new List<Ball>(_balls);
         DestroyBalls(ballsToRemove);
+    }
+
+    public void Init()
+    {
+        
     }
 }

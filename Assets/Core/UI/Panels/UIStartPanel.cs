@@ -7,9 +7,11 @@ namespace Core
     public class UIStartPanel : UIPanel
     {
         public event Action OnStartPlay;
-        
+        public event Action OnContinuePlay;
+
         [SerializeField] private Button _closeBtn;
         [SerializeField] private Button _startBtn;
+        [SerializeField] private Button _continueBtn;
 
         private Model _model;
         private UIStartPanelData _data;
@@ -18,6 +20,7 @@ namespace Core
         {
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
             _startBtn.onClick.AddListener(StartBtn_OnClick);
+            _continueBtn.onClick.AddListener(ContinueBtn_OnClick);
         }
 
        
@@ -32,18 +35,31 @@ namespace Core
             OnStartPlay?.Invoke();
         }
         
+        private void ContinueBtn_OnClick()
+        {
+            ApplicationController.Instance.UIPanelController.PopScreen(this);
+            OnContinuePlay?.Invoke();
+        }
+        
         public override void SetData(UIScreenData undefinedData)
         {
             _data = undefinedData as UIStartPanelData;
             _model = new Model();
+
+            if (_data.GameProcessor.HasPreviousSessionGame)
+            {
+                _continueBtn.gameObject.SetActive(true);
+            }
+            else
+            {
+                _continueBtn.gameObject.SetActive(false);
+            }
         }
         
         public class Model
         {
          
         }
-
-     
     }
     
     public class UIStartPanelData : UIScreenData

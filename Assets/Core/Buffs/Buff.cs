@@ -7,7 +7,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public abstract class Buff : MonoBehaviour
+public interface IBuff
+{
+    string Id { get; }
+    int GetRestCooldown();
+}
+
+public abstract class Buff : MonoBehaviour, IBuff
 {
     protected Action _availableStateChanged;
     private Action _restCooldownChanged;
@@ -23,13 +29,11 @@ public abstract class Buff : MonoBehaviour
     
     public GameProcessor GameProcessor => _gameProcessor;
     public int Cost => _cost;
-    protected abstract bool UndoAvailable { get; }
 
-    protected abstract StepTag UndoStepTag { get; }
-    
     public void Awake()
     {
         _gameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
+        _gameProcessor.OnUndoStepsClear += GameProcessor_OnUndoStepsClear;
     }
 
     public UIBuff CreateControl()
@@ -132,6 +136,11 @@ public abstract class Buff : MonoBehaviour
         Inner_OnStepCompleted(step);
     }
 
+    private void GameProcessor_OnUndoStepsClear()
+    {
+        Inner_OnUndoStepsClear();
+    }
+    
     internal void ConsumeCooldown(int stepValue)
     {
         _restCooldown -= stepValue;
@@ -148,6 +157,7 @@ public abstract class Buff : MonoBehaviour
     
     protected virtual void Inner_OnRestCooldownChanged() { }
     protected virtual void Inner_OnStepCompleted(Step step) { }
+    protected virtual void Inner_OnUndoStepsClear() { }
 
     public Buff OnAvailableStateChanged(Action onChanged)
     {
@@ -160,6 +170,21 @@ public abstract class Buff : MonoBehaviour
         _restCooldownChanged = onChanged;
         return this;
     }
-
     
+    public abstract string Id { get; }
+    
+    public int GetRestCooldown()
+    {
+        return _restCooldown;
+    }
+
+    public void SetRestCooldown(int restCooldown)
+    {
+        _restCooldown = restCooldown;
+        
+        Inner_OnRestCooldownChanged();
+        _restCooldownChanged?.Invoke();
+
+        Available = _restCooldown == 0;
+    }
 }

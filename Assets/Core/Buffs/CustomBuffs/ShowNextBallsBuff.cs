@@ -14,13 +14,15 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
 {
     private readonly List<Ball> _balls = new();
     
+    public override string Id => "ShowNextBalls";
+    
     protected override void Inner_OnStepCompleted(Step step)
     {
         ClearBalls();
         if(RestCooldown != 0)
             ShowNextBalls();
     }
-
+    
     private void ClearBalls()
     {
         foreach (var ball in _balls)
@@ -51,8 +53,8 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
         }
     }
 
-    protected override bool UndoAvailable => true;
-    protected override StepTag UndoStepTag => StepTag.UndoNextBalls;
+    protected virtual bool UndoAvailable => true;
+    protected virtual StepTag UndoStepTag => StepTag.UndoNextBalls;
 
     protected override void InnerProcessUsing()
     {

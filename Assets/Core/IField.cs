@@ -2,6 +2,12 @@ using System.Collections.Generic;
 using Core;
 using UnityEngine;
 
+public interface IBall : IFieldMovable, IFieldSelectable, IFieldMergeable
+{
+    public Vector3Int IntGridPosition { get; }
+    public int Points { get; }
+}
+
 public interface IField
 {
     IEnumerable<T> GetSomething<T>(Vector3Int position) where T : class;
@@ -12,6 +18,7 @@ public interface IField
     Vector3 GetPositionFromGrid(Vector3Int gridPosition);
     public IFieldView View { get; }
     void GenerateNextBallPositions(int count, Vector2Int valueRange);
+    IEnumerable<T> GetAll<T>();
 }
 
 public interface IFieldView

@@ -24,7 +24,8 @@ namespace Core.Steps.CustomOperations
             var otherMergeables = meargeables.GetRange(1, meargeables.Count - 1);
 
             _mergeablesCount = meargeables.Count;
-            _pointsBeforeMerge = targetMergeable.Points;
+            if(targetMergeable is IBall targetBall)
+                _pointsBeforeMerge = targetBall.Points;
             
             Owner.SetData(new MergeOperationData()
             {

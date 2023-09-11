@@ -7,9 +7,16 @@ using Core.Steps.CustomOperations;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+public interface ISessionProgressHolder
+{
+    IField GetField();
+    IEnumerable<IBuff> GetBuffs();
+}
+
 public class PlayerInfo : MonoBehaviour
 {
     const string PlayerDataFileName = "playerData";
+    const string PlayerLastSessionDataFileName = "playerLastSessionData";
     [SerializeField] private DefaultMarket _market;
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     
@@ -17,6 +24,7 @@ public class PlayerInfo : MonoBehaviour
     public event Action OnCastleChanged;
     
     private Progress _progress = new Progress();
+    private SessionProgress _lastSessionProgress = null;
     
     private void Awake()
     {
@@ -101,10 +109,27 @@ public class PlayerInfo : MonoBehaviour
     {
         try
         {
-            var loadedFile = File.ReadAllText(PlayerDataFileName);
-            var loadedProgress = JsonUtility.FromJson<Progress>(loadedFile);
-
-            _progress = loadedProgress;
+            try
+            {
+                var loadedFile = File.ReadAllText(PlayerDataFileName);
+                var loadedProgress = JsonUtility.FromJson<Progress>(loadedFile);
+                _progress = loadedProgress;
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+           
+            try
+            {
+                var loadedFile = File.ReadAllText(PlayerLastSessionDataFileName);
+                var lastSessionProgress = JsonUtility.FromJson<SessionProgress>(loadedFile);
+                _lastSessionProgress = lastSessionProgress;
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
         catch (Exception e)
         {
@@ -118,6 +143,20 @@ public class PlayerInfo : MonoBehaviour
         {
             _progress = new Progress();
             File.Delete(PlayerDataFileName);
+            ClearLastSessionProgress();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+    }
+
+    public void ClearLastSessionProgress()
+    {
+        try
+        {
+            _lastSessionProgress = null;
+            File.Delete(PlayerLastSessionDataFileName);
         }
         catch (Exception e)
         {
@@ -128,6 +167,41 @@ public class PlayerInfo : MonoBehaviour
     public int GetBestSessionScore()
     {
         return _progress.BestSessionScore;
+    }
+
+    public void SaveSessionProgress(ISessionProgressHolder sessionProgressHolder)
+    {
+        var sessionProgress = new SessionProgress();
+
+        sessionProgress.SessionField = new SessionFieldProgress();
+        foreach (var ball in sessionProgressHolder.GetField().GetAll<IBall>())
+        {
+            var ballProgress = new SessionBallProgress()
+            {
+                GridPosition = ball.IntGridPosition,
+                Points = ball.Points,
+            };
+            sessionProgress.SessionField.Balls.Add(ballProgress);
+        }
+
+        sessionProgress.Buffs = new List<SessionBuffProgress>();
+        foreach (var buff in sessionProgressHolder.GetBuffs())
+        {
+            var buffProgress = new SessionBuffProgress
+            {
+                Id = buff.Id,
+                RestCooldown = buff.GetRestCooldown()
+            };
+            sessionProgress.Buffs.Add(buffProgress);
+        }
+        
+        string data = JsonUtility.ToJson(sessionProgress);
+        File.WriteAllText(PlayerLastSessionDataFileName, data);
+    }
+
+    public SessionProgress GetLastSessionProgress()
+    {
+        return _lastSessionProgress;
     }
 }
 
@@ -155,4 +229,32 @@ public class CastlePartProgress
 {
     public Vector2Int GridPosition;
     public bool IsCompleted;
+}
+
+
+[Serializable]
+public class SessionProgress
+{
+    public SessionFieldProgress SessionField;
+    public List<SessionBuffProgress> Buffs = new List<SessionBuffProgress>();
+}
+
+[Serializable]
+public class SessionFieldProgress
+{
+    public List<SessionBallProgress> Balls = new List<SessionBallProgress>();
+}
+
+[Serializable]
+public class SessionBallProgress
+{
+    public Vector3Int GridPosition;
+    public int Points;
+}
+
+[Serializable]
+public class SessionBuffProgress
+{
+    public string Id;
+    public int RestCooldown;
 }
