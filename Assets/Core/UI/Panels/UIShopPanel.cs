@@ -64,7 +64,6 @@ namespace Core
             if (success)
             {
                 StartCoroutine(PlayBoughtSuccessAnimation());
-                ApplicationController.Instance.UIPanelController.PopScreen(this);
             }
             else
             {
