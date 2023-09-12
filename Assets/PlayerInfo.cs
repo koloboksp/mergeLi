@@ -5,12 +5,14 @@ using Core;
 using Core.Goals;
 using Core.Steps.CustomOperations;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 
 public interface ISessionProgressHolder
 {
     IField GetField();
     IEnumerable<IBuff> GetBuffs();
+    int GetScore();
 }
 
 public class PlayerInfo : MonoBehaviour
@@ -31,10 +33,11 @@ public class PlayerInfo : MonoBehaviour
         _market.OnBought += Market_OnBought;
     }
 
-    private void Market_OnBought(bool result, string inAppId)
+    private void Market_OnBought(bool result, string productId)
     {
-        var purchaseItem = _purchasesLibrary.Items.Find(i => string.Equals(i.InAppId, inAppId, StringComparison.Ordinal));
-        if (purchaseItem != null)
+        var purchaseItem = _purchasesLibrary.Items.Find(i => string.Equals(i.ProductId, productId, StringComparison.Ordinal));
+       
+        if (result && purchaseItem != null)
         {
             _progress.Coins += purchaseItem.CurrencyAmount;
             Save();
@@ -173,7 +176,8 @@ public class PlayerInfo : MonoBehaviour
     {
         var sessionProgress = new SessionProgress();
 
-        sessionProgress.SessionField = new SessionFieldProgress();
+        sessionProgress.Score = sessionProgressHolder.GetScore();
+        sessionProgress.Field = new SessionFieldProgress();
         foreach (var ball in sessionProgressHolder.GetField().GetAll<IBall>())
         {
             var ballProgress = new SessionBallProgress()
@@ -181,7 +185,7 @@ public class PlayerInfo : MonoBehaviour
                 GridPosition = ball.IntGridPosition,
                 Points = ball.Points,
             };
-            sessionProgress.SessionField.Balls.Add(ballProgress);
+            sessionProgress.Field.Balls.Add(ballProgress);
         }
 
         sessionProgress.Buffs = new List<SessionBuffProgress>();
@@ -235,8 +239,9 @@ public class CastlePartProgress
 [Serializable]
 public class SessionProgress
 {
-    public SessionFieldProgress SessionField;
+    public SessionFieldProgress Field;
     public List<SessionBuffProgress> Buffs = new List<SessionBuffProgress>();
+    public int Score;
 }
 
 [Serializable]

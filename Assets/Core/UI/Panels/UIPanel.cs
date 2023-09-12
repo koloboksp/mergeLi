@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Core
 {
@@ -8,7 +9,8 @@ namespace Core
         public event Action<UIPanel> OnHided;
         
         [SerializeField] private RectTransform _root;
-
+        [SerializeField] private CanvasGroup _canvasGroup;
+        
         public RectTransform Root => _root;
         
         public virtual void SetData(UIScreenData data)
@@ -40,6 +42,11 @@ namespace Core
         public void Deactivate()
         {
             
+        }
+
+        public void LockInput(bool state)
+        {
+            _canvasGroup.blocksRaycasts = !state;
         }
     }
 

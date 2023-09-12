@@ -171,7 +171,9 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
         if (lastSessionProgress != null)
         {
-            var ballsProgressData = lastSessionProgress.SessionField.Balls.Select(i => (i.GridPosition, i.Points));
+            _score = lastSessionProgress.Score;
+            
+            var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => (i.GridPosition, i.Points));
             _field.AddBalls(ballsProgressData);
 
             foreach (var buffProgress in lastSessionProgress.Buffs)
@@ -553,4 +555,10 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         return _buffs;
     }
+
+    public int GetScore()
+    {
+        return _score;
+    }
+    
 }

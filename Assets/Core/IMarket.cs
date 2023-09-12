@@ -7,6 +7,6 @@ namespace Core
     public interface IMarket
     {
         public event Action<bool, string> OnBought;
-        Task<bool> Buy(string inAppId, PurchaseType modelPurchaseType);
+        Task<bool> Buy(string productId, PurchaseType modelPurchaseType);
     }
 }

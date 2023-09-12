@@ -474,6 +474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7104141350609223302}
   - component: {fileID: 3886935297801031348}
+  - component: {fileID: 2669647581629981627}
   m_Layer: 5
   m_Name: UIShopPanel
   m_TagString: Untagged
@@ -516,9 +517,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _root: {fileID: 7104141350609223302}
+  _canvasGroup: {fileID: 2669647581629981627}
   _closeBtn: {fileID: 2637769873765130055}
   _purchasesContainer: {fileID: 2316871301394179850}
   _itemPrefab: {fileID: 6205770333837401915}
+--- !u!225 &2669647581629981627
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305112124653678651}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2537430552610864091
 GameObject:
   m_ObjectHideFlags: 0

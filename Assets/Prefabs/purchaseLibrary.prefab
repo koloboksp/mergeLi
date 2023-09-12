@@ -64,7 +64,7 @@ GameObject:
   - component: {fileID: 5162631167357616918}
   - component: {fileID: 5162631167357616919}
   m_Layer: 0
-  m_Name: 50
+  m_Name: big
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f10fb695654a30a75ea2257ac9472c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inAppId: coins50
+  _productId: com.wib.livefactory.bigCoinsPack
   _currencyAmount: 50
   _purchaseType: 0
 --- !u!1 &5162631168228188004
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 5162631168228188006}
   - component: {fileID: 5162631168228188007}
   m_Layer: 0
-  m_Name: 20
+  m_Name: medium
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f10fb695654a30a75ea2257ac9472c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inAppId: coins20
+  _productId: com.wib.livefactory.mediumCoinsPack
   _currencyAmount: 20
   _purchaseType: 0
 --- !u!1 &5162631168431247279
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 5162631168431247249}
   - component: {fileID: 5162631168431247278}
   m_Layer: 0
-  m_Name: 10
+  m_Name: small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f10fb695654a30a75ea2257ac9472c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inAppId: coins10
+  _productId: com.wib.livefactory.smallCoinsPack
   _currencyAmount: 10
   _purchaseType: 0
 --- !u!1 &5162631168885598430
@@ -238,6 +238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f10fb695654a30a75ea2257ac9472c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inAppId: 
+  _productId: 
   _currencyAmount: 10
   _purchaseType: 1

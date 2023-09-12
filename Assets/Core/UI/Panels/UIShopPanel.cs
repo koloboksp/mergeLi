@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,11 +33,17 @@ namespace Core
 
             _model = new Model()
                 .OnItemsUpdated(OnItemsUpdated)
-                .OnBoughtSomething(OnBoughtSomething);
+                .OnBoughtSomething(OnBoughtSomething)
+                .OnLockInput(OnLockInput);
             
             _model.SetData(data.Market, data.PurchaseItems);
         }
-        
+
+        private void OnLockInput(bool state)
+        {
+            LockInput(state);
+        }
+
         private void OnItemsUpdated(IEnumerable<UIShopPanel_PurchaseItem.Model> items)
         {
             var oldViews = _purchasesContainer.content.GetComponents<UISkinPanel_SkinItem>();
@@ -52,15 +59,32 @@ namespace Core
             }
         }
         
-        private void OnBoughtSomething()
+        private void OnBoughtSomething(bool success)
         {
+            if (success)
+            {
+                StartCoroutine(PlayBoughtSuccessAnimation());
+                ApplicationController.Instance.UIPanelController.PopScreen(this);
+            }
+            else
+            {
+                var panelData = new UIPurchaseFailedPanelData();
+                ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UIPurchaseFailedPanel), panelData);
+            }
+        }
+
+        private IEnumerator PlayBoughtSuccessAnimation()
+        {
+            //stub
+            yield return new WaitForSeconds(2.0f);
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
         
         public class Model
         {
             private Action<IEnumerable<UIShopPanel_PurchaseItem.Model>> _onItemsUpdated;
-            private Action _onBoughtSomething;
+            private Action<bool> _onBoughtSomething;
+            private Action<bool> _onLockInput;
 
             private IMarket _market;
             private readonly List<UIShopPanel_PurchaseItem.Model> _items = new();
@@ -70,15 +94,18 @@ namespace Core
                 _market = market;
                 _items.AddRange(purchaseItems
                     .Select(i => new UIShopPanel_PurchaseItem.Model(this)
-                        .Init(i.PurchaseType == PurchaseType.Market ? i.InAppId : $"ShowAds{i.CurrencyAmount}", i.InAppId, i.PurchaseType)));
+                        .Init(i.PurchaseType == PurchaseType.Market ? i.ProductId : $"ShowAds{i.CurrencyAmount}", i.ProductId, i.PurchaseType)));
                 _onItemsUpdated?.Invoke(_items);
             }
             
             public async Task<bool> Buy(UIShopPanel_PurchaseItem.Model model)
             {
+                _onLockInput?.Invoke(true);
+                
                 var success = await _market.Buy(model.InAppId, model.PurchaseType);
-                if(success)
-                    _onBoughtSomething?.Invoke();
+                _onBoughtSomething?.Invoke(success);
+                
+                _onLockInput?.Invoke(false);
                 return success;
             }
             
@@ -89,9 +116,15 @@ namespace Core
                 return this;
             }
             
-            public Model OnBoughtSomething(Action onBoughtSomething)
+            public Model OnBoughtSomething(Action<bool> onBoughtSomething)
             {
                 _onBoughtSomething = onBoughtSomething;
+                return this;
+            }
+            
+            public Model OnLockInput(Action<bool> onLockInput)
+            {
+                _onLockInput = onLockInput;
                 return this;
             }
         }
