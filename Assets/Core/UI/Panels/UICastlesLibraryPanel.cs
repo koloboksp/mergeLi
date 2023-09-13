@@ -45,7 +45,7 @@ namespace Core
             foreach (var itemsPrefab in itemsPrefabs)
             {
                 var item = Instantiate(itemsPrefab, _container.content);
-                item.gameObject.name = itemsPrefab.Name;
+                item.gameObject.name = itemsPrefab.Id;
                 item.View.Root.anchorMin = Vector2.zero;
                 item.View.Root.anchorMax = Vector2.one;
                 item.View.Root.offsetMin = Vector2.zero;
@@ -74,7 +74,7 @@ namespace Core
                 _items.AddRange(castles);
                 _onItemsUpdated?.Invoke(_items);
 
-                TrySelect(_items.Find(i => i.Name == selectedCastle));
+                TrySelect(_items.Find(i => i.Id == selectedCastle));
             }
 
             public Model OnItemsUpdated(Action<IEnumerable<Castle>> onItemsUpdated)

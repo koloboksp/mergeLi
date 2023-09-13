@@ -20,7 +20,6 @@ namespace Core
         public override void SetData(UIScreenData undefinedData)
         {
             _data = undefinedData as UICastleCompletePanelData;
-          
             
             StartCoroutine(Show());
         }
@@ -52,6 +51,8 @@ namespace Core
             activeCastle.transform.SetParent(castleOriginalParent);
 
             _data.GameProcessor.ClearUndoSteps();
+            
+            ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
         
         public class UICastleCompletePanelData : UIScreenData

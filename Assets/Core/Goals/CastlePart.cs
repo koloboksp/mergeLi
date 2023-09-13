@@ -43,7 +43,7 @@ public class CastlePart : MonoBehaviour
 
     public int Points => _points;
     public bool Selected => _selected;
-    public bool IsCompleted => _points >= _cost;
+    
     public Sprite Icon
     {
         get => _icon;
@@ -53,43 +53,26 @@ public class CastlePart : MonoBehaviour
             OnIconChanged?.Invoke();
         }
     }
-
-    private void Awake()
-    {
-        _view.OnClick += OnClick;
-    }
     
-    public void ApplyProgress(CastlePartProgress partProgress)
-    {
-        _points = partProgress.IsCompleted ? _cost : 0;
-        OnProgressChanged?.Invoke();
-    }
-
-    public void OnClick()
-    {
-        _owner.SelectPart(this);
-    }
-
     public void Select(bool state)
     {
-        _selected = state;
-        OnSelectedStateChanged?.Invoke();
-    }
-
-    public int AddPoints(int additionalPoints)
-    {
-        var restPoints = (_points + additionalPoints) - _cost;
-        if (restPoints > 0)
+        if (_selected != state)
         {
-            _points = _cost;
-            OnProgressChanged?.Invoke();
-            return restPoints;
+            _selected = state;
+            OnSelectedStateChanged?.Invoke();
         }
-        
-        _points += additionalPoints;
-        OnProgressChanged?.Invoke();
-        return 0;
     }
 
+    public void SetPoints(int points)
+    {
+        if (_points == points) return;
+        
+        _points = points;
+        OnProgressChanged?.Invoke();
+    }
     
+    public void Complete()
+    {
+        SetPoints(_cost);
+    }
 }

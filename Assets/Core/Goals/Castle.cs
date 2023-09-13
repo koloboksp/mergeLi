@@ -7,7 +7,13 @@ using UnityEngine;
 
 namespace Core.Goals
 {
-    public class Castle : MonoBehaviour
+    public interface ICastle
+    {
+        int GetPoints();
+        string Id { get; }
+        bool Completed { get; }
+    }
+    public class Castle : MonoBehaviour, ICastle
     {
         public event Action OnCompleted;
         public event Action OnPartSelected;
@@ -16,13 +22,20 @@ namespace Core.Goals
         [SerializeField] private CastlePart _partPrefab;
         
         private GameProcessor _gameProcessor;
-        private List<CastlePart> _parts = new();
-        private int _selectedPartIndex;
-    
-        public string Name => gameObject.name;
+        private readonly List<CastlePart> _parts = new();
+        private int _points;
+        private CastlePart _selectedPart;
+        
+        public string Id => gameObject.name;
+        public bool Completed => _points >= GetCost(); 
         public CastleView View => _view;
         public IEnumerable<CastlePart> Parts => _parts;
-        
+
+        public CastlePart GetSelectedCastlePart()
+        {
+            return _selectedPart;
+        }
+
         public int GetCost()
         {
             return _parts.Sum(i => i.Cost);
@@ -30,34 +43,24 @@ namespace Core.Goals
         
         public int GetPoints()
         {
-            return _parts.Sum(i => i.Points);
+            return _points;
         }
-        
-        public CastlePart SelectedCastlePart
-        {
-            get
-            {
-                if (_selectedPartIndex < 0 || _selectedPartIndex >= _parts.Count) return null;
-                
-                return _parts[_selectedPartIndex];
-            }
-        }
-        
+
+       
+
         public void Init(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;
 
-            this.gameObject.GetComponentsInChildren<CastlePart>(_parts);
-            
-            var castleProgress = gameProcessor.PlayerInfo.GetCastleProgress(Name);
-            if(castleProgress != null)
-                ApplyProgress(castleProgress);
+            gameObject.GetComponentsInChildren(_parts);
+            _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
 
+            //var castleProgress = gameProcessor.PlayerInfo.GetCastleProgress(Id);
+            //if(castleProgress != null)
+            //    ApplyProgress(castleProgress);
             
             _gameProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
             GameProcessor_OnScoreChanged(0);
-            
-            SelectDefaultPart();
         }
 
         private void OnDestroy()
@@ -67,91 +70,79 @@ namespace Core.Goals
 
         private void GameProcessor_OnScoreChanged(int additionalPoints)
         {
-            AddProgress(additionalPoints);
-
-            var castleProgress = new CastleProgress()
+            _points += additionalPoints;
+            
+            var castleCost = _parts.Sum(i => i.Cost);
+            var completed = false;
+            if (_points >= castleCost)
             {
-                Name = Name,
-            };
-            foreach (var part in _parts)
-            {
-                castleProgress.Parts.Add(new CastlePartProgress()
-                {
-                    GridPosition = part.GridPosition, 
-                    IsCompleted = part.IsCompleted,
-                });
+                completed = true;
+                _points = castleCost;
             }
-            castleProgress.SelectedPartIndex = _selectedPartIndex;
-            var isCompleted = _parts.All(i => i.IsCompleted);
-            castleProgress.IsCompleted = isCompleted;
+
+            ApplyPointsToParts();
             
-            _gameProcessor.PlayerInfo.SetCastleProgress(castleProgress);
-            
-            if(isCompleted)
+            if (completed)
+            {
                 OnCompleted?.Invoke();
+            }
         }
 
-        public void ApplyProgress(CastleProgress castleProgress)
-        {
-            _selectedPartIndex = castleProgress.SelectedPartIndex;
+      // public void ApplyProgress(CastleProgress castleProgress)
+      // {
+      //     if (castleProgress.IsCompleted)
+      //     {
+      //         foreach (var part in _parts)
+      //         {
+      //             part.Complete();
+      //         }
+      //     } 
+      // }
         
-            foreach (var partProgress in castleProgress.Parts)
-            {
-                var foundPart = _parts.Find(i => i.GridPosition == partProgress.GridPosition);
-                if (foundPart != null)
-                    foundPart.ApplyProgress(partProgress);
-            }
-
-            _parts[_selectedPartIndex].Select(true);
-        }
-
-        public void SelectPart(CastlePart newSelected)
+        private void ApplyPointsToParts()
         {
-            _selectedPartIndex = _parts.IndexOf(newSelected);
-            for (var partI = 0; partI < _parts.Count; partI++)
-            {
-                var part = _parts[partI];
-                part.Select(partI == _selectedPartIndex);
-            }
-            
-            OnPartSelected?.Invoke();
-        }
-
-        private void AddProgress(int additionalProgress)
-        {
-            additionalProgress = _parts[_selectedPartIndex].AddPoints(additionalProgress);
-            while (additionalProgress > 0)
-            {
-                int minCost = int.MaxValue;
-                CastlePart newSelectedPart = null;
-                foreach (var part in _parts)
-                    if (!part.IsCompleted && part.Points < minCost)
-                        newSelectedPart = part;
-
-                if (newSelectedPart != null)
-                {
-                    additionalProgress = newSelectedPart.AddPoints(additionalProgress);
-                    SelectPart(newSelectedPart);
-                }
-                else
-                    break;
-            }
-        }
-        
-        public void SelectDefaultPart()
-        {
+            var restScore = _points;
             CastlePart newSelectedPart = null;
-            int minCost = int.MaxValue;
             foreach (var part in _parts)
-                if (!part.IsCompleted && part.Points < minCost)
-                {
-                    minCost = Mathf.Min(minCost, part.Points);
-                    newSelectedPart = part;
-                }
+            {
+                var consumePoints = part.Cost;
+                if (restScore <= part.Cost)
+                    consumePoints = restScore;
+               
+                part.SetPoints(consumePoints);
+                restScore -= consumePoints;
 
-            SelectPart(newSelectedPart);
+                if (restScore <= 0)
+                {
+                    newSelectedPart = part;
+                    break;
+                }
+            }
+
+            if (newSelectedPart != _selectedPart)
+            {
+                if(_selectedPart != null)
+                    _selectedPart.Select(false);
+
+                _selectedPart = newSelectedPart;
+                
+                if(_selectedPart != null)
+                    _selectedPart.Select(true);
+                
+                OnPartSelected?.Invoke();
+            }
         }
 
+        public void SetPoints(int points)
+        {
+            _points = points;
+            GameProcessor_OnScoreChanged(0);
+        }
         
+        public void ResetPoints()
+        {
+            _points = 0;
+            GameProcessor_OnScoreChanged(0);
+        }
     }
 }

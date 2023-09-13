@@ -5,6 +5,7 @@ using System.Linq;
 using Core;
 using Core.Buffs;
 using Core.Effects;
+using Core.Goals;
 using Core.Steps;
 using Core.Steps.CustomOperations;
 using Unity.VisualScripting;
@@ -154,7 +155,6 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
 
         Load();
-        SetDefaults();
         Init();
 
         ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel),
@@ -168,10 +168,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
         _bestSessionScore = PlayerInfo.GetBestSessionScore();
 
-        var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
-        if (lastSessionProgress != null)
+     
+        if (HasPreviousSessionGame)
         {
+            var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
             _score = lastSessionProgress.Score;
+
+            _castleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
+            _castleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points);
             
             var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => (i.GridPosition, i.Points));
             _field.AddBalls(ballsProgressData);
@@ -181,6 +185,10 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 var foundBuff = _buffs.Find(i => i.Id == buffProgress.Id);
                 foundBuff.SetRestCooldown(buffProgress.RestCooldown);
             }
+        }
+        else
+        {
+            _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
         }
     }
 
@@ -195,28 +203,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _playerInfo.Load();
     }
-
-    private void SetDefaults()
-    {
-        var lastSelectedCastle = _playerInfo.GetLastSelectedCastle();
-        if (string.IsNullOrEmpty(lastSelectedCastle))
-        {
-            _playerInfo.SelectCastle(_castleSelector.Library.Castles[0].Name);
-            lastSelectedCastle = _playerInfo.GetLastSelectedCastle();
-        }
-
-        var foundCastle = _castleSelector.Library.Castles.FirstOrDefault(i => i.Name == lastSelectedCastle);
-        if (foundCastle == null)
-        {
-            foreach (var castle in _castleSelector.Library.Castles)
-            {
-                var castleProgress = _playerInfo.GetCastleProgress(castle.Name);
-                if (castleProgress == null || !castleProgress.IsCompleted)
-                    _playerInfo.SelectCastle(castle.Name);
-            }
-        }
-    }
-
+    
     IEnumerator InnerProcess(bool newGame)
     {
         var waitForGameScreenReady =
@@ -228,6 +215,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
             _playerInfo.ClearLastSessionProgress();
             _field.Clear();
             _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
+            _castleSelector.ActiveCastle.ResetPoints();
         }
 
         _field.GenerateNextBallPositions(_generatedBallsCountAfterMove, _generatedBallsPointsRange);
@@ -273,7 +261,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
     private void CastleSelector_OnCastleCompleted()
     {
-        ApplicationController.Instance.UIPanelController.PushScreen(
+        ApplicationController.Instance.UIPanelController.PushPopupScreen(
             typeof(UICastleCompletePanel),
             new UICastleCompletePanel.UICastleCompletePanelData() { GameProcessor = this },
             UICastleCompletePanel_OnScreenReady);
@@ -459,7 +447,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         get
         {
-            return _playerInfo.GetLastSessionProgress() != null;
+            var lastSessionProgress = _playerInfo.GetLastSessionProgress();
+            return lastSessionProgress != null && lastSessionProgress.IsValid();
         }
     }
 
@@ -529,21 +518,17 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
     public void SelectNextCastle()
     {
-        foreach (var castle in _castleSelector.Library.Castles)
-        {
-            var castleProgress = _playerInfo.GetCastleProgress(castle.Name);
-            
-            if (castleProgress == null || !castleProgress.IsCompleted)
-            {
-                _playerInfo.SelectCastle(castle.Name);
-                break;
-            }
-        }
+        _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
     }
 
     public void ClearUndoSteps()
     {
         _stepMachine.ClearUndoSteps();
+    }
+
+    public ICastle GetCastle()
+    {
+        return _castleSelector.ActiveCastle;
     }
 
     public IField GetField()
@@ -560,5 +545,13 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         return _score;
     }
-    
+
+    public string GetFirstUncompletedCastle()
+    {
+        var firstUncompletedCastle = _castleSelector.Library.Castles.FirstOrDefault(i => !_playerInfo.IsCastleCompleted(i.Id));
+        if (firstUncompletedCastle == null)
+            firstUncompletedCastle = _castleSelector.Library.Castles.Last();
+
+        return firstUncompletedCastle.Id;
+    }
 }

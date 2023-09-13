@@ -10,6 +10,6 @@ public class CastleLibrary : MonoBehaviour
     
     public Castle GetCastle(string castleName)
     {
-        return _castles.Find(i => i.Name == castleName);
+        return _castles.Find(i => i.Id == castleName);
     }
 }

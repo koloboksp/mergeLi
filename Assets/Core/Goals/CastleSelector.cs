@@ -23,33 +23,33 @@ public class CastleSelector : MonoBehaviour
     public CastleLibrary Library => _library;
     public Castle ActiveCastle => _castleInstance;
     
-    private void PlayerInfo_OnCastleChanged()
-    {
-        if (_castleInstance != null)
-        {
-            _castleInstance.OnCompleted -= CastleInstance_OnCompleted;
-            _castleInstance.OnPartSelected -= CastleInstance_OnPartSelected;
-            Destroy(_castleInstance.gameObject);
-            _castleInstance = null;
-        }
-        
-        var lastSelectedCastle = _gameProcessor.PlayerInfo.GetLastSelectedCastle();
-        var castlePrefab = _library.GetCastle(lastSelectedCastle);
- 
-        _castleInstance = Instantiate(castlePrefab, _castleRoot);
-        _castleInstance.gameObject.name = castlePrefab.Name;
-        _castleInstance.View.Root.anchorMin = Vector2.zero;
-        _castleInstance.View.Root.anchorMax = Vector2.one;
-        _castleInstance.View.Root.offsetMin = Vector2.zero;
-        _castleInstance.View.Root.offsetMax = Vector2.zero;
-        _castleInstance.View.Root.localScale = Vector3.one;
-        
-        _castleInstance.Init(_gameProcessor);
-        
-        _castleInstance.OnCompleted += CastleInstance_OnCompleted;
-        _castleInstance.OnPartSelected += CastleInstance_OnPartSelected;
-        CastleInstance_OnPartSelected();
-    }
+    //private void PlayerInfo_OnCastleChanged()
+    //{
+    //    if (_castleInstance != null)
+    //    {
+    //        _castleInstance.OnCompleted -= CastleInstance_OnCompleted;
+    //        _castleInstance.OnPartSelected -= CastleInstance_OnPartSelected;
+    //        Destroy(_castleInstance.gameObject);
+    //        _castleInstance = null;
+    //    }
+    //    
+    //    var lastSelectedCastle = _gameProcessor.PlayerInfo.GetLastSelectedCastle();
+    //    var castlePrefab = _library.GetCastle(lastSelectedCastle);
+ //
+    //    _castleInstance = Instantiate(castlePrefab, _castleRoot);
+    //    _castleInstance.gameObject.name = castlePrefab.Id;
+    //    _castleInstance.View.Root.anchorMin = Vector2.zero;
+    //    _castleInstance.View.Root.anchorMax = Vector2.one;
+    //    _castleInstance.View.Root.offsetMin = Vector2.zero;
+    //    _castleInstance.View.Root.offsetMax = Vector2.zero;
+    //    _castleInstance.View.Root.localScale = Vector3.one;
+    //    
+    //    _castleInstance.Init(_gameProcessor);
+    //    
+    //    _castleInstance.OnCompleted += CastleInstance_OnCompleted;
+    //    _castleInstance.OnPartSelected += CastleInstance_OnPartSelected;
+    //    CastleInstance_OnPartSelected();
+    //}
 
     private GameObject _castlePart;
     
@@ -61,9 +61,10 @@ public class CastleSelector : MonoBehaviour
             _castlePart = null;
         }
 
-        if (_castleInstance.SelectedCastlePart != null)
+        var selectedCastlePart = _castleInstance.GetSelectedCastlePart();
+        if (selectedCastlePart != null)
         {
-            _castlePart = GameObject.Instantiate(_castleInstance.SelectedCastlePart.gameObject, _castleInstance.SelectedCastlePart.gameObject.transform.parent);
+            _castlePart = GameObject.Instantiate(selectedCastlePart.gameObject, selectedCastlePart.gameObject.transform.parent);
             _castlePart.AddComponent<CoinsEffectReceiver>();
             _castlePart.transform.SetSiblingIndex(0);
             var images = _castlePart.GetComponentsInChildren<Image>();
@@ -83,7 +84,34 @@ public class CastleSelector : MonoBehaviour
 
     public void Init()
     {
-        _gameProcessor.PlayerInfo.OnCastleChanged += PlayerInfo_OnCastleChanged;
-        PlayerInfo_OnCastleChanged();
+       // _gameProcessor.PlayerInfo.OnCastleChanged += PlayerInfo_OnCastleChanged;
+       // PlayerInfo_OnCastleChanged();
+    }
+
+    public void SelectActiveCastle(string id)
+    {
+        if (_castleInstance != null)
+        {
+            _castleInstance.OnCompleted -= CastleInstance_OnCompleted;
+            _castleInstance.OnPartSelected -= CastleInstance_OnPartSelected;
+            Destroy(_castleInstance.gameObject);
+            _castleInstance = null;
+        }
+        
+        var castlePrefab = _library.GetCastle(id);
+ 
+        _castleInstance = Instantiate(castlePrefab, _castleRoot);
+        _castleInstance.gameObject.name = castlePrefab.Id;
+        _castleInstance.View.Root.anchorMin = Vector2.zero;
+        _castleInstance.View.Root.anchorMax = Vector2.one;
+        _castleInstance.View.Root.offsetMin = Vector2.zero;
+        _castleInstance.View.Root.offsetMax = Vector2.zero;
+        _castleInstance.View.Root.localScale = Vector3.one;
+        
+        _castleInstance.Init(_gameProcessor);
+        
+        _castleInstance.OnCompleted += CastleInstance_OnCompleted;
+        _castleInstance.OnPartSelected += CastleInstance_OnPartSelected;
+        CastleInstance_OnPartSelected();
     }
 }

@@ -10,9 +10,12 @@ using Object = UnityEngine.Object;
 
 public interface ISessionProgressHolder
 {
+    ICastle GetCastle();
     IField GetField();
     IEnumerable<IBuff> GetBuffs();
     int GetScore();
+
+    string GetFirstUncompletedCastle();
 }
 
 public class PlayerInfo : MonoBehaviour
@@ -59,32 +62,17 @@ public class PlayerInfo : MonoBehaviour
         OnCoinsChanged?.Invoke();
     }
 
-    public string GetLastSelectedCastle()
+    
+    public bool IsCastleCompleted(string id)
     {
-        return _progress.LastSelectedCastle;
+        return _progress.CompletedCastles.Contains(id);
     }
-
-    public CastleProgress GetCastleProgress(string castleName)
+   
+    public void MarkCastleCompleted(string id)
     {
-        return _progress.CastleProgresses.Find(i => i.Name == castleName);
-    }
-
-    public void SelectCastle(string castleName)
-    {
-        _progress.LastSelectedCastle = castleName;
-        Save();
+        if (_progress.CompletedCastles.Contains(id)) return;
         
-        OnCastleChanged?.Invoke();
-    }
-
-    public void SetCastleProgress(CastleProgress castleProgress)
-    {
-        var foundIndex = _progress.CastleProgresses.FindIndex(i => i.Name == castleProgress.Name);
-        if (foundIndex < 0)
-            _progress.CastleProgresses.Add(castleProgress);
-        else
-            _progress.CastleProgresses[foundIndex] = castleProgress;
-        
+        _progress.CompletedCastles.Add(id);
         Save();
     }
     
@@ -177,6 +165,28 @@ public class PlayerInfo : MonoBehaviour
         var sessionProgress = new SessionProgress();
 
         sessionProgress.Score = sessionProgressHolder.GetScore();
+
+        
+        var castle = sessionProgressHolder.GetCastle();
+        if (castle.Completed)
+        {
+            MarkCastleCompleted(castle.Id);
+            sessionProgress.Castle = new SessionCastleProgress()
+            {
+                Id = sessionProgressHolder.GetFirstUncompletedCastle(),
+                Points = 0,
+            };
+        }
+        else
+        {
+            sessionProgress.Castle = new SessionCastleProgress()
+            {
+                Id = castle.Id,
+                Points = castle.GetPoints(),
+            };
+        }
+       
+
         sessionProgress.Field = new SessionFieldProgress();
         foreach (var ball in sessionProgressHolder.GetField().GetAll<IBall>())
         {
@@ -207,41 +217,33 @@ public class PlayerInfo : MonoBehaviour
     {
         return _lastSessionProgress;
     }
+
+    
 }
 
 [Serializable]
 public class Progress
 {
-    public List<CastleProgress> CastleProgresses = new List<CastleProgress>();
+    public List<string> CompletedCastles = new List<string>();
     public int BestSessionScore;
-    public string LastSelectedCastle;
     public int Coins;
 }
-
-[Serializable]
-public class CastleProgress
-{
-    public string Name;
-    public int SelectedPartIndex;
-  
-    public List<CastlePartProgress> Parts = new List<CastlePartProgress>();
-    public bool IsCompleted;
-}
-    
-[Serializable]
-public class CastlePartProgress
-{
-    public Vector2Int GridPosition;
-    public bool IsCompleted;
-}
-
 
 [Serializable]
 public class SessionProgress
 {
     public SessionFieldProgress Field;
+    public SessionCastleProgress Castle;
     public List<SessionBuffProgress> Buffs = new List<SessionBuffProgress>();
     public int Score;
+
+    public bool IsValid()
+    {
+        if (string.IsNullOrEmpty(Castle.Id))
+            return false;
+
+        return true;
+    }
 }
 
 [Serializable]
@@ -262,4 +264,11 @@ public class SessionBuffProgress
 {
     public string Id;
     public int RestCooldown;
+}
+
+[Serializable]
+public class SessionCastleProgress
+{ 
+    public string Id;
+    public int Points;
 }
