@@ -6,9 +6,9 @@ namespace Core.Steps
 {
     public class StepMachine : MonoBehaviour
     {
-        public Action<Step, StepExecutionType> OnStepCompleted;
-        public Action<Step, StepExecutionType> OnBeforeStepStarted;
-        public Action OnUndoStepsClear;
+        public event Action<Step, StepExecutionType> OnStepCompleted;
+        public event Action<Step, StepExecutionType> OnBeforeStepStarted;
+        public event Action OnUndoStepsClear;
 
         private readonly List<(Step step, StepExecutionType executionType)> _steps = new ();
         private readonly List<Step> _undoSteps = new ();

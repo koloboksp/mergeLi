@@ -16,7 +16,9 @@ namespace Core
         [SerializeField] private List<Color> _colors;
         
         BallSkin _ballSkin;
-
+        
+        public RectTransform Root => _root;
+        
         public void SetData()
         {
             _ball.OnPointsChanged += Ball_OnPointsChanged;

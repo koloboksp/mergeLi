@@ -107,7 +107,7 @@ namespace Core.Buffs
                     affectingBuffArea.LocalGridPosition = localGridPosition;
                 }
                 
-                affectingBuffArea.transform.position = _gameProcessor.Scene.Field.GetPointPosition(pointerGridPosition + localGridPosition);
+                affectingBuffArea.transform.position = _gameProcessor.Scene.Field.GetWorldPosition(pointerGridPosition + localGridPosition);
                 affectingBuffArea.transform.localScale = Vector3.one;
             }
 

@@ -20,6 +20,7 @@ public interface IField
     void GenerateNextBallPositions(int count, Vector2Int valueRange);
     IEnumerable<T> GetAll<T>();
     Vector3 CellSize();
+    Vector3 GetWorldPosition(Vector3Int gridPosition);
 }
 
 public interface IFieldView

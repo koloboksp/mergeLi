@@ -237,9 +237,9 @@ public class Field : MonoBehaviour, IField
         return TransformToIntPosition(pointerGridPosition);
     }
 
-    public Vector3 GetPointPosition(Vector3Int positionIndex)
+    public Vector3 GetWorldPosition(Vector3Int gridPosition)
     {
-        var areaFloatPosition = GetPositionFromGrid(positionIndex);
+        var areaFloatPosition = GetPositionFromGrid(gridPosition);
         return transform.TransformPoint(areaFloatPosition);
     }
     

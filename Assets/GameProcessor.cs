@@ -10,6 +10,7 @@ using Core.Effects;
 using Core.Goals;
 using Core.Steps;
 using Core.Steps.CustomOperations;
+using Core.Tutorials;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -178,67 +179,90 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
             if (cancellationToken.IsCancellationRequested)
                 throw new OperationCanceledException();
 
-            var isNewSession = await PrepareSession();
-            await ProcessSession(isNewSession);
+            await PrepareSession();
+            await ProcessSession();
         }
     }
     
-    private async Task<bool> PrepareSession()
+    private async Task PrepareSession()
     {
         _bestSessionScore = PlayerInfo.GetBestSessionScore();
         
-        if (HasPreviousSessionGame)
+        if (_forceTutorial)
         {
-            var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
-            _score = lastSessionProgress.Score;
+            _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
 
-            _castleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
-            _castleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points);
-            
-            var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => (i.GridPosition, i.Points));
-            _field.AddBalls(ballsProgressData);
-
-            foreach (var buffProgress in lastSessionProgress.Buffs)
-            {
-                var foundBuff = _buffs.Find(i => i.Id == buffProgress.Id);
-                foundBuff.SetRestCooldown(buffProgress.RestCooldown);
-            }
+            await StartTutorial();
         }
         else
         {
-            _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
-        }
+            if (HasPreviousSessionGame)
+            {
+                var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
+                _score = lastSessionProgress.Score;
 
-        await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-            typeof(UIGameScreen), 
-            new UIGameScreenData() { GameProcessor = this }, 
-            _cancellationTokenSource.Token);
+                _castleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
+                _castleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points);
+            
+                var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => (i.GridPosition, i.Points));
+                _field.AddBalls(ballsProgressData);
+
+                foreach (var buffProgress in lastSessionProgress.Buffs)
+                {
+                    var foundBuff = _buffs.Find(i => i.Id == buffProgress.Id);
+                    foundBuff.SetRestCooldown(buffProgress.RestCooldown);
+                }
+            }
+            else
+            {
+                _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
+            
+                _playerInfo.ClearLastSessionProgress();
+                _field.Clear();
+                _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
+                _castleSelector.ActiveCastle.ResetPoints();
+            }
+            
+            await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+                typeof(UIGameScreen), 
+                new UIGameScreenData() { GameProcessor = this }, 
+                _cancellationTokenSource.Token);
         
-        var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-            typeof(UIStartPanel), 
-            new UIStartPanelData() { GameProcessor = this }, 
-            _cancellationTokenSource.Token) as UIStartPanel;
-        await startPanel.Showing(_cancellationTokenSource.Token);
+            var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+                typeof(UIStartPanel), 
+                new UIStartPanelData() { GameProcessor = this }, 
+                _cancellationTokenSource.Token) as UIStartPanel;
+            await startPanel.Showing(_cancellationTokenSource.Token);
 
-        return startPanel.Choice == UIStartPanelChoice.New;
+            if (startPanel.Choice == UIStartPanelChoice.New)
+            {
+                _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
+            
+                _playerInfo.ClearLastSessionProgress();
+                _field.Clear();
+                _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
+                _castleSelector.ActiveCastle.ResetPoints();
+            }
+        }
     }
-    
 
+    public bool TutorialNotCompleted => true;
+
+    [SerializeField] private bool _forceTutorial;
+    [SerializeField] private TutorialController _tutorialController;
+    private async Task StartTutorial()
+    {
+        await _tutorialController.TryStartTutorial(_cancellationTokenSource.Token);
+    }
+
+    
     private void Load()
     {
         _playerInfo.Load();
     }
     
-    private async Task ProcessSession(bool newGame)
+    private async Task ProcessSession()
     {
-        if (newGame)
-        {
-            _playerInfo.ClearLastSessionProgress();
-            _field.Clear();
-            _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
-            _castleSelector.ActiveCastle.ResetPoints();
-        }
-
         _field.GenerateNextBallPositions(_generatedBallsCountAfterMove, _generatedBallsPointsRange);
 
         while (true)
@@ -338,21 +362,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);
                 if (path.Count > 0)
                 {
-                    _stepMachine.AddStep(new Step(StepTag.Move,
-                        new MoveOperation(_selectedBall.IntGridPosition, pointerGridPosition, _field),
-                        new SelectOperation(pointerGridPosition, false, _field)
-                            .SubscribeCompleted(OnDeselectBall),
-                        new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab,
-                            _destroyBallEffectPrefab, _field, _pointsCalculator, this),
-                        new CheckIfGenerationIsNecessary(
-                            null,
-                            new List<Operation>()
-                            {
-                                new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove,
-                                    _generatedBallsPointsRange, _field),
-                                new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field,
-                                    _pointsCalculator, this)
-                            })));
+                    MoveStep(_selectedBall.IntGridPosition, pointerGridPosition);
                 }
                 else
                 {
@@ -370,6 +380,25 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                     .SubscribeCompleted(OnSelectBall)));
             }
         }
+    }
+
+    private void MoveStep(Vector3Int from, Vector3Int to)
+    {
+        _stepMachine.AddStep(new Step(StepTag.Move,
+            new MoveOperation(from, to, _field),
+            new SelectOperation(to, false, _field)
+                .SubscribeCompleted(OnDeselectBall),
+            new CollapseOperation(to, _collapsePointsEffectPrefab,
+                _destroyBallEffectPrefab, _field, _pointsCalculator, this),
+            new CheckIfGenerationIsNecessary(
+                null,
+                new List<Operation>()
+                {
+                    new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove,
+                        _generatedBallsPointsRange, _field),
+                    new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field,
+                        _pointsCalculator, this)
+                })));
     }
 
     private void OnSelectBall(Operation sender, object result)
@@ -546,4 +575,32 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
         return firstUncompletedCastle.Id;
     }
+
+    public void SelectBall(Vector3Int gridPosition)
+    {
+        _stepMachine.AddStep(new Step(StepTag.Select, new SelectOperation(gridPosition, true, _field)
+            .SubscribeCompleted(OnSelectBall)));
+    }
+    public async Task MoveBall(Vector3Int from, Vector3Int to, CancellationToken cancellationToken)
+    {
+        bool stepCompleted = false;
+        
+        _stepMachine.OnStepCompleted += StepCompleted;
+        MoveStep(from, to);
+        
+        while (!stepCompleted)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
+            
+            await Task.Yield();
+        }
+        
+        void StepCompleted(Step arg1, StepExecutionType arg2)
+        {
+            stepCompleted = true;
+        }
+    }
+
+   
 }
