@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Core.Steps;
 using Core.Steps.CustomOperations;
 using UnityEngine;
@@ -20,14 +21,23 @@ namespace Core
         [SerializeField] private GameObject _lowSpaceWarning;
 
         private UIGameScreenData _data;
+        private CancellationTokenSource _cancellationTokenSource;
+
         public UIGameScreenData Data => _data;
         
         public void Awake()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
             _coins.OnClick += Coins_OnClick;
             _showSettingsBtn.onClick.AddListener(ShowSettingsBtn_OnClick); 
         }
   
+        private void OnDestroy()
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+        }
+        
         public override void SetData(UIScreenData data)
         {
             base.SetData(data);
@@ -112,17 +122,19 @@ namespace Core
         {
             var skinScreenData = new UISettingsPanel.UISettingsPanelData();
             skinScreenData.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UISettingsPanel), skinScreenData);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UISettingsPanel), skinScreenData, _cancellationTokenSource.Token);
         }
         
         private void Coins_OnClick()
         {
-            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UIShopPanel),
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+                typeof(UIShopPanel),
                 new UIShopScreenData()
                 {
                     Market = _data.GameProcessor.Market,
                     PurchaseItems = new List<PurchaseItem>(_data.GameProcessor.PurchasesLibrary.Items)
-                });
+                },
+                _cancellationTokenSource.Token);
         }
         
         private void CastleSelector_OnSelectedPartChanged()

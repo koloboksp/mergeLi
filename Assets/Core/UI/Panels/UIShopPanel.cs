@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Steps.CustomOperations;
 using UnityEngine;
@@ -16,12 +17,20 @@ namespace Core
         [SerializeField] private UIShopPanel_PurchaseItem _itemPrefab;
 
         private Model _model;
+        private CancellationTokenSource _cancellationTokenSource;
 
         private void Awake()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
         }
-        
+
+        private void OnDestroy()
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+        }
+
         private void CloseBtn_OnClick()
         {
             ApplicationController.Instance.UIPanelController.PopScreen(this);
@@ -68,7 +77,8 @@ namespace Core
             else
             {
                 var panelData = new UIPurchaseFailedPanelData();
-                ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UIPurchaseFailedPanel), panelData);
+                ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+                    typeof(UIPurchaseFailedPanel), panelData, _cancellationTokenSource.Token);
             }
         }
 

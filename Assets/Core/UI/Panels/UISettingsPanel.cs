@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,9 +16,12 @@ namespace Core
 
         private Model _model;
         private UISettingsPanelData _data;
+        private CancellationTokenSource _cancellationTokenSource;
 
         private void Awake()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+            
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
             
             _changeSkinBtn.onClick.AddListener(ChangeSkinBtn_OnClick);
@@ -26,13 +30,19 @@ namespace Core
             _showCastlesBtn.onClick.AddListener(ShowCastlesBtn_OnClick);
         }
         
+        private void OnDestroy()
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+        }
+        
         private void ChangeSkinBtn_OnClick()
         {
             var skinScreenData = new UISkinPanel.UISkinPanelData();
             skinScreenData.SelectedSkin = _data.GameProcessor.Scene.ActiveSkin.Name;
             skinScreenData.Skins = _data.GameProcessor.Scene.Library.Containers.Select(i => i.Name);
             skinScreenData.SkinChanger = _data.GameProcessor.Scene;
-            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UISkinPanel), skinScreenData);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UISkinPanel), skinScreenData, _cancellationTokenSource.Token);
         }
 
         private void ClearProgressBtn_OnClick()
@@ -51,7 +61,7 @@ namespace Core
             data.Selected = _data.GameProcessor.GetFirstUncompletedCastle();
             data.Castles = _data.GameProcessor.CastleSelector.Library.Castles;
             data.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UICastlesLibraryPanel), data);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UICastlesLibraryPanel), data, _cancellationTokenSource.Token);
         }
 
         public override void SetData(UIScreenData undefinedData)

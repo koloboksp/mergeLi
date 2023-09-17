@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Core;
 using Core.Buffs;
 using Core.Effects;
@@ -126,7 +128,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     private bool _userStepFinished = false;
     private bool _notAllBallsGenerated = false;
     private int _bestSessionScore;
-
+    private CancellationTokenSource _cancellationTokenSource;
 
     public Scene Scene => _scene;
     public PlayerInfo PlayerInfo => _playerInfo;
@@ -140,12 +142,19 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         get => _bestSessionScore;
     }
 
-    void Awake()
+    private void Awake()
     {
         _pointsCalculator = new PointsCalculator(this);
+        _cancellationTokenSource = new CancellationTokenSource();
     }
 
-    private void Start()
+    private void OnDestroy()
+    {
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+    }
+
+    private async void Start()
     {
         _field.OnPointerDown += Field_OnPointerDown;
         _stepMachine.OnBeforeStepStarted += StepMachine_OnBeforeStepStarted;
@@ -155,20 +164,29 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
 
         Load();
-        Init();
-
-        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel),
-            new UIStartPanelData() { GameProcessor = this }, UIStartPanel_OnScreenReady);
-    }
-
-    private void Init()
-    {
+        
         _castleSelector.Init();
         _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
+        
+        await ProcessGame(_cancellationTokenSource.Token);
+    }
 
+    private async Task ProcessGame(CancellationToken cancellationToken)
+    {
+        while (true)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                throw new OperationCanceledException();
+
+            var isNewSession = await PrepareSession();
+            await ProcessSession(isNewSession);
+        }
+    }
+    
+    private async Task<bool> PrepareSession()
+    {
         _bestSessionScore = PlayerInfo.GetBestSessionScore();
-
-     
+        
         if (HasPreviousSessionGame)
         {
             var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
@@ -190,26 +208,29 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         {
             _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
         }
-    }
 
-    private void UIStartPanel_OnScreenReady(UIPanel sender)
-    {
-        var startPanel = sender as UIStartPanel;
-        startPanel.OnStartPlay += () => StartCoroutine(InnerProcess(true));
-        startPanel.OnContinuePlay += () => StartCoroutine(InnerProcess(false));
+        await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+            typeof(UIGameScreen), 
+            new UIGameScreenData() { GameProcessor = this }, 
+            _cancellationTokenSource.Token);
+        
+        var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+            typeof(UIStartPanel), 
+            new UIStartPanelData() { GameProcessor = this }, 
+            _cancellationTokenSource.Token) as UIStartPanel;
+        await startPanel.Showing(_cancellationTokenSource.Token);
+
+        return startPanel.Choice == UIStartPanelChoice.New;
     }
+    
 
     private void Load()
     {
         _playerInfo.Load();
     }
     
-    IEnumerator InnerProcess(bool newGame)
+    private async Task ProcessSession(bool newGame)
     {
-        var waitForGameScreenReady =
-            new PushAndWaitForScreenReady<UIGameScreen>(new UIGameScreenData() { GameProcessor = this });
-        yield return waitForGameScreenReady;
-
         if (newGame)
         {
             _playerInfo.ClearLastSessionProgress();
@@ -228,59 +249,30 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
             _notAllBallsGenerated = false;
 
             while (!_userStepFinished)
-                yield return null;
+                await Task.Yield();
 
             CheckLowEmptySpace();
         }
 
-        var waitForGameFailPanelReady =
-            new PushPopupAndWaitForScreenReady<UIGameFailPanel>(new UIGameFailPanelData() { GameProcessor = this });
-        yield return waitForGameFailPanelReady;
+        var failPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+            typeof(UIGameFailPanel), 
+            new UIGameFailPanelData() { GameProcessor = this }, 
+            _cancellationTokenSource.Token);
 
-        var waitForGameFailPanelClosed = new WaitForScreenClosed(waitForGameFailPanelReady.Panel);
-        yield return waitForGameFailPanelClosed;
-
-        _field.Clear();
-        CheckLowEmptySpace();
-
-        ApplicationController.Instance.UIPanelController.HideAll();
-        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel),
-            new UIStartPanelData() { GameProcessor = this }, UIStartPanel_OnScreenReady);
+        await failPanel.Showing(_cancellationTokenSource.Token);
     }
-
-    private void Restart()
+    
+    private async void CastleSelector_OnCastleCompleted()
     {
-
-    }
-
-    private void OnScreenReady(UIPanel obj)
-    {
-        ApplicationController.Instance.UIPanelController.PushScreen(typeof(UIStartPanel),
-            new UIStartPanelData() { GameProcessor = this }, UIStartPanel_OnScreenReady);
-    }
-
-    private void CastleSelector_OnCastleCompleted()
-    {
-        ApplicationController.Instance.UIPanelController.PushPopupScreen(
+        var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
             typeof(UICastleCompletePanel),
-            new UICastleCompletePanel.UICastleCompletePanelData() { GameProcessor = this },
-            UICastleCompletePanel_OnScreenReady);
+            new UICastleCompletePanel.UICastleCompletePanelData() { GameProcessor = this }, _cancellationTokenSource.Token);
 
-    }
-
-    private void UICastleCompletePanel_OnScreenReady(UIPanel sender)
-    {
-        var completePanel = sender as UICastleCompletePanel;
-        completePanel.OnHided += StartPanel_OnHided;
-
-    }
-
-    private void StartPanel_OnHided(UIPanel obj)
-    {
+        await castleCompletePanel.Showing(_cancellationTokenSource.Token);
+        
         SelectNextCastle();
-
     }
-
+    
     void Field_OnPointerDown(Vector3Int pointerGridPosition)
     {
         var balls = _field.GetSomething<Ball>(pointerGridPosition).ToList();

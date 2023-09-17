@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -28,37 +31,6 @@ namespace Core
 
         public override bool keepWaiting => !_ready;
     }
-
-    public class PushPanelAndWaitForScreenReady<T> : CustomYieldInstruction where T : UIPanel
-    {
-        private bool _ready;
-        private T _panel;
-        
-        public T Panel => _panel;
-
-        protected void OnScreenReady(UIPanel sender)
-        {
-            _panel = sender as T;
-            _ready = true;
-        }
-
-        public override bool keepWaiting => !_ready;
-    }
-    public class PushPopupAndWaitForScreenReady<T> : PushPanelAndWaitForScreenReady<T> where T : UIPanel
-    {
-        public PushPopupAndWaitForScreenReady(UIScreenData data)
-        {
-            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(T), data, OnScreenReady);
-        }
-
-    }
-    public class PushAndWaitForScreenReady<T> : PushPanelAndWaitForScreenReady<T> where T : UIPanel
-    {
-        public PushAndWaitForScreenReady(UIScreenData data)
-        {
-            ApplicationController.Instance.UIPanelController.PushScreen(typeof(T), data, OnScreenReady);
-        }
-    }
     
     public class UIPanelController
     {
@@ -67,31 +39,14 @@ namespace Core
 
         public void SetScreensRoot(RectTransform screensRoot) => _screensRoot = screensRoot;
         
-        public void PushScreen(Type screenType, UIScreenData data, Action<UIPanel> onScreenReady = null)
+        public async Task<UIPanel> PushScreenAsync(Type screenType, UIScreenData data, CancellationToken cancellationToken)
         {
-            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
-            handle.Completed += senderHandle => 
-            {
-                var screenObject = Object.Instantiate(senderHandle.Result);
-                var screen = screenObject.GetComponent<UIPanel>();
-                screen.Root.SetParent(_screensRoot);
-                screen.Root.anchorMin = Vector2.zero;
-                screen.Root.anchorMax = Vector2.one;
-                screen.Root.offsetMin = Vector2.zero;
-                screen.Root.offsetMax = Vector2.zero;
-                screen.Root.localScale = Vector3.one;
-                _stack.Push(senderHandle, screen, data);
-                
-                onScreenReady?.Invoke(screen);
-            };
-        }
+            var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
+            var result = await handle.Task;
 
-        public void PushPopupScreen(Type screenType, UIScreenData data, Action<UIPanel> onScreenReady = null)
-        {
-            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
-            handle.Completed += senderHandle => 
+            if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                var screenObject = Object.Instantiate(senderHandle.Result);
+                var screenObject = Object.Instantiate(result);
                 var screen = screenObject.GetComponent<UIPanel>();
                 screen.Root.SetParent(_screensRoot);
                 screen.Root.anchorMin = Vector2.zero;
@@ -99,12 +54,36 @@ namespace Core
                 screen.Root.offsetMin = Vector2.zero;
                 screen.Root.offsetMax = Vector2.zero;
                 screen.Root.localScale = Vector3.one;
-                _stack.PushPopup(senderHandle, screen, data);
+                _stack.Push(handle, screen, data);
                 
-                onScreenReady?.Invoke(screen);
-            };
+                return screen;
+            }
+
+            return null;
         }
         
+        public async Task<UIPanel> PushPopupScreenAsync(Type screenType, UIScreenData data, CancellationToken cancellationToken)
+        {
+            var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
+            var result = await handle.Task;
+
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                var screenObject = Object.Instantiate(result);
+                var screen = screenObject.GetComponent<UIPanel>();
+                screen.Root.SetParent(_screensRoot);
+                screen.Root.anchorMin = Vector2.zero;
+                screen.Root.anchorMax = Vector2.one;
+                screen.Root.offsetMin = Vector2.zero;
+                screen.Root.offsetMax = Vector2.zero;
+                screen.Root.localScale = Vector3.one;
+                _stack.PushPopup(handle, screen, data);
+                
+                return screen;
+            }
+
+            return null;
+        }
         public void PopScreen(UIPanel screen)
         {
             var stackItem = _stack.PopScreen(screen);
@@ -130,6 +109,7 @@ namespace Core
                 var stackItem = new StackItem(handle, screen, data);
                 _items.Add(stackItem);
                 stackItem.Screen.SetData(data);
+                stackItem.Screen.Activate();
             }
             
             public void Push(AsyncOperationHandle<GameObject> handle, UIPanel screen, UIScreenData data)
@@ -143,6 +123,7 @@ namespace Core
                 var stackItem = new StackItem(handle, screen, data);
                 _items.Add(stackItem);
                 stackItem.Screen.SetData(data);
+                stackItem.Screen.Activate();
             }
 
             public StackItem PopScreen(UIPanel screen)
@@ -184,8 +165,6 @@ namespace Core
                     _screen = screen;
                     _data = data;
                 }
-                
-                
             }
         }
 

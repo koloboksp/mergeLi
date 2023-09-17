@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Core;
 using Core.Steps.CustomOperations;
 using UnityEngine;
@@ -17,6 +18,19 @@ public class UIBuff : MonoBehaviour
     [SerializeField] protected Text _costLabel;
     [SerializeField] protected CanvasGroup _commonCanvasGroup;
     [SerializeField] protected Image _cooldownImage;
+
+    private CancellationTokenSource _cancellationTokenSource;
+
+    protected virtual void Awake()
+    {
+        _cancellationTokenSource = new CancellationTokenSource();
+    }
+
+    private void OnDestroy()
+    {
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource.Dispose();
+    }
 
     public UIBuff SetModel(Buff model)
     {
@@ -72,12 +86,14 @@ public class UIBuff : MonoBehaviour
     {
         if (!_model.IsCurrencyEnough)
         {
-            ApplicationController.Instance.UIPanelController.PushPopupScreen(typeof(UIShopPanel),
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+                typeof(UIShopPanel),
                 new UIShopScreenData()
                 {
                     Market = _model.GameProcessor.Market,
                     PurchaseItems = new List<PurchaseItem>(_model.GameProcessor.PurchasesLibrary.Items)
-                });
+                }, 
+                _cancellationTokenSource.Token);
             return true;
         }
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +12,8 @@ namespace Core
         
         [SerializeField] private RectTransform _root;
         [SerializeField] private CanvasGroup _canvasGroup;
+
+        private bool _active;
         
         public RectTransform Root => _root;
         
@@ -20,6 +24,7 @@ namespace Core
 
         public void Activate()
         {
+            _active = true;
             InnerActivate();
         }
         protected virtual void InnerActivate()
@@ -32,6 +37,8 @@ namespace Core
             InnerHide();
             
             OnHided?.Invoke(this);
+
+            _active = false;
         }
 
         protected virtual void InnerHide()
@@ -47,6 +54,17 @@ namespace Core
         public void LockInput(bool state)
         {
             _canvasGroup.blocksRaycasts = !state;
+        }
+
+        public async Task Showing(CancellationToken cancellationToken)
+        {
+            while (_active)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    throw new OperationCanceledException();
+                
+                await Task.Yield();
+            }
         }
     }
 

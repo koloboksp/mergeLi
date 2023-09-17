@@ -4,41 +4,48 @@ using UnityEngine.UI;
 
 namespace Core
 {
+    public enum UIStartPanelChoice
+    {
+        Continue,
+        New
+    }
+    
     public class UIStartPanel : UIPanel
     {
-        public event Action OnStartPlay;
-        public event Action OnContinuePlay;
-
         [SerializeField] private Button _closeBtn;
         [SerializeField] private Button _startBtn;
         [SerializeField] private Button _continueBtn;
 
         private Model _model;
         private UIStartPanelData _data;
-
+        private UIStartPanelChoice _choice;
+        
+        public UIStartPanelChoice Choice => _choice;
+        
         private void Awake()
         {
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
             _startBtn.onClick.AddListener(StartBtn_OnClick);
             _continueBtn.onClick.AddListener(ContinueBtn_OnClick);
         }
-
-       
+        
         private void CloseBtn_OnClick()
         {
-           
+            
         }
         
         private void StartBtn_OnClick()
         {
+            _choice = UIStartPanelChoice.New;
+            
             ApplicationController.Instance.UIPanelController.PopScreen(this);
-            OnStartPlay?.Invoke();
         }
         
         private void ContinueBtn_OnClick()
         {
+            _choice = UIStartPanelChoice.Continue;
+
             ApplicationController.Instance.UIPanelController.PopScreen(this);
-            OnContinuePlay?.Invoke();
         }
         
         public override void SetData(UIScreenData undefinedData)
