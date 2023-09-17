@@ -3,6 +3,7 @@ using Core.Steps.CustomOperations;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceLocations;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core
@@ -10,8 +11,8 @@ namespace Core
     public class UIShopPanel_PurchaseItem : MonoBehaviour
     {
         [SerializeField] private Button _button;
-        [SerializeField] private AssetImage _icon;
-        [SerializeField] private Text _name;
+        [SerializeField] private AssetImage _offerIcon;
+        [SerializeField] private Text _count;
        
         private Model _model;
         private void Awake()
@@ -23,8 +24,8 @@ namespace Core
         {
             _model = model;
             
-            _name.text = _model.Name;
-            _icon.SpriteName = _model.BackgroundName;
+            _count.text = _model.CurrencyAmount.ToString();
+            _offerIcon.SpriteName = _model.BackgroundName;
         }
         
         private void OnClick()
@@ -45,6 +46,7 @@ namespace Core
             private string _inAppId;
             private PurchaseType _purchaseType;
             private string _backgroundName;
+            private int _currencyAmount;
 
             public Model(UIShopPanel.Model owner)
             {
@@ -53,13 +55,15 @@ namespace Core
 
             public string Name => _name;
             public string InAppId => _inAppId;
+            public int CurrencyAmount => _currencyAmount;
             public PurchaseType PurchaseType => _purchaseType;
             public string BackgroundName => _backgroundName;
 
-            public Model Init(string name, string inAppId, PurchaseType purchaseType)
+            public Model Init(string name, string inAppId, int currencyAmount, PurchaseType purchaseType)
             {
                 _name = name;
                 _inAppId = inAppId;
+                _currencyAmount = currencyAmount;
                 _purchaseType = purchaseType;
                 
                 return this;
@@ -72,8 +76,7 @@ namespace Core
             }
             public async void BuyMe()
             {
-                var buy = await _owner.Buy(this);
-                
+                var result = await _owner.Buy(this);
             }
         }
     }

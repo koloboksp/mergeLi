@@ -105,7 +105,7 @@ namespace Core
                 _market = market;
                 _items.AddRange(purchaseItems
                     .Select(i => new UIShopPanel_PurchaseItem.Model(this)
-                        .Init(i.PurchaseType == PurchaseType.Market ? i.ProductId : $"ShowAds{i.CurrencyAmount}", i.ProductId, i.PurchaseType)
+                        .Init(i.PurchaseType == PurchaseType.Market ? i.ProductId : $"ShowAds{i.CurrencyAmount}", i.ProductId, i.CurrencyAmount, i.PurchaseType)
                         .SetBackgroundName(i.BackgroundName)));
                 _onItemsUpdated?.Invoke(_items);
             }

@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.cleversolutions.ads.unity": {
+      "version": "https://github.com/cleveradssolutions/CAS-Unity.git#3.2.5",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "19eb37ad202f3e2cffeea56a24d0790bb65df390"
+    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,

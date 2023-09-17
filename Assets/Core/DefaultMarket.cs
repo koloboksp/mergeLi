@@ -26,9 +26,9 @@ namespace Core
             {
                 result = await ApplicationController.Instance.PurchaseController.Buy(purchaseItem.ProductId);
             }
-            else
+            else if (modelPurchaseType == PurchaseType.Ads)
             {
-                
+                result = await ApplicationController.Instance.AdsController.Show(AdvertisingType.Rewarded);
             }
             
             OnBought?.Invoke(result, purchaseItem.ProductId);
