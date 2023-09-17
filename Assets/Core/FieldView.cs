@@ -13,8 +13,8 @@ public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointe
     private bool _stepExecuted = false;
     public Canvas Canvas => _canvas;
     public Transform Root => _root;
-    public Vector2 RectSize => _root.rect.size;
-
+    public Vector2 RootSize => _root.rect.size;
+   
     private void Awake()
     {
         _model.Scene.GameProcessor.OnBeforeStepStarted += GameProcessor_OnBeforeStepStarted;
@@ -30,19 +30,14 @@ public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointe
     {
         _stepExecuted = false;
     }
-
-    public Vector3 CellSize()
-    {
-        return new Vector3(_root.rect.size.x / _model.Size.x, _root.rect.size.x / _model.Size.y, 0);
-    }
-
+    
     public void OnPointerDown(PointerEventData eventData)
     {
         if(_stepExecuted) return;
         
         var localPosition = Root.InverseTransformPoint(_model.ScreenPointToWorld(eventData.position));
       
-        var fieldSize = RectSize;
+        var fieldSize = RootSize;
         var gridPosition = new Vector3Int(
             (int)((localPosition.x / fieldSize.x) * _model.Size.x), 
             (int)((localPosition.y / fieldSize.y) * _model.Size.y));

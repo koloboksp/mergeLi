@@ -68,11 +68,11 @@ namespace Core
             }
         }
         
-        private void OnBoughtSomething(bool success)
+        private async void OnBoughtSomething(bool success)
         {
             if (success)
             {
-                StartCoroutine(PlayBoughtSuccessAnimation());
+                await PlayBoughtSuccessAnimation();
             }
             else
             {
@@ -82,10 +82,12 @@ namespace Core
             }
         }
 
-        private IEnumerator PlayBoughtSuccessAnimation()
+        private async Task PlayBoughtSuccessAnimation()
         {
             //stub
-            yield return new WaitForSeconds(2.0f);
+            LockInput(true);
+            await ApplicationController.WaitForSecondsAsync(2.0f);
+            LockInput(false);
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
         
@@ -103,18 +105,19 @@ namespace Core
                 _market = market;
                 _items.AddRange(purchaseItems
                     .Select(i => new UIShopPanel_PurchaseItem.Model(this)
-                        .Init(i.PurchaseType == PurchaseType.Market ? i.ProductId : $"ShowAds{i.CurrencyAmount}", i.ProductId, i.PurchaseType)));
+                        .Init(i.PurchaseType == PurchaseType.Market ? i.ProductId : $"ShowAds{i.CurrencyAmount}", i.ProductId, i.PurchaseType)
+                        .SetBackgroundName(i.BackgroundName)));
                 _onItemsUpdated?.Invoke(_items);
             }
             
             public async Task<bool> Buy(UIShopPanel_PurchaseItem.Model model)
             {
                 _onLockInput?.Invoke(true);
-                
                 var success = await _market.Buy(model.InAppId, model.PurchaseType);
+                _onLockInput?.Invoke(false);
+                
                 _onBoughtSomething?.Invoke(success);
                 
-                _onLockInput?.Invoke(false);
                 return success;
             }
             

@@ -39,7 +39,7 @@ public class Field : MonoBehaviour, IField
    
     private readonly List<Ball> _balls = new List<Ball>();
     
-    private Vector3 _cellSize = new Vector3(256, 256);
+    private Vector3 _cellSize;
     
     private readonly List<(Vector3Int intPosition, int points)> _nextBallsData = new();
 
@@ -54,7 +54,7 @@ public class Field : MonoBehaviour, IField
 
     private void Awake()
     { 
-        _cellSize = _view.CellSize();
+        _cellSize = new Vector3(View.RootSize.x / Size.x, View.RootSize.x / Size.y, 0);;
     }
 
     public Vector3 ScreenPointToWorld(Vector3 screenPosition)
@@ -160,6 +160,11 @@ public class Field : MonoBehaviour, IField
         var result = _balls.Where(i => i is T).Cast<T>();
         
         return result;
+    }
+
+    public Vector3 CellSize()
+    {
+        return _cellSize;
     }
 
     public List<(Vector3Int intPosition, int points)> AddBalls(int amount, Vector2Int valueRange)

@@ -100,6 +100,7 @@ MonoBehaviour:
   _productId: com.wib.livefactory.bigCoinsPack
   _currencyAmount: 50
   _purchaseType: 0
+  _backgroundName: bigPackPurchase
 --- !u!1 &5162631168228188004
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,6 +148,7 @@ MonoBehaviour:
   _productId: com.wib.livefactory.mediumCoinsPack
   _currencyAmount: 20
   _purchaseType: 0
+  _backgroundName: mediumPackPurchase
 --- !u!1 &5162631168431247279
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,6 +196,7 @@ MonoBehaviour:
   _productId: com.wib.livefactory.smallCoinsPack
   _currencyAmount: 10
   _purchaseType: 0
+  _backgroundName: smallPackPurchase
 --- !u!1 &5162631168885598430
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,3 +244,4 @@ MonoBehaviour:
   _productId: 
   _currencyAmount: 10
   _purchaseType: 1
+  _backgroundName: adsPackPurchase
