@@ -242,7 +242,18 @@ public class Field : MonoBehaviour, IField
         var areaFloatPosition = GetPositionFromGrid(gridPosition);
         return transform.TransformPoint(areaFloatPosition);
     }
-    
+
+    public Vector3 GetWorldPosition(Vector3 gridPosition)
+    {
+        var areaFloatPosition = GetPositionFromGrid(gridPosition);
+        return transform.TransformPoint(areaFloatPosition);
+    }
+
+    public Vector3 GetWorldCellSize()
+    {
+        return View.Root.TransformVector(_cellSize);
+    }
+
     public IEnumerable<T> GetSomething<T>(Vector3Int intPosition) where T : class
     {
         List<T> result = new List<T>();

@@ -15,7 +15,8 @@ namespace Core.Tutorials
             var enumerable = Tutorial.Controller.GameProcessor.GetField().GetAll<Ball>();
             var first = enumerable.First();
 
-            Tutorial.Controller.Focuser.FocusOn(first.View.Root);
+            await ApplicationController.WaitForSecondsAsync(1.0f);
+
             return true;
         }
     }

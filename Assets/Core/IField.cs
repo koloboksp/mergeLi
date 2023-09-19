@@ -21,6 +21,9 @@ public interface IField
     IEnumerable<T> GetAll<T>();
     Vector3 CellSize();
     Vector3 GetWorldPosition(Vector3Int gridPosition);
+    Vector3 GetWorldPosition(Vector3 gridPosition);
+    
+    Vector3 GetWorldCellSize();
 }
 
 public interface IFieldView

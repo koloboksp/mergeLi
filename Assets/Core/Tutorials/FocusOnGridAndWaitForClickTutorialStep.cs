@@ -6,31 +6,32 @@ using UnityEngine.Serialization;
 
 namespace Core.Tutorials
 {
-    public class FocusOnGridAndWaitForClickTutorialStep : TutorialStep
+    public class FocusOnGridAndWaitForClickTutorialStep : TutorialStep, IFocusedOnSomething
     {
-        [FormerlySerializedAs("_ballPosition")] [SerializeField] public Vector3Int _gridPosition;
+        [SerializeField] public Vector3Int _gridPosition;
+        
+        private Rect _focusedRect;
         
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
             Tutorial.Controller.Focuser.gameObject.SetActive(true);
-            
-           // var balls = Tutorial.Controller.GameProcessor.GetField().GetSomething<Ball>(_gridPosition);
-           // var ball = balls.FirstOrDefault();
-           // if (ball != null)
-           // {
-           //     Tutorial.Controller.Focuser.FocusOn(ball.View.Root);
-           // }
-           // else
-            {
-                var worldPosition = Tutorial.Controller.GameProcessor.GetField().GetWorldPosition(_gridPosition);
-                var worldPosition1 = Tutorial.Controller.GameProcessor.GetField().GetWorldPosition(_gridPosition + new Vector3Int(1,1,0));
-                var cellSize = worldPosition1 - worldPosition;
-                var rect = new Rect(worldPosition - cellSize * 2.5f * 0.5f, cellSize * 2.5f);
-                Tutorial.Controller.Focuser.FocusOn(rect);
-            }
-            
+  
+            var worldPosition = Tutorial.Controller.GameProcessor.GetField().GetWorldPosition(_gridPosition);
+            var cellSize = Tutorial.Controller.GameProcessor.GetField().GetWorldCellSize();
+            _focusedRect = new Rect(worldPosition - cellSize * 2.5f * 0.5f, cellSize * 2.5f);
+
+            gameObject.GetComponents<ModuleTutorialStep>().ToList().ForEach(i=>i.OnExecute(this));
+            Tutorial.Controller.Focuser.FocusOn(_focusedRect);
+
             await Tutorial.Controller.Focuser.WaitForClick(cancellationToken);
+            
+            gameObject.GetComponents<ModuleTutorialStep>().ToList().ForEach(i=>i.OnComplete(this));
             return true;
+        }
+        
+        public Rect GetFocusedRect()
+        {
+            return _focusedRect;
         }
     }
 }
