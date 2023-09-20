@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -32,8 +33,8 @@ namespace Core.Tutorials
                 var worldPosition = field.GetWorldPosition(gridPosition);
                 var cellSize = field.GetWorldCellSize();
                 _focusedRect = new Rect(worldPosition - cellSize * 2.5f * 0.5f, cellSize * 2.5f);
-                Tutorial.Controller.Focuser.FocusOn(_focusedRect);
-
+                gameObject.GetComponents<ModuleTutorialStep>().ToList().ForEach(i=>i.OnUpdate(this));
+                
                 moveTimer += Time.deltaTime;
                 await Task.Yield();
             }

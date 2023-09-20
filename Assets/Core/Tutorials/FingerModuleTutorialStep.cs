@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Core.Tutorials
 {
@@ -10,7 +11,7 @@ namespace Core.Tutorials
     
     public class FingerModuleTutorialStep : ModuleTutorialStep
     {
-        public override void OnExecute(TutorialStep step)
+        public override async Task OnExecute(TutorialStep step)
         {
             var focusedOnSomething = step as IFocusedOnSomething;
             step.Tutorial.Controller.Finger.Show(focusedOnSomething.GetFocusedRect());
@@ -19,6 +20,11 @@ namespace Core.Tutorials
         public override void OnComplete(TutorialStep step)
         {
             step.Tutorial.Controller.Finger.Hide();
+        }
+
+        public override void OnUpdate(TutorialStep step)
+        {
+            
         }
     }
 }

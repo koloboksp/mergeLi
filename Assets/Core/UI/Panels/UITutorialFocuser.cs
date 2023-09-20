@@ -20,23 +20,33 @@ namespace Core
         private FocusMode _focusMode;
         private RectTransform _target;
         
-        private void RecalculateRect(RectInt rect)
+        private Rect _desiredRect;
+        private Rect _currentRect;
+        private bool _smooth;
+        private float _smoothTime = 0.5f;
+        private float _smoothTimer;
+
+        private void RecalculateRect(Rect rect)
         {
+            var rectInt = new RectInt(
+                new Vector2Int((int)rect.x, (int)rect.y),
+                new Vector2Int((int)rect.width, (int)rect.height));
+            
             var size = _root.rect;
-            _right.anchoredPosition = new Vector2(rect.xMax, rect.yMin);
-            _right.sizeDelta = new Vector2(size.width - rect.xMax, size.height - rect.yMin);
+            _right.anchoredPosition = new Vector2(rectInt.xMax, rectInt.yMin);
+            _right.sizeDelta = new Vector2(size.width - rectInt.xMax, size.height - rectInt.yMin);
             
             _left.anchoredPosition = new Vector2(0, 0);
-            _left.sizeDelta = new Vector2(rect.xMin, rect.yMax);
+            _left.sizeDelta = new Vector2(rectInt.xMin, rectInt.yMax);
             
-            _top.anchoredPosition = new Vector2(0, rect.yMax);
-            _top.sizeDelta = new Vector2(rect.xMax, size.height - rect.yMax);
+            _top.anchoredPosition = new Vector2(0, rectInt.yMax);
+            _top.sizeDelta = new Vector2(rectInt.xMax, size.height - rectInt.yMax);
             
-            _bottom.anchoredPosition = new Vector2(rect.xMin, 0);
-            _bottom.sizeDelta = new Vector2(size.xMax - rect.xMin, rect.yMin);
+            _bottom.anchoredPosition = new Vector2(rectInt.xMin, 0);
+            _bottom.sizeDelta = new Vector2(size.xMax - rectInt.xMin, rectInt.yMin);
             
-            _center.anchoredPosition = new Vector2(rect.xMin, rect.yMin);
-            _center.sizeDelta = new Vector2(rect.size.x, rect.size.y);
+            _center.anchoredPosition = new Vector2(rectInt.xMin, rectInt.yMin);
+            _center.sizeDelta = new Vector2(rectInt.size.x, rectInt.size.y);
         }
 
         public void FocusOn(RectTransform target)
@@ -45,36 +55,92 @@ namespace Core
             _focusMode = FocusMode.Transform;
         }
         
-        public void FocusOn(Rect rect)
+        public void FocusOn(Rect rect, bool smooth)
         {
+            _focusMode = FocusMode.Rect;
+         
             var lb = _root.InverseTransformPoint(rect.min);
             var rt = _root.InverseTransformPoint(rect.max);
-
-            var rectInt = new RectInt(
+            _desiredRect = new Rect(
                 new Vector2Int((int)lb.x, (int)lb.y),
                 new Vector2Int((int)(rt.x - lb.x), (int)(rt.y - lb.y)));
+            _smooth = smooth;
             
-            _focusMode = FocusMode.Rect;
-            RecalculateRect(rectInt);
+            if (_smooth)
+            {
+                _smoothTimer = 0;
+                enabled = true;
+            }
+            else
+            {
+                _currentRect = _desiredRect;
+                RecalculateRect(_currentRect);
+            }
+        }
+        
+        public void FocusOn(bool smooth)
+        {
+            _focusMode = FocusMode.None;
+            _smooth = smooth;
+            _desiredRect = _root.rect;
+            
+            if (_smooth)
+            {
+                _smoothTimer = 0;
+                enabled = true;
+            }
+            else
+            {
+                _currentRect = _desiredRect;
+                RecalculateRect(_currentRect);
+            }
         }
         
         public void Update()
         {
-            if (_focusMode != FocusMode.Transform) return;
-            if (_target == null) return;
+            if (_smooth)
+            {
+                
+            }
             
-            var corners = new Vector3[4];
-            _target.GetWorldCorners(corners);
+            if (_focusMode == FocusMode.Rect)
+            {
+                
+            }
+            
+            if (_focusMode == FocusMode.Transform)
+            {
+                if (_target != null)
+                {
+                    var corners = new Vector3[4];
+                    _target.GetWorldCorners(corners);
 
-            var lb = _root.InverseTransformPoint(corners[0]);
-            var rt = _root.InverseTransformPoint(corners[2]);
-            var min = Vector3.Min(lb, rt);
-            var max = Vector3.Max(lb, rt);
+                    var lb = _root.InverseTransformPoint(corners[0]);
+                    var rt = _root.InverseTransformPoint(corners[2]);
+                    var min = Vector3.Min(lb, rt);
+                    var max = Vector3.Max(lb, rt);
 
-            var rect = new RectInt(
-                new Vector2Int((int)min.x, (int)min.y),
-                new Vector2Int((int)(max.x - min.x), (int)(max.y - min.y)));
-            RecalculateRect(rect);
+                    _desiredRect = new Rect(
+                        new Vector2(min.x, min.y),
+                        new Vector2(max.x - min.x, max.y - min.y));
+                }
+            }
+
+            if (_smoothTimer < _smoothTime)
+            {
+                _smoothTimer += Time.deltaTime;
+                _smoothTimer = Mathf.Clamp(_smoothTimer, 0, _smoothTime);
+                
+                var nSmoothTimer = _smoothTimer / _smoothTime;
+                var rect = new Rect(
+                    Vector3.Lerp(_currentRect.position, _desiredRect.position, nSmoothTimer),
+                    Vector3.Lerp(_currentRect.size, _desiredRect.size, nSmoothTimer));
+                RecalculateRect(rect);
+            }
+            else
+            {
+                enabled = false;
+            }
         }
 
         public async Task WaitForClick(CancellationToken cancellationToken)

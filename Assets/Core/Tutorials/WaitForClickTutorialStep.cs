@@ -5,19 +5,17 @@ using UnityEngine;
 
 namespace Core.Tutorials
 {
-    public class MoveBallTutorialStep : TutorialStep
+    public class WaitForClickTutorialStep : TutorialStep
     {
-        [SerializeField] public Vector3Int _from;
-        [SerializeField] public Vector3Int _to;
-
+        [SerializeField] private bool _waitForClick = false;
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
             await Task.WhenAll(gameObject.GetComponents<ModuleTutorialStep>()
                 .Select(i=>i.OnExecute(this))
                 .ToArray());
-            
-            await Tutorial.Controller.GameProcessor.MoveBall(_from, _to, cancellationToken);
-            
+            if(_waitForClick)
+                await Tutorial.Controller.Focuser.WaitForClick(cancellationToken);
+            gameObject.GetComponents<ModuleTutorialStep>().ToList().ForEach(i=>i.OnComplete(this));
             return true;
         }
     }
