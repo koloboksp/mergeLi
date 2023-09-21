@@ -13,7 +13,7 @@ namespace Core.Tutorials
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
             await Task.WhenAll(gameObject.GetComponents<ModuleTutorialStep>()
-                .Select(i=>i.OnExecute(this))
+                .Select(i=>i.OnExecute(this, cancellationToken))
                 .ToArray());
             
             await Tutorial.Controller.GameProcessor.MoveBall(_from, _to, cancellationToken);

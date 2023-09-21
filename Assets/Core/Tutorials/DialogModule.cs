@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Tutorials
 {
-    public class DialogModuleTutorialStep : ModuleTutorialStep
+    public class DialogModule : ModuleTutorialStep
     {
         [SerializeField] private List<string> _textKeys = new List<string>();
         
-        public override async Task OnExecute(TutorialStep step)
+        public override async Task OnExecute(TutorialStep step, CancellationToken cancellationToken)
         {
             var focusedOnSomething = step as IFocusedOnSomething;
             if(focusedOnSomething != null)
@@ -21,12 +22,12 @@ namespace Core.Tutorials
             }
         }
 
-        public override void OnComplete(TutorialStep step)
+        public override async Task OnComplete(TutorialStep step, CancellationToken cancellationToken)
         {
             
         }
 
-        public override void OnUpdate(TutorialStep step)
+        public override void OnUpdate(TutorialStep step, CancellationToken cancellationToken)
         {
             
         }

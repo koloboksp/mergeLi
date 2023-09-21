@@ -33,7 +33,7 @@ namespace Core.Tutorials
                 var worldPosition = field.GetWorldPosition(gridPosition);
                 var cellSize = field.GetWorldCellSize();
                 _focusedRect = new Rect(worldPosition - cellSize * 2.5f * 0.5f, cellSize * 2.5f);
-                gameObject.GetComponents<ModuleTutorialStep>().ToList().ForEach(i=>i.OnUpdate(this));
+                gameObject.GetComponents<ModuleTutorialStep>().ToList().ForEach(i=>i.OnUpdate(this, cancellationToken));
                 
                 moveTimer += Time.deltaTime;
                 await Task.Yield();

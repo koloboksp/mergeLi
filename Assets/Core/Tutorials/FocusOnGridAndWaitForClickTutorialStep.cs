@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -11,20 +10,20 @@ namespace Core.Tutorials
         [SerializeField] public Vector3Int _gridPosition;
         private float _rectScale = 2.5f;
         private Rect _focusedRect;
-        
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+
+        protected override async Task<bool> InnerInit(CancellationToken cancellationToken)
         {
             var worldPosition = Tutorial.Controller.GameProcessor.GetField().GetWorldPosition(_gridPosition);
             var cellSize = Tutorial.Controller.GameProcessor.GetField().GetWorldCellSize();
             _focusedRect = new Rect(worldPosition - cellSize * _rectScale * 0.5f, cellSize * _rectScale);
             
-            await Task.WhenAll(gameObject.GetComponents<ModuleTutorialStep>()
-                .Select(i=>i.OnExecute(this))
-                .ToArray());
-            
+            return true;
+        }
+
+        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        {
             await Tutorial.Controller.Focuser.WaitForClick(cancellationToken);
             
-            gameObject.GetComponents<ModuleTutorialStep>().ToList().ForEach(i=>i.OnComplete(this));
             return true;
         }
         

@@ -144,10 +144,31 @@ namespace Core
             
             _score.SetNextGoalScore(pointsGoal, costGoal);
         }
+
+        public void HideAllElements()
+        {
+            _buffsContainerRoot.gameObject.SetActive(false);
+            _buffsContainer.gameObject.SetActive(false);
+            _score.gameObject.SetActive(false);
+            _coins.gameObject.SetActive(false);
+            _showSettingsBtn.gameObject.SetActive(false);
+            _lowSpaceWarning.gameObject.SetActive(false);
+        }
+
+        public void SetActiveElement(UIGameScreenElement element, bool active)
+        {
+            if(element == UIGameScreenElement.ProgressBar)
+                _score.gameObject.SetActive(active);
+        }
     }
 
     public class UIGameScreenData : UIScreenData
     {
         public GameProcessor GameProcessor { get; set; }
+    }
+
+    public enum UIGameScreenElement
+    {
+        ProgressBar,
     }
 }

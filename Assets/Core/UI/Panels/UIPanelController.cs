@@ -98,6 +98,11 @@ namespace Core
                 lastItem.Screen.Activate();
             }
         }
+
+        public T GetPanel<T>() where T : UIPanel
+        {
+            return _stack.GetByPanelType(typeof(T)).Screen as T;
+        } 
         
         class ScreenStack
         {
@@ -148,6 +153,13 @@ namespace Core
                 }
 
                 return null;
+            }
+            
+            public StackItem GetByPanelType(Type type)
+            {
+                var stackItem = _items.FindLast(i => i.Screen.GetType() == type);
+               
+                return stackItem;
             }
             
             public class StackItem
