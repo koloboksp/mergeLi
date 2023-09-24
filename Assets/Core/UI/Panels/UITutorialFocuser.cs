@@ -94,6 +94,7 @@ namespace Core
                 _smoothTimer = 0;
                 enabled = true;
                 await UpdateAsync(cancellationToken);
+                _currentRect = _desiredRect;
             }
             else
             {
@@ -131,6 +132,7 @@ namespace Core
                 _smoothTimer = 0;
                 enabled = true;
                 await UpdateAsync(cancellationToken);
+                _currentRect = _desiredRect;
             }
             else
             {
@@ -237,22 +239,7 @@ namespace Core
 
         public async Task WaitForClick(CancellationToken cancellationToken)
         {
-             _centerButton.onClick.AddListener(OnClick);
-            var buttonClicked = false;
-            
-            while (!buttonClicked)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    throw new OperationCanceledException();
-
-                await Task.Yield();
-            }
-            
-            void OnClick()
-            {
-                _centerButton.onClick.RemoveListener(OnClick);
-                buttonClicked = true;
-            }
+            await AsyncHelpers.WaitForClick(_centerButton, cancellationToken);
         }
 
         enum FocusMode

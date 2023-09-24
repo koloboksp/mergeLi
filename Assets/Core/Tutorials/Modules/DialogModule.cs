@@ -18,7 +18,7 @@ namespace Core.Tutorials
             foreach (var textKey in _textKeys)
             {
                 await step.Tutorial.Controller.Dialog.Show(textKey);
-                await ApplicationController.WaitForSecondsAsync(1.0f);
+                await ApplicationController.WaitForSecondsAsync(1.0f, cancellationToken);
             }
         }
 

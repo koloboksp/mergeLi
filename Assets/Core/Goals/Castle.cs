@@ -7,16 +7,11 @@ using UnityEngine;
 
 namespace Core.Goals
 {
-    public interface ICastle
-    {
-        int GetPoints();
-        string Id { get; }
-        bool Completed { get; }
-    }
     public class Castle : MonoBehaviour, ICastle
     {
         public event Action OnCompleted;
         public event Action OnPartSelected;
+        public event Action OnProgressChanged;
 
         [SerializeField] private CastleView _view;
         [SerializeField] private CastlePart _partPrefab;
@@ -45,19 +40,13 @@ namespace Core.Goals
         {
             return _points;
         }
-
-       
-
+        
         public void Init(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;
 
             gameObject.GetComponentsInChildren(_parts);
             _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
-
-            //var castleProgress = gameProcessor.PlayerInfo.GetCastleProgress(Id);
-            //if(castleProgress != null)
-            //    ApplyProgress(castleProgress);
             
             _gameProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
             GameProcessor_OnScoreChanged(0);
@@ -70,8 +59,18 @@ namespace Core.Goals
 
         private void GameProcessor_OnScoreChanged(int additionalPoints)
         {
-            _points += additionalPoints;
+            var completed = ProcessPoints(additionalPoints);
             
+            OnProgressChanged?.Invoke();
+
+            if (completed)
+                OnCompleted?.Invoke();
+        }
+
+        private bool ProcessPoints(int additionalPoints)
+        {
+            _points += additionalPoints;
+
             var castleCost = _parts.Sum(i => i.Cost);
             var completed = false;
             if (_points >= castleCost)
@@ -81,24 +80,10 @@ namespace Core.Goals
             }
 
             ApplyPointsToParts();
-            
-            if (completed)
-            {
-                OnCompleted?.Invoke();
-            }
+
+            return completed;
         }
 
-      // public void ApplyProgress(CastleProgress castleProgress)
-      // {
-      //     if (castleProgress.IsCompleted)
-      //     {
-      //         foreach (var part in _parts)
-      //         {
-      //             part.Complete();
-      //         }
-      //     } 
-      // }
-        
         private void ApplyPointsToParts()
         {
             var restScore = _points;
@@ -143,6 +128,12 @@ namespace Core.Goals
         {
             _points = 0;
             GameProcessor_OnScoreChanged(0);
+        }
+
+        public void ForceComplete()
+        {
+            var requiredPoints = GetCost() - _points;
+            ProcessPoints(requiredPoints);
         }
     }
 }

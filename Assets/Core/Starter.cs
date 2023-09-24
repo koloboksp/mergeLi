@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using Core;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace Assets.Scripts.Core
 		public async void Start()
 		{
             Logo.Play(LogoClip.name);
-			var taskLogo = ApplicationController.WaitForSecondsAsync(Logo.clip.length);
+			var taskLogo = ApplicationController.WaitForSecondsAsync(Logo.clip.length, CancellationToken.None);
 			var taskInitialization = ApplicationController.StartAsync();
 
             await Task.WhenAll(taskLogo, taskInitialization);

@@ -44,6 +44,10 @@ namespace Core
             }
         }
 
-       
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

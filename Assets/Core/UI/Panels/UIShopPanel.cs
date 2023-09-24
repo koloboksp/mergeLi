@@ -86,7 +86,7 @@ namespace Core
         {
             //stub
             LockInput(true);
-            await ApplicationController.WaitForSecondsAsync(2.0f);
+            await ApplicationController.WaitForSecondsAsync(2.0f, _cancellationTokenSource.Token);
             LockInput(false);
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }

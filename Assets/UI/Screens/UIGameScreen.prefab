@@ -363,7 +363,7 @@ RectTransform:
   - {fileID: 8344435121894139154}
   - {fileID: 4840618613103210845}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1132,6 +1132,7 @@ GameObject:
   - component: {fileID: 447135101054681759}
   - component: {fileID: 7751034290328399452}
   - component: {fileID: 5297330937264307940}
+  - component: {fileID: 6652954190609107802}
   m_Layer: 5
   m_Name: coins
   m_TagString: Untagged
@@ -1221,6 +1222,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6652954190609107802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5844819785010385830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b44924012d804383a2a267b2aa2b2b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6203198141565903775
 GameObject:
   m_ObjectHideFlags: 0

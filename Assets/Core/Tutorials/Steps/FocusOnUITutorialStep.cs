@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Core.Tutorials
 {
-    public class FocusOnUIAndTutorialStep : TutorialStep, IFocusedOnSomething
+    public class FocusOnUITutorialStep : TutorialStep, IFocusedOnSomething
     {
         [SerializeField] private string _tag;
 

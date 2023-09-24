@@ -31,30 +31,19 @@ public class PlayerInfo : MonoBehaviour
     private Progress _progress = new Progress();
     private SessionProgress _lastSessionProgress = null;
     
-    private void Awake()
+    public void AddCoins(int amount)
     {
-        _market.OnBought += Market_OnBought;
+        _progress.Coins += amount;
+        Save();
+        
+        OnCoinsChanged?.Invoke();
     }
-
-    private void Market_OnBought(bool result, string productId)
-    {
-        var purchaseItem = _purchasesLibrary.Items.Find(i => string.Equals(i.ProductId, productId, StringComparison.Ordinal));
-       
-        if (result && purchaseItem != null)
-        {
-            _progress.Coins += purchaseItem.CurrencyAmount;
-            Save();
-            
-            OnCoinsChanged?.Invoke();
-        }
-    }
-
+    
     public int GetAvailableCoins()
     {
         return _progress.Coins;
     }
-
-
+    
     public void ConsumeCoins(int count)
     {
         _progress.Coins -= count;

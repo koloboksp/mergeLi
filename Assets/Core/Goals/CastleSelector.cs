@@ -8,10 +8,8 @@ using UnityEngine.UI;
 public class CastleSelector : MonoBehaviour
 {
     public event Action OnCastleCompleted;
-    public event Action OnSelectedPartChanged;
-    public event Action OnCastleChanged;
-
-
+    public event Action<Castle> OnCastleChanged;
+    
     [SerializeField] private GameProcessor _gameProcessor;
     [SerializeField] private CastleLibrary _library;
     [SerializeField] private Transform _castleRoot;
@@ -72,14 +70,13 @@ public class CastleSelector : MonoBehaviour
             foreach (var image in images)
                 image.material = _selectionMaterial;
         
-            OnSelectedPartChanged?.Invoke();
         }
     }
     
     private void CastleInstance_OnCompleted()
     {
         OnCastleCompleted?.Invoke();
-        OnCastleChanged?.Invoke();
+        OnCastleChanged?.Invoke(null);
     }
 
     public void Init()
@@ -113,5 +110,12 @@ public class CastleSelector : MonoBehaviour
         _castleInstance.OnCompleted += CastleInstance_OnCompleted;
         _castleInstance.OnPartSelected += CastleInstance_OnPartSelected;
         CastleInstance_OnPartSelected();
+        
+        OnCastleChanged?.Invoke(null);
     }
+
+    public void ForceCompleteCastle()
+    {
+        _castleInstance.ForceComplete();
+    }   
 }

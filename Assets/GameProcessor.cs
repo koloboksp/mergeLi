@@ -120,7 +120,9 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     [SerializeField] private List<Buff> _buffs;
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     [SerializeField] private CastleSelector _castleSelector;
-
+    //todo extract
+    [SerializeField] private GiveCoinsEffect _giveCoinsEffect;
+    public GiveCoinsEffect GiveCoinsEffect => _giveCoinsEffect;
 
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
@@ -147,6 +149,18 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _pointsCalculator = new PointsCalculator(this);
         _cancellationTokenSource = new CancellationTokenSource();
+        
+        _market.OnBought += Market_OnBought;
+    }
+
+    private void Market_OnBought(bool result, string productId)
+    {
+        var purchaseItem = _purchasesLibrary.Items.Find(i => string.Equals(i.ProductId, productId, StringComparison.Ordinal));
+       
+        if (result && purchaseItem != null)
+        {
+            _playerInfo.AddCoins(purchaseItem.CurrencyAmount);
+        }
     }
 
     private void OnDestroy()
@@ -288,9 +302,19 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     
     private async void CastleSelector_OnCastleCompleted()
     {
+        ProcessCastleComplete(null);
+    }
+
+    public async void ProcessCastleComplete(Func<Task> beforeCoins)
+    {
         var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
             typeof(UICastleCompletePanel),
-            new UICastleCompletePanel.UICastleCompletePanelData() { GameProcessor = this }, _cancellationTokenSource.Token);
+            new UICastleCompletePanel.UICastleCompletePanelData()
+            {
+                GameProcessor = this, 
+                BeforeGiveCoins = beforeCoins,
+            }, 
+            _cancellationTokenSource.Token);
 
         await castleCompletePanel.Showing(_cancellationTokenSource.Token);
         
@@ -324,22 +348,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                         var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);
                         if (path.Count > 0)
                         {
-                            _stepMachine.AddStep(new Step(StepTag.Merge,
-                                new MoveOperation(_selectedBall.IntGridPosition, pointerGridPosition, _field),
-                                new MergeOperation(pointerGridPosition, _field),
-                                new SelectOperation(pointerGridPosition, false, _field)
-                                    .SubscribeCompleted(OnDeselectBall),
-                                new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab,
-                                    _destroyBallEffectPrefab, _field, _pointsCalculator, this),
-                                new CheckIfGenerationIsNecessary(
-                                    null,
-                                    new List<Operation>()
-                                    {
-                                        new GenerateOperation(_generatedBallsCountAfterMerge,
-                                            _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
-                                        new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab,
-                                            _field, _pointsCalculator, this)
-                                    })));
+                            MergeStep(_selectedBall.IntGridPosition, pointerGridPosition);
                         }
                         else
                         {
@@ -380,6 +389,26 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                     .SubscribeCompleted(OnSelectBall)));
             }
         }
+    }
+
+    private void MergeStep(Vector3Int from, Vector3Int to)
+    {
+        _stepMachine.AddStep(new Step(StepTag.Merge,
+            new MoveOperation(from, to, _field),
+            new MergeOperation(to, _field),
+            new SelectOperation(to, false, _field)
+                .SubscribeCompleted(OnDeselectBall),
+            new CollapseOperation(to, _collapsePointsEffectPrefab,
+                _destroyBallEffectPrefab, _field, _pointsCalculator, this),
+            new CheckIfGenerationIsNecessary(
+                null,
+                new List<Operation>()
+                {
+                    new GenerateOperation(_generatedBallsCountAfterMerge,
+                        _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
+                    new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab,
+                        _field, _pointsCalculator, this)
+                })));
     }
 
     private void MoveStep(Vector3Int from, Vector3Int to)
@@ -479,7 +508,6 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         _score += points;
         
         PlayerInfo.SetBestSessionScore(_score);
-        
         OnScoreChanged?.Invoke(points);
     }
 
@@ -590,9 +618,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         
         while (!stepCompleted)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
-            
+            cancellationToken.ThrowIfCancellationRequested();
             await Task.Yield();
         }
         
@@ -602,5 +628,27 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         }
     }
 
-   
+    public async Task MergeBall(Vector3Int from, Vector3Int to, CancellationToken cancellationToken)
+    {
+        bool stepCompleted = false;
+
+        _stepMachine.OnStepCompleted += StepCompleted;
+        MergeStep(from, to);
+
+        while (!stepCompleted)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await Task.Yield();
+        }
+
+        void StepCompleted(Step arg1, StepExecutionType arg2)
+        {
+            stepCompleted = true;
+        }
+    }
+
+    public async Task GiveTutorialCoins(int coinsAmount)
+    {
+        
+    }
 }

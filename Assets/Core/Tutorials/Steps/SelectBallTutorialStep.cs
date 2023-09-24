@@ -15,7 +15,7 @@ namespace Core.Tutorials
             var enumerable = Tutorial.Controller.GameProcessor.GetField().GetAll<Ball>();
             var first = enumerable.First();
 
-            await ApplicationController.WaitForSecondsAsync(1.0f);
+            await ApplicationController.WaitForSecondsAsync(1.0f, cancellationToken);
 
             return true;
         }

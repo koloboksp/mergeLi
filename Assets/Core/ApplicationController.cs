@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Steps.CustomOperations;
 using Unity.Services.Core;
@@ -45,12 +46,14 @@ namespace Core
             await StartAsync();
         }
         
-        public static async Task WaitForSecondsAsync(float time)
+        public static async Task WaitForSecondsAsync(float time, CancellationToken cancellationToken)
         {
             var timer = 0.0f;
 
             while (timer < time)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+                
                 timer += Time.deltaTime;
                 await Task.Yield();
             }
