@@ -19,18 +19,29 @@ namespace Core
         private Transform _from;
         private UIGameScreen_Coins _to;
 
-        public async Task Show(Transform from, CancellationToken cancellationToken)
+        public async Task Show(int currencyAmount, Transform from, CancellationToken cancellationToken)
         {
             _from = from;
             _to = GameObject.FindObjectOfType<UIGameScreen_Coins>();
 
-            await Run(3, cancellationToken);
+            var coinsValue = 5;
+            var coinsNum = currencyAmount / coinsValue;
+            var restCoinsValue = currencyAmount - coinsValue * coinsNum;
+
+            var splitCoins = new List<int>();
+            for (int i = 0; i < coinsNum; i++)
+                splitCoins.Add(coinsValue);
+            if(restCoinsValue > 0)
+                splitCoins.Add(restCoinsValue);
+            
+            await Run(splitCoins, cancellationToken);
         }
         
-        private async Task Run(int coinsCount, CancellationToken cancellationToken)
+        private async Task Run(List<int> splitCoins, CancellationToken cancellationToken)
         {
+            
             var list = new List<Task>();
-            for (int i = 0; i < coinsCount; i++)
+            for (int i = 0; i < splitCoins.Count; i++)
             {
                 var startPosition = _from.position + Random.insideUnitSphere * _randomizeStartPosition;
                 var endPosition = _to.transform.position;
@@ -41,17 +52,18 @@ namespace Core
                                Vector3.Cross(dirToReceiver, Vector3.forward) *
                                Random.Range(-distanceToReceiver * _randomizeSideOffset, distanceToReceiver * _randomizeSideOffset);
 
-                list.Add(StartFx(Random.Range(0.0f, _randomizeDelay), startPosition, midPoint, endPosition, _duration, cancellationToken));
+                list.Add(StartFx(splitCoins[i], Random.Range(0.0f, _randomizeDelay), startPosition, midPoint, endPosition, _duration, cancellationToken));
             }
             await Task.WhenAll(list);
         }
 
         private async Task StartFx(
-            float delay, 
-            Vector3 startPosition, 
-            Vector3 middlePosition, 
-            Vector3 endPosition, 
-            float time, 
+            int coinValue,
+            float delay,
+            Vector3 startPosition,
+            Vector3 middlePosition,
+            Vector3 endPosition,
+            float time,
             CancellationToken cancellationToken)
         {
            
@@ -86,6 +98,9 @@ namespace Core
                 timer += Time.deltaTime;
                 await Task.Yield();
             }
+            
+            _to.SetCoins(coinValue);
+            
             DestroyCreated();
 
             void DestroyCreated()

@@ -49,13 +49,12 @@ namespace Core
             }
 
             _cancellationTokenSource = new CancellationTokenSource();
-            
             UpScale(_cancellationTokenSource.Token);
         }
 
         private async Task UpScale(CancellationToken cancellationToken)
         {
-            var time = 1.0f;
+            var time = 0.5f;
             var timer = 0.0f;
             while (timer < time)
             {

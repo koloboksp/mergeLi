@@ -371,6 +371,7 @@ MonoBehaviour:
   _view: {fileID: 998695423786879912}
   _partPrefab: {fileID: 4742252313357977921, guid: 77b095d847314e644a1312edb00c0322,
     type: 3}
+  _coinsAfterComplete: 0
 --- !u!114 &998695423786879912
 MonoBehaviour:
   m_ObjectHideFlags: 0

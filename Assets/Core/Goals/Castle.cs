@@ -15,6 +15,7 @@ namespace Core.Goals
 
         [SerializeField] private CastleView _view;
         [SerializeField] private CastlePart _partPrefab;
+        [SerializeField] private int _coinsAfterComplete;
         
         private GameProcessor _gameProcessor;
         private readonly List<CastlePart> _parts = new();
@@ -25,7 +26,8 @@ namespace Core.Goals
         public bool Completed => _points >= GetCost(); 
         public CastleView View => _view;
         public IEnumerable<CastlePart> Parts => _parts;
-
+        public int CoinsAfterComplete => _coinsAfterComplete;
+        
         public CastlePart GetSelectedCastlePart()
         {
             return _selectedPart;

@@ -2,29 +2,40 @@
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core.Tutorials
 {
     public class CompleteCastleTutorialStep : TutorialStep
     {
-        [SerializeField] private List<TutorialStep> _steps = new List<TutorialStep>();
-        
+        [SerializeField] private List<TutorialStep> _stepsBeforeGetCoins = new List<TutorialStep>();
+        [SerializeField] private List<TutorialStep> _stepsBeforeSelectNextCastle = new List<TutorialStep>();
+        [SerializeField] private List<TutorialStep> _stepsAfterSelectNextCastle = new List<TutorialStep>();
+
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
             Tutorial.Controller.GameProcessor.CastleSelector.ForceCompleteCastle();
-            Tutorial.Controller.GameProcessor.ProcessCastleComplete(Sss);
+            Tutorial.Controller.GameProcessor.ProcessCastleComplete(StepsBeforeGetCoins, BeforeSelectNextCastle, AfterSelectNextCastle);
 
             return true;
 
-            async Task Sss()
+            async Task StepsBeforeGetCoins()
             {
-                foreach (var VARIABLE in _steps)
-                {
-                    await VARIABLE.Execute(cancellationToken);
-                }
+                foreach (var step in _stepsBeforeGetCoins)
+                    await step.Execute(cancellationToken);
+            }
+            
+            async Task BeforeSelectNextCastle()
+            {
+                foreach (var step in _stepsBeforeSelectNextCastle)
+                    await step.Execute(cancellationToken);
+            }
+            
+            async Task AfterSelectNextCastle()
+            {
+                foreach (var step in _stepsAfterSelectNextCastle)
+                    await step.Execute(cancellationToken);
             }
         }
-
-        
     }
 }

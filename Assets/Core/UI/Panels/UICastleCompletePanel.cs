@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -42,6 +43,15 @@ namespace Core
 
         async Task Show(CancellationToken cancellationToken)
         {
+            var overUIElements = FindObjectsOfType<UIOverCastleCompletePanel>(true)
+                .Select(i => (i, i.transform, i.gameObject.activeSelf))
+                .ToList();
+            foreach (var overUIElementTuple in overUIElements)
+            {
+                overUIElementTuple.i.transform.SetParent(transform, true);
+                overUIElementTuple.i.gameObject.SetActive(overUIElementTuple.activeSelf);
+            }
+
             var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
             var castleOriginalParent = activeCastle.transform.parent;
             activeCastle.transform.SetParent(_castleAnimationRoot, true);
@@ -52,9 +62,12 @@ namespace Core
             await ApplicationController.WaitForSecondsAsync(_completeClipPart1.length, cancellationToken);
             if (_data.BeforeGiveCoins != null)
                 await _data.BeforeGiveCoins();
-            await _data.GameProcessor.GiveCoinsEffect.Show(_kingRoot, cancellationToken);
+           
+            await _data.GameProcessor.GiveCoinsEffect.Show(activeCastle.CoinsAfterComplete, _kingRoot, cancellationToken);
             await ApplicationController.WaitForSecondsAsync(3.0f, cancellationToken);
             
+            if (_data.BeforeSelectNextCastle != null)
+                await _data.BeforeSelectNextCastle();
             var castlePosition = activeCastle.transform.position;
             _data.GameProcessor.SelectNextCastle();
             
@@ -62,11 +75,15 @@ namespace Core
             activeCastle.transform.SetParent(_castleAnimationRoot, true);
             activeCastle.transform.position = castlePosition;
 
-          
-            await Task.WhenAny(
-                ApplicationController.WaitForSecondsAsync(10.0f, cancellationToken), 
-                AsyncHelpers.WaitForClick(_tapButton, cancellationToken));
-            
+            if (_data.AfterSelectNextCastle != null)
+                await _data.AfterSelectNextCastle();
+            else
+            {
+                await Task.WhenAny(
+                    ApplicationController.WaitForSecondsAsync(10.0f, cancellationToken),
+                    AsyncHelpers.WaitForClick(_tapButton, cancellationToken));
+            }
+
             _animation.Play(_completeClipPart2.name);
             await ApplicationController.WaitForSecondsAsync(10.0f, cancellationToken);
             
@@ -74,13 +91,19 @@ namespace Core
 
             _data.GameProcessor.ClearUndoSteps();
             
+            foreach (var overUIElementTuple in overUIElements)
+                overUIElementTuple.i.transform.SetParent(overUIElementTuple.transform, true);
+            
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
         
         public class UICastleCompletePanelData : UIScreenData
         {
             public GameProcessor GameProcessor { get; set; }
+            
             public Func<Task> BeforeGiveCoins;
+            public Func<Task> BeforeSelectNextCastle;
+            public Func<Task> AfterSelectNextCastle;
         }
     }
 }

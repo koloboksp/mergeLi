@@ -14,8 +14,10 @@ namespace Core.Tutorials
         protected override async Task<bool> InnerInit(CancellationToken cancellationToken)
         {
             var tutorialElements = FindObjectsOfType<UITutorialElement>();
-            _target = tutorialElements.First(i => i.Tag == _tag);
+            _target = tutorialElements.FirstOrDefault(i => i.Tag == _tag);
 
+            if(_target == null)
+                Debug.LogError($"UITutorialElement with tag {_tag} not found.", this);
             return true;
         }
 

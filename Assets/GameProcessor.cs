@@ -302,17 +302,22 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     
     private async void CastleSelector_OnCastleCompleted()
     {
-        ProcessCastleComplete(null);
+        ProcessCastleComplete(null, null, null);
     }
 
-    public async void ProcessCastleComplete(Func<Task> beforeCoins)
+    public async void ProcessCastleComplete(
+        Func<Task> beforeGiveCoins, 
+        Func<Task> beforeSelectNextCastle,
+        Func<Task> afterSelectNextCastle)
     {
         var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
             typeof(UICastleCompletePanel),
             new UICastleCompletePanel.UICastleCompletePanelData()
             {
                 GameProcessor = this, 
-                BeforeGiveCoins = beforeCoins,
+                BeforeGiveCoins = beforeGiveCoins,
+                BeforeSelectNextCastle = beforeSelectNextCastle,
+                AfterSelectNextCastle = afterSelectNextCastle,
             }, 
             _cancellationTokenSource.Token);
 
