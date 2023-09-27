@@ -165,7 +165,6 @@ namespace Core
         public void HideAllElements()
         {
             _buffsContainerRoot.gameObject.SetActive(false);
-            _buffsContainer.gameObject.SetActive(false);
             _score.gameObject.SetActive(false);
             _coins.gameObject.SetActive(false);
             _showSettingsBtn.gameObject.SetActive(false);
@@ -178,6 +177,10 @@ namespace Core
                 _score.gameObject.SetActive(active);
             if(element == UIGameScreenElement.Coins)
                 _coins.gameObject.SetActive(active);
+            if(element == UIGameScreenElement.Buffs)
+                _buffsContainerRoot.gameObject.SetActive(active);
+            if(element == UIGameScreenElement.Settings)
+                _showSettingsBtn.gameObject.SetActive(active);
         }
     }
 
@@ -190,5 +193,7 @@ namespace Core
     {
         ProgressBar,
         Coins,
+        Buffs,
+        Settings,
     }
 }

@@ -11,10 +11,12 @@ namespace Core.Tutorials
     
     public class FingerModule : ModuleTutorialStep
     {
+        [SerializeField] private FingerOrientation _fingerOrientation;
+        
         public override async Task OnExecute(TutorialStep step, CancellationToken cancellationToken)
         {
             var focusedOnSomething = step as IFocusedOnSomething;
-            step.Tutorial.Controller.Finger.Show(focusedOnSomething.GetFocusedRect());
+            step.Tutorial.Controller.Finger.Show(focusedOnSomething.GetFocusedRect(), _fingerOrientation);
         }
 
         public override async Task OnComplete(TutorialStep step, CancellationToken cancellationToken)

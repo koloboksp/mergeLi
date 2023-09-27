@@ -44,7 +44,7 @@ namespace Core
         async Task Show(CancellationToken cancellationToken)
         {
             var overUIElements = FindObjectsOfType<UIOverCastleCompletePanel>(true)
-                .Select(i => (i, i.transform, i.gameObject.activeSelf))
+                .Select(i => (i, i.transform.parent, i.gameObject.activeSelf))
                 .ToList();
             foreach (var overUIElementTuple in overUIElements)
             {
@@ -74,7 +74,8 @@ namespace Core
             activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
             activeCastle.transform.SetParent(_castleAnimationRoot, true);
             activeCastle.transform.position = castlePosition;
-
+            activeCastle.transform.localScale = Vector3.one;
+            
             if (_data.AfterSelectNextCastle != null)
                 await _data.AfterSelectNextCastle();
             else
@@ -85,14 +86,14 @@ namespace Core
             }
 
             _animation.Play(_completeClipPart2.name);
-            await ApplicationController.WaitForSecondsAsync(10.0f, cancellationToken);
+            await ApplicationController.WaitForSecondsAsync(_completeClipPart2.length + 2.0f, cancellationToken);
             
             activeCastle.transform.SetParent(castleOriginalParent);
 
             _data.GameProcessor.ClearUndoSteps();
             
             foreach (var overUIElementTuple in overUIElements)
-                overUIElementTuple.i.transform.SetParent(overUIElementTuple.transform, true);
+                overUIElementTuple.i.transform.SetParent(overUIElementTuple.parent, true);
             
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
