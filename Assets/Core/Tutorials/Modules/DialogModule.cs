@@ -8,12 +8,11 @@ namespace Core.Tutorials
     public class DialogModule : ModuleTutorialStep
     {
         [SerializeField] private List<string> _textKeys = new List<string>();
+        [SerializeField] private DialogPosition _position = DialogPosition.Bottom;
         
         public override async Task OnExecute(TutorialStep step, CancellationToken cancellationToken)
         {
-            var focusedOnSomething = step as IFocusedOnSomething;
-            if(focusedOnSomething != null)
-                step.Tutorial.Controller.Dialog.Move(focusedOnSomething.GetFocusedRect());
+            step.Tutorial.Controller.Dialog.Move(_position);
 
             foreach (var textKey in _textKeys)
             {

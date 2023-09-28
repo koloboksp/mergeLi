@@ -12,15 +12,25 @@ namespace Core
         [SerializeField] private RectTransform _root;
         [SerializeField] private Text _dialogText;
         [SerializeField] private int _showingSpeed = 30;
-        
+        [SerializeField] private RectTransform _bottomAnchor;
+        [SerializeField] private RectTransform _centerAnchor;
+        [SerializeField] private RectTransform _topAnchor;
+
         public async Task Show(string textKey)
         {
             gameObject.SetActive(true);
             await ShowEffect(textKey);
         }
         
-        public void Move(Rect rect)
+        public void Move(DialogPosition dialogPosition)
         {
+            if (dialogPosition == DialogPosition.Bottom)
+                _root.transform.position = _bottomAnchor.transform.position;
+            if (dialogPosition == DialogPosition.Center)
+                _root.transform.position = _centerAnchor.transform.position;
+            if (dialogPosition == DialogPosition.Top)
+                _root.transform.position = _topAnchor.transform.position;
+
            // _root.anchoredPosition = _areaRoot.InverseTransformPoint(new Vector2(0, rect.position.y) + new Vector2(0, 0));
         }
         
@@ -43,11 +53,17 @@ namespace Core
                 await Task.Yield();
             }
         }
-
-
+        
         public void Hide()
         {
             gameObject.SetActive(false);
         }
+    }
+
+    public enum DialogPosition
+    {
+        Bottom,
+        Center,
+        Top
     }
 }

@@ -181,7 +181,6 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         Load();
         
         _castleSelector.Init();
-        _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
         
         await ProcessGame(_cancellationTokenSource.Token);
     }
@@ -210,6 +209,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         }
         else
         {
+            _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
+
             if (HasPreviousSessionGame)
             {
                 var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
@@ -305,7 +306,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         ProcessCastleComplete(null, null, null);
     }
 
-    public async void ProcessCastleComplete(
+    public async Task ProcessCastleComplete(
         Func<Task> beforeGiveCoins, 
         Func<Task> beforeSelectNextCastle,
         Func<Task> afterSelectNextCastle)

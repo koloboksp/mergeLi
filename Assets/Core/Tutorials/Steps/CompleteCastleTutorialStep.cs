@@ -15,7 +15,7 @@ namespace Core.Tutorials
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
             Tutorial.Controller.GameProcessor.CastleSelector.ForceCompleteCastle();
-            Tutorial.Controller.GameProcessor.ProcessCastleComplete(StepsBeforeGetCoins, BeforeSelectNextCastle, AfterSelectNextCastle);
+            await Tutorial.Controller.GameProcessor.ProcessCastleComplete(StepsBeforeGetCoins, BeforeSelectNextCastle, AfterSelectNextCastle);
 
             return true;
 

@@ -5,9 +5,10 @@ using UnityEngine.Serialization;
 
 namespace Core.Tutorials
 {
-    public class FocusOnGridAndWaitForClickTutorialStep : TutorialStep, IFocusedOnSomething
+    public class FocusOnGridTutorialStep : TutorialStep, IFocusedOnSomething
     {
         [SerializeField] public Vector3Int _gridPosition;
+       
         private float _rectScale = 2.5f;
         private Rect _focusedRect;
 
@@ -22,8 +23,6 @@ namespace Core.Tutorials
 
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
-            await Tutorial.Controller.Focuser.WaitForClick(cancellationToken);
-            
             return true;
         }
         

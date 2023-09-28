@@ -140,6 +140,29 @@ namespace Core
                 RecalculateRect(_currentRect);
             }
         }
+
+        public async Task HideAsync(bool smooth, CancellationToken cancellationToken)
+        {
+            _focusMode = FocusMode.None;
+            _smooth = smooth;
+            _desiredRect = _root.rect;
+            _desiredRect.min -= new Vector2(100, 100);
+            _desiredRect.max += new Vector2(100, 100);
+            if (_smooth)
+            {
+                _smoothTimer = 0;
+                enabled = true;
+                await UpdateAsync(cancellationToken);
+                _currentRect = _desiredRect;
+            }
+            else
+            {
+                _currentRect = _desiredRect;
+                RecalculateRect(_currentRect);
+            }
+            
+            gameObject.SetActive(false);
+        }
         
         public void Update()
         {

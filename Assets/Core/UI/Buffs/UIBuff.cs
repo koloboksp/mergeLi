@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Core;
 using Core.Steps.CustomOperations;
+using Core.Tutorials;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ public class UIBuff : MonoBehaviour
     [SerializeField] protected Text _costLabel;
     [SerializeField] protected CanvasGroup _commonCanvasGroup;
     [SerializeField] protected Image _cooldownImage;
+    [SerializeField] protected UITutorialElement _tutorialElement;
 
     private CancellationTokenSource _cancellationTokenSource;
 
@@ -42,6 +44,8 @@ public class UIBuff : MonoBehaviour
         SetCost();
         AvailableStateChanged();
         RestCooldownChanged();
+
+        _tutorialElement.Tag = _model.Id;
         return this;
     }
 

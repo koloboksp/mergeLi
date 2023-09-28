@@ -164,7 +164,7 @@ namespace Core
 
         public void HideAllElements()
         {
-            _buffsContainerRoot.gameObject.SetActive(false);
+            _buffsContainerRoot.gameObject.SetActive(false); 
             _score.gameObject.SetActive(false);
             _coins.gameObject.SetActive(false);
             _showSettingsBtn.gameObject.SetActive(false);
