@@ -17,12 +17,15 @@ namespace Core.Tutorials
     public class GenerateFieldTutorialStep : TutorialStep
     {
         [SerializeField] public List<BallInfo> _balls;
+        [SerializeField] public List<BallInfo> _nextBalls;
         [SerializeField] public Field _field;
         
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
             var ballsInfos = _balls.Select(i => (i.GridPosition, i.Points));
             _field.AddBalls(ballsInfos);
+            var nextBallsInfos = _nextBalls.Select(i => (i.GridPosition, i.Points));
+            _field.SetNextBalls(nextBallsInfos);
 
             return true;
         }
