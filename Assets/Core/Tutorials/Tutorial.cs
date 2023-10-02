@@ -9,9 +9,13 @@ namespace Core.Tutorials
 {
     public class Tutorial : MonoBehaviour
     {
+        [SerializeField] private string _id;
         [SerializeField] private TutorialController _controller;
+        [SerializeField] private TutorialEntry _entry;
         [SerializeField] private TutorialStep _startStep;
         [SerializeField] private List<TutorialStep> _requiredSteps = new List<TutorialStep>();
+
+        public string Id => _id;
         
         public TutorialController Controller => _controller;
        
@@ -50,6 +54,13 @@ namespace Core.Tutorials
                 else
                     FindAllScriptsWithoutNested(child, result);
             }
+        }
+
+        public bool CanStart(bool forceStart) => _entry.CanStart(forceStart);
+
+        public void Complete()
+        {
+            Controller.GameProcessor.PlayerInfo.CompleteTutorial(Id);
         }
     }
 }

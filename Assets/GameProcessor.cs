@@ -201,11 +201,10 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _bestSessionScore = PlayerInfo.GetBestSessionScore();
         
-        if (_forceTutorial)
+        
+        if (_tutorialController.CanStartTutorial(_forceTutorial))
         {
-            _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
-
-            await StartTutorial();
+            await StartTutorial(_forceTutorial);
         }
         else
         {
@@ -265,9 +264,9 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
     [SerializeField] private bool _forceTutorial;
     [SerializeField] private TutorialController _tutorialController;
-    private async Task StartTutorial()
+    private async Task StartTutorial(bool forceTutorial)
     {
-        await _tutorialController.TryStartTutorial(_cancellationTokenSource.Token);
+        await _tutorialController.TryStartTutorial(forceTutorial, _cancellationTokenSource.Token);
     }
 
     
