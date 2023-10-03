@@ -25,9 +25,6 @@ public class PlayerInfo : MonoBehaviour
     [SerializeField] private DefaultMarket _market;
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     
-    public event Action OnCoinsChanged;
-    public event Action OnCastleChanged;
-    
     private Progress _progress = new Progress();
     private SessionProgress _lastSessionProgress = null;
     
@@ -35,8 +32,6 @@ public class PlayerInfo : MonoBehaviour
     {
         _progress.Coins += amount;
         Save();
-        
-        OnCoinsChanged?.Invoke();
     }
     
     public int GetAvailableCoins()
@@ -48,7 +43,6 @@ public class PlayerInfo : MonoBehaviour
     {
         _progress.Coins -= count;
         Save();
-        OnCoinsChanged?.Invoke();
     }
 
     

@@ -64,6 +64,8 @@ namespace Core
                 await _data.BeforeGiveCoins();
            
             await _data.GameProcessor.GiveCoinsEffect.Show(activeCastle.CoinsAfterComplete, _kingRoot, cancellationToken);
+            _data.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
+            
             await ApplicationController.WaitForSecondsAsync(3.0f, cancellationToken);
             
             if (_data.BeforeSelectNextCastle != null)

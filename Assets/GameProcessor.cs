@@ -99,6 +99,9 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     public event Action<int> OnScoreChanged;
     public event Action<bool> OnLowEmptySpaceChanged;
 
+    public event Action<int> OnConsumeCurrency;
+    public event Action<int> OnAddCurrency;
+
     [SerializeField] private Scene _scene;
     [SerializeField] private Field _field;
     [SerializeField] private StepMachine _stepMachine;
@@ -153,13 +156,11 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         _market.OnBought += Market_OnBought;
     }
 
-    private void Market_OnBought(bool result, string productId)
+    private void Market_OnBought(bool result, string productId, int amount)
     {
-        var purchaseItem = _purchasesLibrary.Items.Find(i => string.Equals(i.ProductId, productId, StringComparison.Ordinal));
-       
-        if (result && purchaseItem != null)
+        if (result)
         {
-            _playerInfo.AddCoins(purchaseItem.CurrencyAmount);
+            AddCurrency(amount);
         }
     }
 
@@ -507,6 +508,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         }
     }
 
+    public int CurrencyAmount => _playerInfo.GetAvailableCoins();
+
 
     public void AddPoints(int points)
     {
@@ -529,7 +532,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _stepMachine.AddStep(
             new Step(StepTag.Undo,
-                new SpendOperation(cost, _playerInfo, false),
+                new SpendOperation(cost, this, false),
                 new UndoOperation(_stepMachine),
                 new ConfirmBuffUseOperation(buff)));
     }
@@ -538,7 +541,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _stepMachine.AddStep(
             new Step(ExplodeTypeToStepTags[explodeType], 
-                new SpendOperation(cost, _playerInfo, true),
+                new SpendOperation(cost, this, true),
                 new RemoveOperation(ballsIndexes, _field),
                 new ConfirmBuffUseOperation(buff)));
     }
@@ -547,7 +550,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _stepMachine.AddStep(
             new Step(StepTag.NextBalls, 
-                new SpendOperation(cost, _playerInfo, true),
+                new SpendOperation(cost, this, true),
                 new NextBallsShowOperation(true, nextBallsShower),
                 new ConfirmBuffUseOperation(buff)));
     }
@@ -564,7 +567,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         var gradeLevel = -1;
         _stepMachine.AddStep(
             new Step(StepTag.Downgrade,
-                new SpendOperation(cost, _playerInfo, true),
+                new SpendOperation(cost, this, true),
                 new GradeOperation(ballsIndexes, gradeLevel, _field),
                 new ConfirmBuffUseOperation(buff),
                 new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)));
@@ -655,5 +658,19 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     public async Task GiveTutorialCoins(int coinsAmount)
     {
         
+    }
+
+    public void ConsumeCoins(int amount)
+    {
+        PlayerInfo.ConsumeCoins(amount);
+        
+        OnConsumeCurrency?.Invoke(amount);
+    }
+
+    public void AddCurrency(int amount)
+    {
+        PlayerInfo.AddCoins(amount);
+
+        OnAddCurrency?.Invoke(amount);
     }
 }

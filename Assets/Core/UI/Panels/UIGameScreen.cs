@@ -50,8 +50,8 @@ namespace Core
             OnLowEmptySpaceChanged(false);
             _data.GameProcessor.OnScoreChanged += OnScoreChanged;
             OnScoreChanged(0);
-          //  _data.GameProcessor.PlayerInfo.OnCoinsChanged += OnCoinsChanged;
-            OnCoinsChanged();
+            _data.GameProcessor.OnConsumeCurrency += (amount) => OnConsumeCurrency(amount, false);
+            OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
             
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
             CastleSelector_OnCastleChanged(null);
@@ -130,9 +130,9 @@ namespace Core
             yield return null;
         }
 
-        private void OnCoinsChanged()
+        private void OnConsumeCurrency(int amount, bool force)
         {
-            _coins.Set(_data.GameProcessor.PlayerInfo.GetAvailableCoins());
+            _coins.Add(-amount, force);
         }
         
         private void ShowSettingsBtn_OnClick()

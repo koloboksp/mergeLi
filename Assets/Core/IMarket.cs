@@ -7,7 +7,7 @@ namespace Core
 {
     public interface IMarket
     {
-        public event Action<bool, string> OnBought;
+        public event Action<bool, string, int> OnBought;
         Task<(bool success, int amount)> Buy(string productId, PurchaseType modelPurchaseType, CancellationToken cancellationToken);
     }
 }

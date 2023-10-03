@@ -9,7 +9,7 @@ namespace Core
 {
     public class DefaultMarket : MonoBehaviour, IMarket
     {
-        public event Action<bool, string> OnBought;
+        public event Action<bool, string, int> OnBought;
 
         [SerializeField] private PurchasesLibrary _purchasesLibrary;
         
@@ -37,7 +37,7 @@ namespace Core
                     currencyAmount = purchaseItem.CurrencyAmount;
             }
             
-            OnBought?.Invoke(success, purchaseItem.ProductId);
+            OnBought?.Invoke(success, purchaseItem.ProductId, currencyAmount);
             
             return (success, currencyAmount);
         }

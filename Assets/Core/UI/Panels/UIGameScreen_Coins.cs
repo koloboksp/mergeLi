@@ -38,20 +38,23 @@ namespace Core
             OnClick?.Invoke();
         }
 
-        public void Add(int additionalAmount)
+        public void Add(int additionalAmount, bool force)
         {
             _amount += additionalAmount;
             
             _amountLabel.text = _amount.ToString();
 
-            if (_cancellationTokenSource != null)
+            if (!force)
             {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-            }
+                if (_cancellationTokenSource != null)
+                {
+                    _cancellationTokenSource.Cancel();
+                    _cancellationTokenSource.Dispose();
+                }
 
-            _cancellationTokenSource = new CancellationTokenSource();
-            UpScale(_cancellationTokenSource.Token);
+                _cancellationTokenSource = new CancellationTokenSource();
+                UpScale(_cancellationTokenSource.Token);
+            }
         }
 
         private async Task UpScale(CancellationToken cancellationToken)
