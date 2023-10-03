@@ -94,6 +94,7 @@ public class UIBuff : MonoBehaviour
                 typeof(UIShopPanel),
                 new UIShopScreenData()
                 {
+                    GameProcessor =  _model.GameProcessor,
                     Market = _model.GameProcessor.Market,
                     PurchaseItems = new List<PurchaseItem>(_model.GameProcessor.PurchasesLibrary.Items)
                 }, 

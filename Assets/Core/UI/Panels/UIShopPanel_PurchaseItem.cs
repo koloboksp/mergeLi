@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Core.Steps.CustomOperations;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -10,17 +11,22 @@ namespace Core
 {
     public class UIShopPanel_PurchaseItem : MonoBehaviour
     {
+        [SerializeField] private RectTransform _root;
         [SerializeField] private Button _button;
         [SerializeField] private AssetImage _offerIcon;
         [SerializeField] private Text _count;
        
-        private Model _model;
+        private UIShopPanel_PurchaseItemModel _model;
+
+        public UIShopPanel_PurchaseItemModel Model => _model;
+        public RectTransform Root => _root;
+
         private void Awake()
         {
             _button.onClick.AddListener(OnClick);
         }
         
-        public void SetModel(Model model)
+        public void SetModel(UIShopPanel_PurchaseItemModel model)
         {
             _model = model;
             
@@ -30,54 +36,54 @@ namespace Core
         
         private void OnClick()
         {
-            _model.BuyMe();
+            _model.BuyMe(CancellationToken.None);
         }
         
         private void OnSelectionChanged()
         {
             
         }
-        
-        public class Model
+    }
+    
+    public class UIShopPanel_PurchaseItemModel
+    {
+        private UIShopPanel.Model _owner;
+        private string _name;
+        private bool _selected;
+        private string _inAppId;
+        private PurchaseType _purchaseType;
+        private string _backgroundName;
+        private int _currencyAmount;
+
+        public UIShopPanel_PurchaseItemModel(UIShopPanel.Model owner)
         {
-            private UIShopPanel.Model _owner;
-            private string _name;
-            private bool _selected;
-            private string _inAppId;
-            private PurchaseType _purchaseType;
-            private string _backgroundName;
-            private int _currencyAmount;
+            _owner = owner;
+        }
 
-            public Model(UIShopPanel.Model owner)
-            {
-                _owner = owner;
-            }
+        public string Name => _name;
+        public string InAppId => _inAppId;
+        public int CurrencyAmount => _currencyAmount;
+        public PurchaseType PurchaseType => _purchaseType;
+        public string BackgroundName => _backgroundName;
 
-            public string Name => _name;
-            public string InAppId => _inAppId;
-            public int CurrencyAmount => _currencyAmount;
-            public PurchaseType PurchaseType => _purchaseType;
-            public string BackgroundName => _backgroundName;
-
-            public Model Init(string name, string inAppId, int currencyAmount, PurchaseType purchaseType)
-            {
-                _name = name;
-                _inAppId = inAppId;
-                _currencyAmount = currencyAmount;
-                _purchaseType = purchaseType;
+        public UIShopPanel_PurchaseItemModel Init(string name, string inAppId, int currencyAmount, PurchaseType purchaseType)
+        {
+            _name = name;
+            _inAppId = inAppId;
+            _currencyAmount = currencyAmount;
+            _purchaseType = purchaseType;
                 
-                return this;
-            }
+            return this;
+        }
 
-            public Model SetBackgroundName(string name)
-            {
-                _backgroundName = name;
-                return this;
-            }
-            public async void BuyMe()
-            {
-                var result = await _owner.Buy(this);
-            }
+        public UIShopPanel_PurchaseItemModel SetBackgroundName(string name)
+        {
+            _backgroundName = name;
+            return this;
+        }
+        public async void BuyMe(CancellationToken cancellationToken)
+        {
+            var result = await _owner.Buy(this, cancellationToken);
         }
     }
 }

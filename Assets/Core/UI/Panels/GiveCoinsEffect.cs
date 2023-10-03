@@ -13,7 +13,7 @@ namespace Core
         [SerializeField] private AnimationCurve _movingSpeed;
         [SerializeField] private float _randomizeStartPosition = 0.1f;
         [SerializeField] private float _randomizeSideOffset = 0.1f;
-        [SerializeField] private float _randomizeDelay = 0.1f;
+        [SerializeField] private float _randomizeDelay = 1.0f;
         [SerializeField] private float _duration = 0.5f;
 
         private Transform _from;
@@ -99,7 +99,7 @@ namespace Core
                 await Task.Yield();
             }
             
-            _to.SetCoins(coinValue);
+            _to.Add(coinValue);
             
             DestroyCreated();
 

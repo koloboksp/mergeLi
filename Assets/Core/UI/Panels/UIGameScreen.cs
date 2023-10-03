@@ -50,7 +50,7 @@ namespace Core
             OnLowEmptySpaceChanged(false);
             _data.GameProcessor.OnScoreChanged += OnScoreChanged;
             OnScoreChanged(0);
-            _data.GameProcessor.PlayerInfo.OnCoinsChanged += OnCoinsChanged;
+          //  _data.GameProcessor.PlayerInfo.OnCoinsChanged += OnCoinsChanged;
             OnCoinsChanged();
             
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
@@ -71,7 +71,7 @@ namespace Core
             _data.GameProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
             
             _data.GameProcessor.OnScoreChanged -= OnScoreChanged;
-            _data.GameProcessor.PlayerInfo.OnCoinsChanged -= OnCoinsChanged;
+         //   _data.GameProcessor.PlayerInfo.OnCoinsChanged -= OnCoinsChanged;
             
             _data.GameProcessor.CastleSelector.OnCastleChanged -= CastleSelector_OnCastleChanged;
             
@@ -132,7 +132,7 @@ namespace Core
 
         private void OnCoinsChanged()
         {
-            _coins.SetCoins(_data.GameProcessor.PlayerInfo.GetAvailableCoins());
+            _coins.Set(_data.GameProcessor.PlayerInfo.GetAvailableCoins());
         }
         
         private void ShowSettingsBtn_OnClick()
@@ -148,6 +148,7 @@ namespace Core
                 typeof(UIShopPanel),
                 new UIShopScreenData()
                 {
+                    GameProcessor = _data.GameProcessor,
                     Market = _data.GameProcessor.Market,
                     PurchaseItems = new List<PurchaseItem>(_data.GameProcessor.PurchasesLibrary.Items)
                 },

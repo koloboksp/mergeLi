@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using CAS;
 using UnityEngine;
@@ -75,7 +76,7 @@ namespace Core
             return _manager != null && _manager.IsReadyAd(AdType.Interstitial);
         }
 
-        public async Task<bool> Show(AdvertisingType advertisingType)
+        public async Task<bool> Show(AdvertisingType advertisingType, CancellationToken cancellationToken)
         {
             if (!IsReadyToShow())
                 await Task.CompletedTask;

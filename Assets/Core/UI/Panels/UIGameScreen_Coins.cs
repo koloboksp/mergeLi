@@ -16,6 +16,7 @@ namespace Core
 
         [SerializeField] private AnimationCurve _upScaleEffect;
 
+        private int _amount = 0;
         private CancellationTokenSource _cancellationTokenSource;
         
         private void Awake()
@@ -31,16 +32,17 @@ namespace Core
                 _cancellationTokenSource.Dispose();
             }
         }
-
-
+        
         private void ClickableArea_OnClick()
         {
             OnClick?.Invoke();
         }
 
-        public void SetCoins(int score)
+        public void Add(int additionalAmount)
         {
-            _amountLabel.text = score.ToString();
+            _amount += additionalAmount;
+            
+            _amountLabel.text = _amount.ToString();
 
             if (_cancellationTokenSource != null)
             {
@@ -67,6 +69,12 @@ namespace Core
 
                 timer += Time.deltaTime;
             }
+        }
+
+        public void Set(int amount)
+        {
+            _amount = amount;
+            _amountLabel.text = _amount.ToString();
         }
     }
 }

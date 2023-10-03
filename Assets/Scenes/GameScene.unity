@@ -1647,7 +1647,7 @@ MonoBehaviour:
     type: 3}
   _castleSelector: {fileID: 391481347}
   _giveCoinsEffect: {fileID: 1636435618}
-  _forceTutorial: 1
+  _forceTutorial: 0
   _tutorialController: {fileID: 2121425916}
 --- !u!4 &391481346
 Transform:
@@ -2911,7 +2911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d6c659217e94f9ab2c373e0f0a0dbd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fingerOrientation: 0
+  _fingerOrientation: 1
 --- !u!114 &635504054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5711,7 +5711,7 @@ MonoBehaviour:
   _progressBar: 1
   _coins: 1
   _buffs: 1
-  _settingsBtn: 0
+  _settingsBtn: 1
 --- !u!1 &1478965542
 GameObject:
   m_ObjectHideFlags: 0
@@ -6330,7 +6330,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   _randomizeStartPosition: 0.1
   _randomizeSideOffset: 0.1
-  _randomizeDelay: 0.1
+  _randomizeDelay: 1
   _duration: 0.5
 --- !u!1 &1651605648
 GameObject:
