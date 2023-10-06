@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
+using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class CastleViewer : MonoBehaviour
 {
@@ -15,7 +15,10 @@ public class CastleViewer : MonoBehaviour
     private readonly int GLOW = Shader.PropertyToID("_Glow");
     private readonly int GRAY = Shader.PropertyToID("_Gray");
 
-    [SerializeField] private Renderer rend;
+    // work with image
+    [SerializeField] private Image image;
+    private Material mat;
+    
     [SerializeField] private int stageCount;
     [SerializeField] private float flipTime = 1f;
     [SerializeField] private float glowTime = 2f;
@@ -23,35 +26,43 @@ public class CastleViewer : MonoBehaviour
     [SerializeField] private AnimationCurve flipCurve;
     [SerializeField] private AnimationCurve glowCurve;
 
-
     private int stage;
     private float load;
 
-    private MaterialPropertyBlock mpb;
+    // work with mesh renderer
+    // [SerializeField] private Renderer rend;
+    // private MaterialPropertyBlock mpb;
 
     private void Awake()
     {
-        if (rend == null)
+        // if (rend == null)
+        //     return;
+        // 
+        // mpb = new MaterialPropertyBlock();
+
+        if (image == null)
             return;
 
-        mpb = new MaterialPropertyBlock();
+        mat = new Material(image.material);
+        image.material = mat;
 
         SetAll(0, 0, 0, 0, 0);
-        rend.SetPropertyBlock(mpb);
+        // rend.SetPropertyBlock(mpb);
     }
 
     private void SetAll(float barBorn, float barLoad, float barOver, float glow, float gray)
     {
         SetBars(barBorn, barLoad, barOver);
-        mpb.SetFloat(GLOW, glow);
-        mpb.SetFloat(GRAY, gray);
+
+        mat.SetFloat(GLOW, glow);
+        mat.SetFloat(GRAY, gray);
     }
 
     private void SetBars(float barBorn, float barLoad, float barOver)
     {
-        mpb.SetFloat(BAR_BORN, barBorn);
-        mpb.SetFloat(BAR_LOAD, barLoad);
-        mpb.SetFloat(BAR_OVER, barOver);
+        mat.SetFloat(BAR_BORN, barBorn);
+        mat.SetFloat(BAR_LOAD, barLoad);
+        mat.SetFloat(BAR_OVER, barOver);
     }
 
     public void SetStage(int stage)
@@ -59,7 +70,7 @@ public class CastleViewer : MonoBehaviour
         this.stage = stage;
         load = 0;
         
-        mpb.SetInt(STAGE, stage);
+        mat.SetInt(STAGE, stage);
         SetAll(0, 0, 0, 0, 0);
 
         StartCoroutine(PlayRoutine(flipCurve, flipTime, BAR_BORN));
@@ -95,7 +106,7 @@ public class CastleViewer : MonoBehaviour
         SetBars(0, 0, 0);
 
         stage = stage == stageCount ? STAGE_MAX : stage + 1;
-        mpb.SetFloat(STAGE, stage);
+        mat.SetFloat(STAGE, stage);
         
         if (stage == STAGE_MAX)
         {
@@ -118,8 +129,8 @@ public class CastleViewer : MonoBehaviour
             if (timer < 0)
                 timer = 0;
 
-            mpb.SetFloat(prop, v0 + curve.Evaluate(1f - timer / dur) * scale);
-            rend.SetPropertyBlock(mpb);
+            mat.SetFloat(prop, v0 + curve.Evaluate(1f - timer / dur) * scale);
+            // rend.SetPropertyBlock(mpb);
 
             yield return new WaitForEndOfFrame();
         }
