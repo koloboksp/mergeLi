@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Castle_Rome
+  m_Name: Castle_Saman
   m_Shader: {fileID: 4800000, guid: f135b4625edc78745b123989d723164d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -49,11 +49,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 8566324d855c4894da73aeebe9c885b5, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6aa02511e26ca7d48a61b8d05da75c59, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask:
-        m_Texture: {fileID: 2800000, guid: 21406665d29a6f44ead61c9614c5fedc, type: 3}
+        m_Texture: {fileID: 2800000, guid: d7d37546383aa534ca680a7bac7f665b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -81,8 +81,8 @@ Material:
     - _Bar: 0.531
     - _BarBorn: 1
     - _BarLife: 1
-    - _BarLoad: 0.5
-    - _BarOver: 1
+    - _BarLoad: 0
+    - _BarOver: 0
     - _BarSoft: 0.1
     - _BarStart: 0
     - _BarValue: 0.22
@@ -126,7 +126,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Stage: 25
+    - _Stage: 16
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
