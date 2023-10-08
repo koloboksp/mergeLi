@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Castle_Terem
+  m_Name: Castle_Hut
   m_Shader: {fileID: 4800000, guid: f135b4625edc78745b123989d723164d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -49,11 +49,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f29e336d79ffb5e4ba4deac53dbd57ff, type: 3}
+        m_Texture: {fileID: 2800000, guid: 02c86ab80389a694cb9428b7a434f629, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mask:
-        m_Texture: {fileID: 2800000, guid: 9e5cf551d47c3b2498109281d765b095, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9a8fbd3cf7888cb40b6103443e7a5413, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -126,7 +126,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Stage: 23
+    - _Stage: 7
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:

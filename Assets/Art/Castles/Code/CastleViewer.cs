@@ -18,13 +18,14 @@ public class CastleViewer : MonoBehaviour
     // work with image
     [SerializeField] private Image image;
     private Material mat;
-    
-    [SerializeField] private int stageCount;
-    [SerializeField] private float flipTime = 1f;
-    [SerializeField] private float glowTime = 2f;
 
-    [SerializeField] private AnimationCurve flipCurve;
-    [SerializeField] private AnimationCurve glowCurve;
+    [SerializeField] private CastleSettings castleSettings;
+    [SerializeField] private int stageCount;
+
+    private float flipTime = 1f;
+    private float glowTime = 2f;
+    private AnimationCurve flipCurve;
+    private AnimationCurve glowCurve;
 
     private int stage;
     private float load;
@@ -32,6 +33,9 @@ public class CastleViewer : MonoBehaviour
     // work with mesh renderer
     // [SerializeField] private Renderer rend;
     // private MaterialPropertyBlock mpb;
+
+    [SerializeField] private Transform[] stagePoints;
+    public Transform StagePoint(int id) => stagePoints[id];
 
     private void Awake()
     {
@@ -48,6 +52,11 @@ public class CastleViewer : MonoBehaviour
 
         SetAll(0, 0, 0, 0, 0);
         // rend.SetPropertyBlock(mpb);
+
+        flipTime = castleSettings.flipTime;
+        glowTime = castleSettings.glowTime;
+        flipCurve = castleSettings.flipCurve;
+        glowCurve = castleSettings.glowCurve;
     }
 
     private void SetAll(float barBorn, float barLoad, float barOver, float glow, float gray)

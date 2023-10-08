@@ -55,6 +55,7 @@ Shader "Unlit/Castle"
             
             // twice sample mask - point for stages, linear for others
             Texture2D _Mask;
+            float4 _Mask_TexelSize;
             SamplerState _Mask_Point_Clamp_Sampler;
             SamplerState _Mask_Linear_Clamp_Sampler;
 
@@ -69,6 +70,12 @@ Shader "Unlit/Castle"
 
             fixed _Glow;
             fixed _Gray;
+
+            static const fixed _BlurCore[9] = { 1,2,1,2,4,2,1,2,1 };
+            static const fixed2 _BlurUV[9] = {
+                fixed2(-1, 1), fixed2(0,1),  fixed2(1,1),
+                fixed2(-1,0),  fixed2(0,0),  fixed2(1,0),
+                fixed2(-1,-1), fixed2(0,-1), fixed2(1,-1) };
 
             v2f vert (appdata v)
             {
@@ -103,12 +110,29 @@ Shader "Unlit/Castle"
                 mask.gba = _Mask.Sample(_Mask_Linear_Clamp_Sampler, i.uv).gba;
                 fixed stage = 1.0 - (8.0 * _Stage) / 255.0;
 
+                // float sumStage = 0;
+                // float sumLoad = 0;
+                // float cur = 0;
+                // for (int j = 0; j < 9; j++)
+                // {
+                //     cur = _Mask.Sample(_Mask_Point_Clamp_Sampler, i.uv + _BlurUV[j] * _Mask_TexelSize.xy).r;
+                //     sumStage += step(abs(stage - cur), .02) * _BlurCore[j];
+                //     sumLoad += smoothstep(stage - .01, stage + .01, cur) * _BlurCore[j];
+                // }
+
+                // col.a = 1;
+                // col.a = sumLoad / 16.0;
+                // return col;
+
                 // Clip by opened stages
                 fixed loadMask = step(stage, mask.r);
+                // loadMask = smoothstep(stage, stage + .05, mask.r);
+                // loadMask = sumLoad / 16.0;
                 clip(loadMask - .01);
 
                 // Current stage mask
                 fixed stageMask = step(abs(stage - mask.r), .02);
+                // stageMask = sumStage / 16.0;
 
                 // apply bar color
                 fixed ringBorn = SoftRange(1 - _BarBorn, .2, mask.b);
