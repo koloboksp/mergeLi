@@ -50,10 +50,11 @@ public class CastleSelector : MonoBehaviour
     //}
 
     private GameObject _castlePart;
-    
+    private CoinsEffectReceiver _coinsEffectReceiver;
+
     private void CastleInstance_OnPartSelected()
     {
-        if (_castlePart != null)
+        if (_coinsEffectReceiver != null)
         {
             Destroy(_castlePart);
             _castlePart = null;
@@ -62,14 +63,7 @@ public class CastleSelector : MonoBehaviour
         var selectedCastlePart = _castleInstance.GetSelectedCastlePart();
         if (selectedCastlePart != null)
         {
-            _castlePart = GameObject.Instantiate(selectedCastlePart.gameObject, selectedCastlePart.gameObject.transform.parent);
-            _castlePart.AddComponent<CoinsEffectReceiver>();
-            _castlePart.transform.SetSiblingIndex(0);
-            var images = _castlePart.GetComponentsInChildren<Image>();
-        
-            foreach (var image in images)
-                image.material = _selectionMaterial;
-        
+            _coinsEffectReceiver = selectedCastlePart.AddComponent<CoinsEffectReceiver>();
         }
     }
     

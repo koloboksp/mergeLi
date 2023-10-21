@@ -81,8 +81,8 @@ Material:
     - _Bar: 0.531
     - _BarBorn: 1
     - _BarLife: 1
-    - _BarLoad: 0
-    - _BarOver: 0
+    - _BarLoad: 1
+    - _BarOver: 1
     - _BarSoft: 0.1
     - _BarStart: 0
     - _BarValue: 0.22
@@ -126,7 +126,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Stage: 7
+    - _Stage: 6
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:

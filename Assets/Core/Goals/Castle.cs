@@ -13,8 +13,7 @@ namespace Core.Goals
         public event Action OnPartSelected;
         public event Action OnProgressChanged;
 
-        [SerializeField] private CastleView _view;
-        [SerializeField] private CastlePart _partPrefab;
+        [SerializeField] private CastleViewer _view;
         [SerializeField] private int _coinsAfterComplete;
         
         private GameProcessor _gameProcessor;
@@ -24,7 +23,7 @@ namespace Core.Goals
         
         public string Id => gameObject.name;
         public bool Completed => _points >= GetCost(); 
-        public CastleView View => _view;
+        public CastleViewer View => _view;
         public IEnumerable<CastlePart> Parts => _parts;
         public int CoinsAfterComplete => _coinsAfterComplete;
         
@@ -51,7 +50,7 @@ namespace Core.Goals
             _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
             
             _gameProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
-            GameProcessor_OnScoreChanged(0);
+            GameProcessor_OnScoreChanged1(0, true);
         }
 
         private void OnDestroy()
@@ -61,7 +60,12 @@ namespace Core.Goals
 
         private void GameProcessor_OnScoreChanged(int additionalPoints)
         {
-            var completed = ProcessPoints(additionalPoints);
+            GameProcessor_OnScoreChanged1(additionalPoints, false);
+        }
+
+        private void GameProcessor_OnScoreChanged1(int additionalPoints, bool instant)
+        {
+            var completed = ProcessPoints(additionalPoints, instant);
             
             OnProgressChanged?.Invoke();
 
@@ -69,7 +73,7 @@ namespace Core.Goals
                 OnCompleted?.Invoke();
         }
 
-        private bool ProcessPoints(int additionalPoints)
+        private bool ProcessPoints(int additionalPoints, bool instant)
         {
             _points += additionalPoints;
 
@@ -80,23 +84,31 @@ namespace Core.Goals
                 completed = true;
                 _points = castleCost;
             }
-
-            ApplyPointsToParts();
+            
+            ApplyPointsToParts(instant);
 
             return completed;
         }
 
-        private void ApplyPointsToParts()
+        private void ApplyPointsToParts(bool instant)
         {
             var restScore = _points;
+            var partUnlocked = true;
             CastlePart newSelectedPart = null;
+            
             foreach (var part in _parts)
             {
                 var consumePoints = part.Cost;
+                
+                part.ChangeUnlockState(partUnlocked, instant);
+                
                 if (restScore <= part.Cost)
+                {
                     consumePoints = restScore;
-               
-                part.SetPoints(consumePoints);
+                    partUnlocked = false;
+                }
+                
+                part.SetPoints(consumePoints, instant);
                 restScore -= consumePoints;
 
                 if (restScore <= 0)
@@ -120,22 +132,22 @@ namespace Core.Goals
             }
         }
 
-        public void SetPoints(int points)
+        public void SetPoints(int points, bool instant)
         {
             _points = points;
-            GameProcessor_OnScoreChanged(0);
+            GameProcessor_OnScoreChanged1(0, instant);
         }
         
-        public void ResetPoints()
+        public void ResetPoints(bool instant)
         {
             _points = 0;
-            GameProcessor_OnScoreChanged(0);
+            GameProcessor_OnScoreChanged1(0, instant);
         }
 
         public void ForceComplete()
         {
             var requiredPoints = GetCost() - _points;
-            ProcessPoints(requiredPoints);
+            ProcessPoints(requiredPoints, false);
         }
     }
 }

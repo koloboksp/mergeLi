@@ -26,7 +26,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7169806631353828745}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -93,6 +93,7 @@ MonoBehaviour:
   image: {fileID: 9082746869373581881}
   castleSettings: {fileID: 11400000, guid: 5a91144ec0ed2c0438a9c8fb05b7beb3, type: 2}
   stageCount: 1
+  _root: {fileID: 3936700016026521816}
   stagePoints:
   - {fileID: 3114969110155972010}
 --- !u!1 &8346226606943086954
@@ -104,6 +105,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3114969110155972010}
+  - component: {fileID: 1331044023927043937}
+  - component: {fileID: 7254305169675490095}
   m_Layer: 5
   m_Name: stage_0
   m_TagString: Untagged
@@ -131,3 +134,34 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1331044023927043937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8346226606943086954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d75912302224bf7a691f5db8073b25a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _owner: {fileID: 0}
+  _index: 0
+  _cost: 30
+  _view: {fileID: 7254305169675490095}
+--- !u!114 &7254305169675490095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8346226606943086954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd277d5d4d87442f96cc3365d9d58556, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _model: {fileID: 1331044023927043937}
+  _castleView: {fileID: 3872328642510413083}
+  _root: {fileID: 3114969110155972010}

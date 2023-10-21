@@ -125,6 +125,11 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     [SerializeField] private CastleSelector _castleSelector;
     //todo extract
     [SerializeField] private GiveCoinsEffect _giveCoinsEffect;
+    
+    [SerializeField] private bool _enableTutorial = true;
+    [SerializeField] private bool _forceTutorial;
+    [SerializeField] private TutorialController _tutorialController;
+    
     public GiveCoinsEffect GiveCoinsEffect => _giveCoinsEffect;
 
     private Ball _selectedBall;
@@ -203,7 +208,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         _bestSessionScore = PlayerInfo.GetBestSessionScore();
         
         
-        if (_tutorialController.CanStartTutorial(_forceTutorial))
+        if (_enableTutorial && _tutorialController.CanStartTutorial(_forceTutorial))
         {
             await StartTutorial(_forceTutorial);
         }
@@ -217,7 +222,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 _score = lastSessionProgress.Score;
 
                 _castleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
-                _castleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points);
+                _castleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points, true);
             
                 var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => (i.GridPosition, i.Points));
                 _field.AddBalls(ballsProgressData);
@@ -235,7 +240,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 _playerInfo.ClearLastSessionProgress();
                 _field.Clear();
                 _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
-                _castleSelector.ActiveCastle.ResetPoints();
+                _castleSelector.ActiveCastle.ResetPoints(true);
             }
             
             await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
@@ -256,15 +261,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 _playerInfo.ClearLastSessionProgress();
                 _field.Clear();
                 _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
-                _castleSelector.ActiveCastle.ResetPoints();
+                _castleSelector.ActiveCastle.ResetPoints(true);
             }
         }
     }
 
     public bool TutorialNotCompleted => true;
 
-    [SerializeField] private bool _forceTutorial;
-    [SerializeField] private TutorialController _tutorialController;
+    
     private async Task StartTutorial(bool forceTutorial)
     {
         await _tutorialController.TryStartTutorial(forceTutorial, _cancellationTokenSource.Token);
