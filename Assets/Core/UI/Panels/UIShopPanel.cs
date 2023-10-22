@@ -17,8 +17,12 @@ namespace Core
         [SerializeField] private UIShopPanel_PurchaseItem _itemPrefab;
 
         private Model _model;
+        private UIShopScreenData _data;
         private CancellationTokenSource _cancellationTokenSource;
 
+        private readonly List<UIShopPanel_PurchaseItem> _items = new();
+        private readonly List<(UIOverCastleCompletePanel i, Transform parent, bool activeSelf)> _overUIElements = new();
+        
         private void Awake()
         {
             _cancellationTokenSource = new CancellationTokenSource();
@@ -38,14 +42,40 @@ namespace Core
         
         public override void SetData(UIScreenData undefinedData)
         {
-            var data = undefinedData as UIShopScreenData;
-
+            _data = undefinedData as UIShopScreenData;
             _model = new Model()
                 .OnItemsUpdated(OnItemsUpdated)
                 .OnBoughtSomething(OnBoughtSomething)
                 .OnLockInput(OnLockInput);
             
-            _model.SetData(data.Market, data.PurchaseItems);
+            _model.SetData(_data.Market, _data.PurchaseItems);
+        }
+
+       
+        protected override void InnerActivate()
+        {
+            base.InnerActivate();
+           
+            var overUIElements = FindObjectsOfType<UIOverCastleCompletePanel>(true)
+                .Select(i => (i, i.transform.parent, i.gameObject.activeSelf))
+                .ToList();
+            foreach (var overUIElementTuple in overUIElements)
+            {
+                if (_overUIElements.FindIndex(i=> i.i == overUIElementTuple.i) < 0)
+                {
+                    overUIElementTuple.i.transform.SetParent(transform, true);
+                    overUIElementTuple.i.gameObject.SetActive(overUIElementTuple.activeSelf);
+                    _overUIElements.Add(overUIElementTuple);
+                }
+            }
+        }
+
+        protected override void InnerHide()
+        {
+            foreach (var overUIElementTuple in _overUIElements)
+                overUIElementTuple.i.transform.SetParent(overUIElementTuple.parent, true);
+
+            base.InnerHide();
         }
 
         private void OnLockInput(bool state)
@@ -53,26 +83,26 @@ namespace Core
             LockInput(state);
         }
 
-        private void OnItemsUpdated(IEnumerable<UIShopPanel_PurchaseItem.Model> items)
+        private void OnItemsUpdated(IEnumerable<UIShopPanel_PurchaseItemModel> items)
         {
-            var oldViews = _purchasesContainer.content.GetComponents<UISkinPanel_SkinItem>();
-            foreach (var oldView in oldViews)
+            foreach (var oldView in _items)
                 Destroy(oldView.gameObject);
 
             _itemPrefab.gameObject.SetActive(false);
             foreach (var item in items)
             {
                 var itemView = Instantiate(_itemPrefab, _purchasesContainer.content);
+                _items.Add(itemView);
                 itemView.gameObject.SetActive(true);
                 itemView.SetModel(item);
             }
         }
         
-        private async void OnBoughtSomething(bool success)
+        private async void OnBoughtSomething(UIShopPanel_PurchaseItemModel sender, bool success, int coinsAmount, CancellationToken cancellationToken)
         {
             if (success)
             {
-                await PlayBoughtSuccessAnimation();
+                await PlayBoughtSuccessAnimation(sender, coinsAmount, cancellationToken);
             }
             else
             {
@@ -82,53 +112,56 @@ namespace Core
             }
         }
 
-        private async Task PlayBoughtSuccessAnimation()
+        private async Task PlayBoughtSuccessAnimation(UIShopPanel_PurchaseItemModel sender, int coinsAmount, CancellationToken cancellationToken)
         {
             //stub
             LockInput(true);
-            await ApplicationController.WaitForSecondsAsync(2.0f);
+            var item = _items.Find(i => i.Model == sender);
+            
+            await _data.GameProcessor.GiveCoinsEffect.Show(coinsAmount, item.Root, cancellationToken);
+            await ApplicationController.WaitForSecondsAsync(2.0f, _cancellationTokenSource.Token);
             LockInput(false);
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
         
         public class Model
         {
-            private Action<IEnumerable<UIShopPanel_PurchaseItem.Model>> _onItemsUpdated;
-            private Action<bool> _onBoughtSomething;
+            private Action<IEnumerable<UIShopPanel_PurchaseItemModel>> _onItemsUpdated;
+            private Action<UIShopPanel_PurchaseItemModel, bool, int, CancellationToken> _onBoughtSomething;
             private Action<bool> _onLockInput;
 
             private IMarket _market;
-            private readonly List<UIShopPanel_PurchaseItem.Model> _items = new();
+            private readonly List<UIShopPanel_PurchaseItemModel> _items = new();
           
             public void SetData(IMarket market, IEnumerable<PurchaseItem> purchaseItems)
             {
                 _market = market;
                 _items.AddRange(purchaseItems
-                    .Select(i => new UIShopPanel_PurchaseItem.Model(this)
+                    .Select(i => new UIShopPanel_PurchaseItemModel(this)
                         .Init(i.PurchaseType == PurchaseType.Market ? i.ProductId : $"ShowAds{i.CurrencyAmount}", i.ProductId, i.CurrencyAmount, i.PurchaseType)
                         .SetBackgroundName(i.BackgroundName)));
                 _onItemsUpdated?.Invoke(_items);
             }
             
-            public async Task<bool> Buy(UIShopPanel_PurchaseItem.Model model)
+            public async Task<bool> Buy(UIShopPanel_PurchaseItemModel model, CancellationToken cancellationToken)
             {
                 _onLockInput?.Invoke(true);
-                var success = await _market.Buy(model.InAppId, model.PurchaseType);
+                var result = await _market.Buy(model.InAppId, model.PurchaseType, cancellationToken);
                 _onLockInput?.Invoke(false);
                 
-                _onBoughtSomething?.Invoke(success);
+                _onBoughtSomething?.Invoke(model, result.success, result.amount, cancellationToken);
                 
-                return success;
+                return result.success;
             }
             
-            public Model OnItemsUpdated(Action<IEnumerable<UIShopPanel_PurchaseItem.Model>> onItemsUpdated)
+            public Model OnItemsUpdated(Action<IEnumerable<UIShopPanel_PurchaseItemModel>> onItemsUpdated)
             {
                 _onItemsUpdated = onItemsUpdated;
                 _onItemsUpdated?.Invoke(_items);
                 return this;
             }
             
-            public Model OnBoughtSomething(Action<bool> onBoughtSomething)
+            public Model OnBoughtSomething(Action<UIShopPanel_PurchaseItemModel, bool, int, CancellationToken> onBoughtSomething)
             {
                 _onBoughtSomething = onBoughtSomething;
                 return this;
@@ -144,6 +177,7 @@ namespace Core
     
     public class UIShopScreenData : UIScreenData
     {
+        public GameProcessor GameProcessor;
         public IMarket Market;
         public IEnumerable<PurchaseItem> PurchaseItems;
     }

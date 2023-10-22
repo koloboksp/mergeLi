@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Core.Goals;
 using Core.Steps;
 using Core.Steps.CustomOperations;
 using UnityEngine;
@@ -49,12 +50,11 @@ namespace Core
             OnLowEmptySpaceChanged(false);
             _data.GameProcessor.OnScoreChanged += OnScoreChanged;
             OnScoreChanged(0);
-            _data.GameProcessor.PlayerInfo.OnCoinsChanged += OnCoinsChanged;
-            OnCoinsChanged();
+            _data.GameProcessor.OnConsumeCurrency += (amount) => OnConsumeCurrency(amount, false);
+            OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
             
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
-            CastleSelector_OnCastleChanged();
-            _data.GameProcessor.CastleSelector.OnSelectedPartChanged += CastleSelector_OnSelectedPartChanged;
+            CastleSelector_OnCastleChanged(null);
             
             foreach (var buff in _data.GameProcessor.Buffs)
             {
@@ -71,19 +71,38 @@ namespace Core
             _data.GameProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
             
             _data.GameProcessor.OnScoreChanged -= OnScoreChanged;
-            _data.GameProcessor.PlayerInfo.OnCoinsChanged -= OnCoinsChanged;
+         //   _data.GameProcessor.PlayerInfo.OnCoinsChanged -= OnCoinsChanged;
             
             _data.GameProcessor.CastleSelector.OnCastleChanged -= CastleSelector_OnCastleChanged;
-            _data.GameProcessor.CastleSelector.OnSelectedPartChanged -= CastleSelector_OnSelectedPartChanged;
+            
             base.InnerHide();
         }
 
-        private void CastleSelector_OnCastleChanged()
+        private void CastleSelector_OnCastleChanged(Castle previousCastle)
         {
-            var marks = _data.GameProcessor.CastleSelector.ActiveCastle.Parts.Select(i => i.Cost);
+            if (previousCastle != null)
+            {
+                previousCastle.OnProgressChanged -= ActiveCastle_OnProgressChanged;
+            }
+            
+            var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
+            if (activeCastle != null)
+            {
+                activeCastle.OnProgressChanged += ActiveCastle_OnProgressChanged;
+            }
+            
+            var marks = activeCastle.Parts.Select(i => i.Cost);
             _score.SetScoreMarks(marks);
         }
-        
+
+        private void ActiveCastle_OnProgressChanged()
+        {
+            var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
+            var nextPointsGoal = activeCastle.GetCost();
+            var currentPointsGoal = activeCastle.GetPoints();
+            _score.SetNextGoalScore(currentPointsGoal, nextPointsGoal);
+        }
+
         private void OnBeforeStepStarted(Step sender, StepExecutionType executionType)
         {
             _buffsContainerRoot.interactable = false;
@@ -101,10 +120,8 @@ namespace Core
         
         private void OnScoreChanged(int additionalPoints)
         {
-            var currentPointsGoal = _data.GameProcessor.CastleSelector.ActiveCastle.GetPoints();
-            var nextPointsGoal = _data.GameProcessor.CastleSelector.ActiveCastle.GetCost();
             
-            _score.SetNextGoalScore(currentPointsGoal, nextPointsGoal);
+          
             _score.SetSessionScore(_data.GameProcessor.Score, _data.GameProcessor.BestSessionScore);
         }
 
@@ -113,9 +130,9 @@ namespace Core
             yield return null;
         }
 
-        private void OnCoinsChanged()
+        private void OnConsumeCurrency(int amount, bool force)
         {
-            _coins.SetCoins(_data.GameProcessor.PlayerInfo.GetAvailableCoins());
+            _coins.Add(-amount, force);
         }
         
         private void ShowSettingsBtn_OnClick()
@@ -131,6 +148,7 @@ namespace Core
                 typeof(UIShopPanel),
                 new UIShopScreenData()
                 {
+                    GameProcessor = _data.GameProcessor,
                     Market = _data.GameProcessor.Market,
                     PurchaseItems = new List<PurchaseItem>(_data.GameProcessor.PurchasesLibrary.Items)
                 },
@@ -147,8 +165,7 @@ namespace Core
 
         public void HideAllElements()
         {
-            _buffsContainerRoot.gameObject.SetActive(false);
-            _buffsContainer.gameObject.SetActive(false);
+            _buffsContainerRoot.gameObject.SetActive(false); 
             _score.gameObject.SetActive(false);
             _coins.gameObject.SetActive(false);
             _showSettingsBtn.gameObject.SetActive(false);
@@ -159,6 +176,12 @@ namespace Core
         {
             if(element == UIGameScreenElement.ProgressBar)
                 _score.gameObject.SetActive(active);
+            if(element == UIGameScreenElement.Coins)
+                _coins.gameObject.SetActive(active);
+            if(element == UIGameScreenElement.Buffs)
+                _buffsContainerRoot.gameObject.SetActive(active);
+            if(element == UIGameScreenElement.Settings)
+                _showSettingsBtn.gameObject.SetActive(active);
         }
     }
 
@@ -170,5 +193,8 @@ namespace Core
     public enum UIGameScreenElement
     {
         ProgressBar,
+        Coins,
+        Buffs,
+        Settings,
     }
 }

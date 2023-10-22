@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Steps.CustomOperations;
 using UnityEngine;
@@ -8,32 +9,37 @@ namespace Core
 {
     public class DefaultMarket : MonoBehaviour, IMarket
     {
-        public event Action<bool, string> OnBought;
+        public event Action<bool, string, int> OnBought;
 
         [SerializeField] private PurchasesLibrary _purchasesLibrary;
         
-        public async Task<bool> Buy(string productId, PurchaseType modelPurchaseType)
+        public async Task<(bool success, int amount)> Buy(string productId, PurchaseType modelPurchaseType, CancellationToken cancellationToken)
         {
             var purchaseItem = _purchasesLibrary.Items.FirstOrDefault(i => string.Equals(i.ProductId, productId, StringComparison.Ordinal));
             if (purchaseItem == null)
             {
                 Debug.LogError($"Can't buy product with id: '{productId}'. Product not found in library.");
-                return false;
+                return (false, 0);
             }
             
-            var result = true;
+            var success = true;
+            var currencyAmount = 0;
             if (modelPurchaseType == PurchaseType.Market)
             {
-                result = await ApplicationController.Instance.PurchaseController.Buy(purchaseItem.ProductId);
+                success = await ApplicationController.Instance.PurchaseController.Buy(purchaseItem.ProductId, cancellationToken);
+                if (success)
+                    currencyAmount = purchaseItem.CurrencyAmount;
             }
             else if (modelPurchaseType == PurchaseType.Ads)
             {
-                result = await ApplicationController.Instance.AdsController.Show(AdvertisingType.Rewarded);
+                success = await ApplicationController.Instance.AdsController.Show(AdvertisingType.Rewarded, cancellationToken);
+                if (success)
+                    currencyAmount = purchaseItem.CurrencyAmount;
             }
             
-            OnBought?.Invoke(result, purchaseItem.ProductId);
+            OnBought?.Invoke(success, purchaseItem.ProductId, currencyAmount);
             
-            return result;
+            return (success, currencyAmount);
         }
     }
 }

@@ -7,7 +7,12 @@ namespace Core.Tutorials
         [SerializeField] private string _tag;
         [SerializeField] private RectTransform _root;
 
-        public string Tag => _tag;
+        public string Tag
+        {
+            get => _tag;
+            set => _tag = value;
+        }
+
         public RectTransform Root => _root;
     }
 }

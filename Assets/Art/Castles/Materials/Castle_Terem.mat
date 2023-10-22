@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Castle_Terem
+  m_Shader: {fileID: 4800000, guid: f135b4625edc78745b123989d723164d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _NOISEINVERT_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Dark:
+        m_Texture: {fileID: 2800000, guid: 1239621b1ba6e1440b294e175569e618, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: f29e336d79ffb5e4ba4deac53dbd57ff, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Mask:
+        m_Texture: {fileID: 2800000, guid: 9e5cf551d47c3b2498109281d765b095, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Noise:
+        m_Texture: {fileID: 2800000, guid: e28ae7df464170b4ebfb3901bdbb45c1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Ramp:
+        m_Texture: {fileID: 2800000, guid: 78f8566a67599e14cbdf8589bbb4d72b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Bar: 0.531
+    - _BarBorn: 1
+    - _BarLife: 1
+    - _BarLoad: 0
+    - _BarOver: 0
+    - _BarSoft: 0.1
+    - _BarStart: 0
+    - _BarValue: 0.22
+    - _Blink: 0
+    - _BumpScale: 1
+    - _BurnPhase: 1
+    - _BurnSoft: 1
+    - _Count: 29
+    - _Cutoff: 0.5
+    - _Dark: 1
+    - _DarkSize: 0.5
+    - _DarkSpeed: 1
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _Glow: 0
+    - _GoldPhase: 0
+    - _GoldSoft: 0.197
+    - _GoldWide: 0.11
+    - _Gray: 0
+    - _LoadValue: 1
+    - _MainValue: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _NoiseAspect: 2
+    - _NoiseBold: 0.5
+    - _NoiseInvert: 1
+    - _NoiseSize: 0.5
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _Phase: 0.5
+    - _PhaseSize: 0
+    - _PhaseSoft: 0.5
+    - _Progress: 0.5
+    - _RingSoft: 0
+    - _RingWide: 0.29
+    - _Scale: 0
+    - _ShowValue: 0
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _Stage: 23
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _BarColor: {r: 0, g: 1, b: 0, a: 0.5019608}
+    - _BlinkColor: {r: 1, g: 1, b: 0, a: 0.5019608}
+    - _BordColor: {r: 1, g: 1, b: 0, a: 1}
+    - _BorderColor: {r: 1, g: 0.4831979, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlowColor: {r: 1, g: 1, b: 0, a: 0.5019608}
+    - _GoldColor: {r: 1, g: 0.9431373, b: 0.5, a: 1}
+    - _LoadColor: {r: 0, g: 1, b: 0, a: 1}
+  m_BuildTextureStacks: []

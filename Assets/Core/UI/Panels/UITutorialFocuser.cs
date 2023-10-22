@@ -94,6 +94,7 @@ namespace Core
                 _smoothTimer = 0;
                 enabled = true;
                 await UpdateAsync(cancellationToken);
+                _currentRect = _desiredRect;
             }
             else
             {
@@ -131,12 +132,36 @@ namespace Core
                 _smoothTimer = 0;
                 enabled = true;
                 await UpdateAsync(cancellationToken);
+                _currentRect = _desiredRect;
             }
             else
             {
                 _currentRect = _desiredRect;
                 RecalculateRect(_currentRect);
             }
+        }
+
+        public async Task HideAsync(bool smooth, CancellationToken cancellationToken)
+        {
+            _focusMode = FocusMode.None;
+            _smooth = smooth;
+            _desiredRect = _root.rect;
+            _desiredRect.min -= new Vector2(100, 100);
+            _desiredRect.max += new Vector2(100, 100);
+            if (_smooth)
+            {
+                _smoothTimer = 0;
+                enabled = true;
+                await UpdateAsync(cancellationToken);
+                _currentRect = _desiredRect;
+            }
+            else
+            {
+                _currentRect = _desiredRect;
+                RecalculateRect(_currentRect);
+            }
+            
+            gameObject.SetActive(false);
         }
         
         public void Update()
@@ -237,22 +262,7 @@ namespace Core
 
         public async Task WaitForClick(CancellationToken cancellationToken)
         {
-             _centerButton.onClick.AddListener(OnClick);
-            var buttonClicked = false;
-            
-            while (!buttonClicked)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    throw new OperationCanceledException();
-
-                await Task.Yield();
-            }
-            
-            void OnClick()
-            {
-                _centerButton.onClick.RemoveListener(OnClick);
-                buttonClicked = true;
-            }
+            await AsyncHelpers.WaitForClick(_centerButton, cancellationToken);
         }
 
         enum FocusMode

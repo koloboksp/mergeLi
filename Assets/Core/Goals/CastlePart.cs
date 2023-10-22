@@ -6,14 +6,16 @@ public class CastlePart : MonoBehaviour
 {
     public event Action OnIconChanged;
     public event Action OnCostChanged;
-    public event Action OnProgressChanged;
+    public event Action<int, bool> OnPointsChanged;
+    public event Action<bool, bool> OnUnlockedStateChanged;
     public event Action OnSelectedStateChanged;
 
     [SerializeField] private Castle _owner;
-    [SerializeField] private Vector2Int _gridPosition;
+    [SerializeField] private int _index;
     [SerializeField] private int _cost;
     [SerializeField] private CastlePartView _view;
-    [SerializeField] private Sprite _icon;
+
+    private bool _unlocked;
     private int _points;
     private bool _selected;
     
@@ -24,13 +26,7 @@ public class CastlePart : MonoBehaviour
         get => _owner;
         set => _owner = value;
     }
-
-    public Vector2Int GridPosition
-    {
-        get => _gridPosition;
-        set => _gridPosition = value;
-    }
-
+    
     public int Cost
     {
         get => _cost;
@@ -41,18 +37,10 @@ public class CastlePart : MonoBehaviour
         }
     }
 
+    public bool Unlocked => _unlocked;
     public int Points => _points;
     public bool Selected => _selected;
-    
-    public Sprite Icon
-    {
-        get => _icon;
-        set
-        {
-            _icon = value;
-            OnIconChanged?.Invoke();
-        }
-    }
+    public int Index => _index;
     
     public void Select(bool state)
     {
@@ -63,16 +51,24 @@ public class CastlePart : MonoBehaviour
         }
     }
 
-    public void SetPoints(int points)
+    public void ChangeUnlockState(bool unlocked, bool instant)
     {
-        if (_points == points) return;
-        
-        _points = points;
-        OnProgressChanged?.Invoke();
+        if (_unlocked != unlocked)
+        {
+            var oldUnlocked = _unlocked;
+            _unlocked = unlocked;
+            
+            OnUnlockedStateChanged?.Invoke(oldUnlocked, instant);
+        } 
     }
-    
-    public void Complete()
+
+    public void SetPoints(int points, bool instant)
     {
-        SetPoints(_cost);
+        if (_points != points)
+        {
+            var oldPoints = _points;
+            _points = points;
+            OnPointsChanged?.Invoke(oldPoints, instant);
+        }
     }
 }

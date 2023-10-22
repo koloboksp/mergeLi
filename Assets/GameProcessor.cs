@@ -99,6 +99,9 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     public event Action<int> OnScoreChanged;
     public event Action<bool> OnLowEmptySpaceChanged;
 
+    public event Action<int> OnConsumeCurrency;
+    public event Action<int> OnAddCurrency;
+
     [SerializeField] private Scene _scene;
     [SerializeField] private Field _field;
     [SerializeField] private StepMachine _stepMachine;
@@ -120,7 +123,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     [SerializeField] private List<Buff> _buffs;
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     [SerializeField] private CastleSelector _castleSelector;
-
+    //todo extract
+    [SerializeField] private GiveCoinsEffect _giveCoinsEffect;
+    
+    [SerializeField] private bool _enableTutorial = true;
+    [SerializeField] private bool _forceTutorial;
+    [SerializeField] private TutorialController _tutorialController;
+    
+    public GiveCoinsEffect GiveCoinsEffect => _giveCoinsEffect;
 
     private Ball _selectedBall;
     private Ball _otherSelectedBall;
@@ -147,6 +157,16 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _pointsCalculator = new PointsCalculator(this);
         _cancellationTokenSource = new CancellationTokenSource();
+        
+        _market.OnBought += Market_OnBought;
+    }
+
+    private void Market_OnBought(bool result, string productId, int amount)
+    {
+        if (result)
+        {
+            AddCurrency(amount);
+        }
     }
 
     private void OnDestroy()
@@ -167,7 +187,6 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         Load();
         
         _castleSelector.Init();
-        _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
         
         await ProcessGame(_cancellationTokenSource.Token);
     }
@@ -188,21 +207,22 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _bestSessionScore = PlayerInfo.GetBestSessionScore();
         
-        if (_forceTutorial)
+        
+        if (_enableTutorial && _tutorialController.CanStartTutorial(_forceTutorial))
         {
-            _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
-
-            await StartTutorial();
+            await StartTutorial(_forceTutorial);
         }
         else
         {
+            _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
+
             if (HasPreviousSessionGame)
             {
                 var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
                 _score = lastSessionProgress.Score;
 
                 _castleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
-                _castleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points);
+                _castleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points, true);
             
                 var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => (i.GridPosition, i.Points));
                 _field.AddBalls(ballsProgressData);
@@ -220,7 +240,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 _playerInfo.ClearLastSessionProgress();
                 _field.Clear();
                 _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
-                _castleSelector.ActiveCastle.ResetPoints();
+                _castleSelector.ActiveCastle.ResetPoints(true);
             }
             
             await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
@@ -241,18 +261,17 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 _playerInfo.ClearLastSessionProgress();
                 _field.Clear();
                 _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
-                _castleSelector.ActiveCastle.ResetPoints();
+                _castleSelector.ActiveCastle.ResetPoints(true);
             }
         }
     }
 
     public bool TutorialNotCompleted => true;
 
-    [SerializeField] private bool _forceTutorial;
-    [SerializeField] private TutorialController _tutorialController;
-    private async Task StartTutorial()
+    
+    private async Task StartTutorial(bool forceTutorial)
     {
-        await _tutorialController.TryStartTutorial(_cancellationTokenSource.Token);
+        await _tutorialController.TryStartTutorial(forceTutorial, _cancellationTokenSource.Token);
     }
 
     
@@ -288,9 +307,24 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     
     private async void CastleSelector_OnCastleCompleted()
     {
+        ProcessCastleComplete(null, null, null);
+    }
+
+    public async Task ProcessCastleComplete(
+        Func<Task> beforeGiveCoins, 
+        Func<Task> beforeSelectNextCastle,
+        Func<Task> afterSelectNextCastle)
+    {
         var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
             typeof(UICastleCompletePanel),
-            new UICastleCompletePanel.UICastleCompletePanelData() { GameProcessor = this }, _cancellationTokenSource.Token);
+            new UICastleCompletePanel.UICastleCompletePanelData()
+            {
+                GameProcessor = this, 
+                BeforeGiveCoins = beforeGiveCoins,
+                BeforeSelectNextCastle = beforeSelectNextCastle,
+                AfterSelectNextCastle = afterSelectNextCastle,
+            }, 
+            _cancellationTokenSource.Token);
 
         await castleCompletePanel.Showing(_cancellationTokenSource.Token);
         
@@ -324,22 +358,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                         var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);
                         if (path.Count > 0)
                         {
-                            _stepMachine.AddStep(new Step(StepTag.Merge,
-                                new MoveOperation(_selectedBall.IntGridPosition, pointerGridPosition, _field),
-                                new MergeOperation(pointerGridPosition, _field),
-                                new SelectOperation(pointerGridPosition, false, _field)
-                                    .SubscribeCompleted(OnDeselectBall),
-                                new CollapseOperation(pointerGridPosition, _collapsePointsEffectPrefab,
-                                    _destroyBallEffectPrefab, _field, _pointsCalculator, this),
-                                new CheckIfGenerationIsNecessary(
-                                    null,
-                                    new List<Operation>()
-                                    {
-                                        new GenerateOperation(_generatedBallsCountAfterMerge,
-                                            _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
-                                        new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab,
-                                            _field, _pointsCalculator, this)
-                                    })));
+                            MergeStep(_selectedBall.IntGridPosition, pointerGridPosition);
                         }
                         else
                         {
@@ -380,6 +399,26 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                     .SubscribeCompleted(OnSelectBall)));
             }
         }
+    }
+
+    private void MergeStep(Vector3Int from, Vector3Int to)
+    {
+        _stepMachine.AddStep(new Step(StepTag.Merge,
+            new MoveOperation(from, to, _field),
+            new MergeOperation(to, _field),
+            new SelectOperation(to, false, _field)
+                .SubscribeCompleted(OnDeselectBall),
+            new CollapseOperation(to, _collapsePointsEffectPrefab,
+                _destroyBallEffectPrefab, _field, _pointsCalculator, this),
+            new CheckIfGenerationIsNecessary(
+                null,
+                new List<Operation>()
+                {
+                    new GenerateOperation(_generatedBallsCountAfterMerge,
+                        _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
+                    new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab,
+                        _field, _pointsCalculator, this)
+                })));
     }
 
     private void MoveStep(Vector3Int from, Vector3Int to)
@@ -473,13 +512,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         }
     }
 
+    public int CurrencyAmount => _playerInfo.GetAvailableCoins();
+
 
     public void AddPoints(int points)
     {
         _score += points;
         
         PlayerInfo.SetBestSessionScore(_score);
-        
         OnScoreChanged?.Invoke(points);
     }
 
@@ -496,7 +536,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _stepMachine.AddStep(
             new Step(StepTag.Undo,
-                new SpendOperation(cost, _playerInfo, false),
+                new SpendOperation(cost, this, false),
                 new UndoOperation(_stepMachine),
                 new ConfirmBuffUseOperation(buff)));
     }
@@ -505,7 +545,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _stepMachine.AddStep(
             new Step(ExplodeTypeToStepTags[explodeType], 
-                new SpendOperation(cost, _playerInfo, true),
+                new SpendOperation(cost, this, true),
                 new RemoveOperation(ballsIndexes, _field),
                 new ConfirmBuffUseOperation(buff)));
     }
@@ -514,7 +554,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _stepMachine.AddStep(
             new Step(StepTag.NextBalls, 
-                new SpendOperation(cost, _playerInfo, true),
+                new SpendOperation(cost, this, true),
                 new NextBallsShowOperation(true, nextBallsShower),
                 new ConfirmBuffUseOperation(buff)));
     }
@@ -531,7 +571,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         var gradeLevel = -1;
         _stepMachine.AddStep(
             new Step(StepTag.Downgrade,
-                new SpendOperation(cost, _playerInfo, true),
+                new SpendOperation(cost, this, true),
                 new GradeOperation(ballsIndexes, gradeLevel, _field),
                 new ConfirmBuffUseOperation(buff),
                 new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)));
@@ -590,9 +630,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         
         while (!stepCompleted)
         {
-            if (cancellationToken.IsCancellationRequested)
-                throw new OperationCanceledException();
-            
+            cancellationToken.ThrowIfCancellationRequested();
             await Task.Yield();
         }
         
@@ -602,5 +640,41 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         }
     }
 
-   
+    public async Task MergeBall(Vector3Int from, Vector3Int to, CancellationToken cancellationToken)
+    {
+        bool stepCompleted = false;
+
+        _stepMachine.OnStepCompleted += StepCompleted;
+        MergeStep(from, to);
+
+        while (!stepCompleted)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            await Task.Yield();
+        }
+
+        void StepCompleted(Step arg1, StepExecutionType arg2)
+        {
+            stepCompleted = true;
+        }
+    }
+
+    public async Task GiveTutorialCoins(int coinsAmount)
+    {
+        
+    }
+
+    public void ConsumeCoins(int amount)
+    {
+        PlayerInfo.ConsumeCoins(amount);
+        
+        OnConsumeCurrency?.Invoke(amount);
+    }
+
+    public void AddCurrency(int amount)
+    {
+        PlayerInfo.AddCoins(amount);
+
+        OnAddCurrency?.Invoke(amount);
+    }
 }

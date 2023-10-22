@@ -25,41 +25,24 @@ public class PlayerInfo : MonoBehaviour
     [SerializeField] private DefaultMarket _market;
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     
-    public event Action OnCoinsChanged;
-    public event Action OnCastleChanged;
-    
     private Progress _progress = new Progress();
     private SessionProgress _lastSessionProgress = null;
     
-    private void Awake()
+    public void AddCoins(int amount)
     {
-        _market.OnBought += Market_OnBought;
+        _progress.Coins += amount;
+        Save();
     }
-
-    private void Market_OnBought(bool result, string productId)
-    {
-        var purchaseItem = _purchasesLibrary.Items.Find(i => string.Equals(i.ProductId, productId, StringComparison.Ordinal));
-       
-        if (result && purchaseItem != null)
-        {
-            _progress.Coins += purchaseItem.CurrencyAmount;
-            Save();
-            
-            OnCoinsChanged?.Invoke();
-        }
-    }
-
+    
     public int GetAvailableCoins()
     {
         return _progress.Coins;
     }
-
-
+    
     public void ConsumeCoins(int count)
     {
         _progress.Coins -= count;
         Save();
-        OnCoinsChanged?.Invoke();
     }
 
     
@@ -217,8 +200,33 @@ public class PlayerInfo : MonoBehaviour
     {
         return _lastSessionProgress;
     }
-
     
+    public bool IsTutorialComplete(string tutorialId)
+    {
+        var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
+        if (tutorialProgress != null)
+            return tutorialProgress.IsComplted;
+
+        return false;
+    }
+
+    public void CompleteTutorial(string tutorialId)
+    {
+        var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
+        if (tutorialProgress != null)
+            tutorialProgress.IsComplted = true;
+        else
+        {
+            _progress.Tutorials.Add(
+                new TutorialProgress()
+                {
+                    Id = tutorialId,
+                    IsComplted = true,
+                });
+        }
+        
+        Save();
+    }
 }
 
 [Serializable]
@@ -227,6 +235,7 @@ public class Progress
     public List<string> CompletedCastles = new List<string>();
     public int BestSessionScore;
     public int Coins;
+    public List<TutorialProgress> Tutorials = new();
 }
 
 [Serializable]
@@ -234,9 +243,9 @@ public class SessionProgress
 {
     public SessionFieldProgress Field;
     public SessionCastleProgress Castle;
-    public List<SessionBuffProgress> Buffs = new List<SessionBuffProgress>();
+    public List<SessionBuffProgress> Buffs = new();
     public int Score;
-
+       
     public bool IsValid()
     {
         if (string.IsNullOrEmpty(Castle.Id))
@@ -271,4 +280,11 @@ public class SessionCastleProgress
 { 
     public string Id;
     public int Points;
+}
+
+[Serializable]
+public class TutorialProgress
+{
+    public string Id;
+    public bool IsComplted;
 }

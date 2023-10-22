@@ -8,10 +8,8 @@ using UnityEngine.UI;
 public class CastleSelector : MonoBehaviour
 {
     public event Action OnCastleCompleted;
-    public event Action OnSelectedPartChanged;
-    public event Action OnCastleChanged;
-
-
+    public event Action<Castle> OnCastleChanged;
+    
     [SerializeField] private GameProcessor _gameProcessor;
     [SerializeField] private CastleLibrary _library;
     [SerializeField] private Transform _castleRoot;
@@ -52,10 +50,11 @@ public class CastleSelector : MonoBehaviour
     //}
 
     private GameObject _castlePart;
-    
+    private CoinsEffectReceiver _coinsEffectReceiver;
+
     private void CastleInstance_OnPartSelected()
     {
-        if (_castlePart != null)
+        if (_coinsEffectReceiver != null)
         {
             Destroy(_castlePart);
             _castlePart = null;
@@ -64,22 +63,14 @@ public class CastleSelector : MonoBehaviour
         var selectedCastlePart = _castleInstance.GetSelectedCastlePart();
         if (selectedCastlePart != null)
         {
-            _castlePart = GameObject.Instantiate(selectedCastlePart.gameObject, selectedCastlePart.gameObject.transform.parent);
-            _castlePart.AddComponent<CoinsEffectReceiver>();
-            _castlePart.transform.SetSiblingIndex(0);
-            var images = _castlePart.GetComponentsInChildren<Image>();
-        
-            foreach (var image in images)
-                image.material = _selectionMaterial;
-        
-            OnSelectedPartChanged?.Invoke();
+            _coinsEffectReceiver = selectedCastlePart.AddComponent<CoinsEffectReceiver>();
         }
     }
     
     private void CastleInstance_OnCompleted()
     {
         OnCastleCompleted?.Invoke();
-        OnCastleChanged?.Invoke();
+        OnCastleChanged?.Invoke(null);
     }
 
     public void Init()
@@ -113,5 +104,12 @@ public class CastleSelector : MonoBehaviour
         _castleInstance.OnCompleted += CastleInstance_OnCompleted;
         _castleInstance.OnPartSelected += CastleInstance_OnPartSelected;
         CastleInstance_OnPartSelected();
+        
+        OnCastleChanged?.Invoke(null);
     }
+
+    public void ForceCompleteCastle()
+    {
+        _castleInstance.ForceComplete();
+    }   
 }

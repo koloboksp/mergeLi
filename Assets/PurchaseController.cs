@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Steps.CustomOperations;
 using UnityEngine;
@@ -167,7 +168,7 @@ public class PurchaseController : IDetailedStoreListener
         _purchaseResult = false;
     }
        
-    public async Task<bool> Buy(string productId)
+    public async Task<bool> Buy(string productId, CancellationToken cancellationToken)
     {
 #if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
 

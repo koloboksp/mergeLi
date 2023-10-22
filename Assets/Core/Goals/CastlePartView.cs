@@ -1,64 +1,46 @@
-﻿
-using System;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
-public interface ISupportChangesInEditor
+public class CastlePartView : MonoBehaviour
 {
-    void OnValueUpdatedInEditorMode();
-} 
-public class CastlePartView : MonoBehaviour, ISupportChangesInEditor
-{
-    public event Action OnClick;
-
-    [SerializeField] private RectTransform _root;
     [SerializeField] private CastlePart _model;
-    [SerializeField] private Image _outlineImage;
-    [SerializeField] private Image _image;
-    [SerializeField] private Button _areaClick;
-
-    public RectTransform Root => _root;
     
     private void Awake()
     {
-        _areaClick.onClick.AddListener(Area_OnClick);
-        _model.OnIconChanged += OnIconChanged;
-        OnIconChanged();
         _model.OnCostChanged += OnCostChanged;
         OnCostChanged();
-        _model.OnProgressChanged += OnProgressChanged;
-        OnProgressChanged();
-        _model.OnSelectedStateChanged += OnSelectedStateChanged;
-        OnSelectedStateChanged();
-    }
-    
-    private void Area_OnClick()
-    {
-        OnClick?.Invoke();
-    }
+        
+        _model.OnUnlockedStateChanged += OnUnlockedStateChanged;
+        OnUnlockedStateChanged(_model.Unlocked, true);
 
-    private void OnIconChanged()
-    {
-        _outlineImage.sprite = _model.Icon;
-        _image.sprite = _model.Icon;
+        _model.OnPointsChanged += OnPointsChanged;
+        OnPointsChanged(_model.Points, true);
     }
     
     private void OnCostChanged()
     {
-        OnProgressChanged();
+      
     }
     
-    private void OnSelectedStateChanged()
+    private void OnUnlockedStateChanged(bool oldUnlocked, bool instant)
     {
+        if (oldUnlocked != _model.Unlocked)
+        {
+            if(_model.Unlocked)
+                _model.Owner.View.ShowPartBorn(_model.Index, instant);
+            else
+                _model.Owner.View.ShowPartDeath(_model.Index, instant);
+        }
     }
     
-    private void OnProgressChanged()
+    private void OnPointsChanged(int oldPoints, bool instant)
     {
-        _image.fillAmount = (float)_model.Points / (float)_model.Cost;
-    }
-    
-    public void OnValueUpdatedInEditorMode()
-    {
-        OnIconChanged();
+        if (_model.Points < _model.Cost)
+        {
+            _model.Owner.View.ShowPartProgress(_model.Index, (float)oldPoints/_model.Cost, (float)_model.Points/_model.Cost, instant);
+        }
+        else
+        {
+            _model.Owner.View.ShowPartComplete(_model.Index, instant);
+        }
     }
 }
