@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CanvasRenderer))]
 public class BlobTrail : MonoBehaviour
 {
-    [System.Serializable]
     private class Node
     {
         public Vector3 pos;
@@ -29,7 +29,7 @@ public class BlobTrail : MonoBehaviour
 
     private readonly int[] QUAD = new int[6] { 0, 1, 3, 0, 3, 2 };
 
-    [SerializeField] private CanvasRenderer canvasRend;
+    private CanvasRenderer rend;
     [SerializeField] private Material mat;
 
     [Space(8)]
@@ -38,7 +38,6 @@ public class BlobTrail : MonoBehaviour
     [SerializeField] private float width = 2f;
 
     [Space(8)]
-    [SerializeField] private int maxNodesCount = 32;
     [SerializeField] private float lifeTime = 2f;
     [SerializeField] private float step = 1f;
 
@@ -61,6 +60,8 @@ public class BlobTrail : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
+        rend = GetComponent<CanvasRenderer>();
     }
 
     private void Start()
@@ -76,9 +77,9 @@ public class BlobTrail : MonoBehaviour
 
         mesh = new Mesh();
 
-        canvasRend.materialCount = 1;
-        canvasRend.SetMaterial(mat, 0);
-        canvasRend.SetMesh(mesh);
+        rend.materialCount = 1;
+        rend.SetMaterial(mat, 0);
+        rend.SetMesh(mesh);
     }
 
     void Update()
@@ -110,7 +111,7 @@ public class BlobTrail : MonoBehaviour
         if (nodes.Count <= 1)
         {
             mesh.Clear();
-            canvasRend.SetMesh(mesh);
+            rend.SetMesh(mesh);
             return;
         }
 
@@ -150,7 +151,7 @@ public class BlobTrail : MonoBehaviour
         mesh.triangles = tris;
         mesh.uv = uvs;
 
-        canvasRend.SetMesh(mesh);
+        rend.SetMesh(mesh);
     }
 
     public static void ResetTail()
