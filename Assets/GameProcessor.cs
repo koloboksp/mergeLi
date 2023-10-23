@@ -315,6 +315,9 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         Func<Task> beforeSelectNextCastle,
         Func<Task> afterSelectNextCastle)
     {
+        //wait for last animation is playing 
+        await ApplicationController.WaitForSecondsAsync(2.0f, _cancellationTokenSource.Token);
+        
         var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
             typeof(UICastleCompletePanel),
             new UICastleCompletePanel.UICastleCompletePanelData()

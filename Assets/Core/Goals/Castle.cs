@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -148,6 +150,27 @@ namespace Core.Goals
         {
             var requiredPoints = GetCost() - _points;
             ProcessPoints(requiredPoints, false);
+        }
+
+        public void ShowAsCompleted()
+        {
+            foreach (var part in _parts)
+            {
+                part.ChangeUnlockState(true, true);
+                part.SetPoints(part.Cost, true);
+            }
+        }
+
+        public async Task DestroyCastle(CancellationToken cancellationToken)
+        {
+            for (var index = _parts.Count - 1; index >= 0; index--)
+            {
+                var part = _parts[index];
+                part.SetPoints(0, true);
+                part.ChangeUnlockState(false, false);
+            }
+
+            await ApplicationController.WaitForSecondsAsync(2.0f, cancellationToken);
         }
     }
 }
