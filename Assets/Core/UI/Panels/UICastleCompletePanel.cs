@@ -78,12 +78,10 @@ namespace Core
             activeCastle.transform.position = castlePosition;
             activeCastle.transform.localScale = Vector3.one;
             
-            //var newActiveCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
-            activeCastle.ShowAsCompleted();
-            await activeCastle.DestroyCastle(cancellationToken);
-            
             if (_data.AfterSelectNextCastle != null)
+            {
                 await _data.AfterSelectNextCastle();
+            }
             else
             {
                 await Task.WhenAny(

@@ -167,10 +167,11 @@ namespace Core.Goals
             {
                 var part = _parts[index];
                 part.SetPoints(0, true);
-                part.ChangeUnlockState(false, false);
+                if(index == 0)
+                    part.ChangeUnlockState(true, true);
+                else
+                    part.ChangeUnlockState(false, true);
             }
-
-            await ApplicationController.WaitForSecondsAsync(2.0f, cancellationToken);
         }
     }
 }
