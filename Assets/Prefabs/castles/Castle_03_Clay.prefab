@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8508746258051257580}
   - component: {fileID: 8508746258051257583}
   m_Layer: 5
-  m_Name: Castle_2
+  m_Name: Castle_03_Clay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
