@@ -97,26 +97,34 @@ namespace Core.Goals
             var restScore = _points;
             var partUnlocked = true;
             CastlePart newSelectedPart = null;
-            
-            foreach (var part in _parts)
-            {
-                var consumePoints = part.Cost;
-                
-                part.ChangeUnlockState(partUnlocked, instant);
-                
-                if (restScore <= part.Cost)
-                {
-                    consumePoints = restScore;
-                    partUnlocked = false;
-                }
-                
-                part.SetPoints(consumePoints, instant);
-                restScore -= consumePoints;
 
-                if (restScore <= 0)
+            for (var index = 0; index < _parts.Count; index++)
+            {
+                var part = _parts[index];
+                var consumePoints = part.Cost;
+
+                part.ChangeUnlockState(partUnlocked, instant);
+
+                if (restScore > 0)
                 {
-                    newSelectedPart = part;
-                    break;
+                    if (restScore <= part.Cost)
+                    {
+                        consumePoints = restScore;
+                        partUnlocked = false;
+                    }
+
+                    part.SetPoints(consumePoints, instant);
+                    restScore -= consumePoints;
+
+                    if (part.Unlocked)
+                    {
+                        newSelectedPart = part;
+                      // break;
+                    }
+                }
+                else
+                {
+                    partUnlocked = false;
                 }
             }
 

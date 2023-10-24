@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _points: {fileID: 1669837944706570845}
-  _duration: 0.5
+  _duration: 1
   _coinPrefab: {fileID: 7271366859707694709, guid: 34ec383426191864dab92e2b0faa3628,
     type: 3}
   _movingSpeed:
@@ -218,15 +218,15 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: -0.011509772
-      outSlope: -0.011509772
+      inSlope: 0.01840469
+      outSlope: 0.01840469
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.22128792
-      value: -0.0025469735
+      time: 0.29272956
+      value: 0.005387597
       inSlope: 0.09906027
       outSlope: 0.09906027
       tangentMode: 0
@@ -234,8 +234,8 @@ MonoBehaviour:
       inWeight: 0.29215264
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.9517747
-      value: 0.93587506
+      time: 0.618889
+      value: 0.8829652
       inSlope: 1.4006537
       outSlope: 1.4006537
       tangentMode: 0
@@ -245,8 +245,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 1.3296955
-      outSlope: 1.3296955
+      inSlope: 0.30708843
+      outSlope: 0.30708843
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
@@ -254,6 +254,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _randomizeStartPosition: 0.1
+  _randomizeSideOffset: 0.1
+  _randomizeDelay: 0.5
 --- !u!111 &5600580805448456365
 Animation:
   m_ObjectHideFlags: 0

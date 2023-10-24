@@ -1,5 +1,6 @@
 ﻿using Core.Steps;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UndoBuff : Buff
 {
@@ -31,7 +32,7 @@ public class UndoBuff : Buff
         return _gameProcessor.HasUndoSteps();
     }
 
-    protected override void InnerProcessUsing()
+    protected override void InnerProcessUsing(PointerEventData pointerEventData)
     {
         _gameProcessor.UseUndoBuff(Cost, this);
     }

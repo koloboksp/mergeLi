@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Core;
 using Core.Steps;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 
 public interface INextBallsShower
@@ -56,7 +57,7 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
     protected virtual bool UndoAvailable => true;
     protected virtual StepTag UndoStepTag => StepTag.UndoNextBalls;
 
-    protected override void InnerProcessUsing()
+    protected override void InnerProcessUsing(PointerEventData pointerEventData)
     {
         _gameProcessor.UseShowNextBallsBuff(Cost, this, this);
     }

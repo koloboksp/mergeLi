@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,17 +17,32 @@ namespace Core.Effects
         [SerializeField] private float _randomizeSideOffset = 0.1f;
         [SerializeField] private float _randomizeDelay = 0.1f;
         
+        private CancellationTokenSource _cancellationTokenSource;
+
         public float Duration => _duration;
     
+        private void OnDestroy()
+        {
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
+        }
+        
         public void Run(int points, int coinsCount)
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+
             _points.text = points.ToString();
 
             var coinsEffectReceiver = GameObject.FindObjectOfType<CoinsEffectReceiver>();
 
             for (int i = 0; i < coinsCount; i++)
             {
-                var startPosition = transform.position + Random.insideUnitSphere * _randomizeStartPosition;
+                Vector3 randDirection = Random.insideUnitCircle;
+                var startPosition = transform.position + randDirection * _randomizeStartPosition;
                 var endPosition = coinsEffectReceiver.transform.position;
                 var vecToReceiver = endPosition - startPosition;
                 var distanceToReceiver = vecToReceiver.magnitude;
@@ -34,19 +51,20 @@ namespace Core.Effects
                                Vector3.Cross(dirToReceiver, Vector3.forward) *
                                Random.Range(-distanceToReceiver * _randomizeSideOffset, distanceToReceiver * _randomizeSideOffset);
                 
-                StartCoroutine(StartFx(Random.Range(0.0f, _randomizeDelay), startPosition, midPoint, endPosition, _duration));
+                _ = StartFxAsync(Random.Range(0.0f, _randomizeDelay), startPosition, midPoint, endPosition, _duration, _cancellationTokenSource.Token);
             }
             Destroy(gameObject, _duration + _randomizeDelay);
         }
 
-        IEnumerator StartFx(float delay, 
+        private async Task StartFxAsync(float delay, 
             Vector3 startPosition, 
             Vector3 middlePosition, 
             Vector3 endPosition, 
-            float time)
+            float time, 
+            CancellationToken cancellationToken)
         {
-           
-            yield return new WaitForSeconds(delay);
+
+            await ApplicationController.WaitForSecondsAsync(delay, cancellationToken);
             var coin = Instantiate(_coinPrefab, transform);
 
             var timer = 0.0f;
@@ -69,7 +87,8 @@ namespace Core.Effects
                 coin.transform.position = Vector3.Lerp(startDerivedPosition, endDerivedPosition, pathDerivedParam);
                 
                 timer += Time.deltaTime;
-                yield return null;
+                
+                await Task.Yield();
             }
             Destroy(coin.gameObject);
         }

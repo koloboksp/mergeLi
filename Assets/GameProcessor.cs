@@ -191,9 +191,25 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         await ProcessGame(_cancellationTokenSource.Token);
     }
 
+    IEnumerator T()
+    {
+        throw new Exception();
+        int i = 0;
+        while (i < 10)
+        {
+            if(i == 4)
+                throw new Exception();
+            i++;
+            yield return null;
+        }
+    }
     private async Task ProcessGame(CancellationToken cancellationToken)
     {
-        while (true)
+        List<Coroutine> coroutines = new List<Coroutine>();
+        var startCoroutine = StartCoroutine(T());
+        coroutines.Add(startCoroutine);
+        
+         while (true)
         {
             if (cancellationToken.IsCancellationRequested)
                 throw new OperationCanceledException();
@@ -265,15 +281,11 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
             }
         }
     }
-
-    public bool TutorialNotCompleted => true;
-
     
     private async Task StartTutorial(bool forceTutorial)
     {
         await _tutorialController.TryStartTutorial(forceTutorial, _cancellationTokenSource.Token);
     }
-
     
     private void Load()
     {
@@ -544,12 +556,12 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 new ConfirmBuffUseOperation(buff)));
     }
 
-    public void UseExplodeBuff(int cost, ExplodeType explodeType, List<Vector3Int> ballsIndexes, ExplodeBuff buff)
+    public void UseExplodeBuff(int cost, ExplodeType explodeType, Vector3Int pointerIndex, List<Vector3Int> ballsIndexes, ExplodeBuff buff)
     {
         _stepMachine.AddStep(
             new Step(ExplodeTypeToStepTags[explodeType], 
                 new SpendOperation(cost, this, true),
-                new RemoveOperation(ballsIndexes, _field),
+                new RemoveOperation(pointerIndex, ballsIndexes, _destroyBallEffectPrefab, _field),
                 new ConfirmBuffUseOperation(buff)));
     }
 

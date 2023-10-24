@@ -189,10 +189,9 @@ namespace Core
             }
         }
         
-        public int GetColorIndex(int count)
+        public int GetColorIndex()
         {
             var colorIndex = Mathf.RoundToInt(Mathf.Log(_points, 2));
-            colorIndex %= count;
             return colorIndex;
         }
         

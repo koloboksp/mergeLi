@@ -56,7 +56,7 @@ public abstract class Buff : MonoBehaviour, IBuff
 
         var readyToUse = InnerOnClick();
         if(readyToUse)
-            ProcessUsing();
+            ProcessUsing(null);
     }
     
     protected void OnBeginDrag(PointerEventData eventData)
@@ -74,7 +74,7 @@ public abstract class Buff : MonoBehaviour, IBuff
 
         var readyToUse = InnerOnEndDrag(eventData);
         if(readyToUse)
-            ProcessUsing();
+            ProcessUsing(eventData);
     }
     
     protected void OnDrag(PointerEventData eventData)
@@ -85,7 +85,7 @@ public abstract class Buff : MonoBehaviour, IBuff
         InnerOnDrag(eventData);
     }
 
-    private void ProcessUsing()
+    private void ProcessUsing(PointerEventData eventData)
     {
         _restCooldown = _cooldown;
         _restCooldownChanged?.Invoke();
@@ -95,10 +95,10 @@ public abstract class Buff : MonoBehaviour, IBuff
         else
             Available = true;
         
-        InnerProcessUsing();
+        InnerProcessUsing(eventData);
     }
 
-    protected abstract void InnerProcessUsing();
+    protected abstract void InnerProcessUsing(PointerEventData pointerEventData);
 
     protected virtual bool InnerOnClick()
     {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Core.Buffs
 {
@@ -9,9 +10,10 @@ namespace Core.Buffs
         protected virtual bool UndoAvailable => true;
         protected virtual StepTag UndoStepTag => GameProcessor.UndoStepTags[GameProcessor.ExplodeTypeToStepTags[_explodeType]];
 
-        protected override void InnerProcessUsing()
+        protected override void InnerProcessUsing(PointerEventData eventData)
         {
-            _gameProcessor.UseExplodeBuff(Cost, _explodeType, AffectedAreas, this);
+            var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(_gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
+            _gameProcessor.UseExplodeBuff(Cost, _explodeType, pointerGridPosition, AffectedAreas, this);
         }
 
         public override string Id => _explodeType.ToString();

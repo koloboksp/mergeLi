@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Core.Buffs
 {
@@ -13,7 +14,7 @@ namespace Core.Buffs
             return _gameProcessor.CanGradeAny(affectedAreas);
         }
         
-        protected override void InnerProcessUsing()
+        protected override void InnerProcessUsing(PointerEventData pointerEventData)
         {
             _gameProcessor.UseDowngradeBuff(Cost, AffectedAreas, this);
         }

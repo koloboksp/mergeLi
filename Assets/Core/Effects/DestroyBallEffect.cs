@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Core;
 using UnityEngine;
 
@@ -11,22 +14,36 @@ namespace Core.Effects
         [SerializeField] private float _duration = 2.0f;
         [SerializeField] private float _delayScaler = 0.15f;
 
-        public void Run(Ball ball, float delay)
+        private CancellationTokenSource _cancellationTokenSource;
+
+        private void OnDestroy()
         {
-            var colorIndex = ball.GetColorIndex(_colorVariants.Count);
-            
-            StartCoroutine(StartEffect(_colorVariants[colorIndex], delay * _delayScaler));
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
         }
 
-        IEnumerator StartEffect(DestroyBallEffectColorVariant variant, float delay)
+        public void Run(int colorIndex, float delay)
         {
-            yield return new WaitForSeconds(delay);
+            _cancellationTokenSource = new CancellationTokenSource();
+            
+            var wrapColorIndex = colorIndex % _colorVariants.Count;
+            _ = StartEffectAsync(_colorVariants[wrapColorIndex], delay * _delayScaler, _cancellationTokenSource.Token);
+        }
+
+        private async Task StartEffectAsync(DestroyBallEffectColorVariant variant, float delay, CancellationToken cancellationToken)
+        {
+            await ApplicationController.WaitForSecondsAsync(delay, cancellationToken);
             
             var variantInstance = Instantiate(variant, transform);
             variantInstance.Run();
             
-            yield return new WaitForSeconds(_duration);
-            Destroy(this.gameObject);
+            await ApplicationController.WaitForSecondsAsync(_duration, cancellationToken);
+            
+            Destroy(gameObject);
         }
     }
 }

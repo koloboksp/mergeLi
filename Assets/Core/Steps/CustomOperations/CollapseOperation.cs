@@ -86,8 +86,8 @@ namespace Core.Steps.CustomOperations
                 var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab, 
                     _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ballPair.ball.IntGridPosition)), Quaternion.identity, 
                     _field.View.Root);
-
-                destroyBallEffect.Run(ballPair.ball, ballPair.distance / maxDistanceToCheckingPosition);
+                
+                destroyBallEffect.Run(ballPair.ball.GetColorIndex(), ballPair.distance / maxDistanceToCheckingPosition);
             }
 
             var sumPoints = 0;
