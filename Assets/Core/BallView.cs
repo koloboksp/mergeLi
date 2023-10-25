@@ -70,5 +70,7 @@ namespace Core
         {
             _ballSkin.PathNotFount();
         }
+
+        public Color MainColor => _colors[Ball.GetColorIndex(_ball.Points, _colors.Count)];
     }
 }

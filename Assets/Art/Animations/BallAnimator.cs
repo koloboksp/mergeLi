@@ -49,6 +49,7 @@ public class BallAnimator : MonoBehaviour
         if (ball.Moving)
             BlobTrail.ResetTail();
 
+        BlobTrail.SetColor(ball.View.MainColor);
         Follower.Follow(transform, ball.Moving);
     }
 

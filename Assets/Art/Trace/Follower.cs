@@ -8,6 +8,8 @@ public class Follower : MonoBehaviour
     private static Transform s_target;
     private static bool s_doFollow;
 
+    [SerializeField] private Vector3 offset;
+
     private void Awake()
     {
         instance = this;
@@ -25,6 +27,6 @@ public class Follower : MonoBehaviour
     private void Update()
     {
         if (s_doFollow && s_target != null)
-            transform.position = s_target.position;
+            transform.position = s_target.position + offset;
     }
 }

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1074421965576791404}
-  - component: {fileID: 296098785}
   - component: {fileID: 1074421965576791405}
   - component: {fileID: 3926453264853320890}
   m_Layer: 5
@@ -34,14 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!222 &296098785
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1074421965576791378}
-  m_CullTransparentMesh: 1
 --- !u!114 &1074421965576791405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54,7 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 404b3972368710744a4372fbde684d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasRend: {fileID: 296098785}
   mat: {fileID: 2100000, guid: e77cd1644ecc81547b31ad77089ee220, type: 2}
   widthCurve:
     serializedVersion: 2
@@ -80,10 +70,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  width: 40
-  maxNodesCount: 32
+  width: 0.5
   lifeTime: 0.5
-  step: 30
+  step: 0.5
 --- !u!114 &3926453264853320890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,3 +85,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3083af87f02184d8f0831b351074fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: -1}

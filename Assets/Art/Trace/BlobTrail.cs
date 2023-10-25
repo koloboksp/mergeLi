@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CanvasRenderer))]
 public class BlobTrail : MonoBehaviour
 {
     private class Node
@@ -29,8 +28,8 @@ public class BlobTrail : MonoBehaviour
 
     private readonly int[] QUAD = new int[6] { 0, 1, 3, 0, 3, 2 };
 
-    private CanvasRenderer rend;
     [SerializeField] private Material mat;
+    private Material _mat;
 
     [Space(8)]
     [SerializeField] private AnimationCurve widthCurve =
@@ -47,13 +46,13 @@ public class BlobTrail : MonoBehaviour
     private Vector3[] verts;
     private Vector2[] uvs;
     private int[] tris;
+    private int layer;
 
     private Vector3 oldPos;
     private Vector3 curPos;
     private Vector3 curDir;
 
     private float phase;
-    private Matrix4x4 space;
 
     private static BlobTrail instance;
 
@@ -61,7 +60,13 @@ public class BlobTrail : MonoBehaviour
     {
         instance = this;
 
-        rend = GetComponent<CanvasRenderer>();
+        layer = gameObject.layer;
+        _mat = new Material(mat);
+    }
+
+    private void OnDestroy()
+    {
+        instance = null;
     }
 
     private void Start()
@@ -76,13 +81,9 @@ public class BlobTrail : MonoBehaviour
         uvs = new Vector2[0];
 
         mesh = new Mesh();
-
-        rend.materialCount = 1;
-        rend.SetMaterial(mat, 0);
-        rend.SetMesh(mesh);
     }
 
-    void Update()
+    private void Update()
     {
         // Remove old nodes
         for (int i = nodes.Count - 1; i >= 0; i--)
@@ -111,7 +112,6 @@ public class BlobTrail : MonoBehaviour
         if (nodes.Count <= 1)
         {
             mesh.Clear();
-            rend.SetMesh(mesh);
             return;
         }
 
@@ -142,21 +142,25 @@ public class BlobTrail : MonoBehaviour
             for (int j = 0; j < 6; j++)
                 tris[i * 6 + j] = i * 2 + QUAD[j];
 
-        // Convert from World to Local space
-        space = transform.worldToLocalMatrix;
-        for (int i = 0; i < verts.Length; i++)
-            verts[i] = space.MultiplyPoint3x4(verts[i]);
-
         mesh.vertices = verts;
         mesh.triangles = tris;
         mesh.uv = uvs;
 
-        rend.SetMesh(mesh);
+        Graphics.DrawMesh(mesh, Matrix4x4.identity, _mat, layer);
     }
 
     public static void ResetTail()
     {
+        if (instance == null)
+            return;
+
         instance.nodes.Clear();
         instance.mesh.Clear();
+    }
+
+    public static void SetColor(Color color)
+    {
+        if (instance != null)
+            instance._mat.color = new Color(color.r, color.g, color.b, instance._mat.color.a);
     }
 }
