@@ -187,29 +187,20 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         Load();
         
         _castleSelector.Init();
-        
-        await ProcessGame(_cancellationTokenSource.Token);
-    }
 
-    IEnumerator T()
-    {
-        throw new Exception();
-        int i = 0;
-        while (i < 10)
+        try
         {
-            if(i == 4)
-                throw new Exception();
-            i++;
-            yield return null;
+            await ProcessGame(_cancellationTokenSource.Token);
+        }
+        catch (OperationCanceledException e)
+        {
+            Debug.Log(e);
         }
     }
+    
     private async Task ProcessGame(CancellationToken cancellationToken)
     {
-        List<Coroutine> coroutines = new List<Coroutine>();
-        var startCoroutine = StartCoroutine(T());
-        coroutines.Add(startCoroutine);
-        
-         while (true)
+        while (true)
         {
             if (cancellationToken.IsCancellationRequested)
                 throw new OperationCanceledException();
