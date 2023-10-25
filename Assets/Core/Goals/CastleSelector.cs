@@ -49,15 +49,14 @@ public class CastleSelector : MonoBehaviour
     //    CastleInstance_OnPartSelected();
     //}
 
-    private GameObject _castlePart;
     private CoinsEffectReceiver _coinsEffectReceiver;
 
     private void CastleInstance_OnPartSelected()
     {
         if (_coinsEffectReceiver != null)
         {
-            Destroy(_castlePart);
-            _castlePart = null;
+            Destroy(_coinsEffectReceiver);
+            _coinsEffectReceiver = null;
         }
 
         var selectedCastlePart = _castleInstance.GetSelectedCastlePart();
