@@ -53,6 +53,8 @@ namespace Core
         private void Ball_OnSelectedChanged()
         {
             _ballSkin.Selected = _ball.Selected;
+            if (_ball.Selected)
+                _root.transform.SetAsLastSibling();
         }
 
         private void Ball_OnPointsChanged(int oldPoints)

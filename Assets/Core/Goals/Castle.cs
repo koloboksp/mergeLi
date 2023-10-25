@@ -104,28 +104,22 @@ namespace Core.Goals
                 var consumePoints = part.Cost;
 
                 part.ChangeUnlockState(partUnlocked, instant);
-
-                if (restScore > 0)
+                
+                if (restScore <= part.Cost)
                 {
-                    if (restScore <= part.Cost)
-                    {
-                        consumePoints = restScore;
-                        partUnlocked = false;
-                    }
-
-                    part.SetPoints(consumePoints, instant);
-                    restScore -= consumePoints;
-
-                    if (part.Unlocked)
-                    {
-                        newSelectedPart = part;
-                      // break;
-                    }
-                }
-                else
-                {
+                    consumePoints = restScore;
                     partUnlocked = false;
                 }
+
+                part.SetPoints(consumePoints, instant);
+                restScore -= consumePoints;
+
+                if (restScore <= 0)
+                {
+                    newSelectedPart = part;
+                    break;
+                }
+                
             }
 
             if (newSelectedPart != _selectedPart)
