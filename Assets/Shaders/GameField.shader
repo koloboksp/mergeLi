@@ -6,6 +6,9 @@ Shader "Unlit/GameField"
         [NoScaleOffset] _MainTex ("Main", 2D) = "white" {}
         _MainTile("Main Tile", float) = 1
 
+        [NoScaleOffset] _BorderMask("Border Mask (R)", 2D) = "gray"{}
+        _BorderTile("Border Tile", float) = 1
+
         [Space(8)]
         [NoScaleOffset] _Checker("Checker", 2D) = "gray"{}
         
@@ -13,13 +16,22 @@ Shader "Unlit/GameField"
         _CountY("Count Y", Range(3, 9)) = 9
 
         [Space(8)]
-        _Mid("Cell Mid", Range(0, 1)) = .5
-        _Soft("Cell Soft", Range(0, .2)) = 1
-        _Power("Cell Power", Range(0, 1)) = 1
+        _CellLevel("Cell Level", Range(-1, 1)) = 0
+        _CellSoft("Cell Soft", Range(0, .5)) = 1
+        _CellPower("Cell Power", Range(0, 1)) = 1
 
         [Space(8)]
-        _OutMid("Out Mid", Range(0, .1)) = 0
-        _OutSoft("Out Soft", Range(0, .1)) = .1
+        _BorderColor("Border Color", Color) = (1,1,1,0)
+        _BorderGrow("Border Grow", Range(0, .2)) = 0
+        _BorderWide("Border Wide", Range(0, .5)) = 0
+        _BorderSoft("Border Soft", Range(0, .5)) = .1
+
+        [Space(8)]
+        [NoScaleOffset] _Distort("Distort Map", 2D) = "gray"{}
+        _DistortTile("Distort Tile", float) = 1
+        _DistortSpeed("Distort Speed", float) = 0
+        _DistortPower("Distort Power", Range(0, .05)) = 0
+        
     }
     SubShader
     {
@@ -58,51 +70,74 @@ Shader "Unlit/GameField"
             sampler2D_half _MainTex;
             fixed _MainTile;
 
+            sampler2D_half _BorderMask;
+            fixed _BorderTile;
+
             sampler2D_half _Checker;
             uint _CountX;
             uint _CountY;
-            fixed _Mid;
-            fixed _Soft;
-            fixed _Power;
+            
+            fixed _CellLevel;
+            fixed _CellSoft;
+            fixed _CellPower;
 
-            fixed _OutMid;
-            fixed _OutSoft;
+            fixed3 _BorderColor;
+            fixed _BorderGrow;
+            fixed _BorderWide;
+            fixed _BorderSoft;
+
+            sampler2D_half _Distort;
+            fixed _DistortTile;
+            fixed _DistortSpeed;
+            fixed _DistortPower;
 
             v2f vert(appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                v.vertex.xy *= 1.0 + _BorderGrow;
+                
                 o.uv = v.uv;
+                o.vertex = UnityObjectToClipPos(v.vertex);
 
+                v.uv = (v.uv - .5) * (1.0 + _BorderGrow) + .5;
                 o.uvChecker = v.uv * half2(_CountX, _CountY) / 2;
 
                 return o;
             }
 
+            float RangeLineBoldShort(float base, float sec)
+            {
+                return (sec - .5) * (1.0 - abs(base * 2.0 - 1.0)) + base;
+            }
+
             fixed4 frag(v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv * _MainTile);
-
-                fixed mask = max(col.r, max(col.g, col.b)) / 3;
-
+                
+                fixed mask = (col.r + col.g + col.b) / 3 + _CellLevel;
                 col.rgb = lerp(col.rgb, _Color.rgb, _Color.a);
 
-                _Soft /= 2;
                 fixed checker = tex2D(_Checker, i.uvChecker).r;
-                checker *= mask + checker;
-                checker = smoothstep(_Mid - _Soft, _Mid + _Soft, checker);
-                checker = (checker - .5) * _Power + 1;
+                checker = RangeLineBoldShort(checker, mask);
+                checker = smoothstep(.5 - _CellSoft, .5 + _CellSoft, checker);
 
-                col.rgb *= checker;
+                col.rgb *= (checker - .5) * _CellPower + 1;
 
-                // calc out mask
-                fixed2 border = 1 - abs(i.uv * 2 - 1);
-                border.x = saturate(min(border.x, border.y) * 2);
-                border.x *= mask + border.x;
-                border.x = smoothstep(_OutMid - _OutSoft, _OutMid + _OutSoft, border.x);
-                col.a = border.x;
+                // sample distort
+                half2 dist = tex2D(_Distort, i.uv * _DistortTile + _Time.x * _DistortSpeed).rg;
+                dist = (dist - .5) * _DistortPower;
 
-                
+                // calc border
+                fixed2 border = abs(i.uv * 2 - 1);
+                border.x = 1 - max(border.x, border.y);
+                border.x = saturate(border.x / _BorderWide);
+
+                mask = 1 - tex2D(_BorderMask, i.uv * _BorderTile + dist).r;
+                mask = RangeLineBoldShort(border.x, mask);
+                col.a = smoothstep(.5 - _BorderSoft, .5 + _BorderSoft, mask);
+
+                // internal shadow
+                col.rgb *= lerp(_BorderColor.rgb, 1, border.x * col.a);
 
                 return col;
             }
