@@ -12,8 +12,8 @@ Shader "Unlit/GameField"
         [Space(8)]
         [NoScaleOffset] _Checker("Checker", 2D) = "gray"{}
         
-        _CountX("Count X", Range(3, 9)) = 9
-        _CountY("Count Y", Range(3, 9)) = 9
+        _CountX("Count X", Range(1, 9)) = 9
+        _CountY("Count Y", Range(1, 9)) = 9
 
         [Space(8)]
         _CellLevel("Cell Level", Range(-1, 1)) = 0
