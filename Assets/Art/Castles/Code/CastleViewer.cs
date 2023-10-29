@@ -4,6 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Core;
+using Core.Effects;
+using Core.Steps.CustomOperations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -163,6 +166,8 @@ public class CastleViewer : MonoBehaviour
             AddPoints(.25f);
 
     }
+
+    [SerializeField] private ExplodeEffect _partBornEffect;
     
     private readonly List<Operation> _operations = new ();
     private CancellationTokenSource _cancellationTokenSource;
@@ -196,7 +201,7 @@ public class CastleViewer : MonoBehaviour
     
     public void ShowPartComplete(int partIndex, bool instant)
     {
-        var operation = new ShowPartCompleteOperation(partIndex, this);
+        var operation = new ShowPartCompleteOperation(partIndex, this, _partBornEffect);
         if (instant)
             operation.ExecuteInstant();
         else
@@ -283,14 +288,26 @@ public class CastleViewer : MonoBehaviour
         {
             _target.mat.SetFloat(prop, v1);
         }
+        
+        protected async Task PlayEffect(ExplodeEffect effectPrefab, Transform target, CancellationToken cancellationToken)
+        {
+            var findObjectOfType = FindObjectOfType<UIFxLayer>();
+            var effect = Instantiate(effectPrefab, findObjectOfType.transform);
+            effect.transform.position = target.position;
+            effect.Run(0.0f);
+
+            await ApplicationController.WaitForSecondsAsync(effect.Duration, cancellationToken);
+        }
 
     }
     
     public class ShowPartCompleteOperation : Operation
     {
-        public ShowPartCompleteOperation(int partIndex, CastleViewer target) 
+        private readonly ExplodeEffect _bornEffect;
+        public ShowPartCompleteOperation(int partIndex, CastleViewer target, ExplodeEffect bornEffect) 
             : base(partIndex, target)
         {
+            _bornEffect = bornEffect;
         }
 
         public override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -300,6 +317,7 @@ public class CastleViewer : MonoBehaviour
             Target.mat.SetFloat(Target.BAR_LOAD, 1);
             Target.mat.SetFloat(Target.BAR_OVER, 0);
             
+            await PlayEffect(_bornEffect, this.Target.stagePoints[PartIndex],  cancellationToken);
             await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.BAR_OVER, 0, 1, cancellationToken);
             await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.GLOW, 0, 1, cancellationToken);
             await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.GLOW, 1, 0, cancellationToken);

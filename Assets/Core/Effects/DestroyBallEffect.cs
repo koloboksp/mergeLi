@@ -36,14 +36,25 @@ namespace Core.Effects
 
         private async Task StartEffectAsync(DestroyBallEffectColorVariant variant, float delay, CancellationToken cancellationToken)
         {
-            await ApplicationController.WaitForSecondsAsync(delay, cancellationToken);
-            
-            var variantInstance = Instantiate(variant, transform);
-            variantInstance.Run();
-            
-            await ApplicationController.WaitForSecondsAsync(_duration, cancellationToken);
-            
-            Destroy(gameObject);
+            try
+            {
+                await ApplicationController.WaitForSecondsAsync(delay, cancellationToken);
+
+                var variantInstance = Instantiate(variant, transform);
+                variantInstance.Run();
+
+                await ApplicationController.WaitForSecondsAsync(_duration, cancellationToken);
+
+                Destroy(gameObject);
+            }
+            catch (OperationCanceledException e)
+            {
+                Debug.Log(e);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
     }
 }

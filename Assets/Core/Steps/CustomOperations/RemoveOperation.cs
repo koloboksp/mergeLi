@@ -13,7 +13,8 @@ namespace Core.Steps.CustomOperations
         private readonly List<Vector3Int> _indexes;
         private readonly DestroyBallEffect _destroyBallEffectPrefab;
         
-        private List<(Vector3Int, int)> _removedBalls;
+        private readonly List<(Vector3Int, int)> _removedBalls = new();
+        
         public RemoveOperation(Vector3Int pointerIndex, IEnumerable<Vector3Int> indexes, DestroyBallEffect destroyBallEffectPrefab, IField field)
         {
             _pointerIndex = pointerIndex;
@@ -27,22 +28,25 @@ namespace Core.Steps.CustomOperations
             var foundBalls = _indexes
                 .SelectMany(i => _field.GetSomething<Ball>(i))
                 .ToList();
-            
-            var maxDistanceToCheckingPosition = foundBalls.Max(ball => (ball.IntGridPosition - _pointerIndex).magnitude);
-            foreach (var ball in foundBalls)
-            {
-                var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab, 
-                    _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ball.IntGridPosition)), 
-                    Quaternion.identity, 
-                    _field.View.Root);
 
-                var distanceToBall = (ball.IntGridPosition - _pointerIndex).magnitude;
-                destroyBallEffect.Run(ball.GetColorIndex(), distanceToBall / maxDistanceToCheckingPosition);
+            if (foundBalls.Count != 0)
+            {
+                var maxDistanceToCheckingPosition = foundBalls.Max(ball => (ball.IntGridPosition - _pointerIndex).magnitude);
+                foreach (var ball in foundBalls)
+                {
+                    var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab,
+                        _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ball.IntGridPosition)),
+                        Quaternion.identity,
+                        _field.View.Root);
+
+                    var distanceToBall = (ball.IntGridPosition - _pointerIndex).magnitude;
+                    destroyBallEffect.Run(ball.GetColorIndex(), distanceToBall / maxDistanceToCheckingPosition);
+                }
+
+                _removedBalls.AddRange(foundBalls.Select(i => (IntPosition: i.IntGridPosition, i.Points)));
+                _field.DestroyBalls(foundBalls);
             }
-            
-            _removedBalls = new List<(Vector3Int, int)>(foundBalls.Select(i => (IntPosition: i.IntGridPosition, i.Points)));
-            _field.DestroyBalls(foundBalls);
-            
+
             Complete(null);
         }
 

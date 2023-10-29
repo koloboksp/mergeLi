@@ -1734,6 +1734,7 @@ MonoBehaviour:
   _enableTutorial: 1
   _forceTutorial: 0
   _tutorialController: {fileID: 2121425916}
+  _uiFxLayer: {fileID: 143379532}
 --- !u!4 &391481346
 Transform:
   m_ObjectHideFlags: 0
@@ -2015,6 +2016,8 @@ MonoBehaviour:
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
   _explodeType: 1
+  _explodeEffectPrefab: {fileID: 6253935196294891393, guid: d7b051f9c58eaa7419d8c77236a8be14,
+    type: 3}
   _halfSize: 1
 --- !u!1 &440502841
 GameObject:
@@ -2673,6 +2676,7 @@ MonoBehaviour:
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
   _explodeType: 3
+  _explodeEffectPrefab: {fileID: 0}
   _direction: 1
 --- !u!4 &548640613
 Transform:
@@ -3398,6 +3402,7 @@ MonoBehaviour:
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
   _explodeType: 2
+  _explodeEffectPrefab: {fileID: 0}
   _direction: 0
 --- !u!4 &694036923
 Transform:
@@ -4237,7 +4242,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 32
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -6398,6 +6403,8 @@ MonoBehaviour:
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
   _explodeType: 0
+  _explodeEffectPrefab: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+    type: 3}
   _halfSize: 0
 --- !u!1 &1636435616
 GameObject:

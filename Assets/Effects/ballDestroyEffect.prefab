@@ -50,8 +50,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _colorVariants:
-  - {fileID: 7208651708525056585, guid: 9413f2fce8a7b43acb90e2569a4fc18d, type: 3}
-  - {fileID: 8178693532258202294, guid: c419c6bbf30f24438836a302639f1a29, type: 3}
-  - {fileID: 3095385557223864571, guid: 961d59b84039e4c3b85e318951db3d56, type: 3}
-  - {fileID: 5038913654553134274, guid: ed683897499794988802b09b98107de3, type: 3}
+  - {fileID: 5727574038143263812, guid: ed683897499794988802b09b98107de3, type: 3}
+  - {fileID: 2334196922022484093, guid: 961d59b84039e4c3b85e318951db3d56, type: 3}
+  - {fileID: 7970238780351197903, guid: 9413f2fce8a7b43acb90e2569a4fc18d, type: 3}
+  - {fileID: 8867923117143413296, guid: c419c6bbf30f24438836a302639f1a29, type: 3}
   _duration: 2
+  _delayScaler: 0.15

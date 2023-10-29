@@ -6,13 +6,13 @@ namespace Core.Buffs
 {
     public abstract class AreaEffect : Buff
     {
-        private static readonly List<UIGameScreen_BuffArea> _noAllocFoundBuffAreas = new List<UIGameScreen_BuffArea>();
+        private static readonly List<UIGameScreen_BuffArea> _noAllocFoundBuffAreas = new();
         
         [SerializeField] private UIBuffCursor _cursorPrefab;
         [SerializeField] private AffectingBuffArea _areaPrefab;
        
         private UIBuffCursor _cursorInstance;
-        private List<AffectingBuffArea> _affectingBuffAreas = new List<AffectingBuffArea>();
+        private readonly List<AffectingBuffArea> _affectingBuffAreas = new();
         private readonly List<Vector3Int> _affectedAreas = new();
 
         protected List<Vector3Int> AffectedAreas => _affectedAreas;
@@ -22,7 +22,7 @@ namespace Core.Buffs
             base.InnerOnBeginDrag(eventData);
 
             var pointerPosition = _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position);
-            CreateCursor(eventData.position);
+            CreateCursor(pointerPosition);
             
             var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(pointerPosition);
             var affectingArea = GetAffectingArea(pointerGridPosition);
@@ -33,7 +33,7 @@ namespace Core.Buffs
         {
             base.InnerOnDrag(eventData);
             var pointerPosition = _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position);
-            _cursorInstance.transform.position = pointerPosition;
+            _cursorInstance.SetPosition(pointerPosition);
             
             var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(pointerPosition);
             var affectingArea = GetAffectingArea(pointerGridPosition);
@@ -80,8 +80,8 @@ namespace Core.Buffs
         {
             DestroyCursor();
             
-            _cursorInstance = Instantiate(_cursorPrefab, _gameProcessor.Scene.Field.View.Root);
-            _cursorInstance.transform.position = position;
+            _cursorInstance = Instantiate(_cursorPrefab, _gameProcessor.UIFxLayer.transform);
+            _cursorInstance.SetPosition(position);
             _cursorInstance.transform.localScale = Vector3.one;
         }
         

@@ -129,7 +129,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     [SerializeField] private bool _enableTutorial = true;
     [SerializeField] private bool _forceTutorial;
     [SerializeField] private TutorialController _tutorialController;
-    
+    [FormerlySerializedAs("_fxLayer")] [SerializeField] private UIFxLayer _uiFxLayer;
+
     public GiveCoinsEffect GiveCoinsEffect => _giveCoinsEffect;
 
     private Ball _selectedBall;
@@ -148,6 +149,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     public PurchasesLibrary PurchasesLibrary => _purchasesLibrary;
     public CastleSelector CastleSelector => _castleSelector;
 
+    public UIFxLayer UIFxLayer => _uiFxLayer;
+    
     public int BestSessionScore
     {
         get => _bestSessionScore;
