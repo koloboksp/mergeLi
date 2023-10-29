@@ -157,15 +157,15 @@ public class CastleViewer : MonoBehaviour
 
     public void MoveToGray() => StartCoroutine(PlayRoutine(flipCurve, flipTime, GRAY));
 
-    private void OnGUI()
-    {
-        if (GUI.Button(new Rect(20, 20, 200, 100), "Reset Castle"))
-            SetStage(1);
-
-        if (GUI.Button(new Rect(20, 120, 200, 100), "Add Coins"))
-            AddPoints(.25f);
-
-    }
+    // private void OnGUI()
+    // {
+    //     if (GUI.Button(new Rect(20, 20, 200, 100), "Reset Castle"))
+    //         SetStage(1);
+    // 
+    //     if (GUI.Button(new Rect(20, 120, 200, 100), "Add Coins"))
+    //         AddPoints(.25f);
+    // 
+    // }
 
     [SerializeField] private ExplodeEffect _partBornEffect;
     
