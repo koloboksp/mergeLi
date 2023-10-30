@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dependencies>
+  <androidPackages>
+    <repositories>
+      <repository>https://android-sdk.is.com/</repository>
+      <repository>https://aa-sdk.s3-eu-west-1.amazonaws.com/android_repo</repository>
+      <repository>https://cboost.jfrog.io/artifactory/chartboost-ads/</repository>
+    </repositories>
+    <androidPackage spec="com.cleveradssolutions:cas-families:3.2.5" version="3.2.5"/>
+  </androidPackages>
+</dependencies>
