@@ -21,14 +21,16 @@ public class PurchaseController : IDetailedStoreListener
     private CrossPlatformValidator _validator;
 
     private bool _initialized;
-
+    private readonly List<string> _availableProducts = new List<string>();
+    
     public async Task InitializeAsync(IEnumerable<string> availableProducts)
     {
+        _availableProducts.AddRange(availableProducts);
 #if UNITY_EDITOR
         StandardPurchasingModule.Instance().useFakeStoreAlways = true;
         StandardPurchasingModule.Instance().useFakeStoreUIMode = FakeStoreUIMode.StandardUser;
 #elif UNITY_ANDROID || UNITY_IOS
-            mValidator = new CrossPlatformValidator(GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
+            _validator = new CrossPlatformValidator(UnityEngine.Purchasing.Security.GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
 #elif UNITY_STANDALONE
             return;            
 #endif
@@ -42,7 +44,7 @@ public class PurchaseController : IDetailedStoreListener
 #elif UNITY_EDITOR
             storeName = "Standalone";
 #endif
-        foreach (var productId in availableProducts)
+        foreach (var productId in _availableProducts)
             configurationBuilder.AddProduct(productId, ProductType.Consumable, new IDs { { productId, storeName } });
            
         UnityPurchasing.Initialize(this, configurationBuilder);
@@ -122,7 +124,7 @@ public class PurchaseController : IDetailedStoreListener
                         */
                     }
 
-                    if (AvailableProductIds.Contains(productReceipt.productID))
+                    if (_availableProducts.Contains(productReceipt.productID))
                     {
                         if (productReceipt.transactionID != null)
                         {

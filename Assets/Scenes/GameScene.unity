@@ -1738,7 +1738,7 @@ MonoBehaviour:
   _castleSelector: {fileID: 391481347}
   _giveCoinsEffect: {fileID: 1636435618}
   _enableTutorial: 1
-  _forceTutorial: 0
+  _forceTutorial: 1
   _tutorialController: {fileID: 2121425916}
   _uiFxLayer: {fileID: 143379532}
 --- !u!4 &391481346
@@ -4245,7 +4245,7 @@ MonoBehaviour:
   _id: startTutorial
   _controller: {fileID: 2121425916}
   _entry: {fileID: 920071495}
-  _startStep: {fileID: 1080686367}
+  _startStep: {fileID: 0}
   _requiredSteps:
   - {fileID: 1600160225}
   - {fileID: 711040514}

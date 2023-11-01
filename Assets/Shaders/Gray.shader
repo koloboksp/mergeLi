@@ -71,6 +71,7 @@ Shader "Unlit/Gray"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            float4 _ClipRect;
 
             v2f vert (appdata v)
             {
@@ -92,11 +93,11 @@ Shader "Unlit/Gray"
                 col.rgb = smoothstep(.1, .9, col.rgb); // more expression tone
 
                 #ifdef UNITY_UI_CLIP_RECT
-                color.a *= UnityGet2DClipping(i.wPos, _ClipRect);
+                col.a *= UnityGet2DClipping(i.wPos, _ClipRect);
                 #endif
 
                 #ifdef UNITY_UI_ALPHACLIP
-                clip(color.a - 0.001);
+                clip(col.a - 0.001);
                 #endif
 
                 return col;
