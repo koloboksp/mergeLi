@@ -71,7 +71,8 @@ public class PlayerInfo : MonoBehaviour
         try
         {
             string data = JsonUtility.ToJson(_progress);
-            File.WriteAllText(PlayerDataFileName, data);
+            var path = Path.Combine(Application.persistentDataPath, PlayerDataFileName);
+            File.WriteAllText(path, data);
         }
         catch (Exception e)
         {
@@ -85,7 +86,8 @@ public class PlayerInfo : MonoBehaviour
         {
             try
             {
-                var loadedFile = File.ReadAllText(PlayerDataFileName);
+                var path = Path.Combine(Application.persistentDataPath, PlayerDataFileName);
+                var loadedFile = File.ReadAllText(path);
                 var loadedProgress = JsonUtility.FromJson<Progress>(loadedFile);
                 _progress = loadedProgress;
             }
@@ -96,7 +98,8 @@ public class PlayerInfo : MonoBehaviour
            
             try
             {
-                var loadedFile = File.ReadAllText(PlayerLastSessionDataFileName);
+                var path = Path.Combine(Application.persistentDataPath, PlayerLastSessionDataFileName);
+                var loadedFile = File.ReadAllText(path);
                 var lastSessionProgress = JsonUtility.FromJson<SessionProgress>(loadedFile);
                 _lastSessionProgress = lastSessionProgress;
             }
@@ -191,9 +194,10 @@ public class PlayerInfo : MonoBehaviour
             };
             sessionProgress.Buffs.Add(buffProgress);
         }
-        
+
         string data = JsonUtility.ToJson(sessionProgress);
-        File.WriteAllText(PlayerLastSessionDataFileName, data);
+        var path = Path.Combine(Application.persistentDataPath, PlayerLastSessionDataFileName);
+        File.WriteAllText(path, data);
     }
 
     public SessionProgress GetLastSessionProgress()
