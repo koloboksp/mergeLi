@@ -24,6 +24,18 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BackMask:
+        m_Texture: {fileID: 2800000, guid: a49986b7c30776646978404f150a1026, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BackRamp:
+        m_Texture: {fileID: 2800000, guid: 0ac5590d9ad2e9847b2440ffc19afbb7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BackTex:
+        m_Texture: {fileID: 2800000, guid: 6df440669eeafa34f81cd0faa1af860c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -78,11 +90,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _BackRange: 0
+    - _BackSize: 2
+    - _BackSpeed: -0.3
     - _Bar: 0.531
     - _BarBorn: 1
     - _BarLife: 1
-    - _BarLoad: 0
-    - _BarOver: 0
+    - _BarLoad: 1
+    - _BarOver: 1
     - _BarSoft: 0.1
     - _BarStart: 0
     - _BarValue: 0.22
@@ -126,10 +141,11 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Stage: 23
+    - _Stage: 12
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
+    - _BackColor: {r: 0.09019604, g: 0.33372542, b: 0.9019608, a: 0.6}
     - _BarColor: {r: 0, g: 1, b: 0, a: 0.5019608}
     - _BlinkColor: {r: 1, g: 1, b: 0, a: 0.5019608}
     - _BordColor: {r: 1, g: 1, b: 0, a: 1}

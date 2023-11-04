@@ -16,9 +16,16 @@ Shader "Unlit/Castle"
         _BarLoad("Bar Load", Range(0, 1)) = .5
         _BarOver("Bar Over", Range(0, 1)) = .5
 
-        [Space(10)]
+       
         _Glow("Glow", Range(0, 1)) = .5
-        _Gray("Gray", Range(0, 1)) = .5 
+        // _Gray("Gray", Range(0, 1)) = .5 
+
+        [Space(10)]
+        [NoScaleOffset] _BackMask("Back Mask", 2D) = "white"{}
+        [NoScaleOffset] _BackTex("Back Tex", 2D) = "black"{}
+        _BackSize("Back Size", float) = 1
+        _BackSpeed("Back Speed", float) = 0
+        _BackColor("Border Color", Color) = (1,1,1,1)
     }
 
     SubShader
@@ -49,6 +56,7 @@ Shader "Unlit/Castle"
             {
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
+                float4 uvBack : TEXCOORD1;
             };
 
             sampler2D_half _MainTex;
@@ -69,19 +77,23 @@ Shader "Unlit/Castle"
             fixed _BarOver;
 
             fixed _Glow;
-            fixed _Gray;
+            // fixed _Gray;
 
-            static const fixed _BlurCore[9] = { 1,2,1,2,4,2,1,2,1 };
-            static const fixed2 _BlurUV[9] = {
-                fixed2(-1, 1), fixed2(0,1),  fixed2(1,1),
-                fixed2(-1,0),  fixed2(0,0),  fixed2(1,0),
-                fixed2(-1,-1), fixed2(0,-1), fixed2(1,-1) };
+            sampler2D_half _BackMask;
+            sampler2D_half _BackTex;
+            fixed4 _BackColor;
+            fixed _BackSize;
+            fixed _BackSpeed;
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
+
+                float3 wPos = mul(unity_ObjectToWorld, v.vertex);
+                o.uvBack.xy = wPos.xy / _BackSize + _BackSpeed * _Time.x;
+                o.uvBack.zw = wPos.xy / _BackSize * 1.37 + float2(-1, 1) * _BackSpeed * 1.37 * _Time.x;
 
                 return o;
             }
@@ -90,11 +102,6 @@ Shader "Unlit/Castle"
             {
                 fixed2 r = fixed2(lerp(-soft, 1, size), lerp(0, 1 + soft, size));
                 return smoothstep(r.x, r.y, val);
-            }
-
-            float RangeLineBold(float base, float sec, float bold) {
-                float amp = (1.0 - abs(base * 2.0 - 1.0)) * bold;
-                return (sec - .5) * amp + base;
             }
 
             fixed4 frag(v2f i) : SV_Target
@@ -110,34 +117,19 @@ Shader "Unlit/Castle"
                 mask.gba = _Mask.Sample(_Mask_Linear_Clamp_Sampler, i.uv).gba;
                 fixed stage = 1.0 - (8.0 * _Stage) / 255.0;
 
-                // float sumStage = 0;
-                // float sumLoad = 0;
-                // float cur = 0;
-                // for (int j = 0; j < 9; j++)
-                // {
-                //     cur = _Mask.Sample(_Mask_Point_Clamp_Sampler, i.uv + _BlurUV[j] * _Mask_TexelSize.xy).r;
-                //     sumStage += step(abs(stage - cur), .02) * _BlurCore[j];
-                //     sumLoad += smoothstep(stage - .01, stage + .01, cur) * _BlurCore[j];
-                // }
-
-                // col.a = 1;
-                // col.a = sumLoad / 16.0;
-                // return col;
 
                 // Clip by opened stages
                 fixed loadMask = step(stage, mask.r);
-                // loadMask = smoothstep(stage, stage + .05, mask.r);
-                // loadMask = sumLoad / 16.0;
-                clip(loadMask - .01);
+                // clip(loadMask - .01);
 
                 // Current stage mask
                 fixed stageMask = step(abs(stage - mask.r), .02);
-                // stageMask = sumStage / 16.0;
 
                 // apply bar color
                 fixed ringBorn = SoftRange(1 - _BarBorn, .2, mask.b);
-                clip(lerp(1, ringBorn, stageMask) - .01);
-                
+                ringBorn = lerp(1, ringBorn, stageMask);
+                // clip(lerp(ringBorn - .01);
+
                 fixed barColorMask = 1 - ringBorn * smoothstep(1, .5, mask.a) * step(_BarLoad, mask.g);
                 col.rgb = lerp(gray, _BarColor.rgb, barColorMask);
 
@@ -156,9 +148,16 @@ Shader "Unlit/Castle"
                     col.rgb += _Glow * _GlowColor.rgb * _GlowColor.a;
 
                 // dark after using
-                col.rgb = lerp(col.rgb, gray, _Gray);
+                // col.rgb = lerp(col.rgb, gray, _Gray);
 
-                // col.rgb = loadMask;
+                // sample back
+                fixed3 backTex = tex2D(_BackTex, i.uvBack.xy);
+                fixed3 backTex2 = tex2D(_BackTex, i.uvBack.zw);
+                backTex = max(backTex, backTex2); // lerp(backTex, backTex2, .4);
+                
+                fixed backMask = tex2D(_BackMask, i.uv).r;
+                backTex = lerp(backTex, _BackColor.rgb * 2, backMask.r * _BackColor.a); 
+                col.rgb = lerp(backTex, col.rgb, loadMask);
 
                 return col;
             }
