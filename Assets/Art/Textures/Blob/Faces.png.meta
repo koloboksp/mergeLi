@@ -139,12 +139,12 @@ TextureImporter:
       name: eyes
       rect:
         serializedVersion: 2
-        x: 14
+        x: 19
         y: 224
-        width: 100
+        width: 90
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -160,12 +160,12 @@ TextureImporter:
       name: eyes_fun
       rect:
         serializedVersion: 2
-        x: 14
-        y: 192
-        width: 100
-        height: 32
+        x: 19
+        y: 191
+        width: 90
+        height: 33
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -181,12 +181,12 @@ TextureImporter:
       name: eyes_look
       rect:
         serializedVersion: 2
-        x: 14
-        y: 160
-        width: 100
-        height: 32
+        x: 19
+        y: 156
+        width: 94
+        height: 35
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -202,12 +202,12 @@ TextureImporter:
       name: eyes_think
       rect:
         serializedVersion: 2
-        x: 14
+        x: 19
         y: 128
-        width: 100
-        height: 32
+        width: 91
+        height: 28
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -223,12 +223,12 @@ TextureImporter:
       name: eyes_laugh
       rect:
         serializedVersion: 2
-        x: 14
-        y: 96
-        width: 100
-        height: 32
+        x: 19
+        y: 101
+        width: 88
+        height: 27
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -244,12 +244,12 @@ TextureImporter:
       name: eyes_boss
       rect:
         serializedVersion: 2
-        x: 14
-        y: 64
-        width: 100
-        height: 32
+        x: 15
+        y: 68
+        width: 98
+        height: 33
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -262,15 +262,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Faces_6
+      name: mouth_Ok
       rect:
         serializedVersion: 2
         x: 138
         y: 230
-        width: 44
+        width: 45
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -286,12 +286,12 @@ TextureImporter:
       name: mouth_lickUp
       rect:
         serializedVersion: 2
-        x: 204
-        y: 226
-        width: 40
-        height: 26
+        x: 202
+        y: 225
+        width: 44
+        height: 29
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -308,11 +308,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 137
-        y: 193
+        y: 191
         width: 46
-        height: 30
+        height: 34
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -328,12 +328,12 @@ TextureImporter:
       name: mouth_what
       rect:
         serializedVersion: 2
-        x: 200
-        y: 168
-        width: 48
-        height: 48
+        x: 198
+        y: 166
+        width: 52
+        height: 52
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -352,9 +352,9 @@ TextureImporter:
         x: 131
         y: 160
         width: 58
-        height: 30
+        height: 31
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -371,11 +371,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 141
-        y: 102
+        y: 99
         width: 40
-        height: 56
+        height: 61
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -391,12 +391,12 @@ TextureImporter:
       name: mouth_grin
       rect:
         serializedVersion: 2
-        x: 208
-        y: 137
-        width: 36
-        height: 20
+        x: 206
+        y: 134
+        width: 40
+        height: 26
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -412,12 +412,12 @@ TextureImporter:
       name: mouth_fine
       rect:
         serializedVersion: 2
-        x: 205
+        x: 203
         y: 95
-        width: 38
-        height: 34
+        width: 42
+        height: 35
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -433,12 +433,12 @@ TextureImporter:
       name: mouth_wow
       rect:
         serializedVersion: 2
-        x: 136
-        y: 45
-        width: 48
-        height: 48
+        x: 135
+        y: 44
+        width: 51
+        height: 51
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -454,12 +454,12 @@ TextureImporter:
       name: mouth_u
       rect:
         serializedVersion: 2
-        x: 211
-        y: 68
-        width: 24
-        height: 24
+        x: 210
+        y: 66
+        width: 27
+        height: 27
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -475,12 +475,12 @@ TextureImporter:
       name: mouth_o
       rect:
         serializedVersion: 2
-        x: 146
-        y: 4
+        x: 129
+        y: 2
         width: 30
-        height: 40
+        height: 42
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -496,12 +496,12 @@ TextureImporter:
       name: mouth_smile
       rect:
         serializedVersion: 2
-        x: 204
+        x: 203
         y: 38
-        width: 40
+        width: 42
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -517,12 +517,12 @@ TextureImporter:
       name: mouth_cat
       rect:
         serializedVersion: 2
-        x: 204
+        x: 205
         y: 7
         width: 40
         height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -530,6 +530,69 @@ TextureImporter:
       bones: []
       spriteID: 69e23eba42bf24144874b7771f19cba5
       internalID: -1514489201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: eyes_vortex
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 30
+        width: 86
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f1029c48ddbdd34eb3af951669a0071
+      internalID: 1202409673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: eyes_min
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 0
+        width: 90
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f42edd53e12998147a48494a4bd64328
+      internalID: -1278585614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mouth_smirk
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 1
+        width: 37
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1595412654f39334faf167557b964cd3
+      internalID: 751957852
       vertices: []
       indices: 
       edges: []
@@ -545,13 +608,15 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Faces_6: -1287707290
       eyes: 947705905
       eyes_boss: 1942749868
       eyes_fun: 960861089
       eyes_laugh: 1887196374
       eyes_look: 433872244
+      eyes_min: -1278585614
       eyes_think: 1490263508
+      eyes_vortex: 1202409673
+      mouth_Ok: -1287707290
       mouth_cat: -1514489201
       mouth_fine: 160421308
       mouth_grin: -1272544314
@@ -561,6 +626,7 @@ TextureImporter:
       mouth_o: 56826227
       mouth_sad: 1542137499
       mouth_smile: 1546459245
+      mouth_smirk: 751957852
       mouth_u: -48559979
       mouth_what: 1045641783
       mouth_wow: -51434183
