@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ecd77e279b0969a4ab334b558caf5f3b
+guid: c249528a72caaaf4d8a6ea19eb6e059f
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -150,8 +150,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7769c9a20a522f34e824f0dabab6b827
-      internalID: 92715398
+      spriteID: e8dba5536a3968d44912838d7a997d11
+      internalID: 1129247315
       vertices: []
       indices: 
       edges: []
@@ -171,8 +171,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f5f6d04e82d58242b58116b9b915033
-      internalID: -1363300750
+      spriteID: 0dbf5e66b37b5eb4f810d7d73bc5e9b6
+      internalID: -1913300333
       vertices: []
       indices: 
       edges: []
@@ -192,8 +192,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 06971e0d8d374a849b14695b2a0b2e33
-      internalID: 1676553167
+      spriteID: 40a7b44d6ce8c7d488921bc9407ea6e2
+      internalID: 1515192286
       vertices: []
       indices: 
       edges: []
@@ -213,8 +213,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba2777747b00bb845aeec9f6a2c09135
-      internalID: 754353363
+      spriteID: 92b3fe46d28942343a214ed283cd0e98
+      internalID: 1680512519
       vertices: []
       indices: 
       edges: []
@@ -234,8 +234,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3a5ab265101cbc84e95c5b85c48755e9
-      internalID: -1708652260
+      spriteID: 4a5868792316a2e4c90c59510d7b34bd
+      internalID: -194715686
       vertices: []
       indices: 
       edges: []
@@ -255,8 +255,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ac76e5b003bec26409e90b9fbf37eb73
-      internalID: -1655392407
+      spriteID: 508fb2734acfbb348880affec91f9482
+      internalID: -2103501047
       vertices: []
       indices: 
       edges: []
@@ -276,8 +276,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b5e3c2b1e4d710346b7ccda80ceccc17
-      internalID: 279455855
+      spriteID: fb69fcafaa647ba48b2e1edf3627912b
+      internalID: 2091071802
       vertices: []
       indices: 
       edges: []
@@ -297,8 +297,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cc7222ffe17d66644bb1fff710633f7e
-      internalID: -1077306345
+      spriteID: f8ade8ddd399f014082f81505969036e
+      internalID: 267753915
       vertices: []
       indices: 
       edges: []
@@ -318,14 +318,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 876bb76b5cd8e564b830aee30f87058e
-      internalID: -1052821126
+      spriteID: 4f5473bf91fef0040a71c190a9affe37
+      internalID: -673833153
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Close
+      name: UI_Atlas_Shadow_9
       rect:
         serializedVersion: 2
         x: 128
@@ -339,14 +339,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bebf8f74c9ac28a4ebbf65dcd826c20c
-      internalID: 1521240664
+      spriteID: 6aca4d28acecd4b429b33e331495ddbe
+      internalID: -1872981937
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_ButtonCircle
+      name: UI_Atlas_Shadow_10
       rect:
         serializedVersion: 2
         x: 256
@@ -360,14 +360,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1e4b58b3262eb9f4594ccd02c29ed387
-      internalID: -1479666318
+      spriteID: 9491debf536105543ab85e0e70a780d9
+      internalID: 1261425088
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_ButtonGray
+      name: UI_Atlas_Shadow_11
       rect:
         serializedVersion: 2
         x: 384
@@ -381,38 +381,17 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 67b2a887e64324846a5455a4cfc6ea5b
-      internalID: -1671721342
+      spriteID: 9cf21079d4d72704ebfcf1b576527f69
+      internalID: -117130359
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_StarMini
+      name: UI_Atlas_Shadow_12
       rect:
         serializedVersion: 2
-        x: 64
-        y: 64
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 63630aed4e8f2be4d9bd99c8df86e581
-      internalID: -1590690114
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: UI_Atlas_13
-      rect:
-        serializedVersion: 2
-        x: 256
+        x: 0
         y: 0
         width: 128
         height: 128
@@ -423,20 +402,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 69995d6b2da39db4ca19a2a9dc503df8
-      internalID: 1517825917
+      spriteID: 74e73e92ce2a5cb48ba414e4a873f27a
+      internalID: 1357338397
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_CoinMini
+      name: UI_Atlas_Shadow_13
       rect:
         serializedVersion: 2
-        x: 0
-        y: 64
-        width: 64
-        height: 64
+        x: 128
+        y: 0
+        width: 128
+        height: 128
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -444,8 +423,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4bb4ec475d57b044a812924f23eea561
-      internalID: 343134329
+      spriteID: 00a041bf14ad9fc4eaf32fc654368112
+      internalID: 1929429954
       vertices: []
       indices: 
       edges: []
@@ -461,21 +440,20 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      UI_Atlas_13: 1517825917
-      UI_Back: 1676553167
-      UI_Ball: -1077306345
-      UI_BoomX1: -1655392407
-      UI_BoomX3: -1708652260
-      UI_ButtonCircle: -1479666318
-      UI_ButtonGray: -1671721342
-      UI_Close: 1521240664
-      UI_Coin: 92715398
-      UI_CoinMini: 343134329
-      UI_Flip: 754353363
-      UI_Rocket: -1052821126
-      UI_Settings: 279455855
-      UI_StarMini: -1590690114
-      UI_Wood: -1363300750
+      UI_Atlas_Shadow_10: 1261425088
+      UI_Atlas_Shadow_11: -117130359
+      UI_Atlas_Shadow_12: 1357338397
+      UI_Atlas_Shadow_13: 1929429954
+      UI_Atlas_Shadow_9: -1872981937
+      UI_Back: 1515192286
+      UI_Ball: 267753915
+      UI_BoomX1: -2103501047
+      UI_BoomX3: -194715686
+      UI_Coin: 1129247315
+      UI_Flip: 1680512519
+      UI_Rocket: -673833153
+      UI_Settings: 2091071802
+      UI_Wood: -1913300333
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
