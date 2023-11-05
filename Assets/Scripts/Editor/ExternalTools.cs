@@ -30,13 +30,7 @@ namespace Assets.Scripts.Editor
         [MenuItem("Tools/LocalizationDocument")]
         static void OpenLocalizationDocument()
         {
-            Application.OpenURL("https://docs.google.com/spreadsheets/d/1ksUJL61j-cxS012db2iDCuUL8wCNag_zlErZWZ7Ht38");
-        }
-        //-----------------------------------------------------------------------------------------
-        [MenuItem("Tools/MainDocument")]
-        static void OpenMainDocument()
-        {
-            Application.OpenURL("https://docs.google.com/spreadsheets/d/1SmEM07-HbXDgiOC8ZZHSquyO7gtQ23y8oNszo5C-Dm0");
+            Application.OpenURL("https://docs.google.com/spreadsheets/d/1HeijNQUpz-onfxxlpW31VoTrGMjNryskL7ta-CAaiXA");
         }
         //-----------------------------------------------------------------------------------------
         [MenuItem("Tools/Assembly")]
