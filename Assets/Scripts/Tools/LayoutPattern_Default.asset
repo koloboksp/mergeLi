@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dc22c7a4b795c3428d51ae91742a713, type: 3}
+  m_Name: LayoutPattern_Default
+  m_EditorClassIdentifier: 
+  font: {fileID: 12800000, guid: f61221e3bbd783e4fb2255fde51f1ebb, type: 3}
+  panelImg: {fileID: 21300000, guid: 580a9ac604c9a1c47a79ee944c291867, type: 3}
+  buttonImg: {fileID: 21300000, guid: c9ea0b6040255844aad0be0cb8b1d3cc, type: 3}
+  titleTextSize: 80
+  buttonTextSize: 60
+  textColor: {r: 1, g: 1, b: 1, a: 1}
+  textOutlineSize: 4
+  textOutlineColor: {r: 0, g: 0, b: 0, a: 0.5019608}
+  panelPadding: 60
+  titleHeight: 180
+  buttonSize: {x: 500, y: 160}
