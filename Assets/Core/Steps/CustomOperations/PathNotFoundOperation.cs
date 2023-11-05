@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -19,7 +21,7 @@ namespace Core.Steps.CustomOperations
             _field = field;
         }
 
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var balls = _field.GetSomething<Ball>(_startPosition).ToList();
             if (balls.Count > 0)
@@ -29,8 +31,8 @@ namespace Core.Steps.CustomOperations
             var noPathEffect = Object.Instantiate(_noPathEffect, position, Quaternion.identity, _field.View.Root);
             noPathEffect.AdjustSize(_field.CellSize());
             noPathEffect.Run();
-            
-            Complete(null);
+
+            return null;
         }
     }
 }

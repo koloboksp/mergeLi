@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 public interface IFieldMergeable
 {
-    void StartMerge(IEnumerable<IFieldMergeable> others, Action<IFieldMergeable> onMergeComplete);
+    Task<bool> MergeAsync(IEnumerable<IFieldMergeable> others, CancellationToken cancellationToken);
 }

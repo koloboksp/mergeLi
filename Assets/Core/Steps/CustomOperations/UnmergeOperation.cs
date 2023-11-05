@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -19,14 +21,14 @@ namespace Core.Steps.CustomOperations
             _field = field;
         }
     
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var foundBalls = _field.GetSomething<Ball>(_position).ToList();
             _field.DestroyBalls(foundBalls);
             for (int ballI = 0; ballI < _mergeablesNum; ballI++)
                 _field.CreateBall(_position, _points);
-            
-            Complete(null);
+
+            return null;
         }
     }
 }

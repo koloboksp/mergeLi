@@ -1,4 +1,7 @@
-﻿namespace Core.Steps.CustomOperations
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Core.Steps.CustomOperations
 {
     public class UndoOperation : Operation
     {
@@ -9,10 +12,10 @@
             _stepMachine = stepMachine;
         }
         
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             _stepMachine.Undo();
-            Complete(null);
+            return null;
         }
 
         public override Operation GetInverseOperation()

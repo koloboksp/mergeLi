@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -14,12 +16,12 @@ namespace Core.Steps.CustomOperations
             _field = field;
         }
         
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             foreach (var ballToAdd in _ballsToAdd)
                 _field.CreateBall(ballToAdd.index, ballToAdd.points);
-            
-            Complete(null);
+
+            return null;
         }
     }
 }

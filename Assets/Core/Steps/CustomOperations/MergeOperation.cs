@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -17,7 +19,7 @@ namespace Core.Steps.CustomOperations
             _field = field;
         }
     
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var meargeables = _field.GetSomething<IFieldMergeable>(_position).ToList();
             var targetMergeable = meargeables[0];
@@ -34,14 +36,11 @@ namespace Core.Steps.CustomOperations
                 MergeablesCount = _mergeablesCount,
             });
             
-            targetMergeable.StartMerge(otherMergeables, OnMergeComplete);
-        }
-    
-        private void OnMergeComplete(IFieldMergeable sender)
-        {
-            Complete(null);
-        }
+            await targetMergeable.MergeAsync(otherMergeables, cancellationToken);
 
+            return null;
+        }
+        
         public override Operation GetInverseOperation()
         {
             return new UnmergeOperation(_position, _pointsBeforeMerge, _mergeablesCount, _field);

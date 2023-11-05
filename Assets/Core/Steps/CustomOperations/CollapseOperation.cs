@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Core.Effects;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -44,7 +46,7 @@ namespace Core.Steps.CustomOperations
             _destroyBallEffectPrefab = destroyBallEffectPrefab;
         }
     
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             List<Vector3Int> checkingPositions = new List<Vector3Int>();
         
@@ -119,7 +121,8 @@ namespace Core.Steps.CustomOperations
 
             if(_pointsAdded != 0)
                 _pointsChangeListener.AddPoints(_pointsAdded);
-            Complete(null); 
+
+            return null;
         }
 
         public override Operation GetInverseOperation()

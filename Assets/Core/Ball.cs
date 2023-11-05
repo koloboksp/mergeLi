@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core
@@ -44,7 +46,7 @@ namespace Core
         }
 
        
-        public IEnumerator InnerMove(Vector3Int to, Action<bool> onComplete)
+        public async Task InnerMove(Vector3Int to, CancellationToken cancellationToken)
         {
             var path = _field.GetPath(new Vector3Int((int)_gridPosition.x, (int)_gridPosition.y), to);
             var pathFound = path.Count > 0;
@@ -64,11 +66,13 @@ namespace Core
             
                     while (timer <= moveTime)
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        
                         timer += Time.deltaTime;
                         var newPosition = (startP + Vector3.Lerp(Vector3.zero, pathVec, timer / moveTime));
                         UpdateGridPosition(newPosition);
-                
-                        yield return null;
+
+                        await Task.Yield();
                     }
                     timer -= moveTime;
                 }
@@ -77,29 +81,19 @@ namespace Core
                 _moving = false;
                 OnMovingStateChanged?.Invoke();
             }
-        
-            onComplete?.Invoke(pathFound);
         }
-    
-        public IEnumerator InnerMerge(IEnumerable<IFieldMergeable> others, Action onComplete)
+
+        private async Task InnerMerge(IEnumerable<IFieldMergeable> others, CancellationToken cancellationToken)
         {
             var newPoints = _points;
             foreach (var other in others)
-            {
                 if (other is IBall otherBall)
-                {
                     newPoints += otherBall.Points;
-                }
-            }
                 
             UpdatePoints(newPoints);
             
             foreach (var other in others)
                 _field.DestroySomething(other as Ball);
-
-            yield return null;
-            
-            onComplete?.Invoke();
         }
 
         public bool CanGrade(int level)
@@ -125,9 +119,8 @@ namespace Core
             return true;
         }
         
-        public IEnumerator InnerGrade(int level, Action onComplete)
+        public async Task InnerGrade(int level, CancellationToken cancellationToken)
         {
-           
             var newPoints = _points;
             var currentLevel = 0;
             while (currentLevel < Math.Abs(level))
@@ -141,10 +134,6 @@ namespace Core
             }
          
             UpdatePoints(newPoints);
-            
-            yield return null;
-            
-            onComplete?.Invoke();
         }
 
         public void SetData(Field field, Vector3 startPosition, int points)
@@ -161,34 +150,22 @@ namespace Core
             transform.localPosition = _field.GetPositionFromGrid(_gridPosition);
         }
 
-        public void StartMove(Vector3Int endPosition, Action<IFieldMovable, bool> onMovingComplete)
+        public async Task StartMove(Vector3Int endPosition, CancellationToken cancellationToken)
         {
-            StartCoroutine(InnerMove(endPosition, OnComplete));
-
-            void OnComplete(bool pathFound)
-            {
-                onMovingComplete?.Invoke(this, pathFound);
-            }
+            await InnerMove(endPosition, cancellationToken);
         }
     
-        public void StartMerge(IEnumerable<IFieldMergeable> others, Action<IFieldMergeable> onMergeComplete)
+        public async Task<bool> MergeAsync(IEnumerable<IFieldMergeable> others, CancellationToken cancellationToken)
         {
-            StartCoroutine(InnerMerge(others, OnComplete));
+            await InnerMerge(others, cancellationToken);
 
-            void OnComplete()
-            {
-                onMergeComplete?.Invoke(this);
-            }
+            return true;
         }
         
-        public void StartGrade(int level, Action<Ball> onGradeComplete)
+        public async Task<Ball> StartGrade(int level, CancellationToken cancellationToken)
         {
-            StartCoroutine(InnerGrade(level, OnComplete));
-
-            void OnComplete()
-            {
-                onGradeComplete?.Invoke(this);
-            }
+            await InnerGrade(level, cancellationToken);
+            return this;
         }
         
         public int GetColorIndex()

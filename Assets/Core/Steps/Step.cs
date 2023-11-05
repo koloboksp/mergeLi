@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Core.Steps
 {
@@ -29,51 +31,33 @@ namespace Core.Steps
 
         public void AddOperations(IEnumerable<Operation> operations)
         {
-            if (operations != null)
-                foreach (var operation in operations)
-                    if(operation != null)
-                        _operations.Add(operation);
-            
-            _operations.ForEach(i => i.Owner = this);
+            if (operations == null) 
+                return;
+
+            foreach (var operation in operations)
+            {
+                if (operation == null) 
+                    continue;
+                
+                _operations.Add(operation);
+                operation.Owner = this;
+            }
         }
         
-        public void Execute()
+        public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            if(_launched) return;
-
             _launched = true;
 
-            RunNext();
-        }
+            for (var oI = 0; oI < _operations.Count; oI++)
+            {
+                var operation = _operations[oI];
+                await operation.ExecuteAsync(cancellationToken);
+            }
 
-        private void RunNext()
-        {
-            if (_executeOperationIndex < _operations.Count)
-            {
-                var operation = _operations[_executeOperationIndex];
-                if (!operation.Launched)
-                {
-                    operation.OnComplete += Operation_OnCompleted;
-                    operation.Execute();
-                }
-            }
-        }
-    
-        void Operation_OnCompleted(Operation sender, object data)
-        {
-            sender.OnComplete -= Operation_OnCompleted;
-            _executeOperationIndex += 1;
+            _launched = false;
+            _completed = true;
             
-            if (_executeOperationIndex == _operations.Count)
-            {
-                _launched = false;
-                _completed = true;
-                OnComplete?.Invoke(this);
-            }
-            else
-            {
-                RunNext();
-            }
+            OnComplete?.Invoke(this);
         }
 
         public void SetData(object value)

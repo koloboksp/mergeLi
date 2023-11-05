@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Core.Steps
 {
@@ -7,34 +9,18 @@ namespace Core.Steps
         public event Action<Operation, object> OnComplete;
 
         internal Step Owner { get; set; }
-    
-        private bool _completed = false;
-        private bool _launched = false;
-
-        public bool Completed => _completed;
-        public bool Launched => _launched;
-
-        public void Execute()
-        {
-            if(_launched) return;
-
-            _launched = true;
         
-            InnerExecute();
-        }
-
-        protected virtual void InnerExecute()
+        public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-        }
-
-        protected void Complete(object result)
-        {
-            _launched = false;
-            _completed = true;
-        
+            var result = await InnerExecuteAsync(cancellationToken);
             OnComplete?.Invoke(this, result);
         }
 
+        protected virtual async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
+        {
+            return null;
+        }
+        
         public Operation SubscribeCompleted(Action<Operation, object> action)
         {
             OnComplete += action;

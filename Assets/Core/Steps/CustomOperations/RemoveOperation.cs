@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Core.Effects;
 using UnityEngine;
 
@@ -23,7 +25,7 @@ namespace Core.Steps.CustomOperations
             _field = field;
         }
         
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var foundBalls = _indexes
                 .SelectMany(i => _field.GetSomething<Ball>(i))
@@ -47,7 +49,7 @@ namespace Core.Steps.CustomOperations
                 _field.DestroyBalls(foundBalls);
             }
 
-            Complete(null);
+            return null;
         }
 
         public override Operation GetInverseOperation()

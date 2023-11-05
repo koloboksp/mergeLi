@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps
@@ -12,10 +14,59 @@ namespace Core.Steps
 
         private readonly List<(Step step, StepExecutionType executionType)> _steps = new ();
         private readonly List<Step> _undoSteps = new ();
+        private CancellationTokenSource _cancellationTokenSource;
 
-        public StepMachine()
+        public void Awake()
         {
-       
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+
+        public void OnDestroy()
+        {
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
+        }
+
+        public async void Start()
+        {
+            await ProcessSteps(_cancellationTokenSource.Token);
+        }
+
+        private async Task ProcessSteps(CancellationToken cancellationToken)
+        {
+            try
+            {
+                while (true)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    if (_steps.Count > 0)
+                    {
+                        var stepInfo = _steps[0];
+                        _steps.RemoveAt(0);
+
+                        OnBeforeStepStarted?.Invoke(stepInfo.step, stepInfo.executionType);
+                        await stepInfo.step.ExecuteAsync(cancellationToken);
+                        OnStepCompleted?.Invoke(stepInfo.step, stepInfo.executionType);
+                    }
+                    else
+                    {
+                        await Task.Yield();
+                    }
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                Debug.Log(e);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
 
         public void AddStep(Step step)
@@ -26,35 +77,6 @@ namespace Core.Steps
         public void AddUndoStep(Step step)
         {
             _undoSteps.Add(step);
-        }
-
-        public void Update()
-        {
-            if (_steps.Count > 0)
-            {
-                var step = _steps[0];
-                
-                if (!step.step.Launched)
-                {
-                    OnBeforeStepStarted?.Invoke(step.step, step.executionType);
-
-                    step.step.OnComplete += Step_OnCompleted;
-                    step.step.Execute();
-                }
-            }
-        }
-    
-        void Step_OnCompleted(Step sender)
-        {
-            var foundI = _steps.FindIndex(i => i.step == sender);
-            if (foundI >= 0)
-            {
-                var step = _steps[foundI];
-                step.step.OnComplete -= Step_OnCompleted;
-                _steps.RemoveAt(foundI);
-            
-                OnStepCompleted?.Invoke(step.step, step.executionType);
-            }   
         }
 
         public void Undo()

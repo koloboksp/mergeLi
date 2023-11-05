@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -20,7 +22,7 @@ namespace Core.Steps.CustomOperations
             _pointsChangeListener = pointsChangeListener;
         }
 
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var uniqueBalls = new List<(Vector3Int intPosition, int points)>();
             foreach (var uncollapseBallsLine in _uncollapseBallsLines)
@@ -35,8 +37,8 @@ namespace Core.Steps.CustomOperations
                 _field.CreateBall(uniqueBall.intPosition, uniqueBall.points);
 
             _pointsChangeListener.RemovePoints(_pointsToRemove);
-            
-            Complete(null);
+
+            return null;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Core.Steps.CustomOperations
 {
@@ -14,9 +16,9 @@ namespace Core.Steps.CustomOperations
                 _onFail.AddRange(onFail);
         }
 
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
-            base.InnerExecute();
+            base.InnerExecuteAsync(cancellationToken);
 
             var collapseOperationData = Owner.GetData<CollapseOperationData>();
             if (collapseOperationData.CollapseLines.Count > 0)
@@ -24,7 +26,7 @@ namespace Core.Steps.CustomOperations
             else
                 Owner.AddOperations(_onFail);
 
-            Complete(null);
+            return null;
         }
 
         public override Operation GetInverseOperation()

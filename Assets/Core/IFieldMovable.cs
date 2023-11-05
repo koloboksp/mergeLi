@@ -1,7 +1,9 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public interface IFieldMovable
 {
-    void StartMove(Vector3Int endPosition, Action<IFieldMovable, bool> onMovingComplete);
+    Task StartMove(Vector3Int endPosition, CancellationToken cancellationToken);
 }

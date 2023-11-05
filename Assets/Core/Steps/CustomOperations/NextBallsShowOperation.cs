@@ -1,4 +1,7 @@
-﻿namespace Core.Steps.CustomOperations
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace Core.Steps.CustomOperations
 {
     public class NextBallsShowOperation : Operation
     {
@@ -11,14 +14,14 @@
             _ballsShower = ballsShower;
         }
         
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             if(_show)
                 _ballsShower.Show();
             else
                 _ballsShower.Hide();
-            
-            Complete(null);
+
+            return null;
         }
 
         public override Operation GetInverseOperation()

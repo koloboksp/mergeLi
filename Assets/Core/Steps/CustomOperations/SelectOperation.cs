@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -15,13 +17,13 @@ namespace Core.Steps.CustomOperations
             _field = field;
         }
 
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var selectables = _field.GetSomething<IFieldSelectable>(_position).ToList();
             var firstSelectable = selectables[0];
             firstSelectable.Select(_selectState);
 
-            Complete(firstSelectable);   
+            return firstSelectable;   
         }
     }
 }

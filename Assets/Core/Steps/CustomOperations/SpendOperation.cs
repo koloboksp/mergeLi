@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -17,10 +19,10 @@ namespace Core.Steps.CustomOperations
             _undoAvailable = undoAvailable;
         }
         
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             _gameProcessor.ConsumeCoins(_amount);
-            Complete(null);
+            return null;
         }
 
         public override Operation GetInverseOperation()

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -18,16 +20,13 @@ namespace Core.Steps.CustomOperations
             _field = field;
         }
         
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var foundBalls = _indexes.SelectMany(i => _field.GetSomething<Ball>(i)).ToList();
             foreach (var foundBall in foundBalls)
-                foundBall.StartGrade(_level, OnGradeComplete);
-        }
+                await foundBall.StartGrade(_level, cancellationToken);
 
-        private void OnGradeComplete(Ball sender)
-        {
-            Complete(null);
+            return null;
         }
         
         public override Operation GetInverseOperation()

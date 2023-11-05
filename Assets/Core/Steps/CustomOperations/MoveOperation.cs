@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -17,16 +19,13 @@ namespace Core.Steps.CustomOperations
             _field = field;
         }
 
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var movable = _field.GetSomething<IFieldMovable>(_startPosition).ToList();
             var firstMovable = movable[0];
-            firstMovable.StartMove(_endPosition, OnMovingComplete);
-        }
+            await firstMovable.StartMove(_endPosition, cancellationToken);
 
-        private void OnMovingComplete(IFieldMovable sender, bool pathFound)
-        {
-            Complete(null);
+            return null;
         }
 
         public override Operation GetInverseOperation()

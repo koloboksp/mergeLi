@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Core.Steps.CustomOperations
@@ -22,7 +24,7 @@ namespace Core.Steps.CustomOperations
             _field = field;
         }
     
-        protected override void InnerExecute()
+        protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             _generatedItems.AddRange(_field.GenerateBalls(_amount, _availableValues));
             _field.GenerateNextBallPositions(_maxAmount, _availableValues);
@@ -32,7 +34,7 @@ namespace Core.Steps.CustomOperations
                 NewBallsData = _generatedItems
             });
 
-            Complete(null);
+            return null;
         }
 
         public override Operation GetInverseOperation()
