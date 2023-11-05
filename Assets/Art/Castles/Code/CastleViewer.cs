@@ -296,7 +296,7 @@ public class CastleViewer : MonoBehaviour
             effect.transform.position = target.position;
             effect.Run(0.0f);
 
-            await ApplicationController.WaitForSecondsAsync(effect.Duration, cancellationToken);
+            await AsyncExtensions.WaitForSecondsAsync(effect.Duration, cancellationToken);
         }
 
     }

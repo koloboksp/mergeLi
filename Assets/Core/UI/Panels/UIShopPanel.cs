@@ -119,7 +119,7 @@ namespace Core
             var item = _items.Find(i => i.Model == sender);
             
             await _data.GameProcessor.GiveCoinsEffect.Show(coinsAmount, item.Root, cancellationToken);
-            await ApplicationController.WaitForSecondsAsync(2.0f, _cancellationTokenSource.Token);
+            await AsyncExtensions.WaitForSecondsAsync(2.0f, _cancellationTokenSource.Token);
             LockInput(false);
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }

@@ -11,6 +11,7 @@ namespace Core
         IMediationManager _manager;
         bool _showing;
         bool _errorsOnShowing;
+        private float _waitTime = 3.0f;
         
         public async Task InitializeAsync()
         {
@@ -71,31 +72,40 @@ namespace Core
             };
         }
 
-        private bool IsReadyToShow()
+        private bool IsReadyToShow(AdType advertisingType)
         {
-            return _manager != null && _manager.IsReadyAd(AdType.Interstitial);
+            return _manager != null && _manager.IsReadyAd(advertisingType);
         }
 
         public async Task<bool> Show(AdvertisingType advertisingType, CancellationToken cancellationToken)
         {
-            if (!IsReadyToShow())
-                await Task.CompletedTask;
-
-            _showing = true;
-            _errorsOnShowing = false;
-
             var adType = advertisingType switch
             {
                 AdvertisingType.Interstitial => AdType.Interstitial,
                 AdvertisingType.Rewarded => AdType.Rewarded,
                 _ => AdType.None
             };
+
+            var waitForTimeout = AsyncExtensions.WaitForSecondsAsync(_waitTime, cancellationToken);
+            var waitForAdLoading = AsyncExtensions.WaitForConditionAsync(() => !IsReadyToShow(adType), cancellationToken);
+            await Task.WhenAny(
+                waitForTimeout,
+                waitForAdLoading);
+
+            if (waitForTimeout.IsCompleted)
+                return false;
+            
+            _showing = true;
+            _errorsOnShowing = false;
             
             _manager.ShowAd(adType);
 
             while (_showing)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
                 await Task.Yield();
-
+            }
+            
             return !_errorsOnShowing;
         }
     }

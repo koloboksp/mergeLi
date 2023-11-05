@@ -38,12 +38,12 @@ namespace Core.Effects
         {
             try
             {
-                await ApplicationController.WaitForSecondsAsync(delay, cancellationToken);
+                await AsyncExtensions.WaitForSecondsAsync(delay, cancellationToken);
 
                 var variantInstance = Instantiate(variant, transform);
                 variantInstance.Run();
 
-                await ApplicationController.WaitForSecondsAsync(_duration, cancellationToken);
+                await AsyncExtensions.WaitForSecondsAsync(_duration, cancellationToken);
 
                 Destroy(gameObject);
             }

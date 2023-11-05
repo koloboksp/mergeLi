@@ -10,7 +10,7 @@ namespace Core.Tutorials
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
             if (_wait > 0)
-                await ApplicationController.WaitForSecondsAsync(_wait, cancellationToken);
+                await AsyncExtensions.WaitForSecondsAsync(_wait, cancellationToken);
             return true;
         }
     }

@@ -34,9 +34,9 @@ namespace Core.Effects
 
         private async Task StartEffectAsync(float delay, CancellationToken cancellationToken)
         {
-            await ApplicationController.WaitForSecondsAsync(delay, cancellationToken);
+            await AsyncExtensions.WaitForSecondsAsync(delay, cancellationToken);
             _effectRoot.SetActive(true);
-            await ApplicationController.WaitForSecondsAsync(_duration, cancellationToken);
+            await AsyncExtensions.WaitForSecondsAsync(_duration, cancellationToken);
             
             Destroy(gameObject);
         }

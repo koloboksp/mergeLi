@@ -64,7 +64,7 @@ namespace Core.Effects
             CancellationToken cancellationToken)
         {
 
-            await ApplicationController.WaitForSecondsAsync(delay, cancellationToken);
+            await AsyncExtensions.WaitForSecondsAsync(delay, cancellationToken);
             var coin = Instantiate(_coinPrefab, transform);
 
             var timer = 0.0f;

@@ -13,7 +13,7 @@ namespace Assets.Scripts.Core
 		public async void Start()
 		{
             Logo.Play(LogoClip.name);
-			var taskLogo = ApplicationController.WaitForSecondsAsync(Logo.clip.length, CancellationToken.None);
+			var taskLogo = AsyncExtensions.WaitForSecondsAsync(Logo.clip.length, CancellationToken.None);
 			var taskInitialization = ApplicationController.StartAsync();
 
             await Task.WhenAll(taskLogo, taskInitialization);
