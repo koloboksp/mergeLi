@@ -114,6 +114,8 @@ namespace Core
                 {
                     if(newPoints > 1)
                         newPoints /= 2;
+                    else if (newPoints == 1)
+                        newPoints = 0;
                     else
                         return false;
                 }
