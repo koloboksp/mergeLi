@@ -99,6 +99,9 @@ public class BlobFace : MonoBehaviour
 
     public static void Hide()
     {
+        if (s_instance == null)
+            return;
+
         s_instance.transform.SetParent(null);
         s_instance.gameObject.SetActive(false);
     }
