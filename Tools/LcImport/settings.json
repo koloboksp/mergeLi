@@ -1,0 +1,16 @@
+{
+  "Id": "1ksUJL61j-cxS012db2iDCuUL8wCNag_zlErZWZ7Ht38",
+  "UId": "A2:A300",
+  "Languages": {
+    "Ru": "B2:B300",
+    "En": "C2:C300",
+	"Zh": "E2:E300",
+	"Es": "F2:F300",
+	"Ge": "G2:G300",
+	"Fr": "H2:H300",
+	"It": "I2:I300",
+	"Pt": "J2:J300",
+	"Uk": "K2:K300",
+  },
+  "Output": "..\\..\\Assets\\Localization\\"
+}
