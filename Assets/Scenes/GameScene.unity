@@ -1723,7 +1723,7 @@ MonoBehaviour:
   _generatedBallsCountAfterMerge: 2
   _generatedBallsCountAfterMove: 3
   _generatedBallsCountOnStart: 5
-  _generatedBallsPointsRange: {x: 0, y: 7}
+  _generatedBallsPointsRange: 0000000001000000020000000400000008000000100000002000000040000000
   _uiScreensRoot: {fileID: 1881252459}
   _buffs:
   - {fileID: 502298966}
@@ -1737,7 +1737,7 @@ MonoBehaviour:
     type: 3}
   _castleSelector: {fileID: 391481347}
   _giveCoinsEffect: {fileID: 1636435618}
-  _enableTutorial: 1
+  _enableTutorial: 0
   _forceTutorial: 0
   _tutorialController: {fileID: 2121425916}
   _uiFxLayer: {fileID: 143379532}

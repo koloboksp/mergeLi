@@ -111,9 +111,9 @@ public class Field : MonoBehaviour, IField
         return CalculatePath(from, to);
     }
 
-    public List<(Vector3Int intPosition, int points)> GenerateBalls(int num, Vector2Int valueRange)
+    public List<(Vector3Int intPosition, int points)> GenerateBalls(int num, List<int> availableValues)
     {
-        return AddBalls(num, valueRange);
+        return AddBalls(num, availableValues);
     }
 
     public Vector3Int CreateBall(Vector3Int position, int points)
@@ -135,7 +135,7 @@ public class Field : MonoBehaviour, IField
         return newBall;
     }
     
-    public void GenerateNextBallPositions(int count, Vector2Int valueRange)
+    public void GenerateNextBallPositions(int count, List<int> availableValues)
     {
         var freeIndexes = new List<Vector3Int>();
         for (int x = 0; x < _size.x; x++)
@@ -151,7 +151,7 @@ public class Field : MonoBehaviour, IField
             var randomElementIndex = Random.Range(0, freeIndexes.Count);
             var freeIndex = freeIndexes[randomElementIndex];
             freeIndexes.RemoveAt(randomElementIndex);
-            _nextBallsData.Add((freeIndex, (int)Mathf.Pow(2, Random.Range(valueRange.x, valueRange.y))));
+            _nextBallsData.Add((freeIndex, availableValues[Random.Range(0, availableValues.Count - 1)]));
         }
     }
 
@@ -167,13 +167,13 @@ public class Field : MonoBehaviour, IField
         return _cellSize;
     }
 
-    public List<(Vector3Int intPosition, int points)> AddBalls(int amount, Vector2Int valueRange)
+    public List<(Vector3Int intPosition, int points)> AddBalls(int amount, List<int> availableValues)
     {
         foreach (var ball in _balls)
             _nextBallsData.RemoveAll(i => i.intPosition == ball.IntGridPosition);
 
         if (_nextBallsData.Count < amount)
-            GenerateNextBallPositions(amount - _nextBallsData.Count, valueRange);
+            GenerateNextBallPositions(amount - _nextBallsData.Count, availableValues);
         else
         {
             if (_nextBallsData.Count > amount)

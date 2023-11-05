@@ -9,23 +9,23 @@ namespace Core.Steps.CustomOperations
         private readonly Vector3Int _position;
         private readonly int _amount;
         private readonly int _maxAmount;
-        private readonly Vector2Int _pointsRange;
+        private readonly List<int> _availableValues;
         private readonly IField _field;
 
         private readonly List<(Vector3Int position, int points)> _generatedItems = new();
         
-        public GenerateOperation(int amount, int maxAmount, Vector2Int pointsRange, IField field)
+        public GenerateOperation(int amount, int maxAmount, List<int> availableValues, IField field)
         {
             _amount = amount;
             _maxAmount = maxAmount;
-            _pointsRange = pointsRange;
+            _availableValues = availableValues;
             _field = field;
         }
     
         protected override void InnerExecute()
         {
-            _generatedItems.AddRange(_field.GenerateBalls(_amount, _pointsRange));
-            _field.GenerateNextBallPositions(_maxAmount, _pointsRange);
+            _generatedItems.AddRange(_field.GenerateBalls(_amount, _availableValues));
+            _field.GenerateNextBallPositions(_maxAmount, _availableValues);
             Owner.SetData(new GenerateOperationData()
             {
                 RequiredAmount = _amount,

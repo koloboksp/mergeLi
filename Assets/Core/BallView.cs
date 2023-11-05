@@ -1,21 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 
 namespace Core
 {
-    public interface ISubComponent
+    [Serializable]
+    public class ColorToPointsAssociation
     {
-        void SetData();
+        [SerializeField] private int _points;
+        [SerializeField] private Color _color;
+
+        public int Points => _points;
+        public Color Color => _color;
     }
+    
     public class BallView : MonoBehaviour, ISkinChangeable, ISubComponent
     {
         [SerializeField] private Ball _ball;
         [SerializeField] private RectTransform _root;
-        [SerializeField] private List<Color> _colors;
-        
-        BallSkin _ballSkin;
+        [SerializeField] private List<ColorToPointsAssociation> _colorsAssociations;
+      
+        private BallSkin _ballSkin;
+        private Color _mainColor = Color.magenta;
         
         public RectTransform Root => _root;
         
@@ -60,7 +68,10 @@ namespace Core
         private void Ball_OnPointsChanged(int oldPoints)
         {
             _ballSkin.Points = _ball.Points;
-            _ballSkin.MainColor = _colors[Ball.GetColorIndex(_ball.Points, _colors.Count)];
+            var foundAssociation = _colorsAssociations.Find(i => i.Points == _ball.Points);
+            if (foundAssociation != null)
+                _mainColor = foundAssociation.Color;
+            _ballSkin.MainColor = _mainColor;
         }
         
         private void Ball_TransparencyChanged()
@@ -73,6 +84,6 @@ namespace Core
             _ballSkin.PathNotFount();
         }
 
-        public Color MainColor => _colors[Ball.GetColorIndex(_ball.Points, _colors.Count)];
+        public Color MainColor => _mainColor;
     }
 }
