@@ -12,4 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba8a0ddb363438d8f0840501781eb2a, type: 3}
   m_Name: LocalizationData
   m_EditorClassIdentifier: 
-  Packs: []
+  Packs:
+  - Language: 10
+    NativeName: En
+    NativeFlag: {fileID: 0}
+    Asset: {fileID: 4900000, guid: 8e3f6465de69f454a96ce4916070ce5c, type: 3}
+  - Language: 29
+    NativeName: Ru
+    NativeFlag: {fileID: 0}
+    Asset: {fileID: 4900000, guid: b18d61b00e83c75419e85ca7bfd6ed16, type: 3}

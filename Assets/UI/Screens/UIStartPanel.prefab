@@ -81,7 +81,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text not found(00000000000000000000000000000000)
+  m_Text: Text not found(9d7ebf21aa004f4ab4c930232bbedfba)
 --- !u!114 &1670727018394523039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,10 +111,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 6812060707083140057}
   Id:
-    m03: 0
-    m47: 0
-    m8B: 0
-    mCF: 0
+    m03: 2642329377
+    m47: 2852147018
+    m8B: 3033083939
+    mCF: 733929402
 --- !u!1 &1148831543110891831
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 6288314825971098650}
   - component: {fileID: 7475183959469569645}
   - component: {fileID: 5043742413441773841}
+  - component: {fileID: 6726426280778313877}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -211,6 +212,24 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_EffectDistance: {x: 4, y: 4}
   m_UseGraphicAlpha: 1
+--- !u!114 &6726426280778313877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148831543110891831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3af2499ac920dc48a31c82df90c9b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 8011299393155038838}
+  Id:
+    m03: 1304829585
+    m47: 3094171504
+    m8B: 2841713437
+    mCF: 3432438472
 --- !u!1 &2305112124653678651
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,6 +639,7 @@ GameObject:
   - component: {fileID: 230949151569009772}
   - component: {fileID: 8011299393155038838}
   - component: {fileID: 6970357591874172252}
+  - component: {fileID: 8778293619440736691}
   m_Layer: 5
   m_Name: Text (Legacy)
   m_TagString: Untagged
@@ -688,7 +708,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Continue
+  m_Text: Text not found(480f3db092c54b358cadb4a94be75a9b)
 --- !u!114 &6970357591874172252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -704,6 +724,24 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_EffectDistance: {x: 4, y: 4}
   m_UseGraphicAlpha: 1
+--- !u!114 &8778293619440736691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5634653316354855655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3af2499ac920dc48a31c82df90c9b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 8011299393155038838}
+  Id:
+    m03: 1208958384
+    m47: 2462403381
+    m8B: 2360194217
+    mCF: 1273453211
 --- !u!1 &6648643207531539889
 GameObject:
   m_ObjectHideFlags: 0
