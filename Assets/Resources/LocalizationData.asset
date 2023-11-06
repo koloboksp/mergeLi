@@ -15,9 +15,9 @@ MonoBehaviour:
   Packs:
   - Language: 10
     NativeName: En
-    NativeFlag: {fileID: 0}
+    NativeFlag: {fileID: 21300000, guid: 8080000a5d265f849b201ba213f27758, type: 3}
     Asset: {fileID: 4900000, guid: 8e3f6465de69f454a96ce4916070ce5c, type: 3}
   - Language: 29
     NativeName: Ru
-    NativeFlag: {fileID: 0}
+    NativeFlag: {fileID: 21300000, guid: 1e8656a5e2fc4ed4fbfb941a3b6d7bd4, type: 3}
     Asset: {fileID: 4900000, guid: b18d61b00e83c75419e85ca7bfd6ed16, type: 3}
