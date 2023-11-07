@@ -38,7 +38,10 @@ public class BallAnimator : MonoBehaviour
             { DefaultBallSkin.BallState.Idle, idle },
             { DefaultBallSkin.BallState.Select, select },
             { DefaultBallSkin.BallState.Move, move },
-            { DefaultBallSkin.BallState.PathNotFound, move }
+            { DefaultBallSkin.BallState.PathNotFound, move },
+            { DefaultBallSkin.BallState.Upgrade, select },
+            { DefaultBallSkin.BallState.Downgrade, select }
+            
         };
 
         anim[idle.name].normalizedTime = Random.Range(0, 1f);

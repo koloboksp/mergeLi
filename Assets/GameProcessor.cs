@@ -413,10 +413,10 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     private void MergeStep(Vector3Int from, Vector3Int to)
     {
         _stepMachine.AddStep(new Step(StepTag.Merge,
+            new SelectOperation(from, false, _field)
+                .SubscribeCompleted(OnDeselectBall),
             new MoveOperation(from, to, _field),
             new MergeOperation(to, _field),
-            new SelectOperation(to, false, _field)
-                .SubscribeCompleted(OnDeselectBall),
             new CollapseOperation(to, _collapsePointsEffectPrefab,
                 _destroyBallEffectPrefab, _field, _pointsCalculator, this),
             new CheckIfGenerationIsNecessary(
@@ -433,9 +433,9 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     private void MoveStep(Vector3Int from, Vector3Int to)
     {
         _stepMachine.AddStep(new Step(StepTag.Move,
-            new MoveOperation(from, to, _field),
-            new SelectOperation(to, false, _field)
+            new SelectOperation(from, false, _field)
                 .SubscribeCompleted(OnDeselectBall),
+            new MoveOperation(from, to, _field),
             new CollapseOperation(to, _collapsePointsEffectPrefab,
                 _destroyBallEffectPrefab, _field, _pointsCalculator, this),
             new CheckIfGenerationIsNecessary(

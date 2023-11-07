@@ -53,7 +53,7 @@ namespace Core
             _ballSkin.transform.localPosition = Vector3.zero;
             _ballSkin.transform.localRotation = Quaternion.identity;
            
-            Ball_OnPointsChanged(_ball.Points);
+            Ball_OnPointsChanged(_ball.Points, true);
             Ball_OnSelectedChanged();
             Ball_TransparencyChanged();
         }
@@ -65,9 +65,9 @@ namespace Core
                 _root.transform.SetAsLastSibling();
         }
 
-        private void Ball_OnPointsChanged(int oldPoints)
+        private void Ball_OnPointsChanged(int oldPoints, bool force)
         {
-            _ballSkin.Points = _ball.Points;
+            _ballSkin.SetPoints(_ball.Points, oldPoints, force);
             var foundAssociation = _colorsAssociations.Find(i => i.Points == _ball.Points);
             if (foundAssociation != null)
                 _mainColor = foundAssociation.Color;

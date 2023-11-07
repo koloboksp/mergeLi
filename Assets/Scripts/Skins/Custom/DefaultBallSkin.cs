@@ -7,10 +7,8 @@ namespace Core
 {
     public class DefaultBallSkin : BallSkin
     {
-        public enum BallState { Idle, Select, Move, PathNotFound }
+        public enum BallState { Idle, Select, Move, PathNotFound, Upgrade, Downgrade }
         
-        [SerializeField] private List<Color> _colors;
-        [SerializeField] private BallSelectionEffect _selectionEffect;
         [SerializeField] private Text _valueLabel;
         [SerializeField] private Image _ballIcon;
         [SerializeField] private CanvasGroup _canvasGroup;
@@ -19,7 +17,7 @@ namespace Core
 
         public override bool Selected
         {
-            set => ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle); // _selectionEffect.SetActiveState(value);
+            set => ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle);
         }
 
         public override bool Moving
@@ -27,12 +25,18 @@ namespace Core
             set => ChangeStateEvent?.Invoke(value ? BallState.Move : BallState.Idle);
         }
 
-        public override int Points
+        public override void SetPoints(int points, int oldPoints, bool force)
         {
-            set
-            {
-                _valueLabel.text = value.ToString();
-            }
+            _valueLabel.text = points.ToString();
+
+            if (force)
+                return;
+            
+            var ballState = BallState.Downgrade;
+            if (points > oldPoints)
+                ballState = BallState.Upgrade;
+            
+            ChangeStateEvent?.Invoke(ballState);
         }
 
         public override Color MainColor

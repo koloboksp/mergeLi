@@ -13,7 +13,7 @@ namespace Core
         public event Action OnSelectedChanged;
         public event Action OnMovingStateChanged;
         public event Action OnTransparencyChanged;
-        public event Action<int> OnPointsChanged;
+        public event Action<int, bool> OnPointsChanged;
         public event Action OnPathNotFound;
 
         [SerializeField] private Vector3 _gridPosition;
@@ -90,7 +90,7 @@ namespace Core
                 if (other is IBall otherBall)
                     newPoints += otherBall.Points;
                 
-            UpdatePoints(newPoints);
+            UpdatePoints(newPoints, false);
             
             foreach (var other in others)
                 _field.DestroySomething(other as Ball);
@@ -133,13 +133,13 @@ namespace Core
                 currentLevel++;
             }
          
-            UpdatePoints(newPoints);
+            UpdatePoints(newPoints, false);
         }
 
         public void SetData(Field field, Vector3 startPosition, int points)
         {
             _field = field;
-            UpdatePoints(points);
+            UpdatePoints(points, true);
             
             UpdateGridPosition(startPosition);
         }
@@ -187,11 +187,11 @@ namespace Core
             OnSelectedChanged?.Invoke();
         }
 
-        private void UpdatePoints(int newPoints)
+        private void UpdatePoints(int newPoints, bool force)
         {
             var oldPoints = _points;
             _points = newPoints;
-            OnPointsChanged?.Invoke(oldPoints);
+            OnPointsChanged?.Invoke(oldPoints, force);
         }
 
         public void PathNotFound()
