@@ -12,5 +12,6 @@
 	"Pt": "J2:J300",
 	"Uk": "K2:K300",
   },
-  "Output": "..\\..\\Assets\\Localization\\"
+  "OutputPath": "..\\..\\Assets\\Localization\\",
+  "CredentialsPath": "..\\..\\Keys\\localization.json"
 }
