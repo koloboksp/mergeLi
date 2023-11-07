@@ -13,6 +13,7 @@ namespace Core
         [SerializeField] private Button _changeSkinBtn;
         [SerializeField] private Button _clearProgressBtn;
         [SerializeField] private Button _showCastlesBtn;
+        [SerializeField] private Button _changeLanguageBtn;
 
         private Model _model;
         private UISettingsPanelData _data;
@@ -28,6 +29,8 @@ namespace Core
             _clearProgressBtn.onClick.AddListener(ClearProgressBtn_OnClick);
             
             _showCastlesBtn.onClick.AddListener(ShowCastlesBtn_OnClick);
+            
+            _changeLanguageBtn.onClick.AddListener(ChangeLanguageBtn_OnClick);
         }
         
         private void OnDestroy()
@@ -43,6 +46,15 @@ namespace Core
             skinScreenData.Skins = _data.GameProcessor.Scene.Library.Containers.Select(i => i.Name);
             skinScreenData.SkinChanger = _data.GameProcessor.Scene;
             ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UISkinPanel), skinScreenData, _cancellationTokenSource.Token);
+        }
+        
+        private void ChangeLanguageBtn_OnClick()
+        {
+            var screenData = new UILanguagePanel.UILanguagePanelData();
+            screenData.Selected = ApplicationController.Instance.ActiveLanguage;
+            screenData.Available = ApplicationController.Instance.LocalizationController.Languages;
+            screenData.Changer = ApplicationController.Instance;
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UILanguagePanel), screenData, _cancellationTokenSource.Token);
         }
 
         private void ClearProgressBtn_OnClick()

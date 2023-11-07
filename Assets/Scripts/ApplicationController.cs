@@ -12,7 +12,7 @@ using Object = UnityEngine.Object;
 
 namespace Core
 {
-    public class ApplicationController : ILanguage
+    public class ApplicationController : ILanguage, ILanguageChanger
     {
         private static ApplicationController _instance;
 
@@ -42,7 +42,7 @@ namespace Core
             var timer = new SmallTimer();
 
             _instance._localizationController = new LocalizationController();
-            await _instance._localizationController.InitializeAsync(_instance, CancellationToken.None);
+            await _instance._localizationController.InitializeAsync(CancellationToken.None);
             Debug.Log($"<color=#99ff99>Time initialize {nameof(Assets.Scripts.Core.Localization.LocalizationController)}: {timer.Update()}.</color>");
             
             _instance._purchaseController = new PurchaseController();
@@ -74,6 +74,19 @@ namespace Core
             {
                 
             }
+        }
+
+        public SystemLanguage ActiveLanguage
+        {
+            get
+            {
+                return _localizationController.ActiveActiveLanguage;
+            }
+        }
+
+        public void SetLanguage(SystemLanguage language)
+        {
+            _localizationController.SetLanguage(language);
         }
     }
 }
