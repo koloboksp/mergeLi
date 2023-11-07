@@ -144,7 +144,7 @@ TextureImporter:
         width: 79
         height: 92
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -152,6 +152,48 @@ TextureImporter:
       bones: []
       spriteID: ee085bb77ae0bc64e82a2ccb39797a7a
       internalID: -1383242684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: achievments
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 29
+        width: 99
+        height: 108
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83317be9ee27cd24488e50f2aeb4e307
+      internalID: 862037016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: hats
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 267
+        width: 108
+        height: 90
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c8d8735a515d9244866a65cdce3bdae
+      internalID: 753003789
       vertices: []
       indices: 
       edges: []
@@ -167,6 +209,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      achievments: 862037016
+      hats: 753003789
       icons_0: -1383242684
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
