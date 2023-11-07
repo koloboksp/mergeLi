@@ -395,7 +395,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text not found(58aa7ffd27d745c7a496b8af08667e69)
+  m_Text: my castles
 --- !u!114 &7605927645399020055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,7 +470,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 620, y: 780}
+  m_SizeDelta: {x: 620, y: 940}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6016218568290839343
 CanvasRenderer:
@@ -521,6 +521,7 @@ GameObject:
   - component: {fileID: 7104141350609223302}
   - component: {fileID: 2545674060547544363}
   - component: {fileID: 3380023723880173833}
+  - component: {fileID: 8794526198622982327}
   m_Layer: 5
   m_Name: UISettingsPanel
   m_TagString: Untagged
@@ -588,6 +589,19 @@ MonoBehaviour:
   - {fileID: 6539189958932804856}
   - {fileID: 5366519625971644829}
   - {fileID: 6379451769341828971}
+--- !u!114 &8794526198622982327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305112124653678651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb03e1047abdf0a48be454626f8963ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 3377022519652254961}
 --- !u!1 &3411113405907802890
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,7 +1049,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text not found(9f49be3333ca4424b71402bace1a4137)
+  m_Text: reset progress
 --- !u!114 &8896665313221189041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1272,7 +1286,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text not found(c81b57a198374bf196ef63d46ea85a5e)
+  m_Text: language
 --- !u!114 &4587030138750026922
 MonoBehaviour:
   m_ObjectHideFlags: 0

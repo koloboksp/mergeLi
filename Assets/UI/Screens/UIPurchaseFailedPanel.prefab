@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 7104141350609223302}
   - component: {fileID: 2140116388423779698}
   - component: {fileID: 2109538388412062492}
+  - component: {fileID: 7090225129439608083}
   m_Layer: 5
   m_Name: UIPurchaseFailedPanel
   m_TagString: Untagged
@@ -168,6 +169,19 @@ MonoBehaviour:
   title: {fileID: 5144974484611777097}
   buttons:
   - {fileID: 573856831762587980}
+--- !u!114 &7090225129439608083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305112124653678651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb03e1047abdf0a48be454626f8963ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 3377022519652254961}
 --- !u!1 &3185405040802183213
 GameObject:
   m_ObjectHideFlags: 0

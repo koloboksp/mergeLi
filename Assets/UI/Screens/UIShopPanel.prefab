@@ -278,8 +278,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 7492a626adc52a240a313fa2b0a9866b, type: 2}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.6}
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -759,6 +759,7 @@ GameObject:
   - component: {fileID: 3886935297801031348}
   - component: {fileID: 2669647581629981627}
   - component: {fileID: 274622136249614667}
+  - component: {fileID: 8965612214456398584}
   m_Layer: 5
   m_Name: UIShopPanel
   m_TagString: Untagged
@@ -837,6 +838,19 @@ MonoBehaviour:
   - {fileID: 2715636388196087460}
   - {fileID: 2077899529126733589}
   - {fileID: 411823572371228847}
+--- !u!114 &8965612214456398584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305112124653678651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb03e1047abdf0a48be454626f8963ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 6174549654922210249}
 --- !u!1 &2537430552610864091
 GameObject:
   m_ObjectHideFlags: 0

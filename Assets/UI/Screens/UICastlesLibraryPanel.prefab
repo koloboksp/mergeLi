@@ -122,7 +122,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6263977236443122051}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999875
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -334,6 +334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7104141350609223302}
   - component: {fileID: 7663997995119886190}
+  - component: {fileID: 7528073949927588067}
   m_Layer: 5
   m_Name: UICastlesLibraryPanel
   m_TagString: Untagged
@@ -356,7 +357,7 @@ RectTransform:
   - {fileID: 3696898367836075818}
   - {fileID: 3553126238930314519}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -376,8 +377,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _root: {fileID: 7104141350609223302}
+  _canvasGroup: {fileID: 0}
   _closeBtn: {fileID: 2637769873765130055}
   _container: {fileID: 2316871301394179850}
+--- !u!114 &7528073949927588067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305112124653678651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb03e1047abdf0a48be454626f8963ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 6174549654922210249}
 --- !u!1 &2537430552610864091
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,7 +701,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000029178234}
+  m_AnchoredPosition: {x: 0, y: 0.0010345643}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8790346182889579802

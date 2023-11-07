@@ -28,6 +28,8 @@ Shader "Hidden/DropBlurBlit"
                 for (int j = 0; j < 9; j++)
                     sum += tex2D(_MainTex, i.uv + _MainTex_TexelSize.xy * _BlurCore[j].xy) * _BlurCore[j].z;
 
+                sum.a = 16.0;
+
                 return sum / 16.0;
             }
 

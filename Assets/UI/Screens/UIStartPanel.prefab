@@ -81,7 +81,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text not found(9d7ebf21aa004f4ab4c930232bbedfba)
+  m_Text: new game
 --- !u!114 &1670727018394523039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,6 +241,7 @@ GameObject:
   - component: {fileID: 7104141350609223302}
   - component: {fileID: 2216450195178447766}
   - component: {fileID: 7589518558726902369}
+  - component: {fileID: 3622845257901373646}
   m_Layer: 5
   m_Name: UIStartPanel
   m_TagString: Untagged
@@ -304,6 +305,19 @@ MonoBehaviour:
   buttons:
   - {fileID: 573856831762587980}
   - {fileID: 7500282558050377640}
+--- !u!114 &3622845257901373646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305112124653678651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb03e1047abdf0a48be454626f8963ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 3377022519652254961}
 --- !u!1 &3185405040802183213
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,7 +722,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text not found(480f3db092c54b358cadb4a94be75a9b)
+  m_Text: continuous
 --- !u!114 &6970357591874172252
 MonoBehaviour:
   m_ObjectHideFlags: 0
