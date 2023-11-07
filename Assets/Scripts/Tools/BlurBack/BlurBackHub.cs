@@ -5,7 +5,7 @@ using UnityEngine;
 public class BlurBackHub : MonoBehaviour
 {
     private const float SHOT_SCALE = .2f;
-    private const int BLUR_COUNT = 100;
+    private const int BLUR_COUNT = 10;
     
     [SerializeField] private Camera cam;
     [SerializeField] private Shader blurShader;
