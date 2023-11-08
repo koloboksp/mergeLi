@@ -236,9 +236,11 @@ Animation:
   m_Animation: {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
-  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
   - {fileID: 7400000, guid: b542c6eb5bb975c4eaf747ebfc2671a7, type: 2}
   - {fileID: 7400000, guid: cb84f86e5f16d4248aed24054ca922cd, type: 2}
+  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
+  - {fileID: 7400000, guid: ea53f3d0287847042806291f35cee4c7, type: 2}
+  - {fileID: 7400000, guid: 226a8cc97d078bd47875348c3ee7f41a, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -257,11 +259,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballSkin: {fileID: 4679713789989440162}
   anim: {fileID: 4603561023740904235}
-  idle: {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
-  select: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  move: {fileID: 7400000, guid: b542c6eb5bb975c4eaf747ebfc2671a7, type: 2}
-  noPath: {fileID: 7400000, guid: cb84f86e5f16d4248aed24054ca922cd, type: 2}
-  idles: []
+  idleClip: {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
+  items:
+  - state: 1
+    clip: {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
+  - state: 2
+    clip: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
+  - state: 4
+    clip: {fileID: 7400000, guid: b542c6eb5bb975c4eaf747ebfc2671a7, type: 2}
+  - state: 8
+    clip: {fileID: 7400000, guid: cb84f86e5f16d4248aed24054ca922cd, type: 2}
+  - state: 32
+    clip: {fileID: 7400000, guid: 226a8cc97d078bd47875348c3ee7f41a, type: 2}
+  - state: 16
+    clip: {fileID: 7400000, guid: ea53f3d0287847042806291f35cee4c7, type: 2}
 --- !u!114 &470944024834822428
 MonoBehaviour:
   m_ObjectHideFlags: 0

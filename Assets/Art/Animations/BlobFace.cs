@@ -9,8 +9,6 @@ public class BlobFace : MonoBehaviour
     [System.Serializable]
     private class Face
     {
-        private const float BLINK_SCALE = .3f;
-        
         public DefaultBallSkin.BallState state;
         public Transform eyesRoot;
         public Transform mouthRoot;
@@ -31,7 +29,7 @@ public class BlobFace : MonoBehaviour
 
         public bool Show(DefaultBallSkin.BallState state)
         {
-            bool doShow = state == this.state;
+            bool doShow = (this.state & state) == state;
 
             ShowItems(eyes, doShow);
             ShowItems(mouths, doShow);
@@ -46,29 +44,19 @@ public class BlobFace : MonoBehaviour
             for (int i = 0; i < items.Count; i++)
                 items[i].SetActive(i == ind);
         }
-
-        public void TurnFace()
-        {
-            var scale = eyesRoot.localScale;
-            scale.x *= -1f;
-            eyesRoot.localScale = scale;
-            mouthRoot.localScale = scale;
-        }
-
-        public void BlinkEyes(bool doOpen)
-        {
-            var scale = eyesRoot.localScale;
-            scale.y = doOpen ? 1f : BLINK_SCALE;
-            eyesRoot.localScale = scale;
-        }
     }
+
+    private const float BLINK_SCALE = .3f;
 
     [SerializeField] private float flipTime = 5f;
     [SerializeField] private float blinkWait = 5f;
     [SerializeField] private float blinkStep = .1f;
     [SerializeField] private int blinkCount = 2;
-    private Face lastFace;
+    [SerializeField] private Transform eyesRoot;
+    private Transform lastRoot;
 
+    [Space(8)]
+    [SerializeField] private DefaultBallSkin.BallState changeBlobStates;
     [SerializeField] private List<Face> faces;
 
     private static BlobFace s_instance;
@@ -80,8 +68,8 @@ public class BlobFace : MonoBehaviour
 
         gameObject.SetActive(false);
 
-        TurnFace();
-        BlinkEyes();
+        TurnFaceCycle();
+        BlinkEyesCycle();
 
         s_instance = this;
     }
@@ -99,38 +87,44 @@ public class BlobFace : MonoBehaviour
 
     public static void Hide()
     {
-        if (s_instance == null)
+        if (s_instance != null)
+            s_instance.HideLocal();
+    }
+
+    private void HideLocal()
+    {
+        if (lastRoot != null)
             return;
 
-        s_instance.transform.SetParent(null);
-        s_instance.gameObject.SetActive(false);
+        transform.SetParent(null);
+        gameObject.SetActive(false);
     }
 
     public void ShowLocal(Transform root, DefaultBallSkin.BallState state)
     {
-        bool doShow = false;
-        bool isSnow = false;
-
-        foreach (var face in faces)
+        if ((changeBlobStates & state) == state)
         {
-            isSnow = face.Show(state);
-            doShow |= isSnow;
+            lastRoot = root;
+            gameObject.SetActive(true);
 
-            if (isSnow)
-                lastFace = face;
+            transform.SetParent(root);
+            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            transform.localScale = Vector3.one;
+
+            foreach (var f in faces)
+                f.Show(state);
+
+            return;
         }
 
-        gameObject.SetActive(doShow);
-
-        if (!doShow)
+        if (root != lastRoot)
             return;
 
-        transform.SetParent(root);
-        transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-        transform.localScale = new Vector3(Random.Range(0, 1f) > .5f ? -1f : 1f, 1f, 1f);
+        foreach (var f in faces)
+            f.Show(state);
     }
 
-    private async void TurnFace()
+    private async void TurnFaceCycle()
     {
         while (true)
         {
@@ -139,11 +133,11 @@ public class BlobFace : MonoBehaviour
             if (!Application.isPlaying)
                 return;
 
-            lastFace.TurnFace();
+            transform.localScale = Vector3.Scale(new Vector3(-1f, 1f, 1f), transform.localScale);
         }
     }
 
-    private async void BlinkEyes()
+    private async void BlinkEyesCycle()
     {
         while (true)
         {
@@ -157,7 +151,9 @@ public class BlobFace : MonoBehaviour
             for (int i = 0; i < blinkCount * 2; i++)
             {
                 isOpen = !isOpen;
-                lastFace.BlinkEyes(isOpen);
+
+                eyesRoot.localScale = new Vector3(1f, isOpen ? 1f : BLINK_SCALE, 1f);
+
                 await Task.Delay((int)(1000 * blinkStep));
 
                 if (!Application.isPlaying)

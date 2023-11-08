@@ -5,79 +5,56 @@ using Core;
 
 public class BallAnimator : MonoBehaviour
 {
+    [System.Serializable]
+    private class Item
+    {
+        public DefaultBallSkin.BallState state;
+        public AnimationClip clip;
+    }
+    
     private const float CROSS_FADE = .1f;
 
-    private Ball ball;
     [SerializeField] private DefaultBallSkin ballSkin;
     [SerializeField] private Animation anim;
-
-    [SerializeField] private AnimationClip idle;
-    [SerializeField] private AnimationClip select;
-    [SerializeField] private AnimationClip move;
-    [SerializeField] private AnimationClip noPath;
-    [SerializeField] private AnimationClip[] idles;
-
-    private Dictionary<DefaultBallSkin.BallState, AnimationClip> clips;
+    [SerializeField] private AnimationClip idleClip;
+    [SerializeField] private List<Item> items;
+    private AnimationClip lastLoopClip;
 
     private void Awake()
     {
-        if (ballSkin == null || anim == null || idle == null)
+        if (ballSkin == null || anim == null || idleClip == null)
             return;
 
         ballSkin.ChangeStateEvent += SetAnimationState;
 
-        ball = GetComponentInParent<Ball>();
-        if (ball != null)
-        {
-            ball.OnPathNotFound += Ball_OnPathNotFound;
-            ball.OnMovingStateChanged += Ball_OnMovingStateChanged;
-        }
-
-        clips = new Dictionary<DefaultBallSkin.BallState, AnimationClip>
-        {
-            { DefaultBallSkin.BallState.Idle, idle },
-            { DefaultBallSkin.BallState.Select, select },
-            { DefaultBallSkin.BallState.Move, move },
-            { DefaultBallSkin.BallState.PathNotFound, move },
-            { DefaultBallSkin.BallState.Upgrade, select },
-            { DefaultBallSkin.BallState.Downgrade, select }
-            
-        };
-
-        anim[idle.name].normalizedTime = Random.Range(0, 1f);
-    }
-
-    private void Ball_OnMovingStateChanged()
-    {
-        if (ball.Moving)
-            BlobTrail.ResetTail();
-
-        BlobTrail.SetColor(ball.View.MainColor);
-        Follower.Follow(transform, ball.Moving);
-    }
-
-    private void Ball_OnPathNotFound()
-    {
-        anim.CrossFade(noPath.name, CROSS_FADE);
-        anim.CrossFadeQueued(select.name, CROSS_FADE);
+        anim[idleClip.name].normalizedTime = Random.Range(0, 1f);
     }
 
     private void OnDestroy()
     {
         if (ballSkin != null)
             ballSkin.ChangeStateEvent -= SetAnimationState;
-
-        if (ball != null)
-        {
-            ball.OnPathNotFound -= Ball_OnPathNotFound;
-            ball.OnMovingStateChanged -= Ball_OnMovingStateChanged;
-        }
     }
 
-    private void SetAnimationState(DefaultBallSkin.BallState ballState)
+    private void SetAnimationState(DefaultBallSkin.BallState state)
     {
-        string clipName = clips[ballState] != null ? clips[ballState].name : idle.name;
+        foreach (var item in items)
+        {
+            if ((item.state & state) == state)
+            {
+                anim.CrossFade(item.clip.name, CROSS_FADE);
 
-        anim.CrossFade(clipName, CROSS_FADE);
+                if (item.clip.wrapMode == WrapMode.Loop)
+                {
+                    lastLoopClip = item.clip;
+                }
+                else if (lastLoopClip != null)
+                {
+                    anim.CrossFadeQueued(lastLoopClip.name, CROSS_FADE);
+                }
+
+                break;
+            }
+        }
     }
 }

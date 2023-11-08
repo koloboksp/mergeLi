@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -7,7 +7,16 @@ namespace Core
 {
     public class DefaultBallSkin : BallSkin
     {
-        public enum BallState { Idle, Select, Move, PathNotFound, Upgrade, Downgrade }
+        [Flags] public enum BallState
+        {
+            None = 0,
+            Idle = 1, 
+            Select = 2, 
+            Move = 4, 
+            PathNotFound = 8, 
+            Upgrade = 16, 
+            Downgrade = 32
+        }
         
         [SerializeField] private Text _valueLabel;
         [SerializeField] private Image _ballIcon;
@@ -31,12 +40,8 @@ namespace Core
 
             if (force)
                 return;
-            
-            var ballState = BallState.Downgrade;
-            if (points > oldPoints)
-                ballState = BallState.Upgrade;
-            
-            ChangeStateEvent?.Invoke(ballState);
+
+            ChangeStateEvent?.Invoke(points >= oldPoints ? BallState.Upgrade : BallState.Downgrade);
         }
 
         public override Color MainColor
