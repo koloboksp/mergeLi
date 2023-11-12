@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 07920e30a71220f4280b7845ebe739c3
+guid: 81f527cbe2f8b7242b6cac39b25810c6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -136,97 +136,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: icon_settings
+      name: Flag_Ru
       rect:
         serializedVersion: 2
-        x: 20
-        y: 14
-        width: 82
-        height: 90
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3f9af07dedf044145a67a5651a259811
-      internalID: -1188246607
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: icon_star
-      rect:
-        serializedVersion: 2
-        x: 312
-        y: 15
-        width: 83
-        height: 89
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: af4a7ab174986a44ca76a70086265e97
-      internalID: -1109844911
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: house
-      rect:
-        serializedVersion: 2
-        x: 206
-        y: 109
-        width: 100
-        height: 100
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 46c02b9f12ce9d447bb4a2a541c9cf0c
-      internalID: 2060901850
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: icons2_0
-      rect:
-        serializedVersion: 2
-        x: 14
-        y: 303
-        width: 92
-        height: 96
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cc86075f71ceab946af20529a16456e7
-      internalID: 1664034383
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: sound
-      rect:
-        serializedVersion: 2
-        x: 207
-        y: 209
-        width: 99
-        height: 93
+        x: 0
+        y: 424
+        width: 120
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -234,20 +150,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aa5a7d91f128bcc4da385a1f22f43388
-      internalID: -1898707962
+      spriteID: 21321387e439c454489e0e6959820290
+      internalID: 2094351365
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: music
+      name: Flag_En
       rect:
         serializedVersion: 2
-        x: 111
-        y: 13
-        width: 92
-        height: 95
+        x: 0
+        y: 328
+        width: 120
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -255,8 +171,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 23644e8acaf2c9649910ef71ca79f7b4
-      internalID: 265346087
+      spriteID: 8b8ec7b3dbf088044b39878691238a69
+      internalID: 702871304
       vertices: []
       indices: 
       edges: []
@@ -272,12 +188,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      house: 2060901850
-      icon_settings: -1188246607
-      icon_star: -1109844911
-      icons2_0: 1664034383
-      music: 265346087
-      sound: -1898707962
+      Flag_En: 702871304
+      Flag_Ru: 2094351365
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

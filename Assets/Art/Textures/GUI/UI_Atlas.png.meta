@@ -325,7 +325,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Close
+      name: UI_Pause
       rect:
         serializedVersion: 2
         x: 128
@@ -346,7 +346,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_ButtonCircle
+      name: UI_Achievments
       rect:
         serializedVersion: 2
         x: 256
@@ -367,7 +367,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_ButtonGray
+      name: UI_Crown
       rect:
         serializedVersion: 2
         x: 384
@@ -471,6 +471,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: UI_Castles
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 226345cebff5f0a488dc1e4a44a7bb2f
+      internalID: 793588037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -482,18 +503,19 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      UI_Achievments: -1479666318
       UI_Back: 1676553167
       UI_Ball: -1077306345
       UI_BoomX1: -1655392407
       UI_BoomX3: -1708652260
-      UI_ButtonCircle: -1479666318
-      UI_ButtonGray: -1671721342
-      UI_Close: 1521240664
+      UI_Castles: 793588037
       UI_Coin: 92715398
       UI_CoinMini: 343134329
+      UI_Crown: -1671721342
       UI_Cup: 1517825917
       UI_Flip: 754353363
       UI_Gift: -1599659995
+      UI_Pause: 1521240664
       UI_Rocket: -1052821126
       UI_Settings: 279455855
       UI_StarMini: -1590690114

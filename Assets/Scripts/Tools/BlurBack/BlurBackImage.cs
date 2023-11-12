@@ -4,8 +4,9 @@ using UnityEngine.UI;
 
 public class BlurBackImage : MonoBehaviour
 {
+    private readonly Color COLOR = new(0.3f, 0.3f, 0.3f, 1f);
+    
     [SerializeField] private Image image;
-
 
     private void Awake()
     {
@@ -15,10 +16,11 @@ public class BlurBackImage : MonoBehaviour
             return;
 
         var go = image.gameObject;
-
+        
         DestroyImmediate(image);
 
         var rawImage = go.AddComponent<RawImage>();
+        // rawImage.color = COLOR;
         rawImage.texture = rt;
 
         var btn = go.GetComponent<Button>();
