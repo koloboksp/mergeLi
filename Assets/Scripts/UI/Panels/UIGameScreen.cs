@@ -7,6 +7,7 @@ using Core.Goals;
 using Core.Steps;
 using Core.Steps.CustomOperations;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core
@@ -18,7 +19,7 @@ namespace Core
         [SerializeField] private UIGameScreen_Score _score;
         [SerializeField] private UIGameScreen_Coins _coins;
         [SerializeField] private RectTransform _fieldContainer;
-        [SerializeField] private Button _showSettingsBtn;
+        [FormerlySerializedAs("_showSettingsBtn")] [SerializeField] private Button _showPauseBtn;
         [SerializeField] private GameObject _lowSpaceWarning;
 
         private UIGameScreenData _data;
@@ -30,7 +31,7 @@ namespace Core
         {
             _cancellationTokenSource = new CancellationTokenSource();
             _coins.OnClick += Coins_OnClick;
-            _showSettingsBtn.onClick.AddListener(ShowSettingsBtn_OnClick); 
+            _showPauseBtn.onClick.AddListener(ShowPauseBtn_OnClick); 
         }
   
         private void OnDestroy()
@@ -64,8 +65,17 @@ namespace Core
             }
         }
 
+        protected override void InnerActivate()
+        {
+            base.InnerActivate();
+            
+            _data.GameProcessor.PauseGameProcess(false);
+        }
+
         protected override void InnerHide()
         {
+            _data.GameProcessor.PauseGameProcess(true);
+            
             _data.GameProcessor.OnStepCompleted -= OnStepCompleted;
             _data.GameProcessor.OnBeforeStepStarted -= OnBeforeStepStarted;
             _data.GameProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
@@ -135,11 +145,11 @@ namespace Core
             _coins.Add(-amount, force);
         }
         
-        private void ShowSettingsBtn_OnClick()
+        private void ShowPauseBtn_OnClick()
         {
-            var skinScreenData = new UISettingsPanel.UISettingsPanelData();
-            skinScreenData.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UISettingsPanel), skinScreenData, _cancellationTokenSource.Token);
+            var panelData = new UIPausePanelData();
+            panelData.GameProcessor = _data.GameProcessor;
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UIPausePanel), panelData, _cancellationTokenSource.Token);
         }
         
         private void Coins_OnClick()
@@ -168,7 +178,7 @@ namespace Core
             _buffsContainerRoot.gameObject.SetActive(false); 
             _score.gameObject.SetActive(false);
             _coins.gameObject.SetActive(false);
-            _showSettingsBtn.gameObject.SetActive(false);
+            _showPauseBtn.gameObject.SetActive(false);
             _lowSpaceWarning.gameObject.SetActive(false);
         }
 
@@ -181,7 +191,7 @@ namespace Core
             if(element == UIGameScreenElement.Buffs)
                 _buffsContainerRoot.gameObject.SetActive(active);
             if(element == UIGameScreenElement.Settings)
-                _showSettingsBtn.gameObject.SetActive(active);
+                _showPauseBtn.gameObject.SetActive(active);
         }
     }
 

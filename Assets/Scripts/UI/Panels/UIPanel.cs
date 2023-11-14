@@ -56,7 +56,7 @@ namespace Core
             _canvasGroup.blocksRaycasts = !state;
         }
 
-        public async Task Showing(CancellationToken cancellationToken)
+        public async Task ShowAsync(CancellationToken cancellationToken)
         {
             while (_active)
             {

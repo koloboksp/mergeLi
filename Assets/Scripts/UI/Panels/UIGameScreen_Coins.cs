@@ -53,11 +53,11 @@ namespace Core
                 }
 
                 _cancellationTokenSource = new CancellationTokenSource();
-                UpScale(_cancellationTokenSource.Token);
+                _ = UpScaleAsync(_cancellationTokenSource.Token);
             }
         }
 
-        private async Task UpScale(CancellationToken cancellationToken)
+        private async Task UpScaleAsync(CancellationToken cancellationToken)
         {
             var time = 0.5f;
             var timer = 0.0f;
