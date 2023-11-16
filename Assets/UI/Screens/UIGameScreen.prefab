@@ -390,7 +390,7 @@ MonoBehaviour:
   _score: {fileID: 4155178967740643421}
   _coins: {fileID: 7751034290328399452}
   _fieldContainer: {fileID: 4840618613103210845}
-  _showSettingsBtn: {fileID: 4584576575249581389}
+  _showPauseBtn: {fileID: 4584576575249581389}
   _lowSpaceWarning: {fileID: 8112737322585709290}
 --- !u!1 &2315417767646231163
 GameObject:
@@ -1966,7 +1966,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -100, y: -100}
-  m_SizeDelta: {x: 80, y: 80}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3030052935226461079
 CanvasRenderer:
@@ -1996,7 +1996,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1521240664, guid: ecd77e279b0969a4ab334b558caf5f3b, type: 3}
+  m_Sprite: {fileID: -1579830809, guid: 944056e20f4624849a5fe10d9c4a01e6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
