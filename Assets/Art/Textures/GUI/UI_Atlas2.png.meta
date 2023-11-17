@@ -304,7 +304,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Atlas2_8
+      name: market
       rect:
         serializedVersion: 2
         x: 0
@@ -325,7 +325,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Atlas2_9
+      name: man
       rect:
         serializedVersion: 2
         x: 128
@@ -380,11 +380,11 @@ TextureImporter:
       UI_Atlas2_10: -1590828847
       UI_Atlas2_3: -1859942788
       UI_Atlas2_7: 1327535625
-      UI_Atlas2_8: 1289461321
-      UI_Atlas2_9: -1515942131
       ads: -572028860
       cross: -2104845018
       hand: 316939643
+      man: -1515942131
+      market: 1289461321
       menu: -1579830809
       note: -1721905035
       speaker: -957480366
