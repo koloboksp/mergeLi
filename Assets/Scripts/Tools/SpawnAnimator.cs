@@ -43,7 +43,7 @@ public class SpawnAnimator : MonoBehaviour
 
         while (time < dur)
         {
-            time += Time.deltaTime;
+            time += Time.deltaTime * speed;
 
             obj.localPosition = pos0 + curvePos.Evaluate(time) * posFactor * Vector3.up;
             
