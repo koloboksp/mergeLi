@@ -7,6 +7,7 @@ Shader "Unlit/Sky"
 
         [NoScaleOffset] _Distort("Distort", 2D) = "bump"{}
         _DistParams("Distort XY:Speed, Z:Size, W:Power", vector) = (0,0,0,0)
+        [Toggle] _DistUVMask("Distort UV Mask", float) = 0
 
         [HideInInspector] _StencilComp("Stencil Comparison", Float) = 8
         [HideInInspector] _Stencil("Stencil ID", Float) = 0
@@ -79,6 +80,7 @@ Shader "Unlit/Sky"
             // Distort
             sampler2D_half _Distort;
             half4 _DistParams;
+            fixed _DistUVMask;
 
             // UI
             float4 _ClipRect;
@@ -104,7 +106,12 @@ Shader "Unlit/Sky"
                 float2 dist = tex2D(_Distort, i.uvDist).xy;
                 dist = (dist - .5) * _DistParams.w;
                 
+                if (_DistUVMask)
+                    dist *= i.uv.x;
+
                 fixed4 col = tex2D(_MainTex, i.uv + dist);
+
+                col.rgb += (dist.x + dist.y) * 2;
 
                 #ifdef UNITY_UI_CLIP_RECT
                 col.a *= UnityGet2DClipping(i.wPos, _ClipRect);
