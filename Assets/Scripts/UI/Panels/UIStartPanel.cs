@@ -1,5 +1,8 @@
 ﻿using System;
+using Assets.Scripts.Core;
+using Atom;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core
@@ -12,10 +15,13 @@ namespace Core
     
     public class UIStartPanel : UIPanel
     {
-        [SerializeField] private Button _closeBtn;
-        [SerializeField] private Button _startBtn;
-        [SerializeField] private Button _continueBtn;
+        [SerializeField] private Button _playBtn;
+        [SerializeField] private UIStaticTextLocalizator _playLabelBtn;
+       
+        [SerializeField] private GuidEx _playLocKey;
+        [SerializeField] private GuidEx _continueLocKey;
 
+        [SerializeField] private SpawnAnimator _panelAnimator;
         private Model _model;
         private UIStartPanelData _data;
         private UIStartPanelChoice _choice;
@@ -24,9 +30,7 @@ namespace Core
         
         private void Awake()
         {
-            _closeBtn.onClick.AddListener(CloseBtn_OnClick);
-            _startBtn.onClick.AddListener(StartBtn_OnClick);
-            _continueBtn.onClick.AddListener(ContinueBtn_OnClick);
+            _playBtn.onClick.AddListener(PlayBtn_OnClick);
         }
         
         private void CloseBtn_OnClick()
@@ -34,10 +38,8 @@ namespace Core
             
         }
         
-        private void StartBtn_OnClick()
+        private void PlayBtn_OnClick()
         {
-            _choice = UIStartPanelChoice.New;
-            
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
         
@@ -55,11 +57,21 @@ namespace Core
 
             if (_data.GameProcessor.HasPreviousSessionGame)
             {
-                _continueBtn.gameObject.SetActive(true);
+                _playLabelBtn.Id = _continueLocKey;
             }
             else
             {
-                _continueBtn.gameObject.SetActive(false);
+                _playLabelBtn.Id = _playLocKey;
+            }
+
+            _panelAnimator.Play(_data.Instant);
+            if (_data.Instant)
+            {
+                
+            }
+            else
+            {
+                
             }
         }
         
@@ -72,5 +84,6 @@ namespace Core
     public class UIStartPanelData : UIScreenData
     {
         public GameProcessor GameProcessor { get; set; }
+        public bool Instant { get; set; }
     }
 }

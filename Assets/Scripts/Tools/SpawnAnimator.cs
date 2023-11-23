@@ -16,15 +16,15 @@ public class SpawnAnimator : MonoBehaviour
 
     private float dur;
 
-    private void OnEnable()
+    public void Play(bool instant)
     {
         dur = Mathf.Max(curvePos.keys[^1].time, curveScale.keys[^1].time, fullScale.keys[^1].time);
 
         for (int i = 0; i < transform.childCount; i++)
-            Spawn(transform.GetChild(i), i * itemsDelay + startDelay);
+            Spawn(transform.GetChild(i), i * itemsDelay + startDelay, instant);
     }
-
-    private async void Spawn(Transform obj, float delay)
+    
+    private async void Spawn(Transform obj, float delay, bool instant)
     {
         obj.gameObject.SetActive(false);
 
@@ -34,34 +34,41 @@ public class SpawnAnimator : MonoBehaviour
         float sVert;
         float sHorz;
 
-        await Task.Delay((int)(1000 * delay));
-
-        if (!Application.isPlaying)
-            return;
-
-        obj.gameObject.SetActive(true);
-
-        while (time < dur)
+        if (instant)
         {
-            time += Time.deltaTime * speed;
+            obj.gameObject.SetActive(true);
+        }
+        else
+        {
+            await Task.Delay((int)(1000 * delay));
 
-            obj.localPosition = pos0 + curvePos.Evaluate(time) * posFactor * Vector3.up;
-            
-            sVert = curveScale.Evaluate(time);
-            sHorz = Mathf.Sqrt(1 / sVert);
-            obj.localScale = fullScale.Evaluate(time) * Vector3.Scale(scale0, new Vector3(sHorz, sVert, sHorz)); 
+            obj.gameObject.SetActive(true);
 
-            await Task.Yield();
-
-            if (obj == null)
-                return;
-
-            if (!obj.gameObject.activeInHierarchy)
+            while (time < dur)
             {
-                obj.localPosition = pos0;
-                obj.localScale = scale0;
-                return;
+                time += Time.deltaTime * speed;
+
+                obj.localPosition = pos0 + curvePos.Evaluate(time) * posFactor * Vector3.up;
+
+                sVert = curveScale.Evaluate(time);
+                sHorz = Mathf.Sqrt(1 / sVert);
+                obj.localScale = fullScale.Evaluate(time) * Vector3.Scale(scale0, new Vector3(sHorz, sVert, sHorz));
+
+                await Task.Yield();
+
+                if (obj == null)
+                    return;
+
+                if (!obj.gameObject.activeInHierarchy)
+                {
+                    obj.localPosition = pos0;
+                    obj.localScale = scale0;
+                    return;
+                }
             }
         }
+        sVert = curveScale.Evaluate(dur);
+        sHorz = Mathf.Sqrt(1 / sVert);
+        obj.localScale = fullScale.Evaluate(dur) * Vector3.Scale(scale0, new Vector3(sHorz, sVert, sHorz)); 
     }
 }

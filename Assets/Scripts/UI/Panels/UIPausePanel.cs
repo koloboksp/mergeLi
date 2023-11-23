@@ -40,9 +40,20 @@ namespace Core
         {
             var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
                 typeof(UIStartPanel), 
-                new UIStartPanelData() {GameProcessor = _data.GameProcessor}, 
+                new UIStartPanelData()
+                {
+                    GameProcessor = _data.GameProcessor,
+                    Instant = true
+                }, 
                 _cancellationTokenSource.Token) as UIStartPanel;
             await startPanel.ShowAsync(_cancellationTokenSource.Token);
+            ApplicationController.Instance.UIPanelController.PopScreen(this);
+        }
+        
+        private void RestartBtn_OnClick()
+        {
+            ApplicationController.Instance.UIPanelController.PopScreen(this);
+            _data.GameProcessor.RestartSession();
         }
         
         private void ShopBtn_OnClick()
@@ -56,11 +67,6 @@ namespace Core
                     PurchaseItems = _data.GameProcessor.PurchasesLibrary.Items
                 },
                 _cancellationTokenSource.Token);
-        }
-
-        private void RestartBtn_OnClick()
-        {
-            _data.GameProcessor.RestartSession();
         }
         
         private void CloseBtn_OnClick()

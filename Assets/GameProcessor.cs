@@ -191,10 +191,10 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         
         _castleSelector.Init();
 
-        await ProcessGameAsyncSafe(_cancellationTokenSource.Token);
+        await ProcessGameAsyncSafe(SessionPrepareType.FirstStart, _cancellationTokenSource.Token);
     }
     
-    private async Task ProcessGameAsyncSafe(CancellationToken cancellationToken)
+    private async Task ProcessGameAsyncSafe(SessionPrepareType prepareType, CancellationToken cancellationToken)
     {
         try
         {
@@ -203,7 +203,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 if (cancellationToken.IsCancellationRequested)
                     throw new OperationCanceledException();
     
-                await PrepareSessionAsync(cancellationToken);
+                await PrepareSessionAsync(prepareType, cancellationToken);
                 await ProcessSessionAsync(cancellationToken);
             }
         }
@@ -212,8 +212,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
             Debug.Log(e);
         }
     }
+
+    public enum SessionPrepareType
+    {
+        FirstStart,
+        RestartSession
+    }
     
-    private async Task PrepareSessionAsync(CancellationToken cancellationToken)
+    private async Task PrepareSessionAsync(SessionPrepareType prepareType, CancellationToken cancellationToken)
     {
         _bestSessionScore = PlayerInfo.GetBestSessionScore();
         
@@ -251,27 +257,33 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
                 _castleSelector.ActiveCastle.ResetPoints(true);
             }
-            
-            await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                typeof(UIGameScreen), 
-                new UIGameScreenData() { GameProcessor = this }, 
-                cancellationToken);
-        
-            var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                typeof(UIStartPanel), 
-                new UIStartPanelData() { GameProcessor = this }, 
-                cancellationToken) as UIStartPanel;
-            await startPanel.ShowAsync(cancellationToken);
 
-            if (startPanel.Choice == UIStartPanelChoice.New)
+            if (prepareType == SessionPrepareType.FirstStart)
             {
-                _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
-            
-                _playerInfo.ClearLastSessionProgress();
-                _field.Clear();
-                _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
-                _castleSelector.ActiveCastle.ResetPoints(true);
+                var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+                    typeof(UIStartPanel),
+                    new UIStartPanelData()
+                    {
+                        GameProcessor = this,
+                        Instant = false,
+                    },
+                    cancellationToken) as UIStartPanel;
+                await startPanel.ShowAsync(cancellationToken);
+                
+                await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
+                    typeof(UIGameScreen),
+                    new UIGameScreenData() { GameProcessor = this },
+                    cancellationToken);
             }
+            // if (startPanel.Choice == UIStartPanelChoice.New)
+            // {
+            //     _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
+            //
+            //     _playerInfo.ClearLastSessionProgress();
+            //     _field.Clear();
+            //     _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
+            //     _castleSelector.ActiveCastle.ResetPoints(true);
+            // }
         }
     }
     
@@ -705,7 +717,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         _castleSelector.ActiveCastle.ResetPoints(true);
         
         _cancellationTokenSource = new CancellationTokenSource();
-        _ = ProcessGameAsyncSafe(_cancellationTokenSource.Token);
+        _ = ProcessGameAsyncSafe(SessionPrepareType.RestartSession, _cancellationTokenSource.Token);
     }
 
     public void PauseGameProcess(bool pause)
