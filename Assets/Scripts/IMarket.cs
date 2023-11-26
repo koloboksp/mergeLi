@@ -8,6 +8,6 @@ namespace Core
     public interface IMarket
     {
         public event Action<bool, string, int> OnBought;
-        Task<(bool success, int amount)> Buy(string productId, PurchaseType modelPurchaseType, CancellationToken cancellationToken);
+        Task<(bool success, int amount)> BuyAsync(string productId, CancellationToken cancellationToken);
     }
 }

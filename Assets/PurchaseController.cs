@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Steps.CustomOperations;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
 using UnityEngine.Purchasing.Security;
+using Product = UnityEngine.Purchasing.Product;
 
 public class PurchaseController : IDetailedStoreListener
 {
+    public event Action<string> OnBought;
+        
     private IStoreController _store;
     private IExtensionProvider _extensions;
     private IAppleExtensions _appleExtensions;
@@ -196,9 +200,22 @@ public class PurchaseController : IDetailedStoreListener
         while (_purchaseInProgress)
             await Task.Yield();
 
+        OnBought?.Invoke(productId);
+        
         return _purchaseResult;
 #else
             return await Task.FromException<bool>(new Exception("This platform is not supported."));
 #endif
+    }
+
+    public string GetLocalizedPriceString(string productId)
+    {
+        if (!_initialized)
+        {
+            return String.Empty;
+        }
+
+        var product = _store.products.WithID(productId);
+        return product.metadata.localizedPriceString;
     }
 }

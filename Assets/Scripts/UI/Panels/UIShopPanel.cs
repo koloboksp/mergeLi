@@ -6,7 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.Steps.CustomOperations;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Core
 {
@@ -14,13 +16,15 @@ namespace Core
     {
         [SerializeField] private Button _closeBtn;
         [SerializeField] private ScrollRect _purchasesContainer;
-        [SerializeField] private UIShopPanel_PurchaseItem _itemPrefab;
+        [SerializeField] private UIShopPanel_Item _marketItemPrefab;
+        [SerializeField] private UIShopPanel_Item _adsItemPrefab;
+        [SerializeField] private UIShopPanel_Item _giftItemPrefab;
 
         private Model _model;
-        private UIShopScreenData _data;
+        private UIShopPanelData _data;
         private CancellationTokenSource _cancellationTokenSource;
 
-        private readonly List<UIShopPanel_PurchaseItem> _items = new();
+        private readonly List<UIShopPanel_Item> _items = new();
         private readonly List<(UIOverCastleCompletePanel i, Transform parent, bool activeSelf)> _overUIElements = new();
         
         private void Awake()
@@ -42,13 +46,13 @@ namespace Core
         
         public override void SetData(UIScreenData undefinedData)
         {
-            _data = undefinedData as UIShopScreenData;
+            _data = undefinedData as UIShopPanelData;
             _model = new Model()
                 .OnItemsUpdated(OnItemsUpdated)
-                .OnBoughtSomething(OnBoughtSomething)
+                .OnBoughtSomething(OnBoughtSomethingAsync)
                 .OnLockInput(OnLockInput);
             
-            _model.SetData(_data.Market, _data.PurchaseItems);
+            _model.SetData(_data.Items);
         }
 
        
@@ -83,26 +87,35 @@ namespace Core
             LockInput(state);
         }
 
-        private void OnItemsUpdated(IEnumerable<UIShopPanel_PurchaseItemModel> items)
+        private void OnItemsUpdated(IEnumerable<UIShopPanel_ItemModel> items)
         {
             foreach (var oldView in _items)
                 Destroy(oldView.gameObject);
 
-            _itemPrefab.gameObject.SetActive(false);
+            _marketItemPrefab.gameObject.SetActive(false);
+            _adsItemPrefab.gameObject.SetActive(false);
+            _giftItemPrefab.gameObject.SetActive(false);
+            
             foreach (var item in items)
             {
-                var itemView = Instantiate(_itemPrefab, _purchasesContainer.content);
+                UIShopPanel_Item itemView = item.Item switch
+                {
+                    ShopPanelMarketItem => Instantiate(_marketItemPrefab, _purchasesContainer.content),
+                    ShopPanelAdsItem => Instantiate(_adsItemPrefab, _purchasesContainer.content),
+                    ShopPanelGiftItem => Instantiate(_giftItemPrefab, _purchasesContainer.content),
+                    _ => null
+                };
                 _items.Add(itemView);
                 itemView.gameObject.SetActive(true);
                 itemView.SetModel(item);
             }
         }
         
-        private async void OnBoughtSomething(UIShopPanel_PurchaseItemModel sender, bool success, int coinsAmount, CancellationToken cancellationToken)
+        private async Task OnBoughtSomethingAsync(UIShopPanel_ItemModel sender, bool success, int coinsAmount)
         {
             if (success)
             {
-                await PlayBoughtSuccessAnimation(sender, coinsAmount, cancellationToken);
+                await PlayBoughtSuccessAnimation(sender, coinsAmount, _cancellationTokenSource.Token);
             }
             else
             {
@@ -112,7 +125,7 @@ namespace Core
             }
         }
 
-        private async Task PlayBoughtSuccessAnimation(UIShopPanel_PurchaseItemModel sender, int coinsAmount, CancellationToken cancellationToken)
+        private async Task PlayBoughtSuccessAnimation(UIShopPanel_ItemModel sender, int coinsAmount, CancellationToken cancellationToken)
         {
             //stub
             LockInput(true);
@@ -126,42 +139,39 @@ namespace Core
         
         public class Model
         {
-            private Action<IEnumerable<UIShopPanel_PurchaseItemModel>> _onItemsUpdated;
-            private Action<UIShopPanel_PurchaseItemModel, bool, int, CancellationToken> _onBoughtSomething;
+            private Action<IEnumerable<UIShopPanel_ItemModel>> _onItemsUpdated;
+            private Func<UIShopPanel_ItemModel, bool, int, Task> _onBoughtSomething;
             private Action<bool> _onLockInput;
 
-            private IMarket _market;
-            private readonly List<UIShopPanel_PurchaseItemModel> _items = new();
+            private readonly List<UIShopPanel_ItemModel> _itemModels = new();
           
-            public void SetData(IMarket market, IEnumerable<PurchaseItem> purchaseItems)
+            public void SetData(IEnumerable<IShopPanelItem> purchaseItems)
             {
-                _market = market;
-                _items.AddRange(purchaseItems
-                    .Select(i => new UIShopPanel_PurchaseItemModel(this)
-                        .Init(i.PurchaseType == PurchaseType.Market ? i.ProductId : $"ShowAds{i.CurrencyAmount}", i.ProductId, i.CurrencyAmount, i.PurchaseType)
-                        .SetBackgroundName(i.BackgroundName)));
-                _onItemsUpdated?.Invoke(_items);
+                _itemModels.AddRange(purchaseItems
+                    .Select(i => new UIShopPanel_ItemModel(this)
+                        .Init(i)));
+                _onItemsUpdated?.Invoke(_itemModels);
             }
             
-            public async Task<bool> Buy(UIShopPanel_PurchaseItemModel model, CancellationToken cancellationToken)
+            public void ChangeLockInputState(bool state)
             {
-                _onLockInput?.Invoke(true);
-                var result = await _market.Buy(model.InAppId, model.PurchaseType, cancellationToken);
-                _onLockInput?.Invoke(false);
-                
-                _onBoughtSomething?.Invoke(model, result.success, result.amount, cancellationToken);
-                
-                return result.success;
+                _onLockInput?.Invoke(state);
             }
             
-            public Model OnItemsUpdated(Action<IEnumerable<UIShopPanel_PurchaseItemModel>> onItemsUpdated)
+            public async Task SomethingBoughtAsync(UIShopPanel_ItemModel sender, bool success, int amount)
+            {
+                if(_onBoughtSomething != null)
+                    await _onBoughtSomething.Invoke(sender, success, amount);
+            }
+            
+            public Model OnItemsUpdated(Action<IEnumerable<UIShopPanel_ItemModel>> onItemsUpdated)
             {
                 _onItemsUpdated = onItemsUpdated;
-                _onItemsUpdated?.Invoke(_items);
+                _onItemsUpdated?.Invoke(_itemModels);
                 return this;
             }
             
-            public Model OnBoughtSomething(Action<UIShopPanel_PurchaseItemModel, bool, int, CancellationToken> onBoughtSomething)
+            public Model OnBoughtSomething(Func<UIShopPanel_ItemModel, bool, int, Task> onBoughtSomething)
             {
                 _onBoughtSomething = onBoughtSomething;
                 return this;
@@ -175,10 +185,82 @@ namespace Core
         }
     }
     
-    public class UIShopScreenData : UIScreenData
+    public class UIShopPanelData : UIScreenData
     {
         public GameProcessor GameProcessor;
         public IMarket Market;
-        public IEnumerable<PurchaseItem> PurchaseItems;
+        public IEnumerable<IShopPanelItem> Items;
+    }
+
+    public interface IShopPanelItem
+    {
+        string Name { get; }
+        int CurrencyAmount { get; }
+    }
+
+    public class ShopPanelMarketItem : IShopPanelItem
+    {
+        private UIShopPanel.Model _owner;
+        private string _name;
+        private string _productId;
+        private string _backgroundName;
+        private int _currencyAmount;
+        
+        private IMarket _market;
+        
+        public string Name => _name;
+        public int CurrencyAmount => _currencyAmount;
+        public string ProductId => _productId;
+
+        public IMarket Market => _market;
+        
+        public IShopPanelItem Init(string name, string inAppId, int currencyAmount, IMarket market)
+        {
+            _name = name;
+            _productId = inAppId;
+            _currencyAmount = currencyAmount;
+            _market = market;
+               
+            return this;
+        }
+    }
+    
+    public class ShopPanelAdsItem : IShopPanelItem
+    {
+        private UIShopPanel.Model _owner;
+        private string _name;
+        private int _currencyAmount;
+        private IAdsViewer _adsViewer;
+
+        public string Name => _name;
+        public int CurrencyAmount => _currencyAmount;
+        public IAdsViewer AdsViewer => _adsViewer;
+
+        public IShopPanelItem Init(string name, int currencyAmount, IAdsViewer adsViewer)
+        {
+            _name = name;
+            _currencyAmount = currencyAmount;
+            _adsViewer = adsViewer;
+            
+            return this;
+        }
+    }
+    
+    public class ShopPanelGiftItem : IShopPanelItem
+    {
+        private UIShopPanel.Model _owner;
+        private string _name;
+        private int _currencyAmount;
+        
+        public int CurrencyAmount => _currencyAmount;
+        public string Name => _name;
+
+        public IShopPanelItem Init(string name, int currencyAmount)
+        {
+            _name = name;
+            _currencyAmount = currencyAmount;
+                
+            return this;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Assets.Scripts.Core;
 using Atom;
 using UnityEngine;
@@ -17,20 +18,37 @@ namespace Core
     {
         [SerializeField] private Button _playBtn;
         [SerializeField] private UIStaticTextLocalizator _playLabelBtn;
-       
         [SerializeField] private GuidEx _playLocKey;
         [SerializeField] private GuidEx _continueLocKey;
+
+        [SerializeField] private Button _castlesBtn;
+        [SerializeField] private Button _hatsBtn;
+
+        [SerializeField] private Button _settingsBtn;
 
         [SerializeField] private SpawnAnimator _panelAnimator;
         private Model _model;
         private UIStartPanelData _data;
         private UIStartPanelChoice _choice;
-        
+        private CancellationTokenSource _cancellationTokenSource;
+
         public UIStartPanelChoice Choice => _choice;
         
         private void Awake()
         {
+            _cancellationTokenSource = new CancellationTokenSource();
+
             _playBtn.onClick.AddListener(PlayBtn_OnClick);
+            _castlesBtn.onClick.AddListener(CastleBtn_OnClick);
+            _hatsBtn.onClick.AddListener(HatsBtn_OnClick);
+            
+            _settingsBtn.onClick.AddListener(SettingsBtn_OnClick);
+        }
+        
+        private void OnDestroy()
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
         }
         
         private void CloseBtn_OnClick()
@@ -41,6 +59,27 @@ namespace Core
         private void PlayBtn_OnClick()
         {
             ApplicationController.Instance.UIPanelController.PopScreen(this);
+        }
+        
+        private void CastleBtn_OnClick()
+        {
+            var data = new UICastlesLibraryPanel.UICastleLibraryPanelData();
+            data.Selected = _data.GameProcessor.GetFirstUncompletedCastle();
+            data.Castles = _data.GameProcessor.CastleSelector.Library.Castles;
+            data.GameProcessor = _data.GameProcessor;
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UICastlesLibraryPanel), data, _cancellationTokenSource.Token);
+        }
+        
+        private void HatsBtn_OnClick()
+        {
+           
+        }
+        
+        private void SettingsBtn_OnClick()
+        {
+            var panelData = new UISettingsPanelData();
+            panelData.GameProcessor = _data.GameProcessor;
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UISettingsPanel), panelData, _cancellationTokenSource.Token);
         }
         
         private void ContinueBtn_OnClick()

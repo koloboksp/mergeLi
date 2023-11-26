@@ -60,11 +60,11 @@ namespace Core
         {
             _ = ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
                 typeof(UIShopPanel),
-                new UIShopScreenData()
+                new UIShopPanelData()
                 {
                     GameProcessor = _data.GameProcessor,
                     Market = _data.GameProcessor.Market,
-                    PurchaseItems = _data.GameProcessor.PurchasesLibrary.Items
+                    Items = UIGameScreen.FillShopItems(_data.GameProcessor),
                 },
                 _cancellationTokenSource.Token);
         }

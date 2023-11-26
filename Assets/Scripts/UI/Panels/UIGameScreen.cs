@@ -156,13 +156,30 @@ namespace Core
         {
             ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
                 typeof(UIShopPanel),
-                new UIShopScreenData()
+                new UIShopPanelData()
                 {
                     GameProcessor = _data.GameProcessor,
                     Market = _data.GameProcessor.Market,
-                    PurchaseItems = new List<PurchaseItem>(_data.GameProcessor.PurchasesLibrary.Items)
+                    Items = FillShopItems(_data.GameProcessor),
                 },
                 _cancellationTokenSource.Token);
+        }
+
+        public static IEnumerable<IShopPanelItem> FillShopItems(GameProcessor gameProcessor)
+        {
+            var items = new List<IShopPanelItem>();
+
+            items.AddRange(gameProcessor.AdsLibrary.Items
+                .Select(i => new ShopPanelAdsItem()
+                    .Init(i.name, i.CurrencyAmount, gameProcessor.AdsViewer)));
+            items.AddRange(gameProcessor.PurchasesLibrary.Items
+                .Select(i => new ShopPanelMarketItem()
+                    .Init(i.name, i.ProductId, i.CurrencyAmount, gameProcessor.Market)));
+            items.AddRange(gameProcessor.GiftsLibrary.Items
+                .Select(i => new ShopPanelGiftItem()
+                    .Init(i.name, i.CurrencyAmount)));
+
+            return items;
         }
         
         private void CastleSelector_OnSelectedPartChanged()

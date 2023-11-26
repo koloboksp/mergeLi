@@ -82,14 +82,14 @@ namespace Core
             _model = new Model();
         }
         
-        public class UISettingsPanelData : UIScreenData
-        {
-            public GameProcessor GameProcessor { get; set; }
-        }
-        
         public class Model
         {
          
         }
+    }
+    
+    public class UISettingsPanelData : UIScreenData
+    {
+        public GameProcessor GameProcessor { get; set; }
     }
 }

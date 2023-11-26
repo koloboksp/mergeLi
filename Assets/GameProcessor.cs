@@ -107,6 +107,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     [SerializeField] private StepMachine _stepMachine;
     [SerializeField] private PlayerInfo _playerInfo;
     [SerializeField] private DefaultMarket _market;
+    [SerializeField] private DefaultAdsViewer _adsViewer;
 
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
@@ -123,6 +124,9 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     [SerializeField] private List<Buff> _buffs;
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     [SerializeField] private CastleSelector _castleSelector;
+    [SerializeField] private GiftsLibrary _giftsLibrary;
+    [SerializeField] private AdsLibrary _adsLibrary;
+
     //todo extract
     [SerializeField] private GiveCoinsEffect _giveCoinsEffect;
     
@@ -141,12 +145,16 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     private bool _notAllBallsGenerated = false;
     private int _bestSessionScore;
     private CancellationTokenSource _cancellationTokenSource;
-
+   
     public Scene Scene => _scene;
     public PlayerInfo PlayerInfo => _playerInfo;
     public int Score => _score;
     public IMarket Market => _market;
+    public IAdsViewer AdsViewer => _adsViewer;
     public PurchasesLibrary PurchasesLibrary => _purchasesLibrary;
+    public GiftsLibrary GiftsLibrary => _giftsLibrary;
+    public AdsLibrary AdsLibrary => _adsLibrary;
+
     public CastleSelector CastleSelector => _castleSelector;
 
     public UIFxLayer UIFxLayer => _uiFxLayer;

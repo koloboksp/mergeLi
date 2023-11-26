@@ -13,7 +13,7 @@ namespace Core
 
         [SerializeField] private PurchasesLibrary _purchasesLibrary;
         
-        public async Task<(bool success, int amount)> Buy(string productId, PurchaseType modelPurchaseType, CancellationToken cancellationToken)
+        public async Task<(bool success, int amount)> BuyAsync(string productId, CancellationToken cancellationToken)
         {
             var purchaseItem = _purchasesLibrary.Items.FirstOrDefault(i => string.Equals(i.ProductId, productId, StringComparison.Ordinal));
             if (purchaseItem == null)
@@ -24,18 +24,10 @@ namespace Core
             
             var success = true;
             var currencyAmount = 0;
-            if (modelPurchaseType == PurchaseType.Market)
-            {
-                success = await ApplicationController.Instance.PurchaseController.Buy(purchaseItem.ProductId, cancellationToken);
-                if (success)
-                    currencyAmount = purchaseItem.CurrencyAmount;
-            }
-            else if (modelPurchaseType == PurchaseType.Ads)
-            {
-                success = await ApplicationController.Instance.AdsController.Show(AdvertisingType.Rewarded, cancellationToken);
-                if (success)
-                    currencyAmount = purchaseItem.CurrencyAmount;
-            }
+
+            success = await ApplicationController.Instance.PurchaseController.Buy(purchaseItem.ProductId, cancellationToken);
+            if (success)
+                currencyAmount = purchaseItem.CurrencyAmount;
             
             OnBought?.Invoke(success, purchaseItem.ProductId, currencyAmount);
             

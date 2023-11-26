@@ -92,11 +92,11 @@ public class UIBuff : MonoBehaviour
         {
             ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
                 typeof(UIShopPanel),
-                new UIShopScreenData()
+                new UIShopPanelData()
                 {
                     GameProcessor =  _model.GameProcessor,
                     Market = _model.GameProcessor.Market,
-                    PurchaseItems = new List<PurchaseItem>(_model.GameProcessor.PurchasesLibrary.Items)
+                    Items = UIGameScreen.FillShopItems(_model.GameProcessor)
                 }, 
                 _cancellationTokenSource.Token);
             return true;
