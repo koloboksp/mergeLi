@@ -52,6 +52,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _view: {fileID: 4096404547360739593}
   _coinsAfterComplete: 400
+  _nameKey:
+    m03: 2960979945
+    m47: 705381675
+    m8B: 3118541653
+    mCF: 4067460429
+  _root: {fileID: 8508746258051257580}
 --- !u!1001 &964927389477637138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -184,11 +190,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4545449236926310811, guid: 70fdd34a92a01dd43a7d9c5e4f5d91e2,
-        type: 3}
-      propertyPath: _model
-      value: 
-      objectReference: {fileID: 7896500434790910664}
     - target: {fileID: 5631750671014996352, guid: 70fdd34a92a01dd43a7d9c5e4f5d91e2,
         type: 3}
       propertyPath: _owner
@@ -247,15 +248,3 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 964927389477637138}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7896500434790910664 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6985677960715044570, guid: 70fdd34a92a01dd43a7d9c5e4f5d91e2,
-    type: 3}
-  m_PrefabInstance: {fileID: 964927389477637138}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d75912302224bf7a691f5db8073b25a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

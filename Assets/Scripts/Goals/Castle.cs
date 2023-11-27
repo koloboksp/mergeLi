@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Atom;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -17,18 +18,23 @@ namespace Core.Goals
 
         [SerializeField] private CastleViewer _view;
         [SerializeField] private int _coinsAfterComplete;
-        
+        [SerializeField] private GuidEx _nameKey;
+        [SerializeField] private RectTransform _root;
+
         private GameProcessor _gameProcessor;
         private readonly List<CastlePart> _parts = new();
         private int _points;
         private CastlePart _selectedPart;
         
         public string Id => gameObject.name;
+        public RectTransform Root => _root;
+
         public bool Completed => _points >= GetCost(); 
         public CastleViewer View => _view;
         public IEnumerable<CastlePart> Parts => _parts;
         public int CoinsAfterComplete => _coinsAfterComplete;
-        
+        public GuidEx NameKey => _nameKey;
+
         public CastlePart GetSelectedCastlePart()
         {
             return _selectedPart;

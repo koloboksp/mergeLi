@@ -241,7 +241,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
             if (HasPreviousSessionGame)
             {
-                var lastSessionProgress = PlayerInfo.GetLastSessionProgress();
+                var lastSessionProgress = PlayerInfo.LastSessionProgress;
                 _score = lastSessionProgress.Score;
 
                 _castleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
@@ -541,7 +541,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         get
         {
-            var lastSessionProgress = _playerInfo.GetLastSessionProgress();
+            var lastSessionProgress = _playerInfo.LastSessionProgress;
             return lastSessionProgress != null && lastSessionProgress.IsValid();
         }
     }

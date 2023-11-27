@@ -11,7 +11,7 @@ namespace Assets.Scripts.Core
         public Text Target;
         [SerializeField]
         [FormerlySerializedAsAttribute("mGuid")]
-        public GuidEx Id;
+        private GuidEx _id;
 
         void Awake()
         {
@@ -42,15 +42,22 @@ namespace Assets.Scripts.Core
                 Target.text = text;
             else
             {
-		        var t = LocalizationController.GetText(Id);
+		        var t = LocalizationController.GetText(_id);
                 Target.text = t;
 	        }
         }
 
-        public void SetText(GuidEx id)
+        public GuidEx Id
         {
-            Id = id;
-            UpdateText();
+            set
+            {
+                _id = value;
+                UpdateText();
+            }
+            get
+            {
+                return _id;
+            }
         }
     }
 }

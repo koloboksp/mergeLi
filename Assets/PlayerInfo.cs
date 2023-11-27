@@ -200,11 +200,8 @@ public class PlayerInfo : MonoBehaviour
         File.WriteAllText(path, data);
     }
 
-    public SessionProgress GetLastSessionProgress()
-    {
-        return _lastSessionProgress;
-    }
-    
+    public SessionProgress LastSessionProgress => _lastSessionProgress;
+
     public bool IsTutorialComplete(string tutorialId)
     {
         var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));

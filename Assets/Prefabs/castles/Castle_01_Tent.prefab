@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1054850265026345782}
   - component: {fileID: 1054850265026345781}
-  - component: {fileID: 7112143970757371580}
   m_Layer: 5
   m_Name: Castle_01_Tent
   m_TagString: Untagged
@@ -54,21 +53,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _view: {fileID: 800127031090507919}
   _coinsAfterComplete: 100
---- !u!114 &7112143970757371580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054850265026345783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 751a5d7177994097be8df5864da1e984, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _model: {fileID: 1054850265026345781}
+  _nameKey:
+    m03: 470254033
+    m47: 1772110759
+    m8B: 2383655052
+    mCF: 189184013
   _root: {fileID: 1054850265026345782}
-  castleSettings: {fileID: 11400000, guid: 5a91144ec0ed2c0438a9c8fb05b7beb3, type: 2}
 --- !u!1 &7486807801964353803
 GameObject:
   m_ObjectHideFlags: 0

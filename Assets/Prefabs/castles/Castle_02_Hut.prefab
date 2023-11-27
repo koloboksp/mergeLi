@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7047264570851907106}
   - component: {fileID: 7047264570851907105}
-  - component: {fileID: 998695423786879912}
   m_Layer: 5
   m_Name: Castle_02_Hut
   m_TagString: Untagged
@@ -53,21 +52,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _view: {fileID: 7511617912879365689}
   _coinsAfterComplete: 200
---- !u!114 &998695423786879912
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7047264570851907107}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 751a5d7177994097be8df5864da1e984, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _model: {fileID: 7047264570851907105}
+  _nameKey:
+    m03: 575006680
+    m47: 394414581
+    m8B: 3220381813
+    mCF: 1639819191
   _root: {fileID: 7047264570851907106}
-  castleSettings: {fileID: 11400000, guid: 5a91144ec0ed2c0438a9c8fb05b7beb3, type: 2}
 --- !u!1001 &6738483264874734370
 PrefabInstance:
   m_ObjectHideFlags: 0

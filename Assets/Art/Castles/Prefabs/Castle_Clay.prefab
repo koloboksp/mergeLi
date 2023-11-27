@@ -67,8 +67,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 2292370563305525506}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 0}
 --- !u!1 &1163769236900940230
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,7 +120,7 @@ MonoBehaviour:
   _owner: {fileID: 0}
   _index: 2
   _cost: 1600
-  _view: {fileID: 0}
+  _view: {fileID: 4545449236926310811}
 --- !u!114 &4545449236926310811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,9 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd277d5d4d87442f96cc3365d9d58556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _model: {fileID: 0}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 0}
+  _model: {fileID: 6985677960715044570}
 --- !u!1 &2984148192785647418
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,8 +201,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 7166033418637252375}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 0}
 --- !u!1 &4063241639028370847
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,8 +268,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 7923727353055761805}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 0}
 --- !u!1 &4261021255262913263
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,8 +335,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 3040541659669482}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 0}
 --- !u!1 &4797878524487481598
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,8 +402,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 8998733711129410583}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 4606136149620182654}
 --- !u!1 &7169806631353828745
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,6 +514,7 @@ MonoBehaviour:
   - {fileID: 1381425421825895795}
   - {fileID: 3588103780351912415}
   - {fileID: 4083506898059494264}
+  _partBornEffect: {fileID: 0}
 --- !u!1 &7756844663660795983
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,8 +582,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 3119245449924418174}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 0}
 --- !u!1 &7789605237011785781
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,8 +649,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 5631750671014996352}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 511151730853362150}
 --- !u!1 &7824761540920564551
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,5 +716,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 8609341913173973560}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 0}

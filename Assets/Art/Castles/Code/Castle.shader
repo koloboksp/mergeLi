@@ -26,21 +26,47 @@ Shader "Unlit/Castle"
         _BackSize("Back Size", float) = 1
         _BackSpeed("Back Speed", float) = 0
         _BackColor("Border Color", Color) = (1,1,1,1)
+        
+        _StencilComp("Stencil Comparison", Float) = 8
+        _Stencil("Stencil ID", Float) = 0
+        _StencilOp("Stencil Operation", Float) = 0
+        _StencilWriteMask("Stencil Write Mask", Float) = 255
+        _StencilReadMask("Stencil Read Mask", Float) = 255
+
+        _ColorMask("Color Mask", Float) = 15
+
+        [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip("Use Alpha Clip", Float) = 0
     }
 
     SubShader
     {
         Tags
         {
-            "RenderType"="Transparent"
-            "Queue"="Transparent"
-            "PreviewType"="Plane"
+            "Queue" = "Transparent"
+            "IgnoreProjector" = "True"
+            "RenderType" = "Transparent"
+            "PreviewType" = "Plane"
+            "CanUseSpriteAtlas" = "True"
         }
 
+        Stencil
+        {
+            Ref[_Stencil]
+            Comp[_StencilComp]
+            Pass[_StencilOp]
+            ReadMask[_StencilReadMask]
+            WriteMask[_StencilWriteMask]
+        }
+
+        Cull Off
+        Lighting Off
+        ZWrite Off
+        ZTest[unity_GUIZTestMode]
+        Blend SrcAlpha OneMinusSrcAlpha
+        ColorMask[_ColorMask]
+            
         Pass
         {
-            Blend SrcAlpha OneMinusSrcAlpha
-            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -57,6 +83,7 @@ Shader "Unlit/Castle"
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
                 float4 uvBack : TEXCOORD1;
+                half4  mask : TEXCOORD2;
             };
 
             sampler2D_half _MainTex;
@@ -84,6 +111,10 @@ Shader "Unlit/Castle"
             fixed4 _BackColor;
             fixed _BackSize;
             fixed _BackSpeed;
+            float4 _ClipRect;
+            float _UIMaskSoftnessX;
+            float _UIMaskSoftnessY;
+
 
             v2f vert (appdata v)
             {
@@ -95,6 +126,14 @@ Shader "Unlit/Castle"
                 o.uvBack.xy = wPos.xy / _BackSize + _BackSpeed * _Time.x;
                 o.uvBack.zw = wPos.xy / _BackSize * 1.37 + float2(-1, 1) * _BackSpeed * 1.37 * _Time.x;
 
+                float2 pixelSize = o.vertex.w;
+                pixelSize /= float2(1, 1) * abs(mul((float2x2)UNITY_MATRIX_P, _ScreenParams.xy));
+                float4 clampedRect = clamp(_ClipRect, -2e10, 2e10);
+                float2 maskUV = (v.vertex.xy - clampedRect.xy) / (clampedRect.zw - clampedRect.xy);
+                
+                o.mask = half4(v.vertex.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy)));
+
+                
                 return o;
             }
 
@@ -158,7 +197,11 @@ Shader "Unlit/Castle"
                 fixed backMask = tex2D(_BackMask, i.uv).r;
                 backTex = lerp(backTex, _BackColor.rgb * 2, backMask.r * _BackColor.a); 
                 col.rgb = lerp(backTex, col.rgb, loadMask);
-
+#ifdef UNITY_UI_CLIP_RECT
+                half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);
+                col.a *= m.x * m.y;
+                col.a *= m.x * m.y;
+#endif
                 return col;
             }
             ENDCG

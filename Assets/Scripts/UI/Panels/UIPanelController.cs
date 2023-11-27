@@ -64,24 +64,35 @@ namespace Core
         
         public async Task<UIPanel> PushPopupScreenAsync(Type screenType, UIScreenData data, CancellationToken cancellationToken)
         {
-            var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
-            var result = await handle.Task;
-
-            if (handle.Status == AsyncOperationStatus.Succeeded)
+            try
             {
-                var screenObject = Object.Instantiate(result);
-                var screen = screenObject.GetComponent<UIPanel>();
-                screen.Root.SetParent(_screensRoot);
-                screen.Root.anchorMin = Vector2.zero;
-                screen.Root.anchorMax = Vector2.one;
-                screen.Root.offsetMin = Vector2.zero;
-                screen.Root.offsetMax = Vector2.zero;
-                screen.Root.localScale = Vector3.one;
-                _stack.PushPopup(handle, screen, data);
-                
-                return screen;
+                var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
+                var result = await handle.Task;
+    
+                if (handle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    var screenObject = Object.Instantiate(result);
+                    var screen = screenObject.GetComponent<UIPanel>();
+                    screen.Root.SetParent(_screensRoot);
+                    screen.Root.anchorMin = Vector2.zero;
+                    screen.Root.anchorMax = Vector2.one;
+                    screen.Root.offsetMin = Vector2.zero;
+                    screen.Root.offsetMax = Vector2.zero;
+                    screen.Root.localScale = Vector3.one;
+                    _stack.PushPopup(handle, screen, data);
+                    
+                    return screen;
+                }
             }
-
+            catch (OperationCanceledException e)
+            {
+                Debug.Log(e);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+            
             return null;
         }
         public void PopScreen(UIPanel screen)

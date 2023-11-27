@@ -11,7 +11,8 @@ namespace Core
     {
         [SerializeField] private Button _closeBtn;
         [SerializeField] private ScrollRect _container;
-        
+        [SerializeField] private UICastlesLibraryPanel_CastleLabel _castleLabelPrefab;
+
         private Model _model;
         private GameProcessor _gameProcessor;
         
@@ -41,18 +42,33 @@ namespace Core
             var oldViews = _container.content.GetComponents<Castle>();
             foreach (var oldView in oldViews)
                 Destroy(oldView.gameObject);
+
+            _castleLabelPrefab.gameObject.SetActive(false);
+            
+            var contentHeight = itemsPrefabs.Sum(i => i.Root.sizeDelta.y + _castleLabelPrefab.Root.sizeDelta.y);
+            _container.content.ForceUpdateRectTransforms();
+            _container.content.sizeDelta = new Vector2(_container.content.sizeDelta.x, contentHeight);
             
             foreach (var itemsPrefab in itemsPrefabs)
             {
-                var item = Instantiate(itemsPrefab, _container.content);
-                item.gameObject.name = itemsPrefab.Id;
-                item.View.Root.anchorMin = Vector2.zero;
-                item.View.Root.anchorMax = Vector2.one;
-                item.View.Root.offsetMin = Vector2.zero;
-                item.View.Root.offsetMax = Vector2.zero;
-                item.View.Root.localScale = Vector3.one;
-        
-                item.Init(_gameProcessor);
+                var castleLabel = Instantiate(_castleLabelPrefab, _container.content);
+                castleLabel.gameObject.SetActive(true);
+                castleLabel.NameKey = itemsPrefab.NameKey;
+                
+                var castle = Instantiate(itemsPrefab, _container.content);
+                castle.gameObject.name = itemsPrefab.Id;
+                castle.Init(_gameProcessor);
+                if (castle.Root.sizeDelta.x > _container.content.sizeDelta.x)
+                {
+                    var scaleFactor = _container.content.sizeDelta.x / castle.Root.sizeDelta.x;
+                    castle.Root.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+                }
+                if (_gameProcessor.PlayerInfo.IsCastleCompleted(castle.name))
+                    castle.ShowAsCompleted();
+                
+                var lastSessionProgress = _gameProcessor.PlayerInfo.LastSessionProgress;
+                if (castle.name == lastSessionProgress.Castle.Id)
+                    castle.SetPoints(lastSessionProgress.Castle.Points, true);
             }
         }
         

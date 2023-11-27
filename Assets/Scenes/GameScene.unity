@@ -1743,7 +1743,7 @@ MonoBehaviour:
   _adsLibrary: {fileID: 3263078032568648822, guid: 85db13592bea76548b097552e82e3578,
     type: 3}
   _giveCoinsEffect: {fileID: 1636435618}
-  _enableTutorial: 0
+  _enableTutorial: 1
   _forceTutorial: 0
   _tutorialController: {fileID: 2121425916}
   _uiFxLayer: {fileID: 143379532}
