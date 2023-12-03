@@ -27,6 +27,9 @@ dependencyResolutionManagement {
         maven {
             url "https://cboost.jfrog.io/artifactory/chartboost-ads/" // Assets/CleverAdsSolutions/Editor/CASAndroidFamiliesAdsDependencies.xml:8
         }
+        maven {
+            url (unityProjectPath + "/Assets/GeneratedLocalRepo/GooglePlayGames/com.google.play.games/Editor/m2repository") // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
+        }
         mavenLocal()
 // Android Resolver Repos End
         flatDir {

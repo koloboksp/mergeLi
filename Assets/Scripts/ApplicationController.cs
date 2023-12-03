@@ -20,13 +20,15 @@ namespace Core
         private IAdsController _adsController;
         private UIPanelController _uiPanelController;
         private LocalizationController _localizationController;
-        
+        private ISocialService _socialService;
         public static ApplicationController Instance => _instance;
         
         public LocalizationController LocalizationController => _localizationController;
         public UIPanelController UIPanelController => _uiPanelController;
         public PurchaseController PurchaseController => _purchaseController;
         public IAdsController AdsController => _adsController;
+
+        public ISocialService ISocialService => _socialService;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static async void Start()
@@ -39,18 +41,18 @@ namespace Core
             }
             
             _instance = new ApplicationController();
-            var timer = new SmallTimer();
-
+           
             _instance._localizationController = new LocalizationController();
             await _instance._localizationController.InitializeAsync(CancellationToken.None);
-            Debug.Log($"<color=#99ff99>Time initialize {nameof(Assets.Scripts.Core.Localization.LocalizationController)}: {timer.Update()}.</color>");
-            
+           
             _instance._purchaseController = new PurchaseController();
             await _instance._purchaseController.InitializeAsync(purchasesLibrarySceneReference.Reference.Items.Select(i=>i.ProductId));
-            Debug.Log($"<color=#99ff99>Time initialize {nameof(PurchaseController)}: {timer.Update()}.</color>");
             
             _instance._adsController = new CASWrapper();
             await _instance._adsController.InitializeAsync();
+
+            _instance._socialService = new GooglePlayGames();
+            _ = _instance._socialService.Authentication();
             
             await StartAsync();
         }

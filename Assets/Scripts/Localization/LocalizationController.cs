@@ -8,6 +8,7 @@ using UnityEngine.Serialization;
 using System.Threading.Tasks;
 using Atom.Timers;
 using Core;
+using SmallTimer = Atom.Timers.SmallTimer;
 
 namespace Assets.Scripts.Core.Localization
 {
@@ -43,11 +44,22 @@ namespace Assets.Scripts.Core.Localization
         
         public async Task InitializeAsync(CancellationToken cancellationToken)
         {
-            _dataLoaded = false;
-            AvailableLanguagePacks = await LocalizationData.LoadAsync(cancellationToken);
-            _dataLoaded = true;
+            try
+            {
+                Debug.Log($"<color=#99ff99>Initialize {nameof(LocalizationController)}.</color>");
+                var timer = new SmallTimer();
+
+                _dataLoaded = false;
+                AvailableLanguagePacks = await LocalizationData.LoadAsync(cancellationToken);
+                _dataLoaded = true;
           
-            ChangeLocalization();
+                ChangeLocalization();
+                Debug.Log($"<color=#99ff99>Time initialize {nameof(LocalizationController)}: {timer.Update()}.</color>");
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
 
         public static void Add(ILocalizationSupport listener)

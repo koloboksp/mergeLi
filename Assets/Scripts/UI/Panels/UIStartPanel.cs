@@ -2,6 +2,8 @@
 using System.Threading;
 using Assets.Scripts.Core;
 using Atom;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -26,6 +28,8 @@ namespace Core
 
         [SerializeField] private Button _settingsBtn;
 
+        [SerializeField] private Button _loginSocialBtn;
+
         [SerializeField] private SpawnAnimator _panelAnimator;
         private Model _model;
         private UIStartPanelData _data;
@@ -43,6 +47,8 @@ namespace Core
             _hatsBtn.onClick.AddListener(HatsBtn_OnClick);
             
             _settingsBtn.onClick.AddListener(SettingsBtn_OnClick);
+            
+            _loginSocialBtn.onClick.AddListener(LoginSocialBtn_OnClick);
         }
         
         private void OnDestroy()
@@ -80,6 +86,17 @@ namespace Core
             var panelData = new UISettingsPanelData();
             panelData.GameProcessor = _data.GameProcessor;
             ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UISettingsPanel), panelData, _cancellationTokenSource.Token);
+        }
+        
+        
+        private void LoginSocialBtn_OnClick()
+        {
+            PlayGamesPlatform.Instance.Authenticate(status =>
+            {
+                Debug.Log(status == SignInStatus.Success
+                    ? $"<color=#00CCFF>Play Games sign in. UserName: {PlayGamesPlatform.Instance.localUser.userName}.</color>"
+                    : $"<color=#00CCFF>Failed to sign into Play Games Services: {status}.</color>");
+            });
         }
         
         private void ContinueBtn_OnClick()

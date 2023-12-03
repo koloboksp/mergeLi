@@ -15,11 +15,18 @@ namespace Core
         
         public async Task InitializeAsync()
         {
-            var timer = new SmallTimer();
-            
-            _manager = Build();
-            Subscribe();
-            Debug.Log($"<color=#99ff99>Time initialize {nameof(CASWrapper)}: {timer.Update()}.</color>");
+            try
+            {
+                Debug.Log($"<color=#99ff99>Initialize {nameof(CASWrapper)}.</color>");
+                var timer = new SmallTimer();
+                _manager = Build();
+                Subscribe();
+                Debug.Log($"<color=#99ff99>Time initialize {nameof(CASWrapper)}: {timer.Update()}.</color>");
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
 
         private IMediationManager Build()

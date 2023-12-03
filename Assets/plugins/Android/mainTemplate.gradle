@@ -6,6 +6,7 @@ dependencies {
 // Android Resolver Dependencies Start
     implementation 'com.cleveradssolutions:cas-families:3.2.5' // Assets/CleverAdsSolutions/Editor/CASAndroidFamiliesAdsDependencies.xml:9
     implementation 'com.cleveradssolutions:cas-sdk:3.2.5' // Packages/com.cleversolutions.ads.unity/Editor/CASBaseDependencies.xml:4
+    implementation 'com.google.games:gpgs-plugin-support:0.11.01' // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:11
 // Android Resolver Dependencies End
 **DEPS**}
 

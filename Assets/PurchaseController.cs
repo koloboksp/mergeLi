@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Atom.Timers;
 using Core.Steps.CustomOperations;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -29,29 +30,41 @@ public class PurchaseController : IDetailedStoreListener
     
     public async Task InitializeAsync(IEnumerable<string> availableProducts)
     {
-        _availableProducts.AddRange(availableProducts);
+        try
+        {
+            Debug.Log($"<color=#99ff99>Initialize {nameof(PurchaseController)}.</color>");
+            var timer = new SmallTimer();
+
+            _availableProducts.AddRange(availableProducts);
 #if UNITY_EDITOR
-        StandardPurchasingModule.Instance().useFakeStoreAlways = true;
-        StandardPurchasingModule.Instance().useFakeStoreUIMode = FakeStoreUIMode.StandardUser;
+            StandardPurchasingModule.Instance().useFakeStoreAlways = true;
+            StandardPurchasingModule.Instance().useFakeStoreUIMode = FakeStoreUIMode.StandardUser;
 #elif UNITY_ANDROID || UNITY_IOS
             _validator = new CrossPlatformValidator(UnityEngine.Purchasing.Security.GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
 #elif UNITY_STANDALONE
             return;            
 #endif
-        var configurationBuilder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
+            var configurationBuilder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
-        string storeName = null;
+            string storeName = null;
 #if UNITY_ANDROID
-        storeName = GooglePlay.Name;
+            storeName = GooglePlay.Name;
 #elif UNITY_IOS
             storeName = AppleAppStore.Name;
 #elif UNITY_EDITOR
             storeName = "Standalone";
 #endif
-        foreach (var productId in _availableProducts)
-            configurationBuilder.AddProduct(productId, ProductType.Consumable, new IDs { { productId, storeName } });
+            foreach (var productId in _availableProducts)
+                configurationBuilder.AddProduct(productId, ProductType.Consumable, new IDs { { productId, storeName } });
            
-        UnityPurchasing.Initialize(this, configurationBuilder);
+            UnityPurchasing.Initialize(this, configurationBuilder);
+            
+            Debug.Log($"<color=#99ff99>Time initialize {nameof(PurchaseController)}: {timer.Update()}.</color>");
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
     }
         
     public void OnInitialized(IStoreController store, IExtensionProvider extensions)
