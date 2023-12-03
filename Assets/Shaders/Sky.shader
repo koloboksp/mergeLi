@@ -113,9 +113,9 @@ Shader "Unlit/Sky"
 
                 col.rgb += (dist.x + dist.y) * 2;
 
-                #ifdef UNITY_UI_CLIP_RECT
-                col.a *= UnityGet2DClipping(i.wPos, _ClipRect);
-                #endif
+              //  #ifdef UNITY_UI_CLIP_RECT
+              //  col.a *= UnityGet2DClipping(i.wPos, _ClipRect);
+              //  #endif
 
                 #ifdef UNITY_UI_ALPHACLIP
                 clip(col.a - 0.001);

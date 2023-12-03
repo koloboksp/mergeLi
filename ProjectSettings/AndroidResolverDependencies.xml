@@ -2,11 +2,12 @@
   <packages>
     <package>com.cleveradssolutions:cas-families:3.2.5</package>
     <package>com.cleveradssolutions:cas-sdk:3.2.5</package>
+    <package>com.google.games:gpgs-plugin-support:0.11.01</package>
   </packages>
   <files />
   <settings>
     <setting name="androidAbis" value="arm64-v8a,armeabi-v7a" />
-    <setting name="bundleId" value="com.wib.mergeLi" />
+    <setting name="bundleId" value="com.WiB.MergeLines" />
     <setting name="explodeAars" value="True" />
     <setting name="gradleBuildEnabled" value="True" />
     <setting name="gradlePropertiesTemplateEnabled" value="True" />
