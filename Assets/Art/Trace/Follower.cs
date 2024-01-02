@@ -3,30 +3,29 @@ using UnityEngine;
 
 public class Follower : MonoBehaviour
 {
-    private static Follower instance = null;
-
-    private static Transform s_target;
-    private static bool s_doFollow;
+    private Transform target;
 
     [SerializeField] private Vector3 offset;
 
     private void Awake()
     {
-        instance = this;
+        Core.Ball.OnMovingStateChangedGlobal += Ball_OnMovingStateChangedGlobal;
     }
 
-    public static void Follow(Transform target, bool doFollow)
+    private void Ball_OnMovingStateChangedGlobal(Core.Ball ball, bool move)
     {
-        if (instance == null)
+        if (!move)
             return;
 
-        s_target = target;
-        s_doFollow = doFollow;
+        target = ball.transform;
+        BlobTrail.SetColor(ball.View.MainColor);
     }
 
     private void Update()
     {
-        if (s_doFollow && s_target != null)
-            transform.position = s_target.position + offset;
+        if (target == null)
+            return;
+
+        transform.position = target.position + offset;
     }
 }

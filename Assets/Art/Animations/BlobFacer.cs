@@ -17,8 +17,6 @@ public class BlobFacer : MonoBehaviour
 
     private void OnDestroy()
     {
-        BlobFace.Hide();
-        
         if (ballSkin != null)
             ballSkin.ChangeStateEvent -= OnBallChangeState;
     }

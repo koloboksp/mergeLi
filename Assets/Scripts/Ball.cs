@@ -16,6 +16,8 @@ namespace Core
         public event Action<int, bool> OnPointsChanged;
         public event Action OnPathNotFound;
 
+        public static event Action<Ball, bool> OnMovingStateChangedGlobal;
+
         [SerializeField] private Vector3 _gridPosition;
         [SerializeField] private Field _field;
         [SerializeField] private BallView _view;
@@ -54,7 +56,8 @@ namespace Core
             {
                 _moving = true;
                 OnMovingStateChanged?.Invoke();
-                
+                OnMovingStateChangedGlobal?.Invoke(this, _moving);
+
                 float timer = 0;
                 for (int i = 0; i < path.Count - 1; i++)
                 {
@@ -80,6 +83,7 @@ namespace Core
                 UpdateGridPosition(new Vector3(to.x, to.y));
                 _moving = false;
                 OnMovingStateChanged?.Invoke();
+                OnMovingStateChangedGlobal?.Invoke(this, _moving);
             }
         }
 

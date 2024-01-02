@@ -53,13 +53,13 @@ public class BlobFace : MonoBehaviour
     [SerializeField] private float blinkStep = .1f;
     [SerializeField] private int blinkCount = 2;
     [SerializeField] private Transform eyesRoot;
-    private Transform lastRoot;
 
     [Space(8)]
     [SerializeField] private DefaultBallSkin.BallState changeBlobStates;
     [SerializeField] private List<Face> faces;
 
     private static BlobFace s_instance;
+    private static Transform s_root;
 
     private void Awake()
     {
@@ -74,6 +74,7 @@ public class BlobFace : MonoBehaviour
         s_instance = this;
     }
 
+
     private void OnDestroy()
     {
         s_instance = null;
@@ -85,43 +86,32 @@ public class BlobFace : MonoBehaviour
             s_instance.ShowLocal(root, state);
     }
 
-    public static void Hide()
-    {
-        if (s_instance != null)
-            s_instance.HideLocal();
-    }
-
-    private void HideLocal()
-    {
-        if (lastRoot != null)
-            return;
-
-        transform.SetParent(null);
-        gameObject.SetActive(false);
-    }
-
     public void ShowLocal(Transform root, DefaultBallSkin.BallState state)
     {
-        if ((changeBlobStates & state) == state)
+        if (root == null)
+            return;
+
+        if ((changeBlobStates & state) != state)
+            return;
+
+        s_root = root;
+
+        gameObject.SetActive(true);
+
+        foreach (var face in faces)
+            face.Show(state);
+    }
+
+    private void Update()
+    {
+        if (s_root == null)
         {
-            lastRoot = root;
-            gameObject.SetActive(true);
-
-            transform.SetParent(root);
-            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            transform.localScale = Vector3.one;
-
-            foreach (var f in faces)
-                f.Show(state);
-
+            gameObject.SetActive(false);
             return;
         }
 
-        if (root != lastRoot)
-            return;
-
-        foreach (var f in faces)
-            f.Show(state);
+        transform.SetPositionAndRotation(s_root.position, s_root.rotation);
+        transform.localScale = s_root.localScale;
     }
 
     private async void TurnFaceCycle()
