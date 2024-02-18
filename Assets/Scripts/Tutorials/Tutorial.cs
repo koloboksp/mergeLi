@@ -60,7 +60,7 @@ namespace Core.Tutorials
 
         public void Complete()
         {
-            Controller.GameProcessor.PlayerInfo.CompleteTutorial(Id);
+            ApplicationController.Instance.SaveController.CompleteTutorial(Id);
         }
     }
 }

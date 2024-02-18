@@ -105,7 +105,6 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     [SerializeField] private Scene _scene;
     [SerializeField] private Field _field;
     [SerializeField] private StepMachine _stepMachine;
-    [SerializeField] private PlayerInfo _playerInfo;
     [SerializeField] private DefaultMarket _market;
     [SerializeField] private DefaultAdsViewer _adsViewer;
 
@@ -147,7 +146,6 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     private CancellationTokenSource _cancellationTokenSource;
    
     public Scene Scene => _scene;
-    public PlayerInfo PlayerInfo => _playerInfo;
     public int Score => _score;
     public IMarket Market => _market;
     public IAdsViewer AdsViewer => _adsViewer;
@@ -188,17 +186,18 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
     private async void Start()
     {
+        await ApplicationController.Instance.WaitForInitializationAsync(_cancellationTokenSource.Token);
+        
         _field.OnPointerDown += Field_OnPointerDown;
         _stepMachine.OnBeforeStepStarted += StepMachine_OnBeforeStepStarted;
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
         _stepMachine.OnUndoStepsClear += StepMachine_OnUndoStepsClear;
 
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
-
-        Load();
         
         _castleSelector.Init();
 
+        
         await ProcessGameAsyncSafe(SessionPrepareType.FirstStart, _cancellationTokenSource.Token);
     }
     
@@ -229,7 +228,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     
     private async Task PrepareSessionAsync(SessionPrepareType prepareType, CancellationToken cancellationToken)
     {
-        _bestSessionScore = PlayerInfo.GetBestSessionScore();
+        _bestSessionScore = ApplicationController.Instance.SaveController.GetBestSessionScore();
         
         if (_enableTutorial && _tutorialController.CanStartTutorial(_forceTutorial))
         {
@@ -241,7 +240,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
             if (HasPreviousSessionGame)
             {
-                var lastSessionProgress = PlayerInfo.LastSessionProgress;
+                var lastSessionProgress = ApplicationController.Instance.SaveController.LastSessionProgress;
                 _score = lastSessionProgress.Score;
 
                 _castleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
@@ -260,7 +259,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
             {
                 _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
             
-                _playerInfo.ClearLastSessionProgress();
+                ApplicationController.Instance.SaveController.ClearLastSessionProgress();
                 _field.Clear();
                 _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
                 _castleSelector.ActiveCastle.ResetPoints(true);
@@ -298,11 +297,6 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     private async Task StartTutorial(bool forceTutorial)
     {
         await _tutorialController.TryStartTutorial(forceTutorial, _cancellationTokenSource.Token);
-    }
-    
-    private void Load()
-    {
-        _playerInfo.Load();
     }
     
     private async Task ProcessSessionAsync(CancellationToken cancellationToken)
@@ -518,7 +512,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
             _userStepFinished = true;
         }
 
-        _playerInfo.SaveSessionProgress(this);
+        ApplicationController.Instance.SaveController.SaveSessionProgress(this);
         
         OnStepCompleted?.Invoke(step, executionType);
     }
@@ -541,19 +535,19 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         get
         {
-            var lastSessionProgress = _playerInfo.LastSessionProgress;
+            var lastSessionProgress = ApplicationController.Instance.SaveController.LastSessionProgress;
             return lastSessionProgress != null && lastSessionProgress.IsValid();
         }
     }
 
-    public int CurrencyAmount => _playerInfo.GetAvailableCoins();
+    public int CurrencyAmount => ApplicationController.Instance.SaveController.GetAvailableCoins();
 
 
     public void AddPoints(int points)
     {
         _score += points;
         
-        PlayerInfo.SetBestSessionScore(_score);
+        ApplicationController.Instance.SaveController.SetBestSessionScore(_score);
         OnScoreChanged?.Invoke(points);
     }
 
@@ -561,7 +555,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _score -= points;
         
-        PlayerInfo.SetBestSessionScore(_score);
+        ApplicationController.Instance.SaveController.SetBestSessionScore(_score);
         
         OnScoreChanged?.Invoke(-points);
     }
@@ -643,7 +637,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
     public string GetFirstUncompletedCastle()
     {
-        var firstUncompletedCastle = _castleSelector.Library.Castles.FirstOrDefault(i => !_playerInfo.IsCastleCompleted(i.Id));
+        var firstUncompletedCastle = _castleSelector.Library.Castles.FirstOrDefault(i => !ApplicationController.Instance.SaveController.IsCastleCompleted(i.Id));
         if (firstUncompletedCastle == null)
             firstUncompletedCastle = _castleSelector.Library.Castles.Last();
 
@@ -700,14 +694,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
     public void ConsumeCoins(int amount)
     {
-        PlayerInfo.ConsumeCoins(amount);
+        ApplicationController.Instance.SaveController.ConsumeCoins(amount);
         
         OnConsumeCurrency?.Invoke(amount);
     }
 
     public void AddCurrency(int amount)
     {
-        PlayerInfo.AddCoins(amount);
+        ApplicationController.Instance.SaveController.AddCoins(amount);
 
         OnAddCurrency?.Invoke(amount);
     }
@@ -719,7 +713,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         
         _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
             
-        _playerInfo.ClearLastSessionProgress();
+        ApplicationController.Instance.SaveController.ClearLastSessionProgress();
         _field.Clear();
         _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
         _castleSelector.ActiveCastle.ResetPoints(true);

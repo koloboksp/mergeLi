@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,9 +34,17 @@ namespace Core
             var data = undefinedData as UILanguagePanelData;
             
             _model = new Model()
-                .OnItemsUpdated(OnItemsUpdated);
+                .OnItemsUpdated(OnItemsUpdated)
+                .OnItemsSelected(OnItemSelected);
             
             _model.SetData(data.Available, data.Selected, data.Changer);
+        }
+
+        private void OnItemSelected(UILanguagePanel_LanguageItem.Model sender)
+        {
+            LockInput(true);
+            ApplicationController.Instance.UIPanelController.PopScreen(this);
+            LockInput(false);
         }
 
         private void OnItemsUpdated(IEnumerable<UILanguagePanel_LanguageItem.Model> items)
@@ -63,10 +72,12 @@ namespace Core
         public class Model
         {
             private Action<IEnumerable<UILanguagePanel_LanguageItem.Model>> _onItemsUpdated;
+            private Action<UILanguagePanel_LanguageItem.Model> _onItemSelected;
             
             private readonly List<UILanguagePanel_LanguageItem.Model> _items = new ();
             private ILanguageChanger _changer;
-            
+            public IEnumerable<UILanguagePanel_LanguageItem.Model> Items => _items;
+
             public void SetData(IEnumerable<SystemLanguage> languages, SystemLanguage selected, ILanguageChanger changer)
             {
                 _changer = changer;
@@ -77,22 +88,26 @@ namespace Core
                         .SetIcon(ApplicationController.Instance.LocalizationController.GetIcon(i))));
                 _onItemsUpdated?.Invoke(_items);
 
-                TrySelect(_items.Find(i => i.Language == selected));
+                foreach (var item in _items)
+                    item.SetSelectedState(item.Language == selected);
             }
 
             public Model OnItemsUpdated(Action<IEnumerable<UILanguagePanel_LanguageItem.Model>> onItemsUpdated)
             {
                 _onItemsUpdated = onItemsUpdated;
-                _onItemsUpdated?.Invoke(_items);
+                return this;
+            }
+            
+            public Model OnItemsSelected(Action<UILanguagePanel_LanguageItem.Model> onItemSelected)
+            {
+                _onItemSelected = onItemSelected;
                 return this;
             }
 
             internal void TrySelect(UILanguagePanel_LanguageItem.Model newSelected)
             {
-                foreach (var item in _items)
-                    item.SetSelectedState(item == newSelected);
-                
                 _changer.SetLanguage(newSelected.Language);
+                _onItemSelected?.Invoke(newSelected);
             }
         }
     }

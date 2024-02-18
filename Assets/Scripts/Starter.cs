@@ -14,9 +14,8 @@ namespace Assets.Scripts.Core
 		{
             Logo.Play(LogoClip.name);
 			var taskLogo = AsyncExtensions.WaitForSecondsAsync(Logo.clip.length, CancellationToken.None);
-			var taskInitialization = ApplicationController.StartAsync();
-
-            await Task.WhenAll(taskLogo, taskInitialization);
+			
+            await Task.WhenAll(taskLogo, ApplicationController.Instance.WaitForInitializationAsync(CancellationToken.None));
 
             ApplicationController.LoadGameScene();
 		}

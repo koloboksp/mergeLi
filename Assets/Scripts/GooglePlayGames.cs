@@ -9,7 +9,12 @@ namespace Core
 {
     public class GooglePlayGames : ISocialService
     {
-        public async Task Authentication()
+        public bool IsAutoAuthenticationAvailable()
+        {
+            return true;
+        }
+
+        public async Task Authenticate()
         {
             try
             {

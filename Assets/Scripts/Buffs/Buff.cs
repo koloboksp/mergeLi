@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Core;
 using Core.Buffs;
 using Core.Steps;
 using Unity.VisualScripting;
@@ -126,7 +127,7 @@ public abstract class Buff : MonoBehaviour, IBuff
         }
     }
     
-    public virtual bool IsCurrencyEnough => _gameProcessor.PlayerInfo.GetAvailableCoins() >= _cost;
+    public virtual bool IsCurrencyEnough => ApplicationController.Instance.SaveController.GetAvailableCoins() >= _cost;
 
     public int Cooldown => _cooldown;
     public int RestCooldown => _restCooldown;

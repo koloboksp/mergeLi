@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Core;
 using Core.Goals;
 using Core.Steps.CustomOperations;
@@ -18,20 +20,28 @@ public interface ISessionProgressHolder
     string GetFirstUncompletedCastle();
 }
 
-public class PlayerInfo : MonoBehaviour
+public class SaveController
 {
+    const string PlayerSettingsFileName = "playerSettings";
     const string PlayerDataFileName = "playerData";
     const string PlayerLastSessionDataFileName = "playerLastSessionData";
-    [SerializeField] private DefaultMarket _market;
-    [SerializeField] private PurchasesLibrary _purchasesLibrary;
     
     private Progress _progress = new Progress();
     private SessionProgress _lastSessionProgress = null;
+
+    private SaveSettings _saveSettings;
+
+    public SaveSettings SaveSettings => _saveSettings;
+    
+    public SaveController()
+    {
+        _saveSettings = new SaveSettings(this, PlayerSettingsFileName);
+    }
     
     public void AddCoins(int amount)
     {
         _progress.Coins += amount;
-        Save();
+        SaveData();
     }
     
     public int GetAvailableCoins()
@@ -42,7 +52,7 @@ public class PlayerInfo : MonoBehaviour
     public void ConsumeCoins(int count)
     {
         _progress.Coins -= count;
-        Save();
+        SaveData();
     }
 
     
@@ -56,17 +66,17 @@ public class PlayerInfo : MonoBehaviour
         if (_progress.CompletedCastles.Contains(id)) return;
         
         _progress.CompletedCastles.Add(id);
-        Save();
+        SaveData();
     }
     
     public void SetBestSessionScore(int score)
     {
         _progress.BestSessionScore = score;
         
-        Save();
+        SaveData();
     }
 
-    public void Save()
+    private void SaveData()
     {
         try
         {
@@ -80,14 +90,16 @@ public class PlayerInfo : MonoBehaviour
         }
     }
     
-    public void Load()
+    public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         try
         {
+            await _saveSettings.InitializeAsync(cancellationToken);
+            
             try
             {
                 var path = Path.Combine(Application.persistentDataPath, PlayerDataFileName);
-                var loadedFile = File.ReadAllText(path);
+                var loadedFile = await File.ReadAllTextAsync(path, cancellationToken);
                 var loadedProgress = JsonUtility.FromJson<Progress>(loadedFile);
                 _progress = loadedProgress;
             }
@@ -99,7 +111,7 @@ public class PlayerInfo : MonoBehaviour
             try
             {
                 var path = Path.Combine(Application.persistentDataPath, PlayerLastSessionDataFileName);
-                var loadedFile = File.ReadAllText(path);
+                var loadedFile = await File.ReadAllTextAsync(path, cancellationToken);
                 var lastSessionProgress = JsonUtility.FromJson<SessionProgress>(loadedFile);
                 _lastSessionProgress = lastSessionProgress;
             }
@@ -201,7 +213,7 @@ public class PlayerInfo : MonoBehaviour
     }
 
     public SessionProgress LastSessionProgress => _lastSessionProgress;
-
+   
     public bool IsTutorialComplete(string tutorialId)
     {
         var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
@@ -226,66 +238,37 @@ public class PlayerInfo : MonoBehaviour
                 });
         }
         
-        Save();
+        SaveData();
     }
-}
 
-[Serializable]
-public class Progress
-{
-    public List<string> CompletedCastles = new List<string>();
-    public int BestSessionScore;
-    public int Coins;
-    public List<TutorialProgress> Tutorials = new();
-}
 
-[Serializable]
-public class SessionProgress
-{
-    public SessionFieldProgress Field;
-    public SessionCastleProgress Castle;
-    public List<SessionBuffProgress> Buffs = new();
-    public int Score;
-       
-    public bool IsValid()
+    public void Save<T>(T data, string fileName)
     {
-        if (string.IsNullOrEmpty(Castle.Id))
-            return false;
-
-        return true;
+        try
+        {
+            var sData = JsonUtility.ToJson(data);
+            var path = Path.Combine(Application.persistentDataPath, fileName);
+            File.WriteAllText(path, sData);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
     }
-}
 
-[Serializable]
-public class SessionFieldProgress
-{
-    public List<SessionBallProgress> Balls = new List<SessionBallProgress>();
-}
+    public async Task<T> LoadAsync<T>(string fileName, CancellationToken cancellationToken) where T : class
+    {
+        try
+        {
+            var path = Path.Combine(Application.persistentDataPath, fileName);
+            var loadedFile = await File.ReadAllTextAsync(path, cancellationToken);
+            return JsonUtility.FromJson<T>(loadedFile);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
 
-[Serializable]
-public class SessionBallProgress
-{
-    public Vector3Int GridPosition;
-    public int Points;
-}
-
-[Serializable]
-public class SessionBuffProgress
-{
-    public string Id;
-    public int RestCooldown;
-}
-
-[Serializable]
-public class SessionCastleProgress
-{ 
-    public string Id;
-    public int Points;
-}
-
-[Serializable]
-public class TutorialProgress
-{
-    public string Id;
-    public bool IsComplted;
+        return null;
+    }
 }

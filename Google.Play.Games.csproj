@@ -374,11 +374,11 @@
      <Reference Include="Unity.Plastic.Newtonsoft.Json">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.collab-proxy@2.0.5\Lib\Editor\PlasticSCM\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
      </Reference>
-     <Reference Include="Google.VersionHandler">
-     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
-     </Reference>
      <Reference Include="log4netPlastic">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.collab-proxy@2.0.5\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.VersionHandler">
+     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.IonicZip">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>

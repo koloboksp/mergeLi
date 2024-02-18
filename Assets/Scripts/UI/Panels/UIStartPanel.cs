@@ -91,12 +91,7 @@ namespace Core
         
         private void LoginSocialBtn_OnClick()
         {
-            PlayGamesPlatform.Instance.Authenticate(status =>
-            {
-                Debug.Log(status == SignInStatus.Success
-                    ? $"<color=#00CCFF>Play Games sign in. UserName: {PlayGamesPlatform.Instance.localUser.userName}.</color>"
-                    : $"<color=#00CCFF>Failed to sign into Play Games Services: {status}.</color>");
-            });
+            ApplicationController.Instance.ISocialService.Authenticate();
         }
         
         private void ContinueBtn_OnClick()
@@ -128,6 +123,20 @@ namespace Core
             else
             {
                 
+            }
+            
+            SetupLoginSocialBtn();
+        }
+
+        private void SetupLoginSocialBtn()
+        {
+            if (ApplicationController.Instance.ISocialService.IsAuthenticated())
+            {
+                _loginSocialBtn.gameObject.SetActive(false);
+            }
+            else
+            {
+                _loginSocialBtn.gameObject.SetActive(true);
             }
         }
         

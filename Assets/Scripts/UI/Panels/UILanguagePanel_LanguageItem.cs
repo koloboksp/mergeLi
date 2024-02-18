@@ -9,6 +9,8 @@ namespace Core
         [SerializeField] private Button _button;
         [SerializeField] private Image _icon;
         [SerializeField] private Text _name;
+        [SerializeField] private Color _selectedColor = Color.white;
+        [SerializeField] private Color _normalColor = Color.gray;
         [SerializeField] private GameObject _selectionFrame;
 
         private Model _model;
@@ -30,11 +32,12 @@ namespace Core
         private void OnClick()
         {
             _model.SelectMe();
+            
         }
         
         private void OnSelectionChanged()
         {
-            _selectionFrame.SetActive(_model.Selected);
+            _button.targetGraphic.color = _model.Selected ? _selectedColor : _normalColor;
         }
         
         public class Model

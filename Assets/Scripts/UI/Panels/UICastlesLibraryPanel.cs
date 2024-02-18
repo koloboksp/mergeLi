@@ -63,11 +63,12 @@ namespace Core
                     var scaleFactor = _container.content.sizeDelta.x / castle.Root.sizeDelta.x;
                     castle.Root.localScale = new Vector3(scaleFactor, scaleFactor, 1);
                 }
-                if (_gameProcessor.PlayerInfo.IsCastleCompleted(castle.name))
+                if (ApplicationController.Instance.SaveController.IsCastleCompleted(castle.name))
                     castle.ShowAsCompleted();
                 
-                var lastSessionProgress = _gameProcessor.PlayerInfo.LastSessionProgress;
-                if (castle.name == lastSessionProgress.Castle.Id)
+                var lastSessionProgress = ApplicationController.Instance.SaveController.LastSessionProgress;
+                
+                if (lastSessionProgress != null && castle.name == lastSessionProgress.Castle.Id)
                     castle.SetPoints(lastSessionProgress.Castle.Points, true);
             }
         }

@@ -4,7 +4,7 @@
     {
         public override bool CanStart(bool forceStart)
         {
-            return !Owner.Controller.GameProcessor.PlayerInfo.IsTutorialComplete(Owner.Id) || forceStart;
+            return !ApplicationController.Instance.SaveController.IsTutorialComplete(Owner.Id) || forceStart;
         }
     }
 }

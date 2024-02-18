@@ -4,8 +4,9 @@ namespace Core
 {
     public interface ISocialService
     {
-        Task Authentication();
-        
+        bool IsAutoAuthenticationAvailable();
+        Task Authenticate();
         bool IsAuthenticated();
+      
     }
 }
