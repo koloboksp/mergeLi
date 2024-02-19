@@ -7,6 +7,7 @@ using Core.Steps.CustomOperations;
 using Unity.Services.Core;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
@@ -37,16 +38,10 @@ namespace Core
         public SoundController SoundController => _soundController;
 
         
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static async void Start()
         {
             
-            var purchasesLibrarySceneReference = Object.FindObjectOfType<PurchasesLibrarySceneReference>();
-            if (purchasesLibrarySceneReference == null)
-            {
-                Debug.LogError($"");
-                return;
-            }
             
             _instance = new ApplicationController();
             _instance._initialization = new TaskCompletionSource<bool>();
@@ -60,8 +55,12 @@ namespace Core
             _instance._soundController = new SoundController(_instance._saveController.SaveSettings);
             await _instance._soundController.InitializeAsync(CancellationToken.None);
 
+            var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/RequiredPrefabs/purchaseLibrary.prefab");
+            var purchaseLibraryObject = await handle.Task;
+            var purchasesLibrary = purchaseLibraryObject.GetComponent<PurchasesLibrary>();
+            
             _instance._purchaseController = new PurchaseController();
-            await _instance._purchaseController.InitializeAsync(purchasesLibrarySceneReference.Reference.Items.Select(i=>i.ProductId));
+            await _instance._purchaseController.InitializeAsync(purchasesLibrary.Items.Select(i=>i.ProductId));
             
             _instance._adsController = new CASWrapper();
             await _instance._adsController.InitializeAsync();
