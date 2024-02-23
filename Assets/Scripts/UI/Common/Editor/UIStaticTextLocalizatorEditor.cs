@@ -15,10 +15,10 @@ namespace Assets.Scripts.CustomLevelElements
 
             if (localizator.Id != Atom.GuidEx.Empty)
             {
-                for (var i = 0; i != LocalizationController.LanguagesCount; i++)
+                for (var i = 0; i != LocalizationController.LanguagesCountInEditorMode; i++)
                 {
                     var languagePackDesc = LocalizationController.GetPackDesc(i);
-                    var langText = LocalizationController.GetText(languagePackDesc.Language, localizator.Id);
+                    var langText = LocalizationController.GetTextInEditorMode(languagePackDesc.Language, localizator.Id);
    
                     EditorGUILayout.LabelField($"{languagePackDesc.Language}: ", langText);
                 }

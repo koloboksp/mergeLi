@@ -27,6 +27,8 @@ namespace Core
         private SaveController _saveController;
 
         private TaskCompletionSource<bool> _initialization;
+        private bool _initializated = false;
+        
         public static ApplicationController Instance => _instance;
 
         public SaveController SaveController => _saveController;
@@ -50,8 +52,11 @@ namespace Core
             await _instance._saveController.InitializeAsync(CancellationToken.None);
             
             _instance._localizationController = new LocalizationController();
-            await _instance._localizationController.InitializeAsync(CancellationToken.None);
-           
+            await _instance._localizationController.InitializeAsync(_instance._saveController.SaveSettings, CancellationToken.None);
+            if (!_instance._localizationController.ActiveLanguageDetected)
+            {
+                _instance._localizationController.ActiveLanguage = Application.systemLanguage;
+            }
             _instance._soundController = new SoundController(_instance._saveController.SaveSettings);
             await _instance._soundController.InitializeAsync(CancellationToken.None);
 
@@ -72,8 +77,8 @@ namespace Core
                 _ = _instance._socialService.Authenticate();
             
             _instance._uiPanelController = new UIPanelController();
-
-       
+            
+            _instance._initializated = true;
             _instance._initialization.SetResult(true);
         }
         
@@ -90,23 +95,17 @@ namespace Core
                 
             }
         }
-
-        public SystemLanguage ActiveLanguage
-        {
-            get
-            {
-                return _localizationController.ActiveActiveLanguage;
-            }
-        }
-
-      
+        
         public void SetLanguage(SystemLanguage language)
         {
-            _localizationController.SetLanguage(language);
+            _localizationController.ActiveLanguage = language;
         }
 
         public async Task<bool> WaitForInitializationAsync(CancellationToken cancellationToken)
         {
+            if (_initializated)
+                return true;
+            
             var cancellationTokenCompletion = new TaskCompletionSource<bool>();
             cancellationToken.Register(() => cancellationTokenCompletion.SetResult(true));
             

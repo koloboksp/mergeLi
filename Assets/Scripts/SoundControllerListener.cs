@@ -21,10 +21,10 @@ namespace Core
     {
         [SerializeField] private SoundGroup _group = SoundGroup.Sound;
         [SerializeField] private SoundHolder _soundHolder;
-        
-        private async void OnEnable()
+
+        private void OnEnable()
         {
-           SoundController.AddListener(this);
+            SoundController.AddListener(this);
         }
 
         private void OnDisable()

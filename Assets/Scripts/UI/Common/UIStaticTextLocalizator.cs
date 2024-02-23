@@ -2,6 +2,7 @@ using Assets.Scripts.Core.Localization;
 using UnityEngine;
 using UnityEngine.UI;
 using Atom;
+using Core;
 using UnityEngine.Serialization;
 
 namespace Assets.Scripts.Core
@@ -33,18 +34,18 @@ namespace Assets.Scripts.Core
             UpdateText();
         }
 
-        public void UpdateText(string text = null)
+        private void UpdateText()
         {
             if (Target == null)
                 return;
-
-            if(text != null)
-                Target.text = text;
+            
+            var text = string.Empty;
+            if (Application.isPlaying)
+                text = ApplicationController.Instance.LocalizationController.GetText(_id);
             else
-            {
-		        var t = LocalizationController.GetText(_id);
-                Target.text = t;
-	        }
+                text = LocalizationController.GetTextInEditorMode(LocalizationController.DefaultLanguage, _id);
+
+            Target.text = text;
         }
 
         public GuidEx Id

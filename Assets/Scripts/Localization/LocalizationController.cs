@@ -33,17 +33,20 @@ namespace Assets.Scripts.Core.Localization
     
     public class LocalizationController 
     {
+        public const string LanguagePackNotFoundValue = "Language pack not found";
         public const string TextNotFoundValue = "Text not found";
-        private const SystemLanguage DefaultLanguage = SystemLanguage.English;
+        public const SystemLanguage DefaultLanguage = SystemLanguage.English;
         
         private static readonly List<ILocalizationSupport> LocalizationSupportObjects = new();
         private static List<KeyValuePair<SystemLanguage, LanguagePack>> AvailableLanguagePacks = new();
         
-        private static SystemLanguage _activeLanguage = DefaultLanguage;
         private static bool _dataLoaded;
+        private SaveSettings _saveSettings;
         
-        public async Task InitializeAsync(CancellationToken cancellationToken)
+        public async Task InitializeAsync(SaveSettings saveSettings, CancellationToken cancellationToken)
         {
+            _saveSettings = saveSettings;
+            
             try
             {
                 Debug.Log($"<color=#99ff99>Initialize {nameof(LocalizationController)}.</color>");
@@ -80,16 +83,7 @@ namespace Assets.Scripts.Core.Localization
         {
             LocalizationSupportObjects.Remove(listener);
         }
-
-        public void SetLanguage(SystemLanguage language)
-        {
-            if (_activeLanguage == language)
-                return;
-
-            _activeLanguage = HasLanguage(language) ? language : DefaultLanguage;
-            ChangeLocalization();
-        }
-
+        
         private static void ChangeLocalization()
         {
             for (var i = 0; i != LocalizationSupportObjects.Count; i++)
@@ -107,7 +101,6 @@ namespace Assets.Scripts.Core.Localization
             }
         }
 
-        public static int LanguagesCount => AvailableLanguagePacks.Count;
         
         public IEnumerable<SystemLanguage> Languages
         {
@@ -117,7 +110,21 @@ namespace Assets.Scripts.Core.Localization
             }
         }
 
-        public SystemLanguage ActiveActiveLanguage => _activeLanguage;
+        public SystemLanguage ActiveLanguage
+        {
+            get => _saveSettings.ActiveLanguage;
+            set 
+            {
+                if (_saveSettings.ActiveLanguage != value)
+                {
+                    _saveSettings.ActiveLanguageDetected = true;
+                    _saveSettings.ActiveLanguage = HasLanguage(value) ? value : DefaultLanguage;
+                    ChangeLocalization();
+                }
+            }
+        }
+
+        public bool ActiveLanguageDetected => _saveSettings.ActiveLanguageDetected;
 
         public static bool HasLanguage(SystemLanguage language)
         {
@@ -145,25 +152,32 @@ namespace Assets.Scripts.Core.Localization
             return new LanguagePackDesc(languagePack.Key, languagePack.Value.NativeName, languagePack.Value.NativeFlag);
         }
         
-        public static string GetText(SystemLanguage language, Atom.GuidEx guid)
+        public string GetText(Atom.GuidEx guid)
         {
-            if (!_dataLoaded)
-            {
-                AvailableLanguagePacks = LocalizationData.Load();
-                _dataLoaded = true;
-            }
-            
-            var index = GetPackIndex(language);
-            
-            if (index < 0) 
-                return $"{TextNotFoundValue}({guid})";
+            var packIndex = GetPackIndex(ActiveLanguage);
+            if (packIndex < 0) 
+                return $"{LanguagePackNotFoundValue}({guid})";
 
-            var text = AvailableLanguagePacks[index].Value.Asset.FindText(guid);
-
+            var text = AvailableLanguagePacks[packIndex].Value.Asset.FindText(guid);
             return text ?? $"{TextNotFoundValue}({guid})";
         }
+        
+        public static int LanguagesCountInEditorMode
+        {
+            get
+            {
+                if (!_dataLoaded)
+                {
+                    AvailableLanguagePacks = LocalizationData.Load();
+                    _dataLoaded = true;
+                }
+                
+                return AvailableLanguagePacks.Count;
+            }
+        }
 
-        public static bool HasText(GuidEx guid)
+       
+        public static string GetTextInEditorMode(SystemLanguage language, Atom.GuidEx guid)
         {
             if (!_dataLoaded)
             {
@@ -171,16 +185,12 @@ namespace Assets.Scripts.Core.Localization
                 _dataLoaded = true;
             }
             
-            var index = GetPackIndex(_activeLanguage);
-            if (index >= 0)
-                return AvailableLanguagePacks[index].Value.Asset.FindText(guid) != null;
+            var packIndex = GetPackIndex(language);
+            if (packIndex < 0) 
+                return $"{LanguagePackNotFoundValue}({guid})";
 
-            return false;           
-        }
-        
-        public static string GetText(Atom.GuidEx guid)
-        {
-            return GetText(_activeLanguage, guid);
+            var text = AvailableLanguagePacks[packIndex].Value.Asset.FindText(guid);
+            return text ?? $"{TextNotFoundValue}({guid})";
         }
 
         public readonly struct LanguagePackDesc
@@ -196,7 +206,5 @@ namespace Assets.Scripts.Core.Localization
                 NativeFlag = nativeFlag;
             }
         }
-
-        
     }
 }

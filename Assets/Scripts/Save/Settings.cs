@@ -1,9 +1,11 @@
 ﻿using System;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class Settings
 {
-    public int SelectedLanguage;
+    public bool ActiveLanguageDetected;
+    public int ActiveLanguage;
 
     public float SoundVolume = 0.5f;
     public bool SoundEnable = true;

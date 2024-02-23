@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public class SaveSettings
 {
@@ -70,6 +71,32 @@ public class SaveSettings
         
     }
 
+    public SystemLanguage ActiveLanguage
+    {
+        get => (SystemLanguage)_settings.ActiveLanguage;
+        set
+        {
+            if ((int)value != _settings.ActiveLanguage)
+            {
+                _settings.ActiveLanguage = (int)value;
+                _controller.Save(_settings, _fileName);
+            }
+        }
+    }
+
+    public bool ActiveLanguageDetected
+    {
+        get => _settings.ActiveLanguageDetected;
+        set
+        {
+            if (value != _settings.ActiveLanguageDetected)
+            {
+                _settings.ActiveLanguageDetected = value;
+                _controller.Save(_settings, _fileName);
+            }
+        }
+    }
+    
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         var loadedSettings = await _controller.LoadAsync<Settings>(_fileName, cancellationToken);
