@@ -17,7 +17,7 @@ namespace Core
         
         public RectTransform Root => _root;
         
-        public virtual void SetData(UIScreenData data)
+        public virtual void SetData(UIScreenData undefinedData)
         {
             
         }

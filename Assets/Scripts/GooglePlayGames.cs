@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Atom;
 using GooglePlayGames;
@@ -14,29 +15,34 @@ namespace Core
             return true;
         }
 
-        public async Task Authenticate()
+        public async Task<bool> AuthenticateAsync(CancellationToken cancellationToken)
         {
-            try
+            var timer = new SmallTimer();
+            
+            var cancellationTokenCompletion = new TaskCompletionSource<bool>();
+            cancellationToken.Register(() => cancellationTokenCompletion.SetResult(true));
+        
+            var signInCompletion = new TaskCompletionSource<SignInStatus>();
+            
+            PlayGamesPlatform.Instance.Authenticate(status =>
             {
-                Debug.Log($"<color=#99ff99>Initialize {nameof(PlayGamesPlatform)}.</color>");
+                signInCompletion.SetResult(status);
+            });
             
-                PlayGamesPlatform.DebugLogEnabled = true;
+            await Task.WhenAny(signInCompletion.Task, cancellationTokenCompletion.Task);
 
-                var timer = new SmallTimer();
-            
-                PlayGamesPlatform.Instance.Authenticate(status =>
-                {
-                    Debug.Log(status == SignInStatus.Success
-                        ? $"<color=#00CCFF>Play Games sign in. UserName: {PlayGamesPlatform.Instance.localUser.userName}.</color>"
-                        : $"<color=#00CCFF>Failed to sign into Play Games Services: {status}.</color>");
-                });
-
+            if (signInCompletion.Task.IsCompleted)
+            {
+                Debug.Log(signInCompletion.Task.Result == SignInStatus.Success
+                    ? $"<color=#00CCFF>Play Games sign in. UserName: {PlayGamesPlatform.Instance.localUser.userName}.</color>"
+                    : $"<color=#00CCFF>Failed to sign into Play Games Services: {signInCompletion.Task.Result}.</color>");
+                
                 Debug.Log($"<color=#99ff99>Time authenticate {nameof(PlayGamesPlatform)}: {timer.Update()}.</color>");
+                
+                return signInCompletion.Task.Result == SignInStatus.Success;
             }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
+
+            throw new OperationCanceledException();
         }
         
         public bool IsAuthenticated()
@@ -46,6 +52,22 @@ namespace Core
 #else
             throw new Exception("This platform is not supported.");
 #endif
+        }
+
+        public async Task<bool> ShowAchievementsUIAsync(CancellationToken cancellationToken)
+        {
+            var uiShowing = true;
+            PlayGamesPlatform.Instance.ShowAchievementsUI((status) =>
+            {
+                uiShowing = false;
+            });
+
+            while (uiShowing)
+            {
+                await Task.Yield();
+            }
+
+            return true;
         }
     }
 }

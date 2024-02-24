@@ -40,11 +40,11 @@ namespace Core
             _cancellationTokenSource.Dispose();
         }
         
-        public override void SetData(UIScreenData data)
+        public override void SetData(UIScreenData undefinedData)
         {
-            base.SetData(data);
+            base.SetData(undefinedData);
             
-            _data = data as UIGameScreenData;
+            _data = undefinedData as UIGameScreenData;
             _data.GameProcessor.OnStepCompleted += OnStepCompleted;
             _data.GameProcessor.OnBeforeStepStarted += OnBeforeStepStarted;
             _data.GameProcessor.OnLowEmptySpaceChanged += OnLowEmptySpaceChanged;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using Assets.Scripts.Core;
 using Atom;
 using GooglePlayGames;
@@ -15,6 +16,12 @@ namespace Core
         Continue,
         New
     }
+
+    public static class Locale
+    {
+        public static GuidEx MessageBoxAuthenticateError = new GuidEx("1f7d307ffdd4405ba7972eb018186ddf");
+
+    }
     
     public class UIStartPanel : UIPanel
     {
@@ -29,6 +36,7 @@ namespace Core
         [SerializeField] private Button _settingsBtn;
 
         [SerializeField] private Button _loginSocialBtn;
+        [SerializeField] private Button _achievementsBtn;
 
         [SerializeField] private SpawnAnimator _panelAnimator;
         private Model _model;
@@ -49,6 +57,7 @@ namespace Core
             _settingsBtn.onClick.AddListener(SettingsBtn_OnClick);
             
             _loginSocialBtn.onClick.AddListener(LoginSocialBtn_OnClick);
+            _achievementsBtn.onClick.AddListener(ShowAchievementsBtn_OnClick);
         }
         
         private void OnDestroy()
@@ -91,7 +100,30 @@ namespace Core
         
         private void LoginSocialBtn_OnClick()
         {
-            ApplicationController.Instance.ISocialService.Authenticate();
+            ApplicationController.Instance.ISocialService.AuthenticateAsync(_cancellationTokenSource.Token);
+        }
+        
+        private async void ShowAchievementsBtn_OnClick()
+        {
+            if (!ApplicationController.Instance.ISocialService.IsAuthenticated())
+            {
+                var authenticated = await ApplicationController.Instance.ISocialService.AuthenticateAsync(_cancellationTokenSource.Token);
+                if (!authenticated)
+                {
+                    var errorMessageBox = await ApplicationController.Instance.UIPanelController.PushScreenAsync(
+                        typeof(UIMessageBoxPanel),
+                        new UIMessageBoxPanelData()
+                        {
+                            MessageKey = Locale.MessageBoxAuthenticateError,
+                        }, 
+                        _cancellationTokenSource.Token) as UIMessageBoxPanel;
+                    
+                    await errorMessageBox.ShowAsync(_cancellationTokenSource.Token);
+                    return;
+                }
+            }
+
+            await ApplicationController.Instance.ISocialService.ShowAchievementsUIAsync(_cancellationTokenSource.Token);
         }
         
         private void ContinueBtn_OnClick()

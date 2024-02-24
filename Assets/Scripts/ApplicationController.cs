@@ -74,7 +74,7 @@ namespace Core
             _instance._socialService = new GooglePlayGames();
 //#endif
             if(_instance._socialService.IsAutoAuthenticationAvailable())
-                _ = _instance._socialService.Authenticate();
+                _ = _instance._socialService.AuthenticateAsync(CancellationToken.None);
             
             _instance._uiPanelController = new UIPanelController();
             
