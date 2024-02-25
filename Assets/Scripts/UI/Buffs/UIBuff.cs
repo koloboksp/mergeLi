@@ -90,8 +90,7 @@ public class UIBuff : MonoBehaviour
     {
         if (!_model.IsCurrencyEnough)
         {
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                typeof(UIShopPanel),
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIShopPanel>(
                 new UIShopPanelData()
                 {
                     GameProcessor =  _model.GameProcessor,

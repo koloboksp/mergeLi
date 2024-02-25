@@ -149,13 +149,12 @@ namespace Core
         {
             var panelData = new UIPausePanelData();
             panelData.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UIPausePanel), panelData, _cancellationTokenSource.Token);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIPausePanel>(panelData, _cancellationTokenSource.Token);
         }
         
         private void Coins_OnClick()
         {
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                typeof(UIShopPanel),
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIShopPanel>(
                 new UIShopPanelData()
                 {
                     GameProcessor = _data.GameProcessor,

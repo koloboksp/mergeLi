@@ -38,14 +38,13 @@ namespace Core
         
         private async void MainMenuBtn_OnClick()
         {
-            var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                typeof(UIStartPanel), 
+            var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIStartPanel>(
                 new UIStartPanelData()
                 {
                     GameProcessor = _data.GameProcessor,
                     Instant = true
                 }, 
-                _cancellationTokenSource.Token) as UIStartPanel;
+                _cancellationTokenSource.Token);
             await startPanel.ShowAsync(_cancellationTokenSource.Token);
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
@@ -58,8 +57,7 @@ namespace Core
         
         private void ShopBtn_OnClick()
         {
-            _ = ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                typeof(UIShopPanel),
+            _ = ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIShopPanel>(
                 new UIShopPanelData()
                 {
                     GameProcessor = _data.GameProcessor,

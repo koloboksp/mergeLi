@@ -36,7 +36,9 @@ namespace Core
         [SerializeField] private Button _settingsBtn;
 
         [SerializeField] private Button _loginSocialBtn;
+        [SerializeField] private Button _rateUsBtn;
         [SerializeField] private Button _achievementsBtn;
+        [SerializeField] private Button _leaderboardBtn;
 
         [SerializeField] private SpawnAnimator _panelAnimator;
         private Model _model;
@@ -57,7 +59,9 @@ namespace Core
             _settingsBtn.onClick.AddListener(SettingsBtn_OnClick);
             
             _loginSocialBtn.onClick.AddListener(LoginSocialBtn_OnClick);
+            _rateUsBtn.onClick.AddListener(RateUsBtn_OnClick);
             _achievementsBtn.onClick.AddListener(ShowAchievementsBtn_OnClick);
+            _leaderboardBtn.onClick.AddListener(ShowLeaderboardBtn_OnClick);
         }
         
         private void OnDestroy()
@@ -82,7 +86,7 @@ namespace Core
             data.Selected = _data.GameProcessor.GetFirstUncompletedCastle();
             data.Castles = _data.GameProcessor.CastleSelector.Library.Castles;
             data.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UICastlesLibraryPanel), data, _cancellationTokenSource.Token);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastlesLibraryPanel>(data, _cancellationTokenSource.Token);
         }
         
         private void HatsBtn_OnClick()
@@ -94,36 +98,83 @@ namespace Core
         {
             var panelData = new UISettingsPanelData();
             panelData.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(typeof(UISettingsPanel), panelData, _cancellationTokenSource.Token);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UISettingsPanel>(panelData, _cancellationTokenSource.Token);
         }
         
         
-        private void LoginSocialBtn_OnClick()
-        {
-            ApplicationController.Instance.ISocialService.AuthenticateAsync(_cancellationTokenSource.Token);
-        }
-        
-        private async void ShowAchievementsBtn_OnClick()
+        private async void LoginSocialBtn_OnClick()
         {
             if (!ApplicationController.Instance.ISocialService.IsAuthenticated())
             {
-                var authenticated = await ApplicationController.Instance.ISocialService.AuthenticateAsync(_cancellationTokenSource.Token);
-                if (!authenticated)
+                var waitingScreen = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIWaitingPanel>(null, _cancellationTokenSource.Token);
+                
+                var authenticateResult = await ApplicationController.Instance.ISocialService.AuthenticateAsync(_cancellationTokenSource.Token);
+                if (!authenticateResult)
                 {
-                    var errorMessageBox = await ApplicationController.Instance.UIPanelController.PushScreenAsync(
-                        typeof(UIMessageBoxPanel),
-                        new UIMessageBoxPanelData()
-                        {
-                            MessageKey = Locale.MessageBoxAuthenticateError,
-                        }, 
-                        _cancellationTokenSource.Token) as UIMessageBoxPanel;
+                    ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
+                    var errorMessageBox = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIMessageBoxPanel>(
+                        new UIMessageBoxPanelData(Locale.MessageBoxAuthenticateError), 
+                        _cancellationTokenSource.Token);
                     
                     await errorMessageBox.ShowAsync(_cancellationTokenSource.Token);
                     return;
                 }
+                
+                ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
             }
+        }
 
+        private async void RateUsBtn_OnClick()
+        {
+            ApplicationController.RateUsInStore();
+        }
+
+        private async void ShowAchievementsBtn_OnClick()
+        {
+            if (!ApplicationController.Instance.ISocialService.IsAuthenticated())
+            {
+                var waitingScreen = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIWaitingPanel>(null, _cancellationTokenSource.Token);
+                
+                var authenticateResult = await ApplicationController.Instance.ISocialService.AuthenticateAsync(_cancellationTokenSource.Token);
+                if (!authenticateResult)
+                {
+                    ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
+                    var errorMessageBox = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIMessageBoxPanel>(
+                        new UIMessageBoxPanelData(Locale.MessageBoxAuthenticateError), 
+                        _cancellationTokenSource.Token);
+                    
+                    await errorMessageBox.ShowAsync(_cancellationTokenSource.Token);
+                    return;
+                }
+                
+                ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
+            }
+            
             await ApplicationController.Instance.ISocialService.ShowAchievementsUIAsync(_cancellationTokenSource.Token);
+        }
+        
+        private async void ShowLeaderboardBtn_OnClick()
+        {
+            if (!ApplicationController.Instance.ISocialService.IsAuthenticated())
+            {
+                var waitingScreen = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIWaitingPanel>(null, _cancellationTokenSource.Token);
+                
+                var authenticateResult = await ApplicationController.Instance.ISocialService.AuthenticateAsync(_cancellationTokenSource.Token);
+                if (!authenticateResult)
+                {
+                    ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
+                    var errorMessageBox = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIMessageBoxPanel>(
+                        new UIMessageBoxPanelData(Locale.MessageBoxAuthenticateError), 
+                        _cancellationTokenSource.Token);
+                    
+                    await errorMessageBox.ShowAsync(_cancellationTokenSource.Token);
+                    return;
+                }
+                
+                ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
+            }
+            
+            await ApplicationController.Instance.ISocialService.ShowLeaderboardUIAsync(_cancellationTokenSource.Token);
         }
         
         private void ContinueBtn_OnClick()

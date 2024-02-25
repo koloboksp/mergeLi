@@ -7,10 +7,9 @@ namespace Core.Tutorials
     {
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
-            var gameScreen = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                typeof(UIGameScreen), 
+            var gameScreen = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIGameScreen>(
                 new UIGameScreenData() { GameProcessor = Tutorial.Controller.GameProcessor }, 
-                cancellationToken) as UIGameScreen;
+                cancellationToken);
             gameScreen.HideAllElements();
             
             return true;

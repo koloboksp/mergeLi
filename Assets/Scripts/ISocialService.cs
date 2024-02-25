@@ -10,5 +10,6 @@ namespace Core
         bool IsAuthenticated();
 
         Task<bool> ShowAchievementsUIAsync(CancellationToken cancellationToken);
+        Task<bool> ShowLeaderboardUIAsync(CancellationToken cancellationToken);
     }
 }

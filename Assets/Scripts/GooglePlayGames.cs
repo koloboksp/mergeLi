@@ -64,6 +64,26 @@ namespace Core
 
             while (uiShowing)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+                
+                await Task.Yield();
+            }
+
+            return true;
+        }
+        
+        public async Task<bool> ShowLeaderboardUIAsync(CancellationToken cancellationToken)
+        {
+            var uiShowing = true;
+            PlayGamesPlatform.Instance.ShowLeaderboardUI(null, (status) =>
+            {
+                uiShowing = false;
+            });
+
+            while (uiShowing)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 await Task.Yield();
             }
 

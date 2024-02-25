@@ -32,6 +32,11 @@ namespace Core
 
     public class UIMessageBoxPanelData : UIScreenData
     {
-        public GuidEx MessageKey { get; set; }
+        public GuidEx MessageKey { get; }
+        
+        public UIMessageBoxPanelData(GuidEx messageKey)
+        {
+            MessageKey = messageKey;
+        }
     }
 }

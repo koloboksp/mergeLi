@@ -39,15 +39,15 @@ namespace Core
 
         public void SetScreensRoot(RectTransform screensRoot) => _screensRoot = screensRoot;
         
-        public async Task<UIPanel> PushScreenAsync(Type screenType, UIScreenData data, CancellationToken cancellationToken)
+        public async Task<TPanel> PushScreenAsync<TPanel>(UIScreenData data, CancellationToken cancellationToken) where TPanel : UIPanel
         {
-            var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
+            var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{typeof(TPanel).Name}.prefab");
             var result = await handle.Task;
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
                 var screenObject = Object.Instantiate(result);
-                var screen = screenObject.GetComponent<UIPanel>();
+                var screen = screenObject.GetComponent<TPanel>();
                 screen.Root.SetParent(_screensRoot);
                 screen.Root.anchorMin = Vector2.zero;
                 screen.Root.anchorMax = Vector2.one;
@@ -62,17 +62,17 @@ namespace Core
             return null;
         }
         
-        public async Task<UIPanel> PushPopupScreenAsync(Type screenType, UIScreenData data, CancellationToken cancellationToken)
+        public async Task<TPanel> PushPopupScreenAsync<TPanel>(UIScreenData data, CancellationToken cancellationToken) where TPanel : UIPanel
         {
             try
             {
-                var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{screenType.Name}.prefab");
+                var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{typeof(TPanel).Name}.prefab");
                 var result = await handle.Task;
     
                 if (handle.Status == AsyncOperationStatus.Succeeded)
                 {
                     var screenObject = Object.Instantiate(result);
-                    var screen = screenObject.GetComponent<UIPanel>();
+                    var screen = screenObject.GetComponent<TPanel>();
                     screen.Root.SetParent(_screensRoot);
                     screen.Root.anchorMin = Vector2.zero;
                     screen.Root.anchorMax = Vector2.one;

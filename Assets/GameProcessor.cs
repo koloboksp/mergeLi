@@ -267,18 +267,16 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
             if (prepareType == SessionPrepareType.FirstStart)
             {
-                var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                    typeof(UIStartPanel),
+                var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIStartPanel>(
                     new UIStartPanelData()
                     {
                         GameProcessor = this,
                         Instant = false,
                     },
-                    cancellationToken) as UIStartPanel;
+                    cancellationToken);
                 await startPanel.ShowAsync(cancellationToken);
                 
-                await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                    typeof(UIGameScreen),
+                await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIGameScreen>(
                     new UIGameScreenData() { GameProcessor = this },
                     cancellationToken);
             }
@@ -322,8 +320,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
             CheckLowEmptySpace();
         }
 
-        var failPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-            typeof(UIGameFailPanel), 
+        var failPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIGameFailPanel>(
             new UIGameFailPanelData() { GameProcessor = this }, 
             _cancellationTokenSource.Token);
 
@@ -343,8 +340,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         //wait for last animation is playing 
         await AsyncExtensions.WaitForSecondsAsync(2.0f, _cancellationTokenSource.Token);
         
-        var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-            typeof(UICastleCompletePanel),
+        var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastleCompletePanel>(
             new UICastleCompletePanel.UICastleCompletePanelData()
             {
                 GameProcessor = this, 

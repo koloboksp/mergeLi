@@ -120,8 +120,8 @@ namespace Core
             else
             {
                 var panelData = new UIPurchaseFailedPanelData();
-                ApplicationController.Instance.UIPanelController.PushPopupScreenAsync(
-                    typeof(UIPurchaseFailedPanel), panelData, _cancellationTokenSource.Token);
+                ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIPurchaseFailedPanel>(
+                    panelData, _cancellationTokenSource.Token);
             }
         }
 
