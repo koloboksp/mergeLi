@@ -217,7 +217,7 @@ public class PurchaseController : IDetailedStoreListener
         
         return _purchaseResult;
 #else
-            return await Task.FromException<bool>(new Exception("This platform is not supported."));
+        return await Task.FromException<bool>(new Exception("This platform is not supported."));
 #endif
     }
 

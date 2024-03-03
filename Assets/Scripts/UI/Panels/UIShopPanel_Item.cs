@@ -13,6 +13,7 @@ namespace Core
     public class UIShopPanel_Item : MonoBehaviour
     {
         [SerializeField] private RectTransform _root;
+        [SerializeField] private CanvasGroup _group;
         [SerializeField] private Button _button;
         [SerializeField] private AssetImage _offerIcon;
         
@@ -34,14 +35,17 @@ namespace Core
         public virtual void SetModel(UIShopPanel_ItemModel model)
         {
             _model = model;
-            
-            
-           // _offerIcon.SpriteName = _model.BackgroundName;
         }
         
         protected virtual async void OnClick()
         {
             
+        }
+
+        public bool Interactable
+        {
+            get => _group.interactable;
+            set => _group.interactable = value;
         }
     }
     

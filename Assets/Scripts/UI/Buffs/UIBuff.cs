@@ -95,7 +95,7 @@ public class UIBuff : MonoBehaviour
                 {
                     GameProcessor =  _model.GameProcessor,
                     Market = _model.GameProcessor.Market,
-                    Items = UIGameScreen.FillShopItems(_model.GameProcessor)
+                    Items = UIShopPanel.FillShopItems(_model.GameProcessor)
                 }, 
                 _cancellationTokenSource.Token);
             return true;

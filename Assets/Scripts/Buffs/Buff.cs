@@ -127,7 +127,7 @@ public abstract class Buff : MonoBehaviour, IBuff
         }
     }
     
-    public virtual bool IsCurrencyEnough => ApplicationController.Instance.SaveController.GetAvailableCoins() >= _cost;
+    public virtual bool IsCurrencyEnough => ApplicationController.Instance.SaveController.SaveProgress.GetAvailableCoins() >= _cost;
 
     public int Cooldown => _cooldown;
     public int RestCooldown => _restCooldown;

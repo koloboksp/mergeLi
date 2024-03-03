@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using Assets.Scripts.Core;
 using Atom;
 using GooglePlayGames;
@@ -66,8 +65,14 @@ namespace Core
         
         private void OnDestroy()
         {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = null;
+            }
+            
+            
         }
         
         private void CloseBtn_OnClick()

@@ -92,3 +92,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currencyAmount: 30
+  _collectInterval: 150000000

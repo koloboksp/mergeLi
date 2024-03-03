@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Atom;
 using Core.Steps.CustomOperations;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Math = System.Math;
 using Object = UnityEngine.Object;
 
 namespace Core
@@ -183,6 +185,23 @@ namespace Core
                 return this;
             }
         }
+        
+        public static IEnumerable<IShopPanelItem> FillShopItems(GameProcessor gameProcessor)
+        {
+            var items = new List<IShopPanelItem>();
+
+            items.AddRange(gameProcessor.AdsLibrary.Items
+                .Select(i => new ShopPanelAdsItem()
+                    .Init(i.name, i.CurrencyAmount, gameProcessor.AdsViewer)));
+            items.AddRange(gameProcessor.PurchasesLibrary.Items
+                .Select(i => new ShopPanelMarketItem()
+                    .Init(i.name, i.ProductId, i.CurrencyAmount, gameProcessor.Market)));
+            items.AddRange(gameProcessor.GiftsMarket.Gifts
+                .Select(i => new ShopPanelGiftItem()
+                    .Init(i.Id, i)));
+
+            return items;
+        }
     }
     
     public class UIShopPanelData : UIScreenData
@@ -250,16 +269,18 @@ namespace Core
     {
         private UIShopPanel.Model _owner;
         private string _name;
-        private int _currencyAmount;
+        private long _restTimer;
+        private GiftModel _gift;
         
-        public int CurrencyAmount => _currencyAmount;
+        public int CurrencyAmount => _gift.CurrencyAmount;
         public string Name => _name;
-
-        public IShopPanelItem Init(string name, int currencyAmount)
+        public GiftModel Gift => _gift;
+        
+        public IShopPanelItem Init(string name, GiftModel gift)
         {
             _name = name;
-            _currencyAmount = currencyAmount;
-                
+            _gift = gift;
+            
             return this;
         }
     }

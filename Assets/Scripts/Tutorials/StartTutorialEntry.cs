@@ -4,7 +4,7 @@
     {
         public override bool CanStart(bool forceStart)
         {
-            return !ApplicationController.Instance.SaveController.IsTutorialComplete(Owner.Id) || forceStart;
+            return !ApplicationController.Instance.SaveController.SaveProgress.IsTutorialComplete(Owner.Id) || forceStart;
         }
     }
 }

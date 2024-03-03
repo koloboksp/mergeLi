@@ -63,7 +63,7 @@ namespace Core
                     var scaleFactor = _container.content.sizeDelta.x / castle.Root.sizeDelta.x;
                     castle.Root.localScale = new Vector3(scaleFactor, scaleFactor, 1);
                 }
-                if (ApplicationController.Instance.SaveController.IsCastleCompleted(castle.name))
+                if (ApplicationController.Instance.SaveController.SaveProgress.IsCastleCompleted(castle.name))
                     castle.ShowAsCompleted();
                 
                 var lastSessionProgress = ApplicationController.Instance.SaveController.LastSessionProgress;

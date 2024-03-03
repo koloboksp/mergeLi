@@ -20,74 +20,28 @@ public interface ISessionProgressHolder
     string GetFirstUncompletedCastle();
 }
 
+
+
 public class SaveController
 {
     const string PlayerSettingsFileName = "playerSettings";
     const string PlayerDataFileName = "playerData";
     const string PlayerLastSessionDataFileName = "playerLastSessionData";
     
-    private Progress _progress = new Progress();
     private SessionProgress _lastSessionProgress = null;
 
-    private SaveSettings _saveSettings;
-
+    private readonly SaveSettings _saveSettings;
+    private readonly SaveProgress _saveProgress;
+    
     public SaveSettings SaveSettings => _saveSettings;
+    public SaveProgress SaveProgress => _saveProgress;
+
+    public SessionProgress LastSessionProgress => _lastSessionProgress;
     
     public SaveController()
     {
         _saveSettings = new SaveSettings(this, PlayerSettingsFileName);
-    }
-    
-    public void AddCoins(int amount)
-    {
-        _progress.Coins += amount;
-        SaveData();
-    }
-    
-    public int GetAvailableCoins()
-    {
-        return _progress.Coins;
-    }
-    
-    public void ConsumeCoins(int count)
-    {
-        _progress.Coins -= count;
-        SaveData();
-    }
-
-    
-    public bool IsCastleCompleted(string id)
-    {
-        return _progress.CompletedCastles.Contains(id);
-    }
-   
-    public void MarkCastleCompleted(string id)
-    {
-        if (_progress.CompletedCastles.Contains(id)) return;
-        
-        _progress.CompletedCastles.Add(id);
-        SaveData();
-    }
-    
-    public void SetBestSessionScore(int score)
-    {
-        _progress.BestSessionScore = score;
-        
-        SaveData();
-    }
-
-    private void SaveData()
-    {
-        try
-        {
-            string data = JsonUtility.ToJson(_progress);
-            var path = Path.Combine(Application.persistentDataPath, PlayerDataFileName);
-            File.WriteAllText(path, data);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e);
-        }
+        _saveProgress = new SaveProgress(this, PlayerDataFileName);
     }
     
     public async Task InitializeAsync(CancellationToken cancellationToken)
@@ -95,19 +49,8 @@ public class SaveController
         try
         {
             await _saveSettings.InitializeAsync(cancellationToken);
+            await _saveProgress.InitializeAsync(cancellationToken);
             
-            try
-            {
-                var path = Path.Combine(Application.persistentDataPath, PlayerDataFileName);
-                var loadedFile = await File.ReadAllTextAsync(path, cancellationToken);
-                var loadedProgress = JsonUtility.FromJson<Progress>(loadedFile);
-                _progress = loadedProgress;
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
-           
             try
             {
                 var path = Path.Combine(Application.persistentDataPath, PlayerLastSessionDataFileName);
@@ -130,8 +73,7 @@ public class SaveController
     {
         try
         {
-            _progress = new Progress();
-            File.Delete(PlayerDataFileName);
+            _saveProgress.Clear();
             ClearLastSessionProgress();
         }
         catch (Exception e)
@@ -153,22 +95,16 @@ public class SaveController
         }
     }
 
-    public int GetBestSessionScore()
-    {
-        return _progress.BestSessionScore;
-    }
-
     public void SaveSessionProgress(ISessionProgressHolder sessionProgressHolder)
     {
         var sessionProgress = new SessionProgress();
 
         sessionProgress.Score = sessionProgressHolder.GetScore();
-
         
         var castle = sessionProgressHolder.GetCastle();
         if (castle.Completed)
         {
-            MarkCastleCompleted(castle.Id);
+            _saveProgress.MarkCastleCompleted(castle.Id);
             sessionProgress.Castle = new SessionCastleProgress()
             {
                 Id = sessionProgressHolder.GetFirstUncompletedCastle(),
@@ -211,38 +147,8 @@ public class SaveController
         var path = Path.Combine(Application.persistentDataPath, PlayerLastSessionDataFileName);
         File.WriteAllText(path, data);
     }
-
-    public SessionProgress LastSessionProgress => _lastSessionProgress;
-   
-    public bool IsTutorialComplete(string tutorialId)
-    {
-        var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
-        if (tutorialProgress != null)
-            return tutorialProgress.IsComplted;
-
-        return false;
-    }
-
-    public void CompleteTutorial(string tutorialId)
-    {
-        var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
-        if (tutorialProgress != null)
-            tutorialProgress.IsComplted = true;
-        else
-        {
-            _progress.Tutorials.Add(
-                new TutorialProgress()
-                {
-                    Id = tutorialId,
-                    IsComplted = true,
-                });
-        }
-        
-        SaveData();
-    }
-
-
-    public void Save<T>(T data, string fileName)
+    
+    internal bool Save<T>(T data, string fileName)
     {
         try
         {
@@ -253,10 +159,42 @@ public class SaveController
         catch (Exception e)
         {
             Debug.LogError(e);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    internal async Task<bool> SaveAsync<T>(T data, string fileName)
+    {
+        try
+        {
+            var sData = JsonUtility.ToJson(data);
+            var path = Path.Combine(Application.persistentDataPath, fileName);
+            await File.WriteAllTextAsync(path, sData);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    internal void Clear(string fileName)
+    {
+        try
+        {
+            File.Delete(fileName);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
         }
     }
 
-    public async Task<T> LoadAsync<T>(string fileName, CancellationToken cancellationToken) where T : class
+    internal async Task<T> LoadAsync<T>(string fileName, CancellationToken cancellationToken) where T : class
     {
         try
         {

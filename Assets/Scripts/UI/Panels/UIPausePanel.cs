@@ -62,7 +62,7 @@ namespace Core
                 {
                     GameProcessor = _data.GameProcessor,
                     Market = _data.GameProcessor.Market,
-                    Items = UIGameScreen.FillShopItems(_data.GameProcessor),
+                    Items = UIShopPanel.FillShopItems(_data.GameProcessor),
                 },
                 _cancellationTokenSource.Token);
         }

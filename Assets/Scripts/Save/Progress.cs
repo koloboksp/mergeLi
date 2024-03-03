@@ -8,4 +8,5 @@ public class Progress
     public int BestSessionScore;
     public int Coins;
     public List<TutorialProgress> Tutorials = new();
+    public List<GiftProgress> Gifts = new();
 }

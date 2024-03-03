@@ -8,10 +8,9 @@ namespace Core.Steps.CustomOperations
         [SerializeField] private string _productId;
         [SerializeField] private int _currencyAmount;
         [SerializeField] private string _backgroundName;
-
+        
         public string ProductId => _productId;
         public int CurrencyAmount => _currencyAmount;
         public string BackgroundName => _backgroundName;
     }
-    
 }

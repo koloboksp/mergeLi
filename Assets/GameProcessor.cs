@@ -107,7 +107,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     [SerializeField] private StepMachine _stepMachine;
     [SerializeField] private DefaultMarket _market;
     [SerializeField] private DefaultAdsViewer _adsViewer;
-
+    [SerializeField] private GiftsMarket _giftsMarket;
+    
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
     [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
@@ -125,7 +126,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     [SerializeField] private CastleSelector _castleSelector;
     [SerializeField] private GiftsLibrary _giftsLibrary;
     [SerializeField] private AdsLibrary _adsLibrary;
-
+   
     //todo extract
     [SerializeField] private GiveCoinsEffect _giveCoinsEffect;
     
@@ -149,6 +150,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     public int Score => _score;
     public IMarket Market => _market;
     public IAdsViewer AdsViewer => _adsViewer;
+    public GiftsMarket GiftsMarket => _giftsMarket;
     public PurchasesLibrary PurchasesLibrary => _purchasesLibrary;
     public GiftsLibrary GiftsLibrary => _giftsLibrary;
     public AdsLibrary AdsLibrary => _adsLibrary;
@@ -161,13 +163,22 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         get => _bestSessionScore;
     }
-
+    
     private void Awake()
     {
         _pointsCalculator = new PointsCalculator(this);
         _cancellationTokenSource = new CancellationTokenSource();
         
         _market.OnBought += Market_OnBought;
+        _giftsMarket.OnCollect += GiftsMarket_OnCollect;
+    }
+
+    private void GiftsMarket_OnCollect(bool result, string productId, int amount)
+    {
+        if (result)
+        {
+            AddCurrency(amount);
+        }
     }
 
     private void Market_OnBought(bool result, string productId, int amount)
@@ -188,6 +199,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         await ApplicationController.Instance.WaitForInitializationAsync(_cancellationTokenSource.Token);
         
+        _giftsMarket.Initialize();
+        
         _field.OnPointerDown += Field_OnPointerDown;
         _stepMachine.OnBeforeStepStarted += StepMachine_OnBeforeStepStarted;
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
@@ -196,7 +209,6 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
         
         _castleSelector.Init();
-
         
         await ProcessGameAsyncSafe(SessionPrepareType.FirstStart, _cancellationTokenSource.Token);
     }
@@ -228,7 +240,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     
     private async Task PrepareSessionAsync(SessionPrepareType prepareType, CancellationToken cancellationToken)
     {
-        _bestSessionScore = ApplicationController.Instance.SaveController.GetBestSessionScore();
+        _bestSessionScore = ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore;
         
         if (_enableTutorial && _tutorialController.CanStartTutorial(_forceTutorial))
         {
@@ -536,14 +548,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         }
     }
 
-    public int CurrencyAmount => ApplicationController.Instance.SaveController.GetAvailableCoins();
+    public int CurrencyAmount => ApplicationController.Instance.SaveController.SaveProgress.GetAvailableCoins();
 
 
     public void AddPoints(int points)
     {
         _score += points;
         
-        ApplicationController.Instance.SaveController.SetBestSessionScore(_score);
+        ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(_score);
         OnScoreChanged?.Invoke(points);
     }
 
@@ -551,7 +563,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     {
         _score -= points;
         
-        ApplicationController.Instance.SaveController.SetBestSessionScore(_score);
+        ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(_score);
         
         OnScoreChanged?.Invoke(-points);
     }
@@ -633,7 +645,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
     public string GetFirstUncompletedCastle()
     {
-        var firstUncompletedCastle = _castleSelector.Library.Castles.FirstOrDefault(i => !ApplicationController.Instance.SaveController.IsCastleCompleted(i.Id));
+        var firstUncompletedCastle = _castleSelector.Library.Castles.FirstOrDefault(i => !ApplicationController.Instance.SaveController.SaveProgress.IsCastleCompleted(i.Id));
         if (firstUncompletedCastle == null)
             firstUncompletedCastle = _castleSelector.Library.Castles.Last();
 
@@ -690,14 +702,14 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
 
     public void ConsumeCoins(int amount)
     {
-        ApplicationController.Instance.SaveController.ConsumeCoins(amount);
+        ApplicationController.Instance.SaveController.SaveProgress.ConsumeCoins(amount);
         
         OnConsumeCurrency?.Invoke(amount);
     }
 
     public void AddCurrency(int amount)
     {
-        ApplicationController.Instance.SaveController.AddCoins(amount);
+        ApplicationController.Instance.SaveController.SaveProgress.AddCoins(amount);
 
         OnAddCurrency?.Invoke(amount);
     }

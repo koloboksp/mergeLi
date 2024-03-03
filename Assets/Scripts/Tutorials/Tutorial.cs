@@ -60,7 +60,7 @@ namespace Core.Tutorials
 
         public void Complete()
         {
-            ApplicationController.Instance.SaveController.CompleteTutorial(Id);
+            ApplicationController.Instance.SaveController.SaveProgress.CompleteTutorial(Id);
         }
     }
 }
