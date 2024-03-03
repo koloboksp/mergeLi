@@ -75,6 +75,7 @@ namespace Core
         {
             Model.Owner.ChangeLockInputState(true);
             var result = await _item.Gift.CollectAsync(_cancellationTokenSource.Token);
+            SetAvailability();
             await Model.Owner.SomethingBoughtAsync(this.Model, result.success, result.amount);
             Model.Owner.ChangeLockInputState(false);
         }

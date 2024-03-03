@@ -11,7 +11,8 @@ namespace Core
         
         public static bool TimeUpdated { get; private set; }
         public static long NowTicks => DateTime.Now.Ticks + _ticksDeltaStamp;
-        
+
+        private NetworkReachability _networkReachability = NetworkReachability.NotReachable;
         private CancellationTokenSource _cancellationTokenSource;
 
         protected void Awake()
@@ -38,6 +39,15 @@ namespace Core
             }
         }
 
+        private async void Update()
+        {
+            if (_networkReachability != Application.internetReachability)
+            {
+                _networkReachability = Application.internetReachability;
+                await UpdateTime(_cancellationTokenSource.Token);
+            }
+        }
+
         private static async Task UpdateTime(CancellationToken cancellationToken)
         {
             var ntpClient = new NtpClient();
@@ -49,9 +59,7 @@ namespace Core
                 _ticksDeltaStamp = networkTime.time.Ticks - DateTime.Now.Ticks;
             }
         }
-
         
-
         public static async Task ForceUpdate(CancellationToken cancellationToken)
         {
             await UpdateTime(cancellationToken);
