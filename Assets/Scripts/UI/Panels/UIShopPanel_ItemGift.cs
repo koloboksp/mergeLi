@@ -29,6 +29,8 @@ namespace Core
         {
             _cancellationTokenSource.Cancel();
             _cancellationTokenSource.Dispose();
+            
+            base.OnDestroy();
         }
         
         private async void Timer_OnComplete(UITimer sender)

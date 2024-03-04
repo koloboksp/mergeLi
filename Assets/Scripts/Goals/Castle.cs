@@ -45,6 +45,27 @@ namespace Core.Goals
             return _parts.Sum(i => i.Cost);
         }
         
+        public int GetLastPartCost()
+        {
+            foreach (var part in _parts)
+            {
+                if (part.Points < part.Cost)
+                    return part.Cost;
+            }
+            return int.MaxValue;
+        }
+        
+        public int GetLastPartPoints()
+        {
+            foreach (var part in _parts)
+            {
+                if (part.Points < part.Cost)
+                    return part.Points;
+            }
+            return 0;
+        }
+
+        
         public int GetPoints()
         {
             return _points;

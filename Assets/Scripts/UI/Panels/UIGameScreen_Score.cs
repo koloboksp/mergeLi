@@ -25,10 +25,5 @@ namespace Core
 
             _partProgressBar.SetProgress((float)points / (float)cost);
         }
-
-        public void SetScoreMarks(IEnumerable<int> marks)
-        {
-            _partProgressBar.SetMarks(marks);
-        }
     }
 }

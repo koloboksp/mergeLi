@@ -21,6 +21,7 @@ namespace Core
         [SerializeField] private RectTransform _fieldContainer;
         [FormerlySerializedAs("_showSettingsBtn")] [SerializeField] private Button _showPauseBtn;
         [SerializeField] private GameObject _lowSpaceWarning;
+        [SerializeField] private UIGameScreen_AnyGift _anyGift;
 
         private UIGameScreenData _data;
         private CancellationTokenSource _cancellationTokenSource;
@@ -30,10 +31,12 @@ namespace Core
         public void Awake()
         {
             _cancellationTokenSource = new CancellationTokenSource();
+           
             _coins.OnClick += Coins_OnClick;
-            _showPauseBtn.onClick.AddListener(ShowPauseBtn_OnClick); 
+            _showPauseBtn.onClick.AddListener(ShowPauseBtn_OnClick);
+            _anyGift.OnClick += AnyGift_OnClick;
         }
-  
+        
         private void OnDestroy()
         {
             _cancellationTokenSource.Cancel();
@@ -63,12 +66,15 @@ namespace Core
                 control.transform.SetParent(_buffsContainer.content, false);
                 control.transform.localScale = Vector3.one;
             }
+
+           
         }
 
         protected override void InnerActivate()
         {
             base.InnerActivate();
             
+            _anyGift.Set(_data.GameProcessor.GiftsMarket);
             _data.GameProcessor.PauseGameProcess(false);
         }
 
@@ -99,17 +105,15 @@ namespace Core
             if (activeCastle != null)
             {
                 activeCastle.OnProgressChanged += ActiveCastle_OnProgressChanged;
+                ActiveCastle_OnProgressChanged();
             }
-            
-            var marks = activeCastle.Parts.Select(i => i.Cost);
-            _score.SetScoreMarks(marks);
         }
 
         private void ActiveCastle_OnProgressChanged()
         {
             var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
-            var nextPointsGoal = activeCastle.GetCost();
-            var currentPointsGoal = activeCastle.GetPoints();
+            var nextPointsGoal = activeCastle.GetLastPartCost();
+            var currentPointsGoal = activeCastle.GetLastPartPoints();
             _score.SetNextGoalScore(currentPointsGoal, nextPointsGoal);
         }
 
@@ -164,14 +168,16 @@ namespace Core
                 _cancellationTokenSource.Token);
         }
 
-       
-        
-        private void CastleSelector_OnSelectedPartChanged()
+        private void AnyGift_OnClick()
         {
-            var pointsGoal = _data.GameProcessor.CastleSelector.ActiveCastle.GetPoints();
-            var costGoal = _data.GameProcessor.CastleSelector.ActiveCastle.GetCost(); 
-            
-            _score.SetNextGoalScore(pointsGoal, costGoal);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIShopPanel>(
+                new UIShopPanelData()
+                {
+                    GameProcessor = _data.GameProcessor,
+                    Market = _data.GameProcessor.Market,
+                    Items = UIShopPanel.FillShopItems(_data.GameProcessor),
+                },
+                _cancellationTokenSource.Token);
         }
 
         public void HideAllElements()
