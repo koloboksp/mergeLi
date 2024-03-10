@@ -10,26 +10,12 @@ namespace Core.Effects
         [SerializeField] private float _duration = 2.0f;
         [SerializeField] private float _delayScaler = 0.15f;
         [SerializeField] private GameObject _effectRoot; 
-        private CancellationTokenSource _cancellationTokenSource;
         
         public float Duration => _duration;
-
-        private void OnDestroy()
-        {
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = null;
-            }
-        }
-
+        
         public void Run(float delay)
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            
-           
-            _ = StartEffectAsync(delay * _delayScaler, _cancellationTokenSource.Token);
+            _ = StartEffectAsync(delay * _delayScaler, Application.exitCancellationToken);
         }
 
         private async Task StartEffectAsync(float delay, CancellationToken cancellationToken)

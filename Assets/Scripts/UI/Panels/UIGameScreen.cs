@@ -24,23 +24,14 @@ namespace Core
         [SerializeField] private UIGameScreen_AnyGift _anyGift;
 
         private UIGameScreenData _data;
-        private CancellationTokenSource _cancellationTokenSource;
-
+        
         public UIGameScreenData Data => _data;
         
         public void Awake()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-           
             _coins.OnClick += Coins_OnClick;
             _showPauseBtn.onClick.AddListener(ShowPauseBtn_OnClick);
             _anyGift.OnClick += AnyGift_OnClick;
-        }
-        
-        private void OnDestroy()
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
         }
         
         public override void SetData(UIScreenData undefinedData)
@@ -176,7 +167,9 @@ namespace Core
         {
             var panelData = new UIPausePanelData();
             panelData.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIPausePanel>(panelData, _cancellationTokenSource.Token);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIPausePanel>(
+                panelData, 
+                Application.exitCancellationToken);
         }
         
         private void Coins_OnClick()
@@ -188,7 +181,7 @@ namespace Core
                     Market = _data.GameProcessor.Market,
                     Items = UIShopPanel.FillShopItems(_data.GameProcessor),
                 },
-                _cancellationTokenSource.Token);
+                Application.exitCancellationToken);
         }
 
         private void AnyGift_OnClick()
@@ -200,7 +193,7 @@ namespace Core
                     Market = _data.GameProcessor.Market,
                     Items = UIShopPanel.FillShopItems(_data.GameProcessor),
                 },
-                _cancellationTokenSource.Token);
+                Application.exitCancellationToken);
         }
 
         public void HideAllElements()

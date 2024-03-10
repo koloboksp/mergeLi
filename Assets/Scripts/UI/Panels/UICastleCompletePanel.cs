@@ -21,24 +21,12 @@ namespace Core
         [SerializeField] private Button _tapButton;
 
         private UICastleCompletePanelData _data;
-        private CancellationTokenSource _cancellationTokenSource;
-
-        private void Awake()
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-        }
-
-        private void OnDestroy()
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-        }
-
+        
         public override void SetData(UIScreenData undefinedData)
         {
             _data = undefinedData as UICastleCompletePanelData;
             
-            Show(_cancellationTokenSource.Token);
+            _ = Show(Application.exitCancellationToken);
         }
 
         async Task Show(CancellationToken cancellationToken)

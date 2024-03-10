@@ -32,12 +32,9 @@ namespace Core
 
         private Model _model;
         private UISettingsPanelData _data;
-        private CancellationTokenSource _cancellationTokenSource;
-
+        
         private void Awake()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
             
             _changeSkinBtn.onClick.AddListener(ChangeSkinBtn_OnClick);
@@ -54,19 +51,15 @@ namespace Core
             _changeLanguageBtn.onClick.AddListener(ChangeLanguageBtn_OnClick);
         }
         
-        private void OnDestroy()
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-        }
-        
         private void ChangeSkinBtn_OnClick()
         {
             var skinScreenData = new UISkinPanel.UISkinPanelData();
             skinScreenData.SelectedSkin = _data.GameProcessor.Scene.ActiveSkin.Name;
             skinScreenData.Skins = _data.GameProcessor.Scene.Library.Containers.Select(i => i.Name);
             skinScreenData.SkinChanger = _data.GameProcessor.Scene;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UISkinPanel>(skinScreenData, _cancellationTokenSource.Token);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UISkinPanel>(
+                skinScreenData, 
+                Application.exitCancellationToken);
         }
         
         private void ChangeLanguageBtn_OnClick()
@@ -75,7 +68,9 @@ namespace Core
             screenData.Selected = ApplicationController.Instance.LocalizationController.ActiveLanguage;
             screenData.Available = ApplicationController.Instance.LocalizationController.Languages;
             screenData.Changer = ApplicationController.Instance;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UILanguagePanel>(screenData, _cancellationTokenSource.Token);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UILanguagePanel>(
+                screenData,
+                Application.exitCancellationToken);
         }
 
         private void ClearProgressBtn_OnClick()
@@ -94,7 +89,9 @@ namespace Core
             data.Selected = _data.GameProcessor.GetFirstUncompletedCastle();
             data.Castles = _data.GameProcessor.CastleSelector.Library.Castles;
             data.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastlesLibraryPanel>(data, _cancellationTokenSource.Token);
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastlesLibraryPanel>(
+                data,
+                Application.exitCancellationToken);
         }
 
         public override void SetData(UIScreenData undefinedData)

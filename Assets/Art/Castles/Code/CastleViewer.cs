@@ -66,8 +66,6 @@ public class CastleViewer : MonoBehaviour
         glowTime = castleSettings.glowTime;
         flipCurve = castleSettings.flipCurve;
         glowCurve = castleSettings.glowCurve;
-
-        _cancellationTokenSource = new CancellationTokenSource();
     }
 
     private void SetAll(float barBorn, float barLoad, float barOver, float glow, float gray)
@@ -175,7 +173,7 @@ public class CastleViewer : MonoBehaviour
     [SerializeField] private ExplodeEffect _partBornEffect;
     
     private readonly List<Operation> _operations = new ();
-    private CancellationTokenSource _cancellationTokenSource;
+    private Task _operationsExecutor;
     
     public void ShowPartBorn(int partIndex, bool instant)
     {
@@ -183,9 +181,7 @@ public class CastleViewer : MonoBehaviour
         if (instant)
             operation.ExecuteInstant();
         else
-        {
-            _operations.Add(operation);
-        }
+            AddOperation(operation);
     }
     
     public void ShowPartDeath(int partIndex, bool instant)
@@ -194,9 +190,7 @@ public class CastleViewer : MonoBehaviour
         if (instant)
             operation.ExecuteInstant();
         else
-        {
-            _operations.Add(operation);
-        }
+            AddOperation(operation);
     }
     
     public void ShowPartProgress(int partIndex, int oldPoints, int newPoints, int maxPoints, bool instant)
@@ -205,7 +199,7 @@ public class CastleViewer : MonoBehaviour
         if (instant)
             operation.ExecuteInstant();
         else
-            _operations.Add(operation);
+            AddOperation(operation);
     }
     
     public void ShowPartComplete(int partIndex, bool instant)
@@ -214,35 +208,30 @@ public class CastleViewer : MonoBehaviour
         if (instant)
             operation.ExecuteInstant();
         else
-            _operations.Add(operation);
+            AddOperation(operation);
     }
     
-    
-    private async void Start()
+    private void AddOperation(Operation operation)
     {
-        await WaitForOperations(_cancellationTokenSource.Token);
-    }
+        _operations.Add(operation);
 
-    private async Task WaitForOperations(CancellationToken cancellationToken)
+        if (_operationsExecutor == null)
+            _operationsExecutor = WaitForOperationsSafe(Application.exitCancellationToken);
+    }
+    
+    private async Task WaitForOperationsSafe(CancellationToken exitToken)
     {
         try
         {
-            while (true)
+            while (_operations.Count > 0)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                
-                if (_operations.Count > 0)
-                {
-                    var operation = _operations[0];
-                    
-                    await operation.ExecuteAsync(cancellationToken);
-                    
-                    _operations.RemoveAt(0);
-                }
-                else
-                {
-                    await Task.Yield();
-                }
+                exitToken.ThrowIfCancellationRequested();
+
+                var operation = _operations[0];
+
+                await operation.ExecuteAsync(exitToken);
+
+                _operations.RemoveAt(0);
             }
         }
         catch (OperationCanceledException e)
@@ -252,6 +241,10 @@ public class CastleViewer : MonoBehaviour
         catch (Exception e)
         {
             Debug.LogException(e);
+        }
+        finally
+        {
+            _operationsExecutor = null;
         }
     }
     

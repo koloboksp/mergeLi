@@ -14,26 +14,10 @@ namespace Core.Steps
 
         private readonly List<(Step step, StepExecutionType executionType)> _steps = new ();
         private readonly List<Step> _undoSteps = new ();
-        private CancellationTokenSource _cancellationTokenSource;
-
-        public void Awake()
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-        }
-
-        public void OnDestroy()
-        {
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = null;
-            }
-        }
-
+        
         public async void Start()
         {
-            await ProcessSteps(_cancellationTokenSource.Token);
+            await ProcessSteps(Application.exitCancellationToken);
         }
 
         private async Task ProcessSteps(CancellationToken cancellationToken)

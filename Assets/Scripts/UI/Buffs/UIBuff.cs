@@ -20,20 +20,7 @@ public class UIBuff : MonoBehaviour
     [SerializeField] protected CanvasGroup _commonCanvasGroup;
     [SerializeField] protected Image _cooldownImage;
     [SerializeField] protected UITutorialElement _tutorialElement;
-
-    private CancellationTokenSource _cancellationTokenSource;
-
-    protected virtual void Awake()
-    {
-        _cancellationTokenSource = new CancellationTokenSource();
-    }
-
-    private void OnDestroy()
-    {
-        _cancellationTokenSource.Cancel();
-        _cancellationTokenSource.Dispose();
-    }
-
+    
     public UIBuff SetModel(Buff model)
     {
         _model = model;
@@ -97,7 +84,7 @@ public class UIBuff : MonoBehaviour
                     Market = _model.GameProcessor.Market,
                     Items = UIShopPanel.FillShopItems(_model.GameProcessor)
                 }, 
-                _cancellationTokenSource.Token);
+                Application.exitCancellationToken);
             return true;
         }
 

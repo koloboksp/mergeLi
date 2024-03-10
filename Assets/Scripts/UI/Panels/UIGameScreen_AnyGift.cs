@@ -17,22 +17,13 @@ namespace Core
         [SerializeField] private GameObject _noInternetIcon;
 
         private GiftsMarket _giftsMarket;
-        private CancellationTokenSource _cancellationTokenSource;
-
+       
         private void Awake()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-
             _areaButton.onClick.AddListener(() => OnClick?.Invoke());
             _timer.OnComplete += Timer_OnComplete;
         }
         
-        protected void OnDestroy()
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-        }
-
         public void Set(GiftsMarket giftsMarket)
         {
             _giftsMarket = giftsMarket;
@@ -78,7 +69,7 @@ namespace Core
         
         private async void Timer_OnComplete(UITimer sender)
         {
-            await NetworkTimeManager.ForceUpdate(_cancellationTokenSource.Token);
+            await NetworkTimeManager.ForceUpdate(Application.exitCancellationToken);
             SetAvailability();
         }
     }

@@ -15,29 +15,19 @@ namespace Core
         [SerializeField] private Text _requiredInternetConnectionLbl;
 
         private ShopPanelGiftItem _item;
-        private CancellationTokenSource _cancellationTokenSource;
-
+        
         protected override void Awake()
         {
             base.Awake();
-            _cancellationTokenSource = new CancellationTokenSource();
             
             _timer.OnComplete += Timer_OnComplete;
-        }
-
-        protected override void OnDestroy()
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-            
-            base.OnDestroy();
         }
         
         private async void Timer_OnComplete(UITimer sender)
         {
             Interactable = true;
 
-            await NetworkTimeManager.ForceUpdate(_cancellationTokenSource.Token);
+            await NetworkTimeManager.ForceUpdate(Application.exitCancellationToken);
             SetAvailability();
         }
 
@@ -76,7 +66,7 @@ namespace Core
         protected override async void OnClick()
         {
             Model.Owner.ChangeLockInputState(true);
-            var result = await _item.Gift.CollectAsync(_cancellationTokenSource.Token);
+            var result = await _item.Gift.CollectAsync(Application.exitCancellationToken);
             SetAvailability();
             await Model.Owner.SomethingBoughtAsync(this.Model, result.success, result.amount);
             Model.Owner.ChangeLockInputState(false);

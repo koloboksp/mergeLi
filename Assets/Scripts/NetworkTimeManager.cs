@@ -13,29 +13,17 @@ namespace Core
         public static long NowTicks => DateTime.Now.Ticks + _ticksDeltaStamp;
 
         private NetworkReachability _networkReachability = NetworkReachability.NotReachable;
-        private CancellationTokenSource _cancellationTokenSource;
-
-        protected void Awake()
-        {
-            _cancellationTokenSource = new CancellationTokenSource();
-        }
         
-        protected void OnDestroy()
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-        }
-
         private async void Start()
         {
-            await UpdateTime(_cancellationTokenSource.Token);
+            await UpdateTime(Application.exitCancellationToken);
         }
 
         private async void OnApplicationPause(bool isPaused)
         {
             if (!isPaused)
             {
-                await UpdateTime(_cancellationTokenSource.Token);
+                await UpdateTime(Application.exitCancellationToken);
             }
         }
 
@@ -44,7 +32,7 @@ namespace Core
             if (_networkReachability != Application.internetReachability)
             {
                 _networkReachability = Application.internetReachability;
-                await UpdateTime(_cancellationTokenSource.Token);
+                await UpdateTime(Application.exitCancellationToken);
             }
         }
 

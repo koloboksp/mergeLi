@@ -6,9 +6,8 @@ public class UIUndoBuff : UIBuff
 {
     [SerializeField] private Button _clickArea;
 
-    protected override void Awake()
-    {
-        base.Awake();
+    protected void Awake()
+    { 
         _clickArea.onClick.AddListener(ClickArea_OnClick);
     }
 

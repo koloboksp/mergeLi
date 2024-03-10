@@ -17,23 +17,14 @@ namespace Core
       
         private Model _model;
         private UIPausePanelData _data;
-        private CancellationTokenSource _cancellationTokenSource;
-
+        
         private void Awake()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
             
             _mainMenuBtn.onClick.AddListener(MainMenuBtn_OnClick);
             _restartBtn.onClick.AddListener(RestartBtn_OnClick);
             _shopBtn.onClick.AddListener(ShopBtn_OnClick);
-        }
-        
-        private void OnDestroy()
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
         }
         
         private async void MainMenuBtn_OnClick()
@@ -44,8 +35,8 @@ namespace Core
                     GameProcessor = _data.GameProcessor,
                     Instant = true
                 }, 
-                _cancellationTokenSource.Token);
-            await startPanel.ShowAsync(_cancellationTokenSource.Token);
+                Application.exitCancellationToken);
+            await startPanel.ShowAsync(Application.exitCancellationToken);
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
         
@@ -64,7 +55,7 @@ namespace Core
                     Market = _data.GameProcessor.Market,
                     Items = UIShopPanel.FillShopItems(_data.GameProcessor),
                 },
-                _cancellationTokenSource.Token);
+                Application.exitCancellationToken);
         }
         
         private void CloseBtn_OnClick()

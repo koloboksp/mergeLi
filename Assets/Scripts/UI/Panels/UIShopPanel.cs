@@ -24,23 +24,15 @@ namespace Core
 
         private Model _model;
         private UIShopPanelData _data;
-        private CancellationTokenSource _cancellationTokenSource;
-
+        
         private readonly List<UIShopPanel_Item> _items = new();
         private readonly List<(UIOverCastleCompletePanel i, Transform parent, bool activeSelf)> _overUIElements = new();
         
         private void Awake()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
         }
-
-        private void OnDestroy()
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-        }
-
+        
         private void CloseBtn_OnClick()
         {
             ApplicationController.Instance.UIPanelController.PopScreen(this);
@@ -117,13 +109,14 @@ namespace Core
         {
             if (success)
             {
-                await PlayBoughtSuccessAnimation(sender, coinsAmount, _cancellationTokenSource.Token);
+                await PlayBoughtSuccessAnimation(sender, coinsAmount, Application.exitCancellationToken);
             }
             else
             {
                 var panelData = new UIPurchaseFailedPanelData();
                 ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIPurchaseFailedPanel>(
-                    panelData, _cancellationTokenSource.Token);
+                    panelData, 
+                    Application.exitCancellationToken);
             }
         }
 
@@ -134,7 +127,7 @@ namespace Core
             var item = _items.Find(i => i.Model == sender);
             
             await _data.GameProcessor.GiveCoinsEffect.Show(coinsAmount, item.Root, cancellationToken);
-            await AsyncExtensions.WaitForSecondsAsync(2.0f, _cancellationTokenSource.Token);
+            await AsyncExtensions.WaitForSecondsAsync(2.0f, Application.exitCancellationToken);
             LockInput(false);
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }

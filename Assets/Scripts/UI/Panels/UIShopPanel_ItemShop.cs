@@ -10,19 +10,6 @@ namespace Core
         [SerializeField] private Text _currencyCount;
 
         private ShopPanelMarketItem _item;
-        private CancellationTokenSource _cancellationTokenSource;
-        
-        protected override void Awake()
-        {
-            base.Awake();
-            _cancellationTokenSource = new CancellationTokenSource();
-        }
-        
-        protected override void OnDestroy()
-        {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
-        }
         
         public override void SetModel(UIShopPanel_ItemModel model)
         {
@@ -36,7 +23,7 @@ namespace Core
         protected override async void OnClick()
         {
             Model.Owner.ChangeLockInputState(true);
-            var result = await _item.Market.BuyAsync(_item.ProductId, _cancellationTokenSource.Token);
+            var result = await _item.Market.BuyAsync(_item.ProductId, Application.exitCancellationToken);
             await Model.Owner.SomethingBoughtAsync(this.Model, result.success, result.amount);
             Model.Owner.ChangeLockInputState(false);
         }
