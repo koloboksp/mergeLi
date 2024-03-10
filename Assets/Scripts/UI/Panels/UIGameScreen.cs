@@ -58,6 +58,10 @@ namespace Core
             OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
             
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
+            // var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
+            // var nextPointsGoal = activeCastle.GetLastPartCost();
+            // var currentPointsGoal = activeCastle.GetLastPartPoints();
+            // _score.Set(currentPointsGoal, nextPointsGoal);
             CastleSelector_OnCastleChanged(null);
             
             foreach (var buff in _data.GameProcessor.Buffs)
@@ -98,25 +102,44 @@ namespace Core
         {
             if (previousCastle != null)
             {
-                previousCastle.OnProgressChanged -= ActiveCastle_OnProgressChanged;
+                previousCastle.View.OnPartBornStart -= View_OnPartBornStart;
+                previousCastle.View.OnPartCompleteStart -= View_OnPartCompleteStart;
+                previousCastle.View.OnPartProgressStart -= View_OnPartProgressStart;
             }
             
             var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
             if (activeCastle != null)
             {
-                activeCastle.OnProgressChanged += ActiveCastle_OnProgressChanged;
-                ActiveCastle_OnProgressChanged();
+                activeCastle.View.OnPartBornStart += View_OnPartBornStart;
+                activeCastle.View.OnPartCompleteStart += View_OnPartCompleteStart;
+                activeCastle.View.OnPartProgressStart += View_OnPartProgressStart;
+                
+                var nextPointsGoal = activeCastle.GetLastPartCost();
+                var currentPointsGoal = activeCastle.GetLastPartPoints();
+                _score.InstantSet(currentPointsGoal, nextPointsGoal);
             }
         }
 
-        private void ActiveCastle_OnProgressChanged()
+        private void View_OnPartProgressStart(bool instant, float duration, int oldPoints, int newPoints, int maxPoints)
         {
-            var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
-            var nextPointsGoal = activeCastle.GetLastPartCost();
-            var currentPointsGoal = activeCastle.GetLastPartPoints();
-            _score.SetNextGoalScore(currentPointsGoal, nextPointsGoal);
+            if(instant)
+                _score.InstantSet(newPoints, maxPoints);
+            else
+                _score.Set(duration, oldPoints, newPoints, maxPoints);
         }
 
+        private void View_OnPartBornStart(bool instant, float duration)
+        {
+            
+        }
+        private void View_OnPartCompleteStart(bool instant, float duration)
+        {
+           if (instant)
+               _score.InstantComplete();
+           else
+               _score.Complete(duration);
+        }
+        
         private void OnBeforeStepStarted(Step sender, StepExecutionType executionType)
         {
             _buffsContainerRoot.interactable = false;
@@ -136,7 +159,7 @@ namespace Core
         {
             
           
-            _score.SetSessionScore(_data.GameProcessor.Score, _data.GameProcessor.BestSessionScore);
+            //_score.SetSessionScore(_data.GameProcessor.Score, _data.GameProcessor.BestSessionScore);
         }
 
         private IEnumerator ShowGoalReachAnimation()

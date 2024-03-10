@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core;
@@ -167,6 +168,10 @@ public class CastleViewer : MonoBehaviour
     // 
     // }
 
+    public event Action<bool, float> OnPartCompleteStart;
+    public event Action<bool, float, int, int, int> OnPartProgressStart;
+    public event Action<bool, float> OnPartBornStart;
+    
     [SerializeField] private ExplodeEffect _partBornEffect;
     
     private readonly List<Operation> _operations = new ();
@@ -178,7 +183,9 @@ public class CastleViewer : MonoBehaviour
         if (instant)
             operation.ExecuteInstant();
         else
+        {
             _operations.Add(operation);
+        }
     }
     
     public void ShowPartDeath(int partIndex, bool instant)
@@ -187,12 +194,14 @@ public class CastleViewer : MonoBehaviour
         if (instant)
             operation.ExecuteInstant();
         else
+        {
             _operations.Add(operation);
+        }
     }
     
-    public void ShowPartProgress(int partIndex, float nOldPoints, float nNewPoints, bool instant)
+    public void ShowPartProgress(int partIndex, int oldPoints, int newPoints, int maxPoints, bool instant)
     {
-        var operation = new ShowPartProgressOperation(partIndex, nOldPoints, nNewPoints, this);
+        var operation = new ShowPartProgressOperation(partIndex, oldPoints, newPoints, maxPoints, this);
         if (instant)
             operation.ExecuteInstant();
         else
@@ -264,9 +273,9 @@ public class CastleViewer : MonoBehaviour
         
         public virtual void ExecuteInstant() { }
         
-        protected async Task ChangeValueOperationAsync(AnimationCurve curve, float dur, int prop, float v0, float v1, CancellationToken cancellationToken)
+        protected async Task ChangeValueOperationAsync(AnimationCurve curve, float duration, int prop, float v0, float v1, CancellationToken cancellationToken)
         {
-            float timer = dur;
+            float timer = duration;
             float scale = v1 - v0;
 
             while (timer > 0)
@@ -277,7 +286,7 @@ public class CastleViewer : MonoBehaviour
                 if (timer < 0)
                     timer = 0;
 
-                _target.mat.SetFloat(prop, v0 + curve.Evaluate(1f - timer / dur) * scale);
+                _target.mat.SetFloat(prop, v0 + curve.Evaluate(1f - timer / duration) * scale);
                 // rend.SetPropertyBlock(mpb);
 
                 await Task.Yield();
@@ -312,6 +321,9 @@ public class CastleViewer : MonoBehaviour
 
         public override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            float duration = _bornEffect.Duration + Target.flipTime + Target.flipTime + Target.flipTime;
+            Target.OnPartCompleteStart?.Invoke(false, duration);
+            
             Target.stage = PartIndex + 1;
             Target.mat.SetInt(Target.STAGE,  Target.stage);
             Target.mat.SetFloat(Target.BAR_LOAD, 1);
@@ -325,6 +337,8 @@ public class CastleViewer : MonoBehaviour
         
         public override void ExecuteInstant()
         {
+            Target.OnPartCompleteStart?.Invoke(true, 0.0f);
+            
             Target.stage = PartIndex + 1;
             Target.mat.SetInt(Target.STAGE,  Target.stage);
             Target.mat.SetFloat(Target.BAR_LOAD, 1);
@@ -336,33 +350,46 @@ public class CastleViewer : MonoBehaviour
     
     public class ShowPartProgressOperation : Operation
     {
-        private readonly float _nOldPoints; 
-        private readonly float _nNewPoints; 
-        public ShowPartProgressOperation(int partIndex, float nOldPoints, float nNewPoints, CastleViewer target) 
+        private readonly int _oldPoints; 
+        private readonly int _newPoints;
+        private readonly int _maxPoints;
+        public ShowPartProgressOperation(int partIndex, int oldPoints, int newPoints, int maxPoints, CastleViewer target) 
             : base(partIndex, target)
         {
-            _nOldPoints = nOldPoints;
-            _nNewPoints = nNewPoints;
+            _oldPoints = oldPoints;
+            _newPoints = newPoints;
+            _maxPoints = maxPoints;
         }
 
         public override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            var duration = Target.flipTime;
+            Target.OnPartProgressStart?.Invoke(false, duration, _oldPoints, _newPoints, _maxPoints);
+
             Target.stage = PartIndex + 1;
             Target.mat.SetInt(Target.STAGE, Target.stage);
             Target.mat.SetFloat(Target.BAR_BORN, 1);
             Target.mat.SetFloat(Target.BAR_OVER, 0);
 
-            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.BAR_LOAD, _nOldPoints, _nNewPoints, cancellationToken);
+            var nOldPoints = (float)_oldPoints / _maxPoints;
+            var nNewPoints = (float)_newPoints / _maxPoints;
+            
+            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.BAR_LOAD, nOldPoints, nNewPoints, cancellationToken);
         }
         
         public override void ExecuteInstant()
         {
+            Target.OnPartProgressStart?.Invoke(true, 0.0f, _oldPoints, _newPoints, _maxPoints);
+
             Target.stage = PartIndex + 1;
             Target.mat.SetInt(Target.STAGE, Target.stage);
             Target.mat.SetFloat(Target.BAR_BORN, 1);
             Target.mat.SetFloat(Target.BAR_OVER, 0);
+           
+            var nOldPoints = (float)_oldPoints / _maxPoints;
+            var nNewPoints = (float)_newPoints / _maxPoints;
 
-            ChangeValueOperationInstant(Target.flipCurve, Target.flipTime, Target.BAR_LOAD, _nOldPoints, _nNewPoints);
+            ChangeValueOperationInstant(Target.flipCurve, Target.flipTime, Target.BAR_LOAD, nOldPoints, nNewPoints);
         }
     }
     
@@ -380,6 +407,9 @@ public class CastleViewer : MonoBehaviour
 
         public override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            var duration = Target.flipTime;
+            Target.OnPartBornStart?.Invoke(false, duration);
+
             Target.stage = PartIndex + 1;
             Target.mat.SetInt(Target.STAGE, Target.stage);
             Target.mat.SetFloat(Target.BAR_LOAD, 0);
@@ -390,6 +420,8 @@ public class CastleViewer : MonoBehaviour
         
         public override void ExecuteInstant()
         {
+            Target.OnPartBornStart?.Invoke(true, 0.0f);
+
             Target.stage = PartIndex + 1;
             Target.mat.SetInt(Target.STAGE, Target.stage);
             Target.mat.SetFloat(Target.BAR_LOAD, 0);

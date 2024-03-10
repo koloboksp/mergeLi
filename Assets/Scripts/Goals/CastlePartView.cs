@@ -34,13 +34,8 @@ public class CastlePartView : MonoBehaviour
     
     private void OnPointsChanged(int oldPoints, bool instant)
     {
-        if (_model.Points < _model.Cost)
-        {
-            _model.Owner.View.ShowPartProgress(_model.Index, (float)oldPoints/_model.Cost, (float)_model.Points/_model.Cost, instant);
-        }
-        else
-        {
+        _model.Owner.View.ShowPartProgress(_model.Index, oldPoints, _model.Points, _model.Cost, instant);
+        if (_model.Points == _model.Cost)
             _model.Owner.View.ShowPartComplete(_model.Index, instant);
-        }
     }
 }

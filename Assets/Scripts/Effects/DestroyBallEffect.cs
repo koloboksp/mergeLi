@@ -40,8 +40,8 @@ namespace Core.Effects
             {
                 await AsyncExtensions.WaitForSecondsAsync(delay, cancellationToken);
 
-                var variantInstance = Instantiate(variant, transform);
-                variantInstance.Run();
+               // var variantInstance = Instantiate(variant, transform);
+               // variantInstance.Run();
 
                 await AsyncExtensions.WaitForSecondsAsync(_duration, cancellationToken);
 

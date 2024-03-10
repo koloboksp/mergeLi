@@ -25,11 +25,11 @@ namespace Core.Goals
         private readonly List<CastlePart> _parts = new();
         private int _points;
         private CastlePart _selectedPart;
-        
+
         public string Id => gameObject.name;
         public RectTransform Root => _root;
 
-        public bool Completed => _points >= GetCost(); 
+        public bool Completed => _points >= GetCost();
         public CastleViewer View => _view;
         public IEnumerable<CastlePart> Parts => _parts;
         public int CoinsAfterComplete => _coinsAfterComplete;
@@ -44,7 +44,7 @@ namespace Core.Goals
         {
             return _parts.Sum(i => i.Cost);
         }
-        
+
         public int GetLastPartCost()
         {
             foreach (var part in _parts)
@@ -52,9 +52,10 @@ namespace Core.Goals
                 if (part.Points < part.Cost)
                     return part.Cost;
             }
+
             return int.MaxValue;
         }
-        
+
         public int GetLastPartPoints()
         {
             foreach (var part in _parts)
@@ -62,22 +63,23 @@ namespace Core.Goals
                 if (part.Points < part.Cost)
                     return part.Points;
             }
+
             return 0;
         }
 
-        
+
         public int GetPoints()
         {
             return _points;
         }
-        
+
         public void Init(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;
 
             gameObject.GetComponentsInChildren(_parts);
             _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
-            
+
             _gameProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
             GameProcessor_OnScoreChanged1(0, true);
         }
@@ -95,7 +97,7 @@ namespace Core.Goals
         private void GameProcessor_OnScoreChanged1(int additionalPoints, bool instant)
         {
             var completed = ProcessPoints(additionalPoints, instant);
-            
+
             OnProgressChanged?.Invoke();
 
             if (completed)
@@ -113,52 +115,72 @@ namespace Core.Goals
                 completed = true;
                 _points = castleCost;
             }
-            
-            ApplyPointsToParts(instant);
+
+            ApplyPointsToParts((int)Mathf.Sign(additionalPoints), instant);
 
             return completed;
         }
 
-        private void ApplyPointsToParts(bool instant)
+        private void ApplyPointsToParts(int direction, bool instant)
         {
+            var partStates = new List<(int consumePoints, int cost, bool unlocked)>();
+
             var restScore = _points;
-            var partUnlocked = true;
-            CastlePart newSelectedPart = null;
-
-            for (var index = 0; index < _parts.Count; index++)
+            var newSelectedPartIndex = 0;
+            for (var partI = 0; partI < _parts.Count; partI++)
             {
-                var part = _parts[index];
-                var consumePoints = part.Cost;
+                var part = _parts[partI];
+                int consumePoints = restScore <= part.Cost
+                    ? restScore
+                    : part.Cost;
 
-                part.ChangeUnlockState(partUnlocked, instant);
-                
-                if (restScore <= part.Cost)
-                {
-                    consumePoints = restScore;
-                    partUnlocked = false;
-                }
+                var partUnlocked = partI == 0
+                    ? true
+                    : partStates[partI - 1].unlocked
+                      && partStates[partI - 1].consumePoints == partStates[partI - 1].cost;
 
-                part.SetPoints(consumePoints, instant);
+                if (partUnlocked)
+                    newSelectedPartIndex = partI;
+
+                partStates.Add((consumePoints, part.Cost, partUnlocked));
+
                 restScore -= consumePoints;
-
-                if (restScore <= 0)
-                {
-                    newSelectedPart = part;
-                    break;
-                }
-                
             }
 
+            if (direction >= 0)
+            {
+                for (var index = 0; index < _parts.Count; index++)
+                {
+                    var part = _parts[index];
+
+                    var partState = partStates[index];
+                    part.ChangeUnlockState(partState.unlocked, instant);
+                    part.SetPoints(partState.consumePoints, instant);
+                }
+            }
+            else
+            {
+                for (var index = _parts.Count - 1; index >= 0; index--)
+                {
+                    var part = _parts[index];
+
+                    var partState = partStates[index];
+                    part.SetPoints(partState.consumePoints, instant);
+                    part.ChangeUnlockState(partState.unlocked, instant);
+                }
+            }
+
+            var newSelectedPart = _parts[newSelectedPartIndex];
             if (newSelectedPart != _selectedPart)
             {
-                if(_selectedPart != null)
+                if (_selectedPart != null)
                     _selectedPart.Select(false);
 
                 _selectedPart = newSelectedPart;
-                
-                if(_selectedPart != null)
+
+                if (_selectedPart != null)
                     _selectedPart.Select(true);
-                
+
                 OnPartSelected?.Invoke();
             }
         }
@@ -168,7 +190,7 @@ namespace Core.Goals
             _points = points;
             GameProcessor_OnScoreChanged1(0, instant);
         }
-        
+
         public void ResetPoints(bool instant)
         {
             _points = 0;
@@ -196,7 +218,7 @@ namespace Core.Goals
             {
                 var part = _parts[index];
                 part.SetPoints(0, true);
-                if(index == 0)
+                if (index == 0)
                     part.ChangeUnlockState(true, true);
                 else
                     part.ChangeUnlockState(false, true);
