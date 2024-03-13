@@ -85,10 +85,12 @@ namespace Core
 
         private void ShowCastlesBtn_OnClick()
         {
-            var data = new UICastlesLibraryPanel.UICastleLibraryPanelData();
-            data.Selected = _data.GameProcessor.GetFirstUncompletedCastle();
-            data.Castles = _data.GameProcessor.CastleSelector.Library.Castles;
-            data.GameProcessor = _data.GameProcessor;
+            var data = new UICastleLibraryPanelData
+            {
+                Selected = _data.GameProcessor.GetFirstUncompletedCastle(),
+                Castles = _data.GameProcessor.CastleSelector.Library.Castles,
+                GameProcessor = _data.GameProcessor
+            };
             ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastlesLibraryPanel>(
                 data,
                 Application.exitCancellationToken);

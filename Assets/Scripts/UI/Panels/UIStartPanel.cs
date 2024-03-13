@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using Assets.Scripts.Core;
 using Atom;
@@ -72,18 +73,27 @@ namespace Core
         
         private void CastleBtn_OnClick()
         {
-            var data = new UICastlesLibraryPanel.UICastleLibraryPanelData();
-            data.Selected = _data.GameProcessor.GetFirstUncompletedCastle();
-            data.Castles = _data.GameProcessor.CastleSelector.Library.Castles;
-            data.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastlesLibraryPanel>(
+            var data = new UICastleLibraryPanelData
+            {
+                Selected = _data.GameProcessor.GetFirstUncompletedCastle(),
+                Castles = _data.GameProcessor.CastleSelector.Library.Castles,
+                GameProcessor = _data.GameProcessor
+            };
+            _ = ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastlesLibraryPanel>(
                 data,
                 Application.exitCancellationToken);
         }
         
         private void HatsBtn_OnClick()
         {
-           
+            var data = new UIHatsPanelData();
+            data.SelectedSkin = _data.GameProcessor.Scene.ActiveSkin.Name;
+            data.Skins = _data.GameProcessor.Scene.Library.Containers.Select(i => i.Name);
+            data.HatsChanger = _data.GameProcessor.Scene;
+            
+            _ = ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIHatsPanel>(
+                data,
+                Application.exitCancellationToken);
         }
         
         private void SettingsBtn_OnClick()

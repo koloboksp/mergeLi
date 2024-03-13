@@ -73,12 +73,7 @@ namespace Core
             }
         }
         
-        public class UICastleLibraryPanelData : UIScreenData
-        {
-            public string Selected;
-            public IEnumerable<Castle> Castles;
-            public GameProcessor GameProcessor;
-        }
+        
         
         public class Model
         {
@@ -106,5 +101,12 @@ namespace Core
                 
             }
         }
+    }
+    
+    public class UICastleLibraryPanelData : UIScreenData
+    {
+        public string Selected;
+        public IEnumerable<Castle> Castles;
+        public GameProcessor GameProcessor;
     }
 }
