@@ -8,4 +8,5 @@ public abstract class BallSkin : Skin
     public abstract Color MainColor { set; }
     public abstract float Transparency { set; }
     public abstract void PathNotFount();
+    public abstract void SetHat(Hat hat);
 }

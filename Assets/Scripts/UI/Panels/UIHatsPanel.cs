@@ -31,7 +31,7 @@ namespace Core
             _model = new Model()
                 .OnItemsUpdated(OnItemsUpdated);
             
-            _model.SetData(data.Skins, data.SelectedSkin, data.HatsChanger);
+            _model.SetData(data.Hats, data.SelectedHat, data.HatsChanger);
         }
 
         private void OnItemsUpdated(IEnumerable<UIHatsPanel_HatItem.Model> items)
@@ -89,8 +89,8 @@ namespace Core
     
     public class UIHatsPanelData : UIScreenData
     {
-        public string SelectedSkin;
-        public IEnumerable<string> Skins;
+        public string SelectedHat;
+        public IEnumerable<string> Hats;
         public IHatsChanger HatsChanger;
     }
 }

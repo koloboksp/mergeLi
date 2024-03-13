@@ -2,25 +2,30 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Core
 {
     public class DefaultBallSkin : BallSkin
     {
-        [Flags] public enum BallState
+        [Flags]
+        public enum BallState
         {
             None = 0,
-            Idle = 1, 
-            Select = 2, 
-            Move = 4, 
-            PathNotFound = 8, 
-            Upgrade = 16, 
+            Idle = 1,
+            Select = 2,
+            Move = 4,
+            PathNotFound = 8,
+            Upgrade = 16,
             Downgrade = 32
         }
-        
+
         [SerializeField] private Text _valueLabel;
         [SerializeField] private Image _ballIcon;
+        [SerializeField] private Transform _hatAnchor;
         [SerializeField] private CanvasGroup _canvasGroup;
+
+        private Hat _hat;
 
         public UnityAction<BallState> ChangeStateEvent;
 
@@ -57,6 +62,18 @@ namespace Core
         public override void PathNotFount()
         {
             ChangeStateEvent?.Invoke(BallState.PathNotFound);
+        }
+
+        public override void SetHat(Hat hat)
+        {
+            if (_hat != null)
+            {
+                Destroy(_hat.gameObject);
+                _hat = null;
+            }
+
+            if (hat != null)
+                _hat = Instantiate(hat, _hatAnchor);
         }
     }
 }

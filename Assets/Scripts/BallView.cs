@@ -16,7 +16,7 @@ namespace Core
         public Color Color => _color;
     }
     
-    public class BallView : MonoBehaviour, ISkinChangeable, ISubComponent
+    public class BallView : MonoBehaviour, ISkinChangeable, IHatChangeable, ISubComponent
     {
         [SerializeField] private Ball _ball;
         [SerializeField] private RectTransform _root;
@@ -56,6 +56,14 @@ namespace Core
             Ball_OnPointsChanged(_ball.Points, true);
             Ball_OnSelectedChanged();
             Ball_TransparencyChanged();
+        }
+        
+        public void ChangeHat(Hat hat)
+        {
+            if (_ballSkin != null)
+            {
+                _ballSkin.SetHat(hat);
+            }
         }
         
         private void Ball_OnSelectedChanged()

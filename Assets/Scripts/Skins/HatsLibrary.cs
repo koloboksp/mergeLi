@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class HatsLibrary : MonoBehaviour
 {
-    [SerializeField] private List<SkinContainer> _skinContainers;
+    [SerializeField] private List<Hat> _hats;
 
-    public IEnumerable<SkinContainer> Containers => _skinContainers;
+    public IEnumerable<Hat> Hats => _hats;
     
-    public SkinContainer GetContainer(string skinName)
+    public Hat GetHat(string hatName)
     {
-        return _skinContainers.Find(i => i.Name == skinName);
+        return _hats.Find(i => i.Name == hatName);
     }
 }

@@ -323,6 +323,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _skinsLibrary: {fileID: 6286026246992310968, guid: a10d4adc293d9a34c9d7386e013d6f00,
     type: 3}
+  _hatsLibrary: {fileID: 4023327791964962262, guid: a93820c93d0390f47b5090f55244ed45,
+    type: 3}
   _gameProcessor: {fileID: 0}
   _field: {fileID: 6493377614370124532}
   _sceneRoot: {fileID: 6493377613641388009}
