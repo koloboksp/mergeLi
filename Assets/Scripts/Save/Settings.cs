@@ -11,4 +11,6 @@ public class Settings
     public bool SoundEnable = true;
     public float MusicVolume;
     public bool MusicEnable;
+    
+    public string ActiveHat;
 }

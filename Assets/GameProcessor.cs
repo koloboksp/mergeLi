@@ -64,7 +64,12 @@ public enum StepTag
     None,
 }
 
-public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISessionProgressHolder
+public class GameProcessor : MonoBehaviour, 
+    IRules, 
+    IPointsChangeListener, 
+    ISessionProgressHolder,
+    ISkinChanger,
+    IHatsChanger
 {
     public static readonly List<StepTag> NewStepStepTags = new()
     {
@@ -250,6 +255,12 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
         {
             _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
 
+            var activeSkinName = ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin;
+            _scene.SetSkin(activeSkinName);
+            
+            var activeHatName = ApplicationController.Instance.SaveController.SaveSettings.ActiveHat;
+            _scene.SetHat(activeHatName);
+            
             if (HasPreviousSessionGame)
             {
                 var lastSessionProgress = ApplicationController.Instance.SaveController.LastSessionProgress;
@@ -276,7 +287,7 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                 _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
                 _castleSelector.ActiveCastle.ResetPoints(true);
             }
-
+            
             if (prepareType == SessionPrepareType.FirstStart)
             {
                 var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIStartPanel>(
@@ -292,6 +303,8 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
                     new UIGameScreenData() { GameProcessor = this },
                     cancellationToken);
             }
+            
+            
             // if (startPanel.Choice == UIStartPanelChoice.New)
             // {
             //     _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
@@ -733,5 +746,17 @@ public class GameProcessor : MonoBehaviour, IRules, IPointsChangeListener, ISess
     public void PauseGameProcess(bool pause)
     {
         
+    }
+
+    public void SetSkin(string skinName)
+    {
+        ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin = skinName;
+        _scene.SetSkin(skinName);
+    }
+
+    public void SetHat(string hatName)
+    {
+        ApplicationController.Instance.SaveController.SaveSettings.ActiveHat = hatName;
+        _scene.SetHat(hatName);
     }
 }

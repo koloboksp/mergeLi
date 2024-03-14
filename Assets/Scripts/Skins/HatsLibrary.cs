@@ -11,4 +11,9 @@ public class HatsLibrary : MonoBehaviour
     {
         return _hats.Find(i => i.Name == hatName);
     }
+
+    public Hat GetDefaultHat()
+    {
+        return _hats[0];
+    }
 }

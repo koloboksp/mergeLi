@@ -54,9 +54,9 @@ namespace Core
         private void ChangeSkinBtn_OnClick()
         {
             var skinScreenData = new UISkinPanel.UISkinPanelData();
-            skinScreenData.SelectedSkin = _data.GameProcessor.Scene.ActiveSkin.Name;
+            skinScreenData.SelectedSkin = ApplicationController.Instance.SaveController.SaveSettings.ActiveHat;
             skinScreenData.Skins = _data.GameProcessor.Scene.SkinLibrary.Containers.Select(i => i.Name);
-            skinScreenData.SkinChanger = _data.GameProcessor.Scene;
+            skinScreenData.SkinChanger = _data.GameProcessor;
             ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UISkinPanel>(
                 skinScreenData, 
                 Application.exitCancellationToken);

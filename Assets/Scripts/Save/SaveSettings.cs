@@ -96,7 +96,33 @@ public class SaveSettings
             }
         }
     }
-    
+
+    public string ActiveHat
+    {
+        get => _settings.ActiveHat;
+        set
+        {
+            if (value != _settings.ActiveHat)
+            {
+                _settings.ActiveHat = value;
+                _controller.Save(_settings, _fileName);
+            }
+        }
+    }
+
+    public string ActiveSkin
+    {
+        get => _settings.ActiveHat;
+        set
+        {
+            if (value != _settings.ActiveHat)
+            {
+                _settings.ActiveHat = value;
+                _controller.Save(_settings, _fileName);
+            }
+        }
+    }
+
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         var loadedSettings = await _controller.LoadAsync<Settings>(_fileName, cancellationToken);

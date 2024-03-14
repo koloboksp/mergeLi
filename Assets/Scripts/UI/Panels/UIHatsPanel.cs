@@ -67,7 +67,12 @@ namespace Core
                         .SetName(i)));
                 _onItemsUpdated?.Invoke(_items);
 
-                TrySelect(_items.Find(i => i.Name == selectedSkin));
+                var initialSelected = _items.Find(i => i.Name == selectedSkin);
+                if (initialSelected == null)
+                    initialSelected = _items.FirstOrDefault();
+                
+                if(initialSelected != null)
+                    TrySelect(initialSelected);
             }
 
             public Model OnItemsUpdated(Action<IEnumerable<UIHatsPanel_HatItem.Model>> onItemsUpdated)

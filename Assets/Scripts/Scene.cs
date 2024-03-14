@@ -2,7 +2,7 @@ using System;
 using Core.Steps.CustomOperations;
 using UnityEngine;
 
-public class Scene : MonoBehaviour, ISkinChanger, IHatsChanger
+public class Scene : MonoBehaviour
 {
     [SerializeField] private SkinsLibrary _skinsLibrary;
     [SerializeField] private HatsLibrary _hatsLibrary;
@@ -20,25 +20,24 @@ public class Scene : MonoBehaviour, ISkinChanger, IHatsChanger
     public SkinsLibrary SkinLibrary => _skinsLibrary;
     public SkinContainer ActiveSkin => _activeSkin;
     public HatsLibrary HatsLibrary => _hatsLibrary;
-    public string ActiveHat => _activeHat;
     
     public void SetSkin(string skinName)
     {
         _activeSkin = _skinsLibrary.GetContainer(skinName);
+        if (_activeSkin == null)
+            _activeSkin = _skinsLibrary.GetDefaultSkin();
+        
         var skinChangeables = _field.gameObject.GetComponentsInChildren<ISkinChangeable>();
         foreach (var skinChangeable in skinChangeables)
             skinChangeable.ChangeSkin(_activeSkin);
     }
-
-    public void Awake()
-    {
-        _activeSkin = _skinsLibrary.GetContainer("default");
-        _activeHat = "none";
-    }
-
+    
     public void SetHat(string hatName)
     {
         var hat = _hatsLibrary.GetHat(hatName);
+        if (hat == null)
+            hat = _hatsLibrary.GetDefaultHat();
+        
         var hatChangeables = _field.gameObject.GetComponentsInChildren<IHatChangeable>();
         foreach (var hatChangeable in hatChangeables)
             hatChangeable.ChangeHat(hat);

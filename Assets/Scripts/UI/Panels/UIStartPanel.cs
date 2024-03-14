@@ -87,9 +87,9 @@ namespace Core
         private void HatsBtn_OnClick()
         {
             var data = new UIHatsPanelData();
-            data.SelectedHat = _data.GameProcessor.Scene.ActiveHat;
+            data.SelectedHat = ApplicationController.Instance.SaveController.SaveSettings.ActiveHat;
             data.Hats = _data.GameProcessor.Scene.HatsLibrary.Hats.Select(i => i.Name);
-            data.HatsChanger = _data.GameProcessor.Scene;
+            data.HatsChanger = _data.GameProcessor;
             
             _ = ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIHatsPanel>(
                 data,
