@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 namespace Core.Buffs
 {
-    public class ExplodeBuff : AreaEffect
+    public class ExplodeBuff : AreaBuff
     {
         [SerializeField] private ExplodeType _explodeType;
         [SerializeField] private ExplodeEffect _explodeEffectPrefab;

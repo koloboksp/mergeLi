@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class UIExplosionBuff : UIBuff, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    [SerializeField] private Button _clickArea;
     private bool _showShopScreenRequired;
     
     public void OnBeginDrag(PointerEventData eventData)

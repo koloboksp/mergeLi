@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace Core.Buffs
 {
-    public class DowngradeBuff : AreaEffect
+    public class DowngradeBuff : AreaBuff
     {
         protected virtual bool UndoAvailable => true;
         protected virtual StepTag UndoStepTag => StepTag.UndoDowngrade;

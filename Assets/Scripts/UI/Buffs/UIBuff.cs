@@ -16,10 +16,13 @@ public class UIBuff : MonoBehaviour
     protected Action<PointerEventData> _onDrag;
 
     [SerializeField] protected Buff _model;
+    [SerializeField] protected GameObject _iconPanel;
     [SerializeField] protected Text _costLabel;
     [SerializeField] protected CanvasGroup _commonCanvasGroup;
     [SerializeField] protected Image _cooldownImage;
     [SerializeField] protected UITutorialElement _tutorialElement;
+
+    public GameObject IconPanel => _iconPanel;
     
     public UIBuff SetModel(Buff model)
     {
@@ -38,13 +41,31 @@ public class UIBuff : MonoBehaviour
 
     protected virtual void AvailableStateChanged()
     {
-        _commonCanvasGroup.interactable = _model.Available;
+        UpdateInteractableAndFillAmount();
+    }
+
+    private void UpdateInteractableAndFillAmount()
+    {
+        var interactable = false;
+        var fillAmount = 1.0f;
+        if (_model.Available && _model.RestCooldown == 0)
+        {
+            interactable = true;
+            fillAmount = 0.0f;
+        }
+        else
+        {
+            interactable = false;
+            fillAmount = (float)_model.RestCooldown / (float)_model.Cooldown;
+        }
+
+        _commonCanvasGroup.interactable = interactable;
+        _cooldownImage.fillAmount = fillAmount;
     }
 
     protected virtual void RestCooldownChanged()
     {
-        var fillAmount = (_model.Cooldown == 0) ? 0.0f : (float)_model.RestCooldown / (float)_model.Cooldown;
-        _cooldownImage.fillAmount = fillAmount;
+        UpdateInteractableAndFillAmount();
     }
     
     private void SetCost()

@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 namespace Core.Buffs
 {
-    public abstract class AreaEffect : Buff
+    public abstract class AreaBuff : Buff
     {
         private static readonly List<UIGameScreen_BuffArea> _noAllocFoundBuffAreas = new();
         
@@ -24,11 +24,13 @@ namespace Core.Buffs
             var pointerPosition = _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position);
             CreateCursor(pointerPosition);
             
+            SetControlIconPanelActive(false);
+            
             var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(pointerPosition);
             var affectingArea = GetAffectingArea(pointerGridPosition);
             UpdateAffectingArea(pointerGridPosition, affectingArea);
         }
-
+        
         protected override void InnerOnDrag(PointerEventData eventData)
         {
             base.InnerOnDrag(eventData);
@@ -45,7 +47,8 @@ namespace Core.Buffs
             base.InnerOnEndDrag(eventData);
             
             DestroyCursor();
-            
+            SetControlIconPanelActive(true);
+
             var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(_gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
             _affectedAreas.Clear();
             foreach (var affectingBuffArea in _affectingBuffAreas)
@@ -73,7 +76,11 @@ namespace Core.Buffs
         
         protected virtual List<Vector3Int> GetAffectingArea(Vector3Int pointerGridPosition)
         {
-            return new List<Vector3Int>() { new(0, 0, 0) };
+            var affectingArea = new List<Vector3Int>();
+            if (IsAreaValid(pointerGridPosition + Vector3Int.zero, _gameProcessor.Scene.Field.Size))
+                affectingArea.Add(Vector3Int.zero);
+            
+            return affectingArea;
         }
         
         private void CreateCursor(Vector3 position)

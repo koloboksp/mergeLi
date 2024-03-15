@@ -23,11 +23,11 @@ public abstract class Buff : MonoBehaviour, IBuff
     [SerializeField] private UIBuff _controlPrefab;
     [SerializeField] private int _cost = 1;
     [SerializeField] private int _cooldown = 3;
-    
+
     private UIBuff _control;
     private bool _available = true;
     private int _restCooldown;
-    
+
     public GameProcessor GameProcessor => _gameProcessor;
     public int Cost => _cost;
 
@@ -41,47 +41,55 @@ public abstract class Buff : MonoBehaviour, IBuff
     {
         _control = Instantiate(_controlPrefab);
         _control
-            .SetModel(this) 
+            .SetModel(this)
             .OnClick(OnClick)
             .OnBeginDrag(OnBeginDrag)
             .OnEndDrag(OnEndDrag)
             .OnDrag(OnDrag);
-        
+
         return _control;
     }
-    
+
     protected void OnClick()
     {
-        if(!IsCurrencyEnough) return;
-        if(!Available) return;
+        if (!IsCurrencyEnough)
+            return;
+        if (!Available)
+            return;
 
         var readyToUse = InnerOnClick();
-        if(readyToUse)
+        if (readyToUse)
             ProcessUsing(null);
     }
-    
+
     protected void OnBeginDrag(PointerEventData eventData)
     {
-        if(!IsCurrencyEnough) return;
-        if(!Available) return;
+        if (!IsCurrencyEnough)
+            return;
+        if (!Available)
+            return;
 
         InnerOnBeginDrag(eventData);
     }
-    
+
     protected void OnEndDrag(PointerEventData eventData)
     {
-        if(!IsCurrencyEnough) return;
-        if(!Available) return;
+        if (!IsCurrencyEnough)
+            return;
+        if (!Available)
+            return;
 
         var readyToUse = InnerOnEndDrag(eventData);
-        if(readyToUse)
+        if (readyToUse)
             ProcessUsing(eventData);
     }
-    
+
     protected void OnDrag(PointerEventData eventData)
     {
-        if(!IsCurrencyEnough) return;
-        if(!Available) return;
+        if (!IsCurrencyEnough)
+            return;
+        if (!Available)
+            return;
 
         InnerOnDrag(eventData);
     }
@@ -90,12 +98,12 @@ public abstract class Buff : MonoBehaviour, IBuff
     {
         _restCooldown = _cooldown;
         _restCooldownChanged?.Invoke();
-        
+
         if (_restCooldown != 0)
             Available = false;
         else
             Available = true;
-        
+
         InnerProcessUsing(eventData);
     }
 
@@ -110,9 +118,14 @@ public abstract class Buff : MonoBehaviour, IBuff
     {
         return true;
     }
-    
-    protected virtual void InnerOnBeginDrag(PointerEventData eventData) { }
-    protected virtual void InnerOnDrag(PointerEventData eventData) { }
+
+    protected virtual void InnerOnBeginDrag(PointerEventData eventData)
+    {
+    }
+
+    protected virtual void InnerOnDrag(PointerEventData eventData)
+    {
+    }
 
     public virtual bool Available
     {
@@ -126,12 +139,12 @@ public abstract class Buff : MonoBehaviour, IBuff
             }
         }
     }
-    
+
     public virtual bool IsCurrencyEnough => ApplicationController.Instance.SaveController.SaveProgress.GetAvailableCoins() >= _cost;
 
     public int Cooldown => _cooldown;
     public int RestCooldown => _restCooldown;
-    
+
     private void GameProcessor_OnStepCompleted(Step step, StepExecutionType executionType)
     {
         Inner_OnStepCompleted(step);
@@ -141,7 +154,7 @@ public abstract class Buff : MonoBehaviour, IBuff
     {
         Inner_OnUndoStepsClear();
     }
-    
+
     internal void ConsumeCooldown(int stepValue)
     {
         _restCooldown -= stepValue;
@@ -149,31 +162,39 @@ public abstract class Buff : MonoBehaviour, IBuff
             _restCooldown = 0;
         if (_restCooldown < 0)
             _restCooldown = 0;
-        
+
         Inner_OnRestCooldownChanged();
         _restCooldownChanged?.Invoke();
 
         Available = _restCooldown == 0;
     }
-    
-    protected virtual void Inner_OnRestCooldownChanged() { }
-    protected virtual void Inner_OnStepCompleted(Step step) { }
-    protected virtual void Inner_OnUndoStepsClear() { }
+
+    protected virtual void Inner_OnRestCooldownChanged()
+    {
+    }
+
+    protected virtual void Inner_OnStepCompleted(Step step)
+    {
+    }
+
+    protected virtual void Inner_OnUndoStepsClear()
+    {
+    }
 
     public Buff OnAvailableStateChanged(Action onChanged)
     {
         _availableStateChanged = onChanged;
         return this;
     }
-    
+
     public Buff OnRestCooldownChanged(Action onChanged)
     {
         _restCooldownChanged = onChanged;
         return this;
     }
-    
+
     public abstract string Id { get; }
-    
+
     public int GetRestCooldown()
     {
         return _restCooldown;
@@ -182,10 +203,15 @@ public abstract class Buff : MonoBehaviour, IBuff
     public void SetRestCooldown(int restCooldown)
     {
         _restCooldown = restCooldown;
-        
+
         Inner_OnRestCooldownChanged();
         _restCooldownChanged?.Invoke();
 
         Available = _restCooldown == 0;
+    }
+    
+    protected void SetControlIconPanelActive(bool state)
+    {
+        _control.IconPanel.SetActive(state);
     }
 }

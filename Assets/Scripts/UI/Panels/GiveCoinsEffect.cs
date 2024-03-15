@@ -11,6 +11,7 @@ namespace Core
     {
         [SerializeField] private GameObject _coinPrefab;
         [SerializeField] private AnimationCurve _movingSpeed;
+        [SerializeField] private AnimationCurve _scale;
         [SerializeField] private float _randomizeStartPosition = 0.1f;
         [SerializeField] private float _randomizeSideOffset = 0.1f;
         [SerializeField] private float _randomizeDelay = 1.0f;
@@ -82,6 +83,7 @@ namespace Core
                 
                 var pathParam = timer / time;
                 var f = _movingSpeed.Evaluate(pathParam);
+                var scaleFactor = _scale.Evaluate(pathParam);
                 var pathDerivedParam = f * 2.0f;
                 var startDerivedPosition = startPosition;
                 var endDerivedPosition = middlePosition;
@@ -94,7 +96,7 @@ namespace Core
                 }
                 
                 coin.transform.position = Vector3.Lerp(startDerivedPosition, endDerivedPosition, pathDerivedParam);
-                
+                coin.transform.localScale = Vector3.one * scaleFactor;
                 timer += Time.deltaTime;
                 await Task.Yield();
             }
