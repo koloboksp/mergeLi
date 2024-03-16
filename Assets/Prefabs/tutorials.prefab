@@ -109,6 +109,11 @@ MonoBehaviour:
   _textKeys:
   - "\u0414\u0430\u0432\u0430\u0439 \u0436\u0435 \u0434\u043E\u0441\u0442\u043E\u0440\u043E\u0438\u043C
     \u044D\u0442\u043E\u0442 \u0434\u043E\u043C\u0438\u043A!"
+  _textKeysTemp:
+  - m03: 2858129863
+    m47: 3287305451
+    m8B: 3139937455
+    mCF: 2693000571
   _position: 0
 --- !u!1 &355250499402738423
 GameObject:
@@ -217,6 +222,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textKeys:
   - "\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439!"
+  _textKeysTemp:
+  - m03: 2229805990
+    m47: 1146310177
+    m8B: 2918721420
+    mCF: 4170663814
   _position: 0
 --- !u!1 &607084713333380470
 GameObject:
@@ -299,6 +309,15 @@ MonoBehaviour:
   - "\u0422\u043E\u043B\u044C\u043A\u043E \u0442\u044B \u043D\u0430\u0434\u0435\u043B\u0435\u043D
     \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044C\u044E
     - \u0443\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0438\u043C\u0438!"
+  _textKeysTemp:
+  - m03: 1928340113
+    m47: 4105257086
+    m8B: 3042043899
+    mCF: 2839450692
+  - m03: 4290249784
+    m47: 3140176021
+    m8B: 3193569807
+    mCF: 20821702
   _position: 0
 --- !u!1 &619790315132504555
 GameObject:
@@ -700,9 +719,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9008560476959149771}
   - component: {fileID: 3829633426042937365}
-  - component: {fileID: 3001669115719337814}
   m_Layer: 0
-  m_Name: giveCoins
+  m_Name: prepareForGiveCoins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -740,18 +758,51 @@ MonoBehaviour:
   _coins: 1
   _buffs: 0
   _settingsBtn: 0
---- !u!114 &3001669115719337814
+--- !u!1 &1551199332295467773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6619785209155377268}
+  - component: {fileID: 4291656267483695013}
+  m_Layer: 0
+  m_Name: giveCoins
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6619785209155377268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551199332295467773}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 252723805375165013}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4291656267483695013
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1462571049711330005}
+  m_GameObject: {fileID: 1551199332295467773}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01bc1754bdd4494f9ba58020d089f710, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c883180740a4f98a3d3fabb8d955dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tutorial: {fileID: 7747690254940513010}
 --- !u!1 &1590191732953331519
 GameObject:
   m_ObjectHideFlags: 0
@@ -1153,6 +1204,11 @@ MonoBehaviour:
   _textKeys:
   - "\u0414\u0435\u043B\u043E \u043E\u0441\u0442\u0430\u043B\u043E\u0441\u044C \u0437\u0430
     \u043C\u0430\u043B\u044B\u043C!"
+  _textKeysTemp:
+  - m03: 568441290
+    m47: 3482470331
+    m8B: 2757475435
+    mCF: 2291319532
   _position: 0
 --- !u!1 &2366988613661925327
 GameObject:
@@ -1215,6 +1271,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textKeys:
   - "\u041F\u043E\u0434\u0432\u0438\u043D\u044C \u0435\u0433\u043E \u0441\u044E\u0434\u0430!"
+  _textKeysTemp:
+  - m03: 2192226086
+    m47: 6899868
+    m8B: 2564338368
+    mCF: 3776481999
   _position: 0
 --- !u!1 &2395671025469399948
 GameObject:
@@ -1326,6 +1387,15 @@ MonoBehaviour:
     \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D!"
   - "\u0422\u044B \u0445\u043E\u0440\u043E\u0448\u043E \u043F\u043E\u0441\u0442\u0430\u0440\u0430\u043B\u0441\u044F
     \u0438 \u0432\u043E\u0442 \u0442\u0432\u043E\u044F \u043D\u0430\u0433\u0440\u0430\u0434\u0430"
+  _textKeysTemp:
+  - m03: 1529555938
+    m47: 2026917575
+    m8B: 2659830044
+    mCF: 1963489976
+  - m03: 1357184674
+    m47: 1028213088
+    m8B: 2338529423
+    mCF: 1943272065
   _position: 0
 --- !u!1 &2604666182460501485
 GameObject:
@@ -1392,6 +1462,15 @@ MonoBehaviour:
   - "\u0422\u043E \u0442\u044B \u043F\u043E\u043B\u0443\u0447\u0438\u0448\u044C \u0431\u043B\u043E\u0431\u0430
     \u0431\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u043E\u0433\u043E
     \u0443\u0440\u043E\u0432\u043D\u044F - 4!"
+  _textKeysTemp:
+  - m03: 1488687119
+    m47: 416039375
+    m8B: 2500940867
+    mCF: 2772312268
+  - m03: 2791059364
+    m47: 1581205707
+    m8B: 2989417317
+    mCF: 1867764188
   _position: 0
 --- !u!1 &2950966181968158458
 GameObject:
@@ -1622,6 +1701,19 @@ MonoBehaviour:
     \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u0432 \u0440\u044F\u0434 \u0438\u0437
     5 \u0448\u0442\u0443\u043A."
   - "\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439!"
+  _textKeysTemp:
+  - m03: 3254070944
+    m47: 2665565229
+    m8B: 2465766853
+    mCF: 2845636854
+  - m03: 815669665
+    m47: 4251666846
+    m8B: 2890527903
+    mCF: 2155153696
+  - m03: 2604723377
+    m47: 1260667282
+    m8B: 2983216236
+    mCF: 763639620
   _position: 0
 --- !u!1 &3682061063746355742
 GameObject:
@@ -1687,6 +1779,15 @@ MonoBehaviour:
   - "\u0414\u0430\u0432\u0430\u0439 \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u043C
     \u0447\u0442\u043E \u043D\u0430\u043C \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442
     \u0441\u043E\u0431\u0440\u0430\u0442\u044C \u0434\u0430\u043B\u044C\u0448\u0435."
+  _textKeysTemp:
+  - m03: 4271229442
+    m47: 2464697577
+    m8B: 2437266351
+    mCF: 1941168924
+  - m03: 158417460
+    m47: 2125351772
+    m8B: 2610035416
+    mCF: 952253745
   _position: 0
 --- !u!1 &3690881294131113025
 GameObject:
@@ -1751,6 +1852,15 @@ MonoBehaviour:
   - "\u0423 \u0442\u0435\u0431\u044F \u043F\u043E\u043B\u0443\u0447\u0438\u043B\u043E\u0441\u044C!"
   - "\u0412\u0438\u0434\u0438\u0448\u044C, \u043E\u043D\u0438 \u0432\u0435\u0440\u043D\u0443\u043B\u0438
     \u0440\u0435\u0441\u0443\u0440\u0441\u044B!"
+  _textKeysTemp:
+  - m03: 2756012630
+    m47: 2754364264
+    m8B: 2214988115
+    mCF: 700560260
+  - m03: 1104012707
+    m47: 2560115587
+    m8B: 2926171037
+    mCF: 3780919947
   _position: 0
 --- !u!1 &3729957058961553979
 GameObject:
@@ -1783,7 +1893,7 @@ Transform:
   m_Children:
   - {fileID: 8691295248254765105}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2025090940685713392
 MonoBehaviour:
@@ -2001,6 +2111,11 @@ MonoBehaviour:
   _textKeys:
   - "\u0418 \u043C\u044B \u0441\u043C\u043E\u0433\u043B\u0438 \u0441\u043E\u0431\u0440\u0430\u0442\u044C
     \u0447\u0430\u0441\u0442\u044C \u044D\u0442\u043E\u0433\u043E \u0434\u043E\u043C\u0438\u043A\u0430."
+  _textKeysTemp:
+  - m03: 1611318962
+    m47: 397037223
+    m8B: 2375851651
+    mCF: 1689361597
   _position: 0
 --- !u!1 &3873212204892877371
 GameObject:
@@ -2095,6 +2210,7 @@ Transform:
   m_Children:
   - {fileID: 7964744763313262139}
   - {fileID: 9008560476959149771}
+  - {fileID: 6619785209155377268}
   - {fileID: 7230830744600836182}
   - {fileID: 2635341874550401373}
   - {fileID: 5213498201507123084}
@@ -2125,6 +2241,7 @@ MonoBehaviour:
   _stepsBeforeGetCoins:
   - {fileID: 2285994177699040352}
   - {fileID: 3829633426042937365}
+  - {fileID: 4291656267483695013}
   - {fileID: 267856909119710631}
   _stepsBeforeSelectNextCastle:
   - {fileID: 2508836097776239719}
@@ -2206,6 +2323,19 @@ MonoBehaviour:
     \u0438 \u0432\u0435\u0440\u043D\u0443\u0442 \u0443\u043A\u0440\u0430\u0434\u0435\u043D\u043D\u044B\u0435
     \u0440\u0435\u0441\u0443\u0440\u0441\u044B."
   - "\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439!"
+  _textKeysTemp:
+  - m03: 2587684844
+    m47: 2401977874
+    m8B: 2197591772
+    mCF: 625477495
+  - m03: 2842262363
+    m47: 133185847
+    m8B: 2636871630
+    mCF: 1226418682
+  - m03: 2942189088
+    m47: 2175944038
+    m8B: 3024224551
+    mCF: 4282560580
   _position: 0
 --- !u!1 &4420866535176903747
 GameObject:
@@ -2282,6 +2412,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textKeys:
   - "\u0412\u044B\u0431\u0435\u0440\u0438 \u044D\u0442\u043E\u0433\u043E \u0431\u043B\u043E\u0431\u0430!"
+  _textKeysTemp:
+  - m03: 3900823940
+    m47: 2610774870
+    m8B: 2887333395
+    mCF: 3126396253
   _position: 0
 --- !u!1 &4485184685154008206
 GameObject:
@@ -2482,6 +2617,11 @@ MonoBehaviour:
   _textKeys:
   - "\u0421\u043C\u043E\u0442\u0440\u0438 \u043A\u0430\u043A\u043E\u0439 \u0431\u044B\u043B
     \u043A\u0440\u0430\u0441\u0438\u0432\u044B\u0439 \u0434\u043E\u043C\u0438\u043A!"
+  _textKeysTemp:
+  - m03: 4281978603
+    m47: 440354046
+    m8B: 3112970006
+    mCF: 336595628
   _position: 0
 --- !u!1 &4636933057199955637
 GameObject:
@@ -2608,6 +2748,11 @@ MonoBehaviour:
   - "\u042D\u0442\u0430 \u0441\u0443\u043F\u0435\u0440-\u0441\u0438\u043B\u0430 \u043F\u043E\u043C\u043E\u0436\u0435\u0442
     \u0443\u0437\u043D\u0430\u0442\u044C \u0433\u0434\u0435 \u043F\u043E\u044F\u0432\u044F\u0442\u0441\u044F
     \u043D\u043E\u0432\u044B\u0435 \u0431\u043B\u043E\u0431\u044B!"
+  _textKeysTemp:
+  - m03: 165097334
+    m47: 3980085411
+    m8B: 2477412711
+    mCF: 3343910781
   _position: 1
 --- !u!1 &5087417285450584636
 GameObject:
@@ -3322,6 +3467,15 @@ MonoBehaviour:
     \u0440\u0430\u0437\u0430\u0431\u0440\u0430\u043B\u0438 \u0438 \u0443\u0442\u0430\u0449\u0438\u043B\u0438
     \u0435\u0433\u043E \u043F\u043E \u0447\u0430\u0441\u0442\u044F\u043C!"
   - "\u041F\u043E\u043C\u043E\u0436\u0435\u0448\u044C \u0435\u0433\u043E \u0432\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C?"
+  _textKeysTemp:
+  - m03: 176422876
+    m47: 3202895593
+    m8B: 2766429602
+    mCF: 1761140799
+  - m03: 398657673
+    m47: 972243844
+    m8B: 2926424654
+    mCF: 1134072643
   _position: 0
 --- !u!1 &6154053979672773617
 GameObject:
@@ -3387,6 +3541,11 @@ MonoBehaviour:
     \u0441\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u043D\u043E\u0433\u043E, \u0442\u043E
     \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439 \u0432\u043E\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C\u0441\u044F
     \u0441\u0443\u043F\u0435\u0440 \u0441\u0438\u043B\u043E\u0439!"
+  _textKeysTemp:
+  - m03: 2064243710
+    m47: 4236526029
+    m8B: 2437695002
+    mCF: 2883193838
   _position: 1
 --- !u!1 &6372968701637075878
 GameObject:
@@ -3765,6 +3924,11 @@ MonoBehaviour:
   _textKeys:
   - "\u042D\u0442\u0430 \u0441\u0443\u043F\u0435\u0440-\u0441\u0438\u043B\u0430 \u043F\u043E\u043C\u043E\u0436\u0435\u0442
     \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0435\u0431\u0435 \u0445\u043E\u0434."
+  _textKeysTemp:
+  - m03: 3738549274
+    m47: 2444446370
+    m8B: 3195250843
+    mCF: 2207046815
   _position: 1
 --- !u!1 &7012528324606082510
 GameObject:
@@ -3891,6 +4055,11 @@ MonoBehaviour:
   - "\u042D\u0442\u0430 \u0441\u0443\u043F\u0435\u0440-\u0441\u0438\u043B\u0430 \u043F\u043E\u043C\u043E\u0436\u0435\u0442
     \u0432\u0437\u043E\u0440\u0432\u0430\u0442\u044C \u043C\u0435\u0448\u0430\u044E\u0449\u0438\u0445
     \u0431\u043B\u043E\u0431\u043E\u0432! \u0423-\u0445\u0430-\u0445\u0430!"
+  _textKeysTemp:
+  - m03: 1074548391
+    m47: 1218792210
+    m8B: 2389363556
+    mCF: 3259409408
   _position: 1
 --- !u!1 &7107481280512485100
 GameObject:
@@ -4388,6 +4557,11 @@ MonoBehaviour:
   _textKeys:
   - "\u0422\u0435\u043F\u0435\u0440\u044C \u0432\u044B\u0431\u0435\u0440\u0438 \u044D\u0442\u043E\u0433\u043E
     \u0431\u043B\u043E\u0431\u0430!"
+  _textKeysTemp:
+  - m03: 4287867443
+    m47: 2759347982
+    m8B: 2536889255
+    mCF: 3647690033
   _position: 0
 --- !u!1 &7472768150421751863
 GameObject:
@@ -4454,6 +4628,19 @@ MonoBehaviour:
     \u0431\u043B\u043E\u0431\u043E\u0432 \u0442\u044B \u0441\u043E\u0435\u0434\u0438\u043D\u044F\u0435\u0448\u044C,"
   - "\u0442\u0435\u043C \u0431\u043E\u043B\u044C\u0448\u0435 \u0440\u0435\u0441\u0443\u0440\u0441\u043E\u0432
     \u043C\u044B \u043F\u043E\u043B\u0443\u0447\u0430\u043C."
+  _textKeysTemp:
+  - m03: 3310524119
+    m47: 664227095
+    m8B: 2151993301
+    mCF: 3497849821
+  - m03: 2713157021
+    m47: 3132244604
+    m8B: 2259375129
+    mCF: 1838924617
+  - m03: 2572198362
+    m47: 729894785
+    m8B: 3115015704
+    mCF: 1592163417
   _position: 0
 --- !u!1 &7504475244191429034
 GameObject:
@@ -4530,6 +4717,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textKeys:
   - "\u0412\u044B\u0431\u0435\u0440\u0438 \u044D\u0442\u043E\u0433\u043E \u0431\u043B\u043E\u0431\u0430!"
+  _textKeysTemp:
+  - m03: 665693269
+    m47: 1969833110
+    m8B: 3211208366
+    mCF: 1338774825
   _position: 0
 --- !u!1 &7562464223374183711
 GameObject:
@@ -4774,6 +4966,15 @@ MonoBehaviour:
     \u0442\u044B \u0440\u0430\u0437\u0431\u0435\u0440\u0435\u0448\u044C\u0441\u044F
     \u043F\u043E-\u0445\u043E\u0434\u0443 \u0438\u0433\u0440\u044B!"
   - "\u041F\u0440\u0438\u044F\u0442\u043D\u043E\u0439 \u0438\u0433\u0440\u044B!"
+  _textKeysTemp:
+  - m03: 494926595
+    m47: 3351792604
+    m8B: 2970740081
+    mCF: 1784191774
+  - m03: 4175561066
+    m47: 1536117244
+    m8B: 2903506940
+    mCF: 3628502197
   _position: 1
 --- !u!1 &8147635850775522924
 GameObject:
@@ -4883,6 +5084,11 @@ MonoBehaviour:
   _textKeys:
   - "\u042F \u0432\u0438\u0436\u0443 \u0435\u0449\u0435 \u043E\u0434\u0438\u043D
     \u0445\u043E\u0440\u043E\u0448\u0438\u0439 \u0445\u043E\u0434!"
+  _textKeysTemp:
+  - m03: 3531459134
+    m47: 3641851961
+    m8B: 2616668545
+    mCF: 1907587080
   _position: 0
 --- !u!1 &8257033777395152592
 GameObject:
@@ -5105,6 +5311,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textKeys:
   - "\u0412\u044B\u0431\u0435\u0440\u0438 \u044D\u0442\u043E\u0433\u043E \u0431\u043B\u043E\u0431\u0430!"
+  _textKeysTemp:
+  - m03: 3713817547
+    m47: 205407826
+    m8B: 2328846702
+    mCF: 1074602127
   _position: 0
 --- !u!1 &8960160709785239006
 GameObject:

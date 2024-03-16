@@ -6,7 +6,12 @@ using UnityEngine.UI;
 
 namespace Core
 {
-    public class UIGameScreen_Coins : MonoBehaviour
+    public interface ICoinsReceiver
+    {
+        
+    }
+    
+    public class UIGameScreen_Coins : MonoBehaviour, ICoinsReceiver
     {
         public event Action OnClick;
 

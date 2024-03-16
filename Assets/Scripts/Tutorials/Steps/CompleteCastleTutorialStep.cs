@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Atom;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,7 +16,11 @@ namespace Core.Tutorials
         protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
         {
             Tutorial.Controller.GameProcessor.CastleSelector.ForceCompleteCastle();
-            await Tutorial.Controller.GameProcessor.ProcessCastleComplete(StepsBeforeGetCoins, BeforeSelectNextCastle, AfterSelectNextCastle);
+            await Tutorial.Controller.GameProcessor.ProcessCastleCompleteAsync(
+                GuidEx.Empty,
+                StepsBeforeGetCoins,
+                BeforeSelectNextCastle,
+                AfterSelectNextCastle);
 
             return true;
 

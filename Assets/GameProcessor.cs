@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Atom;
 using Core;
 using Core.Buffs;
 using Core.Effects;
@@ -355,10 +356,11 @@ public class GameProcessor : MonoBehaviour,
     
     private async void CastleSelector_OnCastleCompleted()
     {
-        ProcessCastleComplete(null, null, null);
+        _ = ProcessCastleCompleteAsync(GuidEx.Empty, null, null, null);
     }
 
-    public async Task ProcessCastleComplete(
+    public async Task ProcessCastleCompleteAsync(
+        GuidEx dialogTextKey,
         Func<Task> beforeGiveCoins, 
         Func<Task> beforeSelectNextCastle,
         Func<Task> afterSelectNextCastle)
@@ -367,9 +369,10 @@ public class GameProcessor : MonoBehaviour,
         await AsyncExtensions.WaitForSecondsAsync(2.0f, _cancellationTokenSource.Token);
         
         var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastleCompletePanel>(
-            new UICastleCompletePanel.UICastleCompletePanelData()
+            new UICastleCompletePanelData()
             {
                 GameProcessor = this, 
+                DialogTextKey = dialogTextKey,
                 BeforeGiveCoins = beforeGiveCoins,
                 BeforeSelectNextCastle = beforeSelectNextCastle,
                 AfterSelectNextCastle = afterSelectNextCastle,

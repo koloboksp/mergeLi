@@ -314,7 +314,7 @@ public class CastleViewer : MonoBehaviour
 
         public override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            float duration = _bornEffect.Duration + Target.flipTime + Target.flipTime + Target.flipTime;
+            float duration = Target.flipTime + Target.flipTime + Target.flipTime;
             Target.OnPartCompleteStart?.Invoke(false, duration);
             
             Target.stage = PartIndex + 1;
