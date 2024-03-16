@@ -41,7 +41,7 @@ namespace Core
         
         public async Task<TPanel> PushScreenAsync<TPanel>(UIScreenData data, CancellationToken cancellationToken) where TPanel : UIPanel
         {
-            var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{typeof(TPanel).Name}.prefab");
+            var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/Prefabs/UI/Screens/{typeof(TPanel).Name}.prefab");
             var result = await handle.Task;
 
             if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -66,7 +66,7 @@ namespace Core
         {
             try
             {
-                var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/UI/Screens/{typeof(TPanel).Name}.prefab");
+                var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/Prefabs/UI/Screens/{typeof(TPanel).Name}.prefab");
                 var result = await handle.Task;
     
                 if (handle.Status == AsyncOperationStatus.Succeeded)

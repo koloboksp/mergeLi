@@ -18,12 +18,12 @@ MonoBehaviour:
   m_GUID: 8a7c0153a2f4e5a40aa4af946ec59b72
   m_SerializeEntries:
   - m_GUID: 9f97e387fe52c9848aba41e4ff279324
-    m_Address: Assets/UI
+    m_Address: Assets/Prefabs/UI
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 15ae4b59a84f6a44f8977322aa28bade
-    m_Address: Assets/UI/Screens
+    m_Address: Assets/Prefabs/UI/Screens
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
