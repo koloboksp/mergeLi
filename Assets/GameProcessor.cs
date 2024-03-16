@@ -247,6 +247,13 @@ public class GameProcessor : MonoBehaviour,
     {
         _bestSessionScore = ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore;
         
+        var activeSkinName = ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin;
+        _scene.SetSkin(activeSkinName);
+            
+        var activeHatName = ApplicationController.Instance.SaveController.SaveSettings.ActiveHat;
+        _scene.SetHat(activeHatName);
+
+        
         if (_enableTutorial && _tutorialController.CanStartTutorial(_forceTutorial))
         {
             await StartTutorial(_forceTutorial);
@@ -254,12 +261,6 @@ public class GameProcessor : MonoBehaviour,
         else
         {
             _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
-
-            var activeSkinName = ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin;
-            _scene.SetSkin(activeSkinName);
-            
-            var activeHatName = ApplicationController.Instance.SaveController.SaveSettings.ActiveHat;
-            _scene.SetHat(activeHatName);
             
             if (HasPreviousSessionGame)
             {
