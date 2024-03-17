@@ -39,7 +39,8 @@ public class SaveProgress
 
     public void MarkCastleCompleted(string id)
     {
-        if (_progress.CompletedCastles.Contains(id)) return;
+        if (_progress.CompletedCastles.Contains(id))
+            return;
 
         _progress.CompletedCastles.Add(id);
         _controller.Save(_progress, _fileName);

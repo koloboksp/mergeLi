@@ -12,27 +12,27 @@ namespace Core.Tutorials
         public Tutorial Tutorial => _tutorial;
         public async Task<bool> Execute(CancellationToken cancellationToken)
         {
-            await InnerInit(cancellationToken);
+            await InnerInitAsync(cancellationToken);
             
             await Task.WhenAll(gameObject.GetComponents<ModuleTutorialStep>()
-                .Select(i=>i.OnExecute(this, cancellationToken))
+                .Select(i=>i.OnExecuteAsync(this, cancellationToken))
                 .ToArray());
 
-            var result = await InnerExecute(cancellationToken);
+            var result = await InnerExecuteAsync(cancellationToken);
             
             await Task.WhenAll(gameObject.GetComponents<ModuleTutorialStep>()
-                .Select(i=>i.OnComplete(this, cancellationToken))
+                .Select(i=>i.OnCompleteAsync(this, cancellationToken))
                 .ToArray());
 
             return result;
         }
 
-        protected virtual async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected virtual async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             return true;
         }
         
-        protected virtual async Task<bool> InnerInit(CancellationToken cancellationToken)
+        protected virtual async Task<bool> InnerInitAsync(CancellationToken cancellationToken)
         {
             return true;
         }

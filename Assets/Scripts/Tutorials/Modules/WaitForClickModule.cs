@@ -5,7 +5,7 @@ namespace Core.Tutorials
 {
     public class WaitForClickModule : ModuleTutorialStep
     {
-        public override async Task OnExecute(TutorialStep step, CancellationToken cancellationToken)
+        public override async Task OnExecuteAsync(TutorialStep step, CancellationToken cancellationToken)
         {
             await step.Tutorial.Controller.Focuser.WaitForClick(cancellationToken);
         }

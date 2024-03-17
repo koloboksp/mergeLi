@@ -24,7 +24,7 @@ namespace Core.Buffs
             var pointerPosition = _gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position);
             CreateCursor(pointerPosition);
             
-            SetControlIconPanelActive(false);
+            ChangeDragPhase(DragPhase.Begin);
             
             var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(pointerPosition);
             var affectingArea = GetAffectingArea(pointerGridPosition);
@@ -47,7 +47,7 @@ namespace Core.Buffs
             base.InnerOnEndDrag(eventData);
             
             DestroyCursor();
-            SetControlIconPanelActive(true);
+            ChangeDragPhase(DragPhase.End);
 
             var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(_gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
             _affectedAreas.Clear();

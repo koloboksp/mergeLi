@@ -8,7 +8,7 @@ namespace Core.Tutorials
 {
     public class SelectCastleTutorialStep : TutorialStep
     {
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var castle = Tutorial.Controller.GameProcessor.CastleSelector.Library.Castles.First();
             Tutorial.Controller.GameProcessor.CastleSelector.SelectActiveCastle(castle.Id);

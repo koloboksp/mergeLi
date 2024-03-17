@@ -8,7 +8,7 @@ namespace Core.Tutorials
     public class WaitForClickTutorialStep : TutorialStep
     {
         [SerializeField] private bool _waitForClick = false;
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             if(_waitForClick)
                 await Tutorial.Controller.Focuser.WaitForClick(cancellationToken);

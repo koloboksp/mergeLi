@@ -66,7 +66,7 @@ namespace Core
                 if (ApplicationController.Instance.SaveController.SaveProgress.IsCastleCompleted(castle.name))
                     castle.ShowAsCompleted();
                 
-                var lastSessionProgress = ApplicationController.Instance.SaveController.LastSessionProgress;
+                var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
                 
                 if (lastSessionProgress != null && castle.name == lastSessionProgress.Castle.Id)
                     castle.SetPoints(lastSessionProgress.Castle.Points, true);

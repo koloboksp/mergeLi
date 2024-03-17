@@ -16,7 +16,7 @@ namespace Core
     {
         private UIPanel _panel;
         private bool _ready;
-        
+
         public WaitForScreenClosed(UIPanel panel)
         {
             _panel = panel;
@@ -31,44 +31,21 @@ namespace Core
 
         public override bool keepWaiting => !_ready;
     }
-    
+
     public class UIPanelController
     {
         private readonly ScreenStack _stack = new ScreenStack();
         private Transform _screensRoot;
 
         public void SetScreensRoot(RectTransform screensRoot) => _screensRoot = screensRoot;
-        
+
         public async Task<TPanel> PushScreenAsync<TPanel>(UIScreenData data, CancellationToken cancellationToken) where TPanel : UIPanel
-        {
-            var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/Prefabs/UI/Screens/{typeof(TPanel).Name}.prefab");
-            var result = await handle.Task;
-
-            if (handle.Status == AsyncOperationStatus.Succeeded)
-            {
-                var screenObject = Object.Instantiate(result);
-                var screen = screenObject.GetComponent<TPanel>();
-                screen.Root.SetParent(_screensRoot);
-                screen.Root.anchorMin = Vector2.zero;
-                screen.Root.anchorMax = Vector2.one;
-                screen.Root.offsetMin = Vector2.zero;
-                screen.Root.offsetMax = Vector2.zero;
-                screen.Root.localScale = Vector3.one;
-                _stack.Push(handle, screen, data);
-                
-                return screen;
-            }
-
-            return null;
-        }
-        
-        public async Task<TPanel> PushPopupScreenAsync<TPanel>(UIScreenData data, CancellationToken cancellationToken) where TPanel : UIPanel
         {
             try
             {
                 var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/Prefabs/UI/Screens/{typeof(TPanel).Name}.prefab");
                 var result = await handle.Task;
-    
+
                 if (handle.Status == AsyncOperationStatus.Succeeded)
                 {
                     var screenObject = Object.Instantiate(result);
@@ -79,8 +56,8 @@ namespace Core
                     screen.Root.offsetMin = Vector2.zero;
                     screen.Root.offsetMax = Vector2.zero;
                     screen.Root.localScale = Vector3.one;
-                    _stack.PushPopup(handle, screen, data);
-                    
+                    _stack.Push(handle, screen, data);
+
                     return screen;
                 }
             }
@@ -92,68 +69,92 @@ namespace Core
             {
                 Debug.LogException(e);
             }
-            
+
             return null;
         }
+
+        public async Task<TPanel> PushPopupScreenAsync<TPanel>(UIScreenData data, CancellationToken cancellationToken) where TPanel : UIPanel
+        {
+            try
+            {
+                var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/Prefabs/UI/Screens/{typeof(TPanel).Name}.prefab");
+                var result = await handle.Task;
+
+                if (handle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    var screenObject = Object.Instantiate(result);
+                    var screen = screenObject.GetComponent<TPanel>();
+                    screen.Root.SetParent(_screensRoot);
+                    screen.Root.anchorMin = Vector2.zero;
+                    screen.Root.anchorMax = Vector2.one;
+                    screen.Root.offsetMin = Vector2.zero;
+                    screen.Root.offsetMax = Vector2.zero;
+                    screen.Root.localScale = Vector3.one;
+                    _stack.PushPopup(handle, screen, data);
+
+                    return screen;
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                Debug.Log(e);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+
+            return null;
+        }
+
         public void PopScreen(UIPanel screen)
         {
-            var stackItem = _stack.PopScreen(screen);
-
-            stackItem.Screen.Hide();
-            Object.Destroy(stackItem.Screen.gameObject);
-            Addressables.Release(stackItem.Handle);
-
-            if (_stack.Count > 0)
-            {
-                var lastItem = _stack.GetLast();
-                lastItem.Screen.Activate();
-            }
+            _stack.PopScreen(screen);
         }
 
         public T GetPanel<T>() where T : UIPanel
         {
             return _stack.GetByPanelType(typeof(T)).Screen as T;
-        } 
-        
-        class ScreenStack
-        {
-            private List<StackItem> _items = new List<StackItem>();
-            public int Count => _items.Count;
+        }
 
+        private class ScreenStack
+        {
+            private readonly List<StackItem> _items = new();
+            
             public void PushPopup(AsyncOperationHandle<GameObject> handle, UIPanel screen, UIScreenData data)
             {
                 var stackItem = new StackItem(handle, screen, data);
                 _items.Add(stackItem);
-                stackItem.Screen.SetData(data);
-                stackItem.Screen.Activate();
-            }
-            
-            public void Push(AsyncOperationHandle<GameObject> handle, UIPanel screen, UIScreenData data)
-            {
-                if (_items.Count > 0)
-                {
-                    StackItem lastItem = _items[_items.Count - 1];
-                    _items.RemoveAt(_items.Count - 1);
-                    lastItem.Screen.Deactivate();
-                }
-                var stackItem = new StackItem(handle, screen, data);
-                _items.Add(stackItem);
-                stackItem.Screen.SetData(data);
-                stackItem.Screen.Activate();
+                stackItem.SetDataAndActivate();
             }
 
-            public StackItem PopScreen(UIPanel screen)
+            public void Push(AsyncOperationHandle<GameObject> handle, UIPanel screen, UIScreenData data)
             {
-                var stackI = _items.FindIndex(i => i.Screen == screen);
-                if (stackI >= 0)
+                for (var itemI = _items.Count - 1; itemI >= 0; itemI--)
                 {
-                    StackItem stackItem = _items[stackI];
-                    _items.RemoveAt(stackI);
-                    stackItem.Screen.Deactivate();
-                    return stackItem;
+                    var stackItem = _items[itemI];
+                    stackItem.Hide();
+                    _items.RemoveAt(itemI);
                 }
-                
-                return null;
+
+                PushPopup(handle, screen, data);
+            }
+
+            public void PopScreen(UIPanel screen)
+            {
+                var foundItemI = _items.FindIndex(i => i.Screen == screen);
+                if (foundItemI >= 0)
+                {
+                    var stackItem = _items[foundItemI];
+                    stackItem.Hide();
+                    _items.RemoveAt(foundItemI);
+                }
+
+                if (_items.Count > 0)
+                {
+                    var lastItem = _items[_items.Count - 1];
+                    lastItem.Activate();
+                }
             }
 
             public StackItem GetLast()
@@ -165,21 +166,20 @@ namespace Core
 
                 return null;
             }
-            
+
             public StackItem GetByPanelType(Type type)
             {
                 var stackItem = _items.FindLast(i => i.Screen.GetType() == type);
-               
+
                 return stackItem;
             }
-            
+
             public class StackItem
             {
-                private AsyncOperationHandle<GameObject> _handle;
-                private UIPanel _screen;
-                private UIScreenData _data;
-
-                public AsyncOperationHandle<GameObject> Handle => _handle;
+                private readonly AsyncOperationHandle<GameObject> _handle;
+                private readonly UIPanel _screen;
+                private readonly UIScreenData _data;
+                
                 public UIPanel Screen => _screen;
 
                 public StackItem(AsyncOperationHandle<GameObject> handle, UIPanel screen, UIScreenData data)
@@ -188,16 +188,27 @@ namespace Core
                     _screen = screen;
                     _data = data;
                 }
-            }
-        }
 
-        public void HideAll()
-        {
-            var stackItem = _stack.GetLast();
-            while (stackItem != null)
-            {
-                PopScreen(stackItem.Screen);
-                stackItem = _stack.GetLast();
+                public void SetDataAndActivate()
+                {
+                    _screen.SetData(_data);
+                    _screen.Activate();
+                }
+                
+                public void Activate()
+                {
+                    _screen.Activate();
+                }
+                
+                public void Hide()
+                {
+                    _screen.Deactivate();
+                    _screen.Hide();
+                    Object.Destroy(_screen.gameObject);
+                    Addressables.Release(_handle);
+                }
+
+                
             }
         }
     }

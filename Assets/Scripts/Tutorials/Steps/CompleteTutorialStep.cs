@@ -5,7 +5,7 @@ namespace Core.Tutorials
 {
     public class CompleteTutorialStep : TutorialStep
     {
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             Tutorial.Complete();
             return true;

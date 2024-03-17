@@ -32,16 +32,17 @@ public class SaveController
 
     private readonly SaveSettings _saveSettings;
     private readonly SaveProgress _saveProgress;
+    private readonly SaveSessionProgress _saveLastSessionProgress;
     
     public SaveSettings SaveSettings => _saveSettings;
     public SaveProgress SaveProgress => _saveProgress;
-
-    public SessionProgress LastSessionProgress => _lastSessionProgress;
+    public SaveSessionProgress SaveLastSessionProgress => _saveLastSessionProgress;
     
     public SaveController()
     {
         _saveSettings = new SaveSettings(this, PlayerSettingsFileName);
         _saveProgress = new SaveProgress(this, PlayerDataFileName);
+        _saveLastSessionProgress = new SaveSessionProgress(this, PlayerLastSessionDataFileName);
     }
     
     public async Task InitializeAsync(CancellationToken cancellationToken)
@@ -50,18 +51,7 @@ public class SaveController
         {
             await _saveSettings.InitializeAsync(cancellationToken);
             await _saveProgress.InitializeAsync(cancellationToken);
-            
-            try
-            {
-                var path = Path.Combine(Application.persistentDataPath, PlayerLastSessionDataFileName);
-                var loadedFile = await File.ReadAllTextAsync(path, cancellationToken);
-                var lastSessionProgress = JsonUtility.FromJson<SessionProgress>(loadedFile);
-                _lastSessionProgress = lastSessionProgress;
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
+            await _saveLastSessionProgress.InitializeAsync(cancellationToken);
         }
         catch (Exception e)
         {
@@ -73,79 +63,14 @@ public class SaveController
     {
         try
         {
+            _saveSettings.Clear();
             _saveProgress.Clear();
-            ClearLastSessionProgress();
+            _saveLastSessionProgress.Clear();
         }
         catch (Exception e)
         {
             Debug.LogError(e);
         }
-    }
-
-    public void ClearLastSessionProgress()
-    {
-        try
-        {
-            _lastSessionProgress = null;
-            File.Delete(PlayerLastSessionDataFileName);
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e);
-        }
-    }
-
-    public void SaveSessionProgress(ISessionProgressHolder sessionProgressHolder)
-    {
-        var sessionProgress = new SessionProgress();
-
-        sessionProgress.Score = sessionProgressHolder.GetScore();
-        
-        var castle = sessionProgressHolder.GetCastle();
-        if (castle.Completed)
-        {
-            _saveProgress.MarkCastleCompleted(castle.Id);
-            sessionProgress.Castle = new SessionCastleProgress()
-            {
-                Id = sessionProgressHolder.GetFirstUncompletedCastle(),
-                Points = 0,
-            };
-        }
-        else
-        {
-            sessionProgress.Castle = new SessionCastleProgress()
-            {
-                Id = castle.Id,
-                Points = castle.GetPoints(),
-            };
-        }
-       
-
-        sessionProgress.Field = new SessionFieldProgress();
-        foreach (var ball in sessionProgressHolder.GetField().GetAll<IBall>())
-        {
-            var ballProgress = new SessionBallProgress()
-            {
-                GridPosition = ball.IntGridPosition,
-                Points = ball.Points,
-            };
-            sessionProgress.Field.Balls.Add(ballProgress);
-        }
-
-        sessionProgress.Buffs = new List<SessionBuffProgress>();
-        foreach (var buff in sessionProgressHolder.GetBuffs())
-        {
-            var buffProgress = new SessionBuffProgress
-            {
-                Id = buff.Id,
-                RestCooldown = buff.GetRestCooldown()
-            };
-            sessionProgress.Buffs.Add(buffProgress);
-        }
-
-        string data = JsonUtility.ToJson(sessionProgress);
-        var path = Path.Combine(Application.persistentDataPath, PlayerLastSessionDataFileName);
-        File.WriteAllText(path, data);
     }
     
     internal bool Save<T>(T data, string fileName)
@@ -186,7 +111,8 @@ public class SaveController
     {
         try
         {
-            File.Delete(fileName);
+            var fullPath = Path.Combine(Application.persistentDataPath, fileName);
+            File.Delete(fullPath);
         }
         catch (Exception e)
         {
@@ -198,8 +124,8 @@ public class SaveController
     {
         try
         {
-            var path = Path.Combine(Application.persistentDataPath, fileName);
-            var loadedFile = await File.ReadAllTextAsync(path, cancellationToken);
+            var fullPath = Path.Combine(Application.persistentDataPath, fileName);
+            var loadedFile = await File.ReadAllTextAsync(fullPath, cancellationToken);
             return JsonUtility.FromJson<T>(loadedFile);
         }
         catch (Exception e)

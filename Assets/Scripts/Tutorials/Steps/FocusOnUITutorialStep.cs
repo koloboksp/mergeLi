@@ -11,7 +11,7 @@ namespace Core.Tutorials
 
         private UITutorialElement _target;
         
-        protected override async Task<bool> InnerInit(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerInitAsync(CancellationToken cancellationToken)
         {
             var tutorialElements = FindObjectsOfType<UITutorialElement>();
             _target = tutorialElements.FirstOrDefault(i => i.Tag == _tag);

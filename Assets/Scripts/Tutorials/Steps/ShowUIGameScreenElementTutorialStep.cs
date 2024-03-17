@@ -10,7 +10,7 @@ namespace Core.Tutorials
         [SerializeField] private bool _coins;
         [SerializeField] private bool _buffs;
         [SerializeField] private bool _settingsBtn;
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var gameScreen = ApplicationController.Instance.UIPanelController.GetPanel<UIGameScreen>();
             if(_progressBar)

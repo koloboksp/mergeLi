@@ -7,6 +7,7 @@ using Core.Steps;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Object = UnityEngine.Object;
 
 public interface IBuff
 {
@@ -14,43 +15,38 @@ public interface IBuff
     int GetRestCooldown();
 }
 
+public enum DragPhase
+{
+    Begin,
+    Process,
+    End,
+}
 public abstract class Buff : MonoBehaviour, IBuff
 {
     protected Action _availableStateChanged;
     private Action _restCooldownChanged;
+    private Action<DragPhase> _dragPhaseChanged;
 
     [SerializeField] protected GameProcessor _gameProcessor;
     [SerializeField] private UIBuff _controlPrefab;
     [SerializeField] private int _cost = 1;
     [SerializeField] private int _cooldown = 3;
-
-    private UIBuff _control;
+    
     private bool _available = true;
     private int _restCooldown;
 
     public GameProcessor GameProcessor => _gameProcessor;
     public int Cost => _cost;
 
+    public UIBuff ControlPrefab => _controlPrefab;
+
     public void Awake()
     {
         _gameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
         _gameProcessor.OnUndoStepsClear += GameProcessor_OnUndoStepsClear;
     }
-
-    public UIBuff CreateControl()
-    {
-        _control = Instantiate(_controlPrefab);
-        _control
-            .SetModel(this)
-            .OnClick(OnClick)
-            .OnBeginDrag(OnBeginDrag)
-            .OnEndDrag(OnEndDrag)
-            .OnDrag(OnDrag);
-
-        return _control;
-    }
-
-    protected void OnClick()
+    
+    public void OnClick()
     {
         if (!IsCurrencyEnough)
             return;
@@ -62,7 +58,7 @@ public abstract class Buff : MonoBehaviour, IBuff
             ProcessUsing(null);
     }
 
-    protected void OnBeginDrag(PointerEventData eventData)
+    public void OnBeginDrag(PointerEventData eventData)
     {
         if (!IsCurrencyEnough)
             return;
@@ -72,7 +68,7 @@ public abstract class Buff : MonoBehaviour, IBuff
         InnerOnBeginDrag(eventData);
     }
 
-    protected void OnEndDrag(PointerEventData eventData)
+    public void OnEndDrag(PointerEventData eventData)
     {
         if (!IsCurrencyEnough)
             return;
@@ -84,7 +80,7 @@ public abstract class Buff : MonoBehaviour, IBuff
             ProcessUsing(eventData);
     }
 
-    protected void OnDrag(PointerEventData eventData)
+    public void OnDrag(PointerEventData eventData)
     {
         if (!IsCurrencyEnough)
             return;
@@ -181,20 +177,8 @@ public abstract class Buff : MonoBehaviour, IBuff
     {
     }
 
-    public Buff OnAvailableStateChanged(Action onChanged)
-    {
-        _availableStateChanged = onChanged;
-        return this;
-    }
-
-    public Buff OnRestCooldownChanged(Action onChanged)
-    {
-        _restCooldownChanged = onChanged;
-        return this;
-    }
-
     public abstract string Id { get; }
-
+   
     public int GetRestCooldown()
     {
         return _restCooldown;
@@ -210,8 +194,26 @@ public abstract class Buff : MonoBehaviour, IBuff
         Available = _restCooldown == 0;
     }
     
-    protected void SetControlIconPanelActive(bool state)
+    protected void ChangeDragPhase(DragPhase dragPhase)
     {
-        _control.IconPanel.SetActive(state);
+        _dragPhaseChanged?.Invoke(dragPhase);
+    }
+    
+    public Buff OnAvailableStateChanged(Action onChanged)
+    {
+        _availableStateChanged = onChanged;
+        return this;
+    }
+
+    public Buff OnRestCooldownChanged(Action onChanged)
+    {
+        _restCooldownChanged = onChanged;
+        return this;
+    }
+    
+    public Buff OnDragPhaseChanged(Action<DragPhase> onChanged)
+    {
+        _dragPhaseChanged = onChanged;
+        return this;
     }
 }

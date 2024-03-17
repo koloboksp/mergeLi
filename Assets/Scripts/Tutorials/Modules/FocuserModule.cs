@@ -8,29 +8,30 @@ namespace Core.Tutorials
     {
         [SerializeField] private bool _smooth;
        
-        public override async Task OnExecute(TutorialStep step, CancellationToken cancellationToken)
+        public override async Task OnExecuteAsync(TutorialStep step, CancellationToken cancellationToken)
         {
-            await UpdateFocus(step as IFocusedOnSomething, step.Tutorial.Controller, cancellationToken);
-        }
-
-        public override async Task OnComplete(TutorialStep step, CancellationToken cancellationToken)
-        {
-            
-        }
-
-        public override void OnUpdate(TutorialStep step, CancellationToken cancellationToken)
-        {
-            UpdateFocus(step as IFocusedOnSomething, step.Tutorial.Controller, cancellationToken);
-        }
-
-        async Task UpdateFocus(IFocusedOnSomething focusedOnSomething, TutorialController controller, CancellationToken cancellationToken)
-        {
-            controller.Focuser.gameObject.SetActive(true);
-            
-            if (focusedOnSomething != null)
-                await controller.Focuser.FocusOnAsync(focusedOnSomething.GetFocusedRect(), _smooth, cancellationToken);
+            if (step is IFocusedOnSomething focusedOnSomething)
+            {
+                step.Tutorial.Controller.Focuser.gameObject.SetActive(true);
+                await step.Tutorial.Controller.Focuser.FocusOnAsync(focusedOnSomething.GetFocusedRect(), _smooth, cancellationToken);
+            }
             else
-                await controller.Focuser.FocusOnAsync(_smooth, cancellationToken);
+            {
+                await step.Tutorial.Controller.Focuser.UnfocusOnAsync(_smooth, cancellationToken);
+            }
+        }
+
+        public override async Task OnCompleteAsync(TutorialStep step, CancellationToken cancellationToken)
+        {
+            
+        }
+
+        public override void OnUpdate(TutorialStep step)
+        {
+            if (step is IFocusedOnSomething focusedOnSomething)
+            {
+                step.Tutorial.Controller.Focuser.ForceFocusOn(focusedOnSomething.GetFocusedRect());
+            }
         }
     }
 }

@@ -165,11 +165,6 @@ public class GameProcessor : MonoBehaviour,
 
     public UIFxLayer UIFxLayer => _uiFxLayer;
     
-    public int BestSessionScore
-    {
-        get => _bestSessionScore;
-    }
-    
     private void Awake()
     {
         _pointsCalculator = new PointsCalculator(this);
@@ -265,7 +260,7 @@ public class GameProcessor : MonoBehaviour,
             
             if (HasPreviousSessionGame)
             {
-                var lastSessionProgress = ApplicationController.Instance.SaveController.LastSessionProgress;
+                var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
                 _score = lastSessionProgress.Score;
 
                 _castleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
@@ -284,7 +279,7 @@ public class GameProcessor : MonoBehaviour,
             {
                 _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
             
-                ApplicationController.Instance.SaveController.ClearLastSessionProgress();
+                ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
                 _field.Clear();
                 _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
                 _castleSelector.ActiveCastle.ResetPoints(true);
@@ -292,7 +287,7 @@ public class GameProcessor : MonoBehaviour,
             
             if (prepareType == SessionPrepareType.FirstStart)
             {
-                var startPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIStartPanel>(
+                var startPanel = await ApplicationController.Instance.UIPanelController.PushScreenAsync<UIStartPanel>(
                     new UIStartPanelData()
                     {
                         GameProcessor = this,
@@ -305,17 +300,6 @@ public class GameProcessor : MonoBehaviour,
                     new UIGameScreenData() { GameProcessor = this },
                     cancellationToken);
             }
-            
-            
-            // if (startPanel.Choice == UIStartPanelChoice.New)
-            // {
-            //     _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
-            //
-            //     _playerInfo.ClearLastSessionProgress();
-            //     _field.Clear();
-            //     _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
-            //     _castleSelector.ActiveCastle.ResetPoints(true);
-            // }
         }
     }
     
@@ -352,6 +336,7 @@ public class GameProcessor : MonoBehaviour,
             _cancellationTokenSource.Token);
 
         await failPanel.ShowAsync(_cancellationTokenSource.Token);
+        ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
     }
     
     private async void CastleSelector_OnCastleCompleted()
@@ -537,7 +522,10 @@ public class GameProcessor : MonoBehaviour,
             _userStepFinished = true;
         }
 
-        ApplicationController.Instance.SaveController.SaveSessionProgress(this);
+        var castle = GetCastle();
+        if (castle.Completed)
+            ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
+        ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
         
         OnStepCompleted?.Invoke(step, executionType);
     }
@@ -560,7 +548,7 @@ public class GameProcessor : MonoBehaviour,
     {
         get
         {
-            var lastSessionProgress = ApplicationController.Instance.SaveController.LastSessionProgress;
+            var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
             return lastSessionProgress != null && lastSessionProgress.IsValid();
         }
     }
@@ -738,7 +726,7 @@ public class GameProcessor : MonoBehaviour,
         
         _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
             
-        ApplicationController.Instance.SaveController.ClearLastSessionProgress();
+        ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
         _field.Clear();
         _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
         _castleSelector.ActiveCastle.ResetPoints(true);

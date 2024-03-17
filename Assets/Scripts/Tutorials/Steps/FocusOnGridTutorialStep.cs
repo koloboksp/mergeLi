@@ -12,7 +12,7 @@ namespace Core.Tutorials
         private float _rectScale = 2.5f;
         private Rect _focusedRect;
 
-        protected override async Task<bool> InnerInit(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerInitAsync(CancellationToken cancellationToken)
         {
             var worldPosition = Tutorial.Controller.GameProcessor.GetField().GetWorldPosition(_gridPosition);
             var cellSize = Tutorial.Controller.GameProcessor.GetField().GetWorldCellSize();
@@ -21,7 +21,7 @@ namespace Core.Tutorials
             return true;
         }
 
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             return true;
         }

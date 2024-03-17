@@ -11,7 +11,7 @@ public class SessionProgress
        
     public bool IsValid()
     {
-        if (string.IsNullOrEmpty(Castle.Id))
+        if (Castle == null || string.IsNullOrEmpty(Castle.Id))
             return false;
 
         return true;

@@ -7,8 +7,8 @@ public class SaveSettings
     private Settings _settings = new Settings();
 
     private readonly SaveController _controller;
-    private readonly string _fileName; 
-    
+    private readonly string _fileName;
+
     public SaveSettings(SaveController controller, string fileName)
     {
         _controller = controller;
@@ -26,9 +26,8 @@ public class SaveSettings
                 _controller.Save(_settings, _fileName);
             }
         }
-        
     }
-    
+
     public bool SoundEnable
     {
         get => _settings.SoundEnable;
@@ -40,9 +39,8 @@ public class SaveSettings
                 _controller.Save(_settings, _fileName);
             }
         }
-        
     }
-    
+
     public float MusicVolume
     {
         get => _settings.MusicVolume;
@@ -54,9 +52,8 @@ public class SaveSettings
                 _controller.Save(_settings, _fileName);
             }
         }
-        
     }
-    
+
     public bool MusicEnable
     {
         get => _settings.MusicEnable;
@@ -68,7 +65,6 @@ public class SaveSettings
                 _controller.Save(_settings, _fileName);
             }
         }
-        
     }
 
     public SystemLanguage ActiveLanguage
@@ -126,7 +122,13 @@ public class SaveSettings
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         var loadedSettings = await _controller.LoadAsync<Settings>(_fileName, cancellationToken);
-        if(loadedSettings != null)
+        if (loadedSettings != null)
             _settings = loadedSettings;
+    }
+
+    public void Clear()
+    {
+        _settings = new Settings();
+        _controller.Clear(_fileName);
     }
 }

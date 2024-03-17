@@ -13,7 +13,7 @@ namespace Core.Tutorials
         [SerializeField] private List<TutorialStep> _stepsBeforeSelectNextCastle = new List<TutorialStep>();
         [SerializeField] private List<TutorialStep> _stepsAfterSelectNextCastle = new List<TutorialStep>();
 
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             Tutorial.Controller.GameProcessor.CastleSelector.ForceCompleteCastle();
             await Tutorial.Controller.GameProcessor.ProcessCastleCompleteAsync(

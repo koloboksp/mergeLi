@@ -29,16 +29,22 @@ public class UIBuff : MonoBehaviour
         _model = model;
         _model
             .OnAvailableStateChanged(AvailableStateChanged)
-            .OnRestCooldownChanged(RestCooldownChanged);
+            .OnRestCooldownChanged(RestCooldownChanged)
+            .OnDragPhaseChanged(OnDragPhaseChanged);
+       
+        _onClick += _model.OnClick;
+        _onBeginDrag += _model.OnBeginDrag;
+        _onDrag += _model.OnDrag;
+        _onEndDrag += _model.OnEndDrag;
 
         SetCost();
         AvailableStateChanged();
         RestCooldownChanged();
-
+        
         _tutorialElement.Tag = _model.Id;
         return this;
     }
-
+    
     protected virtual void AvailableStateChanged()
     {
         UpdateInteractableAndFillAmount();
@@ -68,32 +74,16 @@ public class UIBuff : MonoBehaviour
         UpdateInteractableAndFillAmount();
     }
     
+    private void OnDragPhaseChanged(DragPhase dragPhase)
+    {
+        _iconPanel.SetActive(dragPhase == DragPhase.End);
+    }
+    
     private void SetCost()
     {
         _costLabel.text = _model.Cost.ToString();
     }
-
-    public UIBuff OnClick(Action action)
-    {
-        _onClick = action;
-        return this;
-    }
-    public UIBuff OnBeginDrag(Action<PointerEventData> action)
-    {
-        _onBeginDrag = action;
-        return this;
-    }
-    public UIBuff OnEndDrag(Action<PointerEventData> action)
-    {
-        _onEndDrag = action;
-        return this;
-    }
-    public UIBuff OnDrag(Action<PointerEventData> action)
-    {
-        _onDrag = action;
-        return this;
-    }
-
+    
     protected bool ShowShopScreenRequired()
     {
         if (!_model.IsCurrencyEnough)
@@ -110,6 +100,14 @@ public class UIBuff : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void UnsubscribeModel()
+    {
+        _onClick -= _model.OnClick;
+        _onBeginDrag -= _model.OnBeginDrag;
+        _onDrag -= _model.OnDrag;
+        _onEndDrag -= _model.OnEndDrag;
     }
 }
 

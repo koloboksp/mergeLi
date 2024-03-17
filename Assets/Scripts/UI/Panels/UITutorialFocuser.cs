@@ -49,35 +49,40 @@ namespace Core
             _center.sizeDelta = new Vector2(rectInt.size.x, rectInt.size.y);
         }
 
-        public void FocusOn(RectTransform target)
-        {
-            _target = target;
-            _focusMode = FocusMode.Transform;
-        }
+        // public void FocusOn(RectTransform target)
+        // {
+        //     _target = target;
+        //     _focusMode = FocusMode.Transform;
+        // }
         
-        public void FocusOn(Rect rect, bool smooth)
+        // public void FocusOn(Rect rect, bool smooth)
+        // {
+        //     _focusMode = FocusMode.Rect;
+        //  
+        //     var lb = _root.InverseTransformPoint(rect.min);
+        //     var rt = _root.InverseTransformPoint(rect.max);
+        //     _desiredRect = new Rect(
+        //         new Vector2Int((int)lb.x, (int)lb.y),
+        //         new Vector2Int((int)(rt.x - lb.x), (int)(rt.y - lb.y)));
+        //     _smooth = smooth;
+        //     
+        //     if (_smooth)
+        //     {
+        //         _smoothTimer = 0;
+        //         enabled = true;
+        //     }
+        //     else
+        //     {
+        //         _currentRect = _desiredRect;
+        //         RecalculateRect(_currentRect);
+        //     }
+        // }
+
+        public void ForceFocusOn(Rect rect)
         {
-            _focusMode = FocusMode.Rect;
-         
-            var lb = _root.InverseTransformPoint(rect.min);
-            var rt = _root.InverseTransformPoint(rect.max);
-            _desiredRect = new Rect(
-                new Vector2Int((int)lb.x, (int)lb.y),
-                new Vector2Int((int)(rt.x - lb.x), (int)(rt.y - lb.y)));
-            _smooth = smooth;
-            
-            if (_smooth)
-            {
-                _smoothTimer = 0;
-                enabled = true;
-            }
-            else
-            {
-                _currentRect = _desiredRect;
-                RecalculateRect(_currentRect);
-            }
+            RecalculateRect(rect);
         }
-        
+
         public async Task FocusOnAsync(Rect rect, bool smooth, CancellationToken cancellationToken)
         {
             _focusMode = FocusMode.Rect;
@@ -103,25 +108,25 @@ namespace Core
             }
         }
         
-        public void FocusOn(bool smooth)
-        {
-            _focusMode = FocusMode.None;
-            _smooth = smooth;
-            _desiredRect = _root.rect;
-            
-            if (_smooth)
-            {
-                _smoothTimer = 0;
-                enabled = true;
-            }
-            else
-            {
-                _currentRect = _desiredRect;
-                RecalculateRect(_currentRect);
-            }
-        }
+        // public void FocusOn(bool smooth)
+        // {
+        //     _focusMode = FocusMode.None;
+        //     _smooth = smooth;
+        //     _desiredRect = _root.rect;
+        //     
+        //     if (_smooth)
+        //     {
+        //         _smoothTimer = 0;
+        //         enabled = true;
+        //     }
+        //     else
+        //     {
+        //         _currentRect = _desiredRect;
+        //         RecalculateRect(_currentRect);
+        //     }
+        // }
         
-        public async Task FocusOnAsync(bool smooth, CancellationToken cancellationToken)
+        public async Task UnfocusOnAsync(bool smooth, CancellationToken cancellationToken)
         {
             _focusMode = FocusMode.None;
             _smooth = smooth;
@@ -164,52 +169,52 @@ namespace Core
             gameObject.SetActive(false);
         }
         
-        public void Update()
-        {
-            if (_smooth)
-            {
-                
-            }
-            
-            if (_focusMode == FocusMode.Rect)
-            {
-                
-            }
-            
-            if (_focusMode == FocusMode.Transform)
-            {
-                if (_target != null)
-                {
-                    var corners = new Vector3[4];
-                    _target.GetWorldCorners(corners);
-
-                    var lb = _root.InverseTransformPoint(corners[0]);
-                    var rt = _root.InverseTransformPoint(corners[2]);
-                    var min = Vector3.Min(lb, rt);
-                    var max = Vector3.Max(lb, rt);
-
-                    _desiredRect = new Rect(
-                        new Vector2(min.x, min.y),
-                        new Vector2(max.x - min.x, max.y - min.y));
-                }
-            }
-
-            if (_smoothTimer < _smoothTime)
-            {
-                _smoothTimer += Time.deltaTime;
-                _smoothTimer = Mathf.Clamp(_smoothTimer, 0, _smoothTime);
-                
-                var nSmoothTimer = _smoothTimer / _smoothTime;
-                var rect = new Rect(
-                    Vector3.Lerp(_currentRect.position, _desiredRect.position, nSmoothTimer),
-                    Vector3.Lerp(_currentRect.size, _desiredRect.size, nSmoothTimer));
-                RecalculateRect(rect);
-            }
-            else
-            {
-                enabled = false;
-            }
-        }
+        // public void Update()
+        // {
+        //     if (_smooth)
+        //     {
+        //         
+        //     }
+        //     
+        //     if (_focusMode == FocusMode.Rect)
+        //     {
+        //         
+        //     }
+        //     
+        //     if (_focusMode == FocusMode.Transform)
+        //     {
+        //         if (_target != null)
+        //         {
+        //             var corners = new Vector3[4];
+        //             _target.GetWorldCorners(corners);
+        //
+        //             var lb = _root.InverseTransformPoint(corners[0]);
+        //             var rt = _root.InverseTransformPoint(corners[2]);
+        //             var min = Vector3.Min(lb, rt);
+        //             var max = Vector3.Max(lb, rt);
+        //
+        //             _desiredRect = new Rect(
+        //                 new Vector2(min.x, min.y),
+        //                 new Vector2(max.x - min.x, max.y - min.y));
+        //         }
+        //     }
+        //
+        //     if (_smoothTimer < _smoothTime)
+        //     {
+        //         _smoothTimer += Time.deltaTime;
+        //         _smoothTimer = Mathf.Clamp(_smoothTimer, 0, _smoothTime);
+        //         
+        //         var nSmoothTimer = _smoothTimer / _smoothTime;
+        //         var rect = new Rect(
+        //             Vector3.Lerp(_currentRect.position, _desiredRect.position, nSmoothTimer),
+        //             Vector3.Lerp(_currentRect.size, _desiredRect.size, nSmoothTimer));
+        //         RecalculateRect(rect);
+        //     }
+        //     else
+        //     {
+        //         enabled = false;
+        //     }
+        // }
         
         public async Task<bool> UpdateAsync(CancellationToken cancellationToken)
         {

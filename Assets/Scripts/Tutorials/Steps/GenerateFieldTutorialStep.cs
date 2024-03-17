@@ -20,7 +20,7 @@ namespace Core.Tutorials
         [SerializeField] public List<BallInfo> _nextBalls;
         [SerializeField] public Field _field;
         
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var ballsInfos = _balls.Select(i => (i.GridPosition, i.Points));
             _field.AddBalls(ballsInfos);

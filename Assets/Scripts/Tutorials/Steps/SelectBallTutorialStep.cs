@@ -9,7 +9,7 @@ namespace Core.Tutorials
     {
         [SerializeField] public Vector3Int _ballPosition;
         
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             Tutorial.Controller.GameProcessor.SelectBall(_ballPosition);
             var enumerable = Tutorial.Controller.GameProcessor.GetField().GetAll<Ball>();

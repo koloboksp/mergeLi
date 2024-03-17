@@ -6,7 +6,7 @@ namespace Core.Tutorials
 {
     public class DestroyActiveCastleTutorialStep : TutorialStep
     {
-        protected override async Task<bool> InnerExecute(CancellationToken cancellationToken)
+        protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var activeCastle = Tutorial.Controller.GameProcessor.CastleSelector.ActiveCastle;
             await activeCastle.DestroyCastle(cancellationToken);
