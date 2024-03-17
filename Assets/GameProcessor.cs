@@ -549,7 +549,7 @@ public class GameProcessor : MonoBehaviour,
         get
         {
             var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
-            return lastSessionProgress != null && lastSessionProgress.IsValid();
+            return lastSessionProgress.IsValid();
         }
     }
 
