@@ -38,14 +38,12 @@ public class SaveSessionProgress
 
     public void ChangeProgress(ISessionProgressHolder sessionProgressHolder)
     {
-        var sessionProgress = new SessionProgress();
-
-        sessionProgress.Score = sessionProgressHolder.GetScore();
+        _session.Score = sessionProgressHolder.GetScore();
         
         var castle = sessionProgressHolder.GetCastle();
         if (castle.Completed)
         {
-            sessionProgress.Castle = new SessionCastleProgress()
+            _session.Castle = new SessionCastleProgress()
             {
                 Id = sessionProgressHolder.GetFirstUncompletedCastle(),
                 Points = 0,
@@ -53,14 +51,14 @@ public class SaveSessionProgress
         }
         else
         {
-            sessionProgress.Castle = new SessionCastleProgress()
+            _session.Castle = new SessionCastleProgress()
             {
                 Id = castle.Id,
                 Points = castle.GetPoints(),
             };
         }
         
-        sessionProgress.Field = new SessionFieldProgress();
+        _session.Field = new SessionFieldProgress();
         foreach (var ball in sessionProgressHolder.GetField().GetAll<IBall>())
         {
             var ballProgress = new SessionBallProgress()
@@ -68,10 +66,10 @@ public class SaveSessionProgress
                 GridPosition = ball.IntGridPosition,
                 Points = ball.Points,
             };
-            sessionProgress.Field.Balls.Add(ballProgress);
+            _session.Field.Balls.Add(ballProgress);
         }
 
-        sessionProgress.Buffs = new List<SessionBuffProgress>();
+        _session.Buffs = new List<SessionBuffProgress>();
         foreach (var buff in sessionProgressHolder.GetBuffs())
         {
             var buffProgress = new SessionBuffProgress
@@ -79,7 +77,7 @@ public class SaveSessionProgress
                 Id = buff.Id,
                 RestCooldown = buff.GetRestCooldown()
             };
-            sessionProgress.Buffs.Add(buffProgress);
+            _session.Buffs.Add(buffProgress);
         }
 
         _controller.Save(_session, _fileName);

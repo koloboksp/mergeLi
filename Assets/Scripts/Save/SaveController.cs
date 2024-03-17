@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Core;
 using Core.Goals;
-using Core.Steps.CustomOperations;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Object = UnityEngine.Object;
 
 public interface ISessionProgressHolder
 {
@@ -21,30 +17,29 @@ public interface ISessionProgressHolder
 }
 
 
-
 public class SaveController
 {
     const string PlayerSettingsFileName = "playerSettings";
     const string PlayerDataFileName = "playerData";
     const string PlayerLastSessionDataFileName = "playerLastSessionData";
-    
+
     private SessionProgress _lastSessionProgress = null;
 
     private readonly SaveSettings _saveSettings;
     private readonly SaveProgress _saveProgress;
     private readonly SaveSessionProgress _saveLastSessionProgress;
-    
+
     public SaveSettings SaveSettings => _saveSettings;
     public SaveProgress SaveProgress => _saveProgress;
     public SaveSessionProgress SaveLastSessionProgress => _saveLastSessionProgress;
-    
+
     public SaveController()
     {
         _saveSettings = new SaveSettings(this, PlayerSettingsFileName);
         _saveProgress = new SaveProgress(this, PlayerDataFileName);
         _saveLastSessionProgress = new SaveSessionProgress(this, PlayerLastSessionDataFileName);
     }
-    
+
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         try
@@ -72,41 +67,41 @@ public class SaveController
             Debug.LogError(e);
         }
     }
-    
+
     internal bool Save<T>(T data, string fileName)
     {
         try
         {
             var sData = JsonUtility.ToJson(data);
-            var path = Path.Combine(Application.persistentDataPath, fileName);
-            File.WriteAllText(path, sData);
+            var fullPath = Path.Combine(Application.persistentDataPath, fileName);
+            File.WriteAllText(fullPath, sData);
         }
         catch (Exception e)
         {
             Debug.LogError(e);
             return false;
         }
-        
+
         return true;
     }
-    
+
     internal async Task<bool> SaveAsync<T>(T data, string fileName)
     {
         try
         {
             var sData = JsonUtility.ToJson(data);
-            var path = Path.Combine(Application.persistentDataPath, fileName);
-            await File.WriteAllTextAsync(path, sData);
+            var fullPath = Path.Combine(Application.persistentDataPath, fileName);
+            await File.WriteAllTextAsync(fullPath, sData);
         }
         catch (Exception e)
         {
             Debug.LogError(e);
             return false;
         }
-        
+
         return true;
     }
-    
+
     internal void Clear(string fileName)
     {
         try
