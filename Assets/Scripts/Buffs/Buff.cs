@@ -27,11 +27,11 @@ public abstract class Buff : MonoBehaviour, IBuff
     private Action _restCooldownChanged;
     private Action<DragPhase> _dragPhaseChanged;
 
-    [SerializeField] protected GameProcessor _gameProcessor;
     [SerializeField] private UIBuff _controlPrefab;
     [SerializeField] private int _cost = 1;
     [SerializeField] private int _cooldown = 3;
     
+    protected GameProcessor _gameProcessor;
     private bool _available = true;
     private int _restCooldown;
 
@@ -40,8 +40,10 @@ public abstract class Buff : MonoBehaviour, IBuff
 
     public UIBuff ControlPrefab => _controlPrefab;
 
-    public void Awake()
+    public void SetData(GameProcessor gameProcessor)
     {
+        _gameProcessor = gameProcessor;
+        
         _gameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
         _gameProcessor.OnUndoStepsClear += GameProcessor_OnUndoStepsClear;
     }

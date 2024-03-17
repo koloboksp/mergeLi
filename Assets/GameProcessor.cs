@@ -126,8 +126,7 @@ public class GameProcessor : MonoBehaviour,
     [SerializeField] private List<int> _generatedBallsPointsRange = new List<int>();
 
     [SerializeField] private RectTransform _uiScreensRoot;
-
-    [SerializeField] private List<Buff> _buffs;
+    
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     [SerializeField] private CastleSelector _castleSelector;
     [SerializeField] private GiftsLibrary _giftsLibrary;
@@ -151,7 +150,9 @@ public class GameProcessor : MonoBehaviour,
     private bool _notAllBallsGenerated = false;
     private int _bestSessionScore;
     private CancellationTokenSource _cancellationTokenSource;
-   
+    private readonly List<Buff> _buffs = new();
+    private readonly List<Achievement> _achievements = new ();
+
     public Scene Scene => _scene;
     public int Score => _score;
     public IMarket Market => _market;
@@ -201,6 +202,13 @@ public class GameProcessor : MonoBehaviour,
         await ApplicationController.Instance.WaitForInitializationAsync(_cancellationTokenSource.Token);
         
         _giftsMarket.Initialize();
+        _buffs.AddRange(GetComponentsInChildren<Buff>());
+        foreach (var buff in _buffs)
+            buff.SetData(this);
+        
+        _achievements.AddRange(GetComponentsInChildren<Achievement>());
+        foreach (var achievement in _achievements)
+            achievement.SetData(this);
         
         _field.OnPointerDown += Field_OnPointerDown;
         _stepMachine.OnBeforeStepStarted += StepMachine_OnBeforeStepStarted;

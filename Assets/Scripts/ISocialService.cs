@@ -11,5 +11,6 @@ namespace Core
 
         Task<bool> ShowAchievementsUIAsync(CancellationToken cancellationToken);
         Task<bool> ShowLeaderboardUIAsync(CancellationToken cancellationToken);
+        Task<bool> UnlockAchievement(string id, CancellationToken cancellationToken);
     }
 }

@@ -60,8 +60,7 @@ namespace Core
         {
             while (_active)
             {
-                if (cancellationToken.IsCancellationRequested)
-                    throw new OperationCanceledException();
+                cancellationToken.ThrowIfCancellationRequested();
                 
                 await Task.Yield();
             }

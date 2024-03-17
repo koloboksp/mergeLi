@@ -19,10 +19,10 @@ public interface IField
     public IFieldView View { get; }
     void GenerateNextBallPositions(int count, List<int> availableValues);
     IEnumerable<T> GetAll<T>();
+    Vector2Int Size { get; }
     Vector3 CellSize();
     Vector3 GetWorldPosition(Vector3Int gridPosition);
     Vector3 GetWorldPosition(Vector3 gridPosition);
-    
     Vector3 GetWorldCellSize();
 }
 
