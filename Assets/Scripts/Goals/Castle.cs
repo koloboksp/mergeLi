@@ -81,7 +81,7 @@ namespace Core.Goals
             _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
 
             _gameProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
-            GameProcessor_OnScoreChanged1(0, true);
+            OnScoreChanged(0, true);
         }
 
         private void OnDestroy()
@@ -91,10 +91,10 @@ namespace Core.Goals
 
         private void GameProcessor_OnScoreChanged(int additionalPoints)
         {
-            GameProcessor_OnScoreChanged1(additionalPoints, false);
+            OnScoreChanged(additionalPoints, false);
         }
 
-        private void GameProcessor_OnScoreChanged1(int additionalPoints, bool instant)
+        private void OnScoreChanged(int additionalPoints, bool instant)
         {
             var completed = ProcessPoints(additionalPoints, instant);
 
@@ -188,13 +188,13 @@ namespace Core.Goals
         public void SetPoints(int points, bool instant)
         {
             _points = points;
-            GameProcessor_OnScoreChanged1(0, instant);
+            OnScoreChanged(0, instant);
         }
 
         public void ResetPoints(bool instant)
         {
             _points = 0;
-            GameProcessor_OnScoreChanged1(0, instant);
+            OnScoreChanged(0, instant);
         }
 
         public void ForceComplete()
@@ -203,6 +203,16 @@ namespace Core.Goals
             ProcessPoints(requiredPoints, false);
         }
 
+        public void ShowAsLocked()
+        {
+            foreach (var part in _parts)
+            {
+                part.ChangeUnlockState(false, true);
+                part.SetPoints(0, true);
+            }
+            _view.SetStage(0);
+        }
+        
         public void ShowAsCompleted()
         {
             foreach (var part in _parts)
