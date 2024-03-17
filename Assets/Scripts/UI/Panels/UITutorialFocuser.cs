@@ -80,7 +80,16 @@ namespace Core
 
         public void ForceFocusOn(Rect rect)
         {
-            RecalculateRect(rect);
+            _focusMode = FocusMode.Rect;
+            
+            var lb = _root.InverseTransformPoint(rect.min);
+            var rt = _root.InverseTransformPoint(rect.max);
+            _desiredRect = new Rect(
+                new Vector2Int((int)lb.x, (int)lb.y),
+                new Vector2Int((int)(rt.x - lb.x), (int)(rt.y - lb.y)));
+            _currentRect = _desiredRect;
+            
+            RecalculateRect(_currentRect);
         }
 
         public async Task FocusOnAsync(Rect rect, bool smooth, CancellationToken cancellationToken)

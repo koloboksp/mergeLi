@@ -26,6 +26,8 @@ namespace Core.Tutorials
 
             Tutorial.Controller.Focuser.gameObject.SetActive(true);
 
+            var modules = gameObject.GetComponents<ModuleTutorialStep>();
+            
             while (moveTimer < moveTime)
             {
                 moveTimer += Time.deltaTime;
@@ -35,7 +37,8 @@ namespace Core.Tutorials
                 var worldPosition = field.GetWorldPosition(gridPosition);
                 var cellSize = field.GetWorldCellSize();
                 _focusedRect = new Rect(worldPosition - cellSize * 2.5f * 0.5f, cellSize * 2.5f);
-                gameObject.GetComponents<ModuleTutorialStep>().ToList().ForEach(i => i.OnUpdate(this));
+                foreach (var module in modules)
+                    module.OnUpdate(this);
                 
                 await Task.Yield();
             }
