@@ -24,7 +24,7 @@ namespace Core
         private Button _showPauseBtn;
 
         [SerializeField] private GameObject _lowSpaceWarning;
-        [SerializeField] private UIGameScreen_AnyGift _anyGift;
+        [FormerlySerializedAs("_anyGift")] [SerializeField] private UIAnyGiftIndicator _anyGiftIndicator;
 
         private List<UIBuff> _uiBuffs = new();
         private UIGameScreenData _data;
@@ -35,7 +35,7 @@ namespace Core
         {
             _coins.OnClick += Coins_OnClick;
             _showPauseBtn.onClick.AddListener(ShowPauseBtn_OnClick);
-            _anyGift.OnClick += AnyGift_OnClick;
+            _anyGiftIndicator.OnClick += AnyGiftIndicatorOnClick;
         }
 
         public override void SetData(UIScreenData undefinedData)
@@ -68,7 +68,7 @@ namespace Core
         {
             base.InnerActivate();
 
-            _anyGift.Set(_data.GameProcessor.GiftsMarket);
+            _anyGiftIndicator.Set(_data.GameProcessor.GiftsMarket);
             _data.GameProcessor.PauseGameProcess(false);
         }
 
@@ -200,7 +200,7 @@ namespace Core
                 Application.exitCancellationToken);
         }
 
-        private void AnyGift_OnClick()
+        private void AnyGiftIndicatorOnClick()
         {
             ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIShopPanel>(
                 new UIShopPanelData()

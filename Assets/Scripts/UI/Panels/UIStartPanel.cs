@@ -1,12 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
+﻿using System.Linq;
 using Assets.Scripts.Core;
 using Atom;
-using GooglePlayGames;
-using GooglePlayGames.BasicApi;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core
@@ -41,6 +36,9 @@ namespace Core
         [SerializeField] private Button _leaderboardBtn;
 
         [SerializeField] private SpawnAnimator _panelAnimator;
+
+        [SerializeField] private UIAnyGiftIndicator _anyGiftIndicator;
+        
         private Model _model;
         private UIStartPanelData _data;
         private UIStartPanelChoice _choice;
@@ -202,14 +200,7 @@ namespace Core
             _data = undefinedData as UIStartPanelData;
             _model = new Model();
 
-            if (_data.GameProcessor.HasPreviousSessionGame)
-            {
-                _playLabelBtn.Id = _continueLocKey;
-            }
-            else
-            {
-                _playLabelBtn.Id = _playLocKey;
-            }
+            SetPlayButton();
 
             _panelAnimator.Play(_data.Instant);
             if (_data.Instant)
@@ -222,6 +213,20 @@ namespace Core
             }
             
             SetupLoginSocialBtn();
+            
+            _anyGiftIndicator.Set(_data.GameProcessor.GiftsMarket);
+        }
+
+        private void SetPlayButton()
+        {
+            if (_data.GameProcessor.HasPreviousSessionGame)
+            {
+                _playLabelBtn.Id = _continueLocKey;
+            }
+            else
+            {
+                _playLabelBtn.Id = _playLocKey;
+            }
         }
 
         private void SetupLoginSocialBtn()

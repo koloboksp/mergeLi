@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Core
 {
-    public class UIGameScreen_AnyGift : MonoBehaviour
+    public class UIAnyGiftIndicator : MonoBehaviour
     {
         public event Action OnClick;
 
