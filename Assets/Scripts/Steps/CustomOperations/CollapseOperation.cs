@@ -20,7 +20,7 @@ namespace Core.Steps.CustomOperations
         private readonly CollapsePointsEffect _collapsePointsEffectPrefab;
 
         private readonly List<(Ball ball, float distance)> _ballsToRemove = new();
-        private readonly List<List<(Vector3Int intPosition, int points)>> _collapseLines = new List<List<(Vector3Int, int)>>();
+        private readonly List<List<BallDesc>> _collapseLines = new();
         private int _pointsAdded;
 
         public CollapseOperation(Vector3Int position, CollapsePointsEffect collapsePointsEffectPrefab,
@@ -63,10 +63,10 @@ namespace Core.Steps.CustomOperations
                 List<List<Ball>> collapseLines = _field.CheckCollapse(checkingPosition);
                 foreach (var collapseLine in collapseLines)
                 {
-                    _collapseLines.Add(new List<(Vector3Int intPosition, int points)>());
+                    _collapseLines.Add(new List<BallDesc>());
                     foreach (var ball in collapseLine)
                     {
-                        _collapseLines[_collapseLines.Count - 1].Add((ball.IntGridPosition, ball.Points));
+                        _collapseLines[^1].Add(new BallDesc(ball.IntGridPosition, ball.Points));
                         maxDistanceToCheckingPosition = Mathf.Max(maxDistanceToCheckingPosition, (ball.IntGridPosition - checkingPosition).magnitude);
                     }
                 }
@@ -95,7 +95,7 @@ namespace Core.Steps.CustomOperations
             var sumPoints = 0;
             foreach (var collapseLine in collapseLineWithResultPoints)
             {
-                var groupsByPoints = collapseLine.GroupBy(i => i.points);
+                var groupsByPoints = collapseLine.GroupBy(i => i.Points);
                 foreach (var groupByPoints in groupsByPoints)
                 {
                     var valueTuples = groupByPoints.ToList();
@@ -103,8 +103,8 @@ namespace Core.Steps.CustomOperations
                     var sumGroupPoints = 0;
                     foreach (var tuple in valueTuples)
                     {
-                        centerPosition += _field.GetPositionFromGrid(tuple.intPosition) / valueTuples.Count;
-                        sumGroupPoints += tuple.points;
+                        centerPosition += _field.GetPositionFromGrid(tuple.GridPosition) / valueTuples.Count;
+                        sumGroupPoints += tuple.Points;
                     }
 
                     var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
@@ -139,6 +139,6 @@ namespace Core.Steps.CustomOperations
 
     public class CollapseOperationData 
     {
-        public List<List<(Vector3Int intPosition, int points)>> CollapseLines = new();
+        public List<List<BallDesc>> CollapseLines = new();
     }
 }

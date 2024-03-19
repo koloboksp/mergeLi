@@ -10,10 +10,10 @@ namespace Core.Steps.CustomOperations
         private readonly IField _field;
         private readonly IPointsChangeListener _pointsChangeListener;
 
-        private readonly List<List<(Vector3Int intPosition, int points)>> _uncollapseBallsLines;
+        private readonly List<List<BallDesc>> _uncollapseBallsLines;
         private readonly int _pointsToRemove;
         
-        public UncollapseOperation(List<List<(Vector3Int intPosition, int points)>> uncollapseBallsLines, int pointsToRemove,
+        public UncollapseOperation(List<List<BallDesc>> uncollapseBallsLines, int pointsToRemove,
             IField field, IPointsChangeListener pointsChangeListener)
         {
             _uncollapseBallsLines = uncollapseBallsLines;
@@ -24,17 +24,17 @@ namespace Core.Steps.CustomOperations
 
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
-            var uniqueBalls = new List<(Vector3Int intPosition, int points)>();
+            var uniqueBalls = new List<BallDesc>();
             foreach (var uncollapseBallsLine in _uncollapseBallsLines)
             foreach (var uncollapseBall in uncollapseBallsLine)
-                {
-                    var foundBallI = uniqueBalls.FindIndex(i => i.intPosition == uncollapseBall.intPosition);
-                    if (foundBallI < 0)
-                        uniqueBalls.Add(uncollapseBall);
-                }
+            {
+                var foundBallI = uniqueBalls.FindIndex(i => i.GridPosition == uncollapseBall.GridPosition);
+                if (foundBallI < 0)
+                    uniqueBalls.Add(uncollapseBall);
+            }
             
             foreach (var uniqueBall in uniqueBalls)
-                _field.CreateBall(uniqueBall.intPosition, uniqueBall.points);
+                _field.CreateBall(uniqueBall.GridPosition, uniqueBall.Points);
 
             _pointsChangeListener.RemovePoints(_pointsToRemove);
 

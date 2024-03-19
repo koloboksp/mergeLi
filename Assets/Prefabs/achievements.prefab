@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6383584398196888080}
-  - component: {fileID: 8105813000373456610}
+  - component: {fileID: 4012067453873873049}
   m_Layer: 0
   m_Name: allOnZero
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 3126564381448173542}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8105813000373456610
+--- !u!114 &4012067453873873049
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,9 +41,158 @@ MonoBehaviour:
   m_GameObject: {fileID: 1743452036423676753}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 374cb6e696564959a8d95cc3cba33240, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e274b3c46ce475782abe5089159fd2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _masks:
+  - Balls:
+    - GridPosition: {x: 0, y: 8, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 7, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 6, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 5, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 4, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 3, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 2, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 1, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 0, z: 0}
+      Points: 0
+  - Balls:
+    - GridPosition: {x: 0, y: 0, z: 0}
+      Points: 0
+    - GridPosition: {x: 1, y: 0, z: 0}
+      Points: 0
+    - GridPosition: {x: 2, y: 0, z: 0}
+      Points: 0
+    - GridPosition: {x: 4, y: 0, z: 0}
+      Points: 0
+    - GridPosition: {x: 6, y: 0, z: 0}
+      Points: 0
+    - GridPosition: {x: 7, y: 0, z: 0}
+      Points: 0
+    - GridPosition: {x: 8, y: 0, z: 0}
+      Points: 0
+    - GridPosition: {x: 5, y: 0, z: 0}
+      Points: 0
+    - GridPosition: {x: 3, y: 0, z: 0}
+      Points: 0
+  - Balls:
+    - GridPosition: {x: 8, y: 0, z: 0}
+      Points: 0
+    - GridPosition: {x: 1, y: 7, z: 0}
+      Points: 0
+    - GridPosition: {x: 2, y: 6, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 8, z: 0}
+      Points: 0
+    - GridPosition: {x: 3, y: 5, z: 0}
+      Points: 0
+    - GridPosition: {x: 4, y: 4, z: 0}
+      Points: 0
+    - GridPosition: {x: 5, y: 3, z: 0}
+      Points: 0
+    - GridPosition: {x: 6, y: 2, z: 0}
+      Points: 0
+    - GridPosition: {x: 7, y: 1, z: 0}
+      Points: 0
+  - Balls:
+    - GridPosition: {x: 4, y: 4, z: 0}
+      Points: 0
+    - GridPosition: {x: 8, y: 8, z: 0}
+      Points: 0
+    - GridPosition: {x: 7, y: 7, z: 0}
+      Points: 0
+    - GridPosition: {x: 6, y: 6, z: 0}
+      Points: 0
+    - GridPosition: {x: 5, y: 5, z: 0}
+      Points: 0
+    - GridPosition: {x: 3, y: 3, z: 0}
+      Points: 0
+    - GridPosition: {x: 2, y: 2, z: 0}
+      Points: 0
+    - GridPosition: {x: 1, y: 1, z: 0}
+      Points: 0
+    - GridPosition: {x: 0, y: 0, z: 0}
+      Points: 0
+--- !u!1 &2036065679662191726
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2323666832301617485}
+  - component: {fileID: 2591606430743021323}
+  m_Layer: 0
+  m_Name: poseidon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2323666832301617485
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036065679662191726}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3126564381448173542}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2591606430743021323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036065679662191726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e274b3c46ce475782abe5089159fd2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _masks:
+  - Balls:
+    - GridPosition: {x: 4, y: 0, z: 0}
+      Points: -1
+    - GridPosition: {x: 3, y: 1, z: 0}
+      Points: -1
+    - GridPosition: {x: 2, y: 2, z: 0}
+      Points: -1
+    - GridPosition: {x: 1, y: 3, z: 0}
+      Points: -1
+    - GridPosition: {x: 0, y: 4, z: 0}
+      Points: -1
+    - GridPosition: {x: 4, y: 4, z: 0}
+      Points: -1
+    - GridPosition: {x: 4, y: 3, z: 0}
+      Points: -1
+    - GridPosition: {x: 4, y: 2, z: 0}
+      Points: -1
+    - GridPosition: {x: 4, y: 1, z: 0}
+      Points: -1
+    - GridPosition: {x: 5, y: 1, z: 0}
+      Points: -1
+    - GridPosition: {x: 6, y: 2, z: 0}
+      Points: -1
+    - GridPosition: {x: 7, y: 3, z: 0}
+      Points: -1
+    - GridPosition: {x: 8, y: 4, z: 0}
+      Points: -1
 --- !u!1 &3054221371316500029
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,6 +222,88 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6383584398196888080}
+  - {fileID: 1512819445523557793}
+  - {fileID: 2323666832301617485}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7699497581027426385
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1512819445523557793}
+  - component: {fileID: 7846147133468670420}
+  m_Layer: 0
+  m_Name: emperor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1512819445523557793
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7699497581027426385}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3126564381448173542}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7846147133468670420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7699497581027426385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e274b3c46ce475782abe5089159fd2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _masks:
+  - Balls:
+    - GridPosition: {x: 0, y: 8, z: 0}
+      Points: -1
+    - GridPosition: {x: 1, y: 7, z: 0}
+      Points: -1
+    - GridPosition: {x: 2, y: 6, z: 0}
+      Points: -1
+    - GridPosition: {x: 3, y: 5, z: 0}
+      Points: -1
+    - GridPosition: {x: 4, y: 4, z: 0}
+      Points: -1
+    - GridPosition: {x: 5, y: 3, z: 0}
+      Points: -1
+    - GridPosition: {x: 6, y: 2, z: 0}
+      Points: -1
+    - GridPosition: {x: 7, y: 1, z: 0}
+      Points: -1
+    - GridPosition: {x: 8, y: 0, z: 0}
+      Points: -1
+    - GridPosition: {x: 5, y: 5, z: 0}
+      Points: -1
+    - GridPosition: {x: 6, y: 6, z: 0}
+      Points: -1
+    - GridPosition: {x: 8, y: 8, z: 0}
+      Points: -1
+    - GridPosition: {x: 7, y: 7, z: 0}
+      Points: -1
+    - GridPosition: {x: 3, y: 3, z: 0}
+      Points: -1
+    - GridPosition: {x: 2, y: 2, z: 0}
+      Points: -1
+    - GridPosition: {x: 1, y: 1, z: 0}
+      Points: -1
+    - GridPosition: {x: 0, y: 0, z: 0}
+      Points: -1

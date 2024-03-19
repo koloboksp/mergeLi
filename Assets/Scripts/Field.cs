@@ -256,7 +256,7 @@ public class Field : MonoBehaviour, IField
 
     public IEnumerable<T> GetSomething<T>(Vector3Int intPosition) where T : class
     {
-        List<T> result = new List<T>();
+        var result = new List<T>();
         foreach (var ball in _balls)
         {
             if(ball.IntGridPosition != intPosition) continue;
