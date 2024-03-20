@@ -1,24 +1,27 @@
 ﻿using Core;
 using UnityEngine;
 
-public class Achievement : MonoBehaviour
+namespace Achievements
 {
-    private GameProcessor _gameProcessor;
-
-    public string Id => gameObject.name;
-    public GameProcessor GameProcessor => _gameProcessor;
-
-    protected virtual void InnerCheck()
+    public class Achievement : MonoBehaviour
     {
-    }
+        private GameProcessor _gameProcessor;
 
-    public virtual void SetData(GameProcessor gameProcessor)
-    {
-        _gameProcessor = gameProcessor;
-    }
+        public string Id => gameObject.name;
+        public GameProcessor GameProcessor => _gameProcessor;
 
-    protected void Unlock()
-    {
-        _ = ApplicationController.Instance.ISocialService.UnlockAchievement(Id, Application.exitCancellationToken);
+        protected virtual void InnerCheck()
+        {
+        }
+
+        public virtual void SetData(GameProcessor gameProcessor)
+        {
+            _gameProcessor = gameProcessor;
+        }
+
+        protected void Unlock()
+        {
+            _ = ApplicationController.Instance.ISocialService.UnlockAchievement(Id, Application.exitCancellationToken);
+        }
     }
 }
