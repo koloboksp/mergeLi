@@ -129,8 +129,13 @@ namespace Core
             var currentLevel = 0;
             while (currentLevel < Math.Abs(level))
             {
-                if(level > 0)
-                    newPoints *= 2;
+                if (level > 0)
+                {
+                    if (newPoints == 0)
+                        newPoints = 1;
+                    else
+                        newPoints *= 2;
+                }
                 else
                     newPoints /= 2;
                 

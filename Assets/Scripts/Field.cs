@@ -138,13 +138,15 @@ public class Field : MonoBehaviour, IField
     public void GenerateNextBallPositions(int count, List<int> availableValues)
     {
         var freeIndexes = new List<Vector3Int>();
-        for (int x = 0; x < _size.x; x++)
-        for (int y = 0; y < _size.y; y++)
+        for (var x = 0; x < _size.x; x++)
+        for (var y = 0; y < _size.y; y++)
             freeIndexes.Add(new Vector3Int(x, y, 0));
         foreach (var ball in _balls)
             freeIndexes.Remove(ball.IntGridPosition);
-        
-        for (int i = 0; i < count; i++)
+        foreach (var nextBall in _nextBallsData)
+            freeIndexes.Remove(nextBall.intPosition);
+
+        for (var i = 0; i < count; i++)
         {
             if(freeIndexes.Count <= 0) break;
             

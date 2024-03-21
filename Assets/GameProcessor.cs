@@ -105,6 +105,7 @@ public class GameProcessor : MonoBehaviour,
     
     public event Action<int> OnScoreChanged;
     public event Action<bool> OnLowEmptySpaceChanged;
+    public event Action<bool> OnFreeSpaceIsOverChanged; 
 
     public event Action<int> OnConsumeCurrency;
     public event Action<int> OnAddCurrency;
@@ -511,9 +512,11 @@ public class GameProcessor : MonoBehaviour,
     {
         var emptyCellsCount = _field.CalculateEmptySpacesCount();
         var threshold = Mathf.Max(_generatedBallsCountAfterMerge, _generatedBallsCountAfterMove);
-        bool lowSpace = emptyCellsCount <= threshold;
+        var lowSpace = emptyCellsCount <= threshold;
+        var freeSpaceIsOver = emptyCellsCount <= 0;
 
         OnLowEmptySpaceChanged?.Invoke(lowSpace);
+        OnFreeSpaceIsOverChanged?.Invoke(freeSpaceIsOver);
     }
 
     private void StepMachine_OnStepCompleted(Step step, StepExecutionType executionType)
