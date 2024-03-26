@@ -32,7 +32,7 @@ namespace Core.Steps.CustomOperations
             Owner.SetData(new MergeOperationData()
             {
                 Position = _position,
-                Points = _pointsBeforeMerge,
+                PointsBeforeMerge = _pointsBeforeMerge,
                 MergeablesCount = _mergeablesCount,
             });
             
@@ -50,7 +50,7 @@ namespace Core.Steps.CustomOperations
     public class MergeOperationData
     {
         public Vector3Int Position;
-        public int Points;
+        public int PointsBeforeMerge;
         public int MergeablesCount;
     }
 }

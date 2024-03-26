@@ -26,7 +26,8 @@ public abstract class Buff : MonoBehaviour, IBuff
     protected Action _availableStateChanged;
     private Action _restCooldownChanged;
     private Action<DragPhase> _dragPhaseChanged;
-
+    private Action _interruptUsing;
+    
     [SerializeField] private UIBuff _controlPrefab;
     [SerializeField] private int _cost = 1;
     [SerializeField] private int _cooldown = 3;
@@ -58,6 +59,8 @@ public abstract class Buff : MonoBehaviour, IBuff
         var readyToUse = InnerOnClick();
         if (readyToUse)
             ProcessUsing(null);
+        else
+            InterruptUsing(null);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -80,6 +83,8 @@ public abstract class Buff : MonoBehaviour, IBuff
         var readyToUse = InnerOnEndDrag(eventData);
         if (readyToUse)
             ProcessUsing(eventData);
+        else
+            InterruptUsing(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -103,6 +108,11 @@ public abstract class Buff : MonoBehaviour, IBuff
             Available = true;
 
         InnerProcessUsing(eventData);
+    }
+
+    private void InterruptUsing(PointerEventData eventData)
+    {
+        _interruptUsing?.Invoke();
     }
 
     protected abstract void InnerProcessUsing(PointerEventData pointerEventData);
@@ -201,21 +211,27 @@ public abstract class Buff : MonoBehaviour, IBuff
         _dragPhaseChanged?.Invoke(dragPhase);
     }
     
-    public Buff OnAvailableStateChanged(Action onChanged)
+    public Buff OnInterruptUsing(Action onInterruptUsing)
     {
-        _availableStateChanged = onChanged;
+        _interruptUsing += onInterruptUsing;
         return this;
     }
 
     public Buff OnRestCooldownChanged(Action onChanged)
     {
-        _restCooldownChanged = onChanged;
+        _restCooldownChanged += onChanged;
         return this;
     }
     
     public Buff OnDragPhaseChanged(Action<DragPhase> onChanged)
     {
-        _dragPhaseChanged = onChanged;
+        _dragPhaseChanged += onChanged;
+        return this;
+    }
+    
+    public Buff OnAvailableStateChanged(Action onChanged)
+    {
+        _availableStateChanged += onChanged;
         return this;
     }
 }

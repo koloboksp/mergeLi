@@ -594,7 +594,7 @@ public class GameProcessor : MonoBehaviour,
                 new ConfirmBuffUseOperation(buff)));
     }
 
-    public void UseExplodeBuff(int cost, ExplodeType explodeType, Vector3Int pointerIndex, List<Vector3Int> ballsIndexes, ExplodeBuff buff)
+    public void UseExplodeBuff(int cost, ExplodeType explodeType, Vector3Int pointerIndex, IReadOnlyList<Vector3Int> ballsIndexes, ExplodeBuff buff)
     {
         _stepMachine.AddStep(
             new Step(ExplodeTypeToStepTags[explodeType], 
@@ -612,14 +612,24 @@ public class GameProcessor : MonoBehaviour,
                 new ConfirmBuffUseOperation(buff)));
     }
 
-    public bool CanGradeAny(IEnumerable<Vector3Int> ballsIndexes)
+    public bool CanDowngradeAny(IEnumerable<Vector3Int> ballsIndexes)
     {
         var gradeLevel = -1;
-        var balls = ballsIndexes.SelectMany(i => _field.GetSomething<Ball>(i)).ToList();
+        var balls = ballsIndexes
+            .SelectMany(i => _field.GetSomething<Ball>(i))
+            .ToList();
+        
         return balls.Any(ball => ball.CanGrade(gradeLevel));
     }
     
-    public void UseDowngradeBuff(int cost, List<Vector3Int> ballsIndexes, DowngradeBuff buff)
+    public IReadOnlyList<Ball> GetBalls(IReadOnlyList<Vector3Int> ballsIndexes)
+    {
+        return ballsIndexes
+            .SelectMany(i => _field.GetSomething<Ball>(i))
+            .ToList();
+    }
+    
+    public void UseDowngradeBuff(int cost, IReadOnlyList<Vector3Int> ballsIndexes, DowngradeBuff buff)
     {
         var gradeLevel = -1;
         _stepMachine.AddStep(
@@ -763,4 +773,6 @@ public class GameProcessor : MonoBehaviour,
         ApplicationController.Instance.SaveController.SaveSettings.ActiveHat = hatName;
         _scene.SetHat(hatName);
     }
+
+   
 }

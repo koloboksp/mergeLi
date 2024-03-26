@@ -11,7 +11,7 @@ namespace Core.Buffs
         
         protected override bool CanBuffBeUsed(Vector3Int pointerGridPosition, IEnumerable<Vector3Int> affectedAreas)
         {
-            return _gameProcessor.CanGradeAny(affectedAreas);
+            return _gameProcessor.CanDowngradeAny(affectedAreas);
         }
         
         protected override void InnerProcessUsing(PointerEventData pointerEventData)

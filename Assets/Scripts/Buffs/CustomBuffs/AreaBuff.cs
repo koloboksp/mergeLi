@@ -15,7 +15,7 @@ namespace Core.Buffs
         private readonly List<AffectingBuffArea> _affectingBuffAreas = new();
         private readonly List<Vector3Int> _affectedAreas = new();
 
-        protected List<Vector3Int> AffectedAreas => _affectedAreas;
+        public IReadOnlyList<Vector3Int> AffectedAreas => _affectedAreas;
 
         protected override void InnerOnBeginDrag(PointerEventData eventData)
         {
