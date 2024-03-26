@@ -15,7 +15,9 @@ namespace Core.Steps.CustomOperations
         private readonly List<Vector3Int> _indexes;
         private readonly DestroyBallEffect _destroyBallEffectPrefab;
         
-        private readonly List<(Vector3Int, int)> _removedBalls = new();
+        private readonly List<BallDesc> _removedBalls = new();
+
+        public IReadOnlyList<BallDesc> RemovedBalls => _removedBalls;
         
         public RemoveOperation(Vector3Int pointerIndex, IEnumerable<Vector3Int> indexes, DestroyBallEffect destroyBallEffectPrefab, IField field)
         {
@@ -45,7 +47,7 @@ namespace Core.Steps.CustomOperations
                     destroyBallEffect.Run(ball.GetColorIndex(), distanceToBall / maxDistanceToCheckingPosition);
                 }
 
-                _removedBalls.AddRange(foundBalls.Select(i => (IntPosition: i.IntGridPosition, i.Points)));
+                _removedBalls.AddRange(foundBalls.Select(i => new BallDesc(i.IntGridPosition, i.Points)));
                 _field.DestroyBalls(foundBalls);
             }
 

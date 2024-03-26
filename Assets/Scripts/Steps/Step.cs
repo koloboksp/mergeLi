@@ -71,6 +71,11 @@ namespace Core.Steps
                 return value as T;
             return null;
         }
+
+        public T FindOperation<T>() where T : Operation
+        {
+            return _operations.Find(i => i.GetType() == typeof(T)) as T;
+        }
     }
 
     public enum StepExecutionType

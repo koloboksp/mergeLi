@@ -562,8 +562,8 @@ MonoBehaviour:
   _minimalBallsInLine: 5
   _generatedBallsCountAfterMerge: 2
   _generatedBallsCountAfterMove: 3
-  _generatedBallsCountOnStart: 76
-  _generatedBallsPointsRange: 0000000001000000020000000400000008000000000000000000000000000000
+  _generatedBallsCountOnStart: 50
+  _generatedBallsPointsRange: 0000000001000000000000000000000000000000000000000000000000000000
   _uiScreensRoot: {fileID: 1881252459}
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,
     type: 3}
@@ -926,7 +926,8 @@ MonoBehaviour:
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
   _explodeType: 3
-  _explodeEffectPrefab: {fileID: 0}
+  _explodeEffectPrefab: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+    type: 3}
   _direction: 1
 --- !u!4 &548640613
 Transform:
@@ -1252,7 +1253,8 @@ MonoBehaviour:
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
   _explodeType: 2
-  _explodeEffectPrefab: {fileID: 0}
+  _explodeEffectPrefab: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+    type: 3}
   _direction: 0
 --- !u!4 &694036923
 Transform:
