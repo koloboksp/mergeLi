@@ -3,9 +3,8 @@ using UnityEngine;
 
 namespace Achievements
 {
-    public class UseBuffAtLeastNTimesInRowAchievement : Achievement
+    public class SurviveNTurnsAchievement : Achievement
     {
-        [SerializeField] private StepTag _buffTag;
         [SerializeField] private int _threshold = 1;
 
         private int _times = 0;
@@ -21,23 +20,21 @@ namespace Achievements
 
         private void GameProcessor_OnStepCompleted(Step step, StepExecutionType stepExecutionType)
         {
-            if (stepExecutionType == StepExecutionType.Undo)
-                return;
-
-            if (step.Tag == StepTag.Select 
-                || step.Tag == StepTag.Deselect 
-                || step.Tag == StepTag.ChangeSelected
-                || step.Tag == StepTag.NoPath)
-                return;
-
-            if (_buffTag != step.Tag)
+            if (step.Tag != StepTag.Move && step.Tag != StepTag.Merge)
             {
-                _times = 0;
                 return;
             }
 
-            _times += 1;
+            if (stepExecutionType == StepExecutionType.Undo)
+            {
+                _times -= 1;
 
+            }
+            else
+            {
+                _times += 1;
+            }
+            
             if (_times >= _threshold)
             {
                 _times = 0;
