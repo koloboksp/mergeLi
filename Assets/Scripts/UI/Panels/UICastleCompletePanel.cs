@@ -25,79 +25,86 @@ namespace Core
         {
             _data = undefinedData as UICastleCompletePanelData;
             
-            _ = Show(Application.exitCancellationToken);
+            _ = PlayAsyncSafe(Application.exitCancellationToken);
         }
 
-        async Task Show(CancellationToken cancellationToken)
+        private async Task PlayAsyncSafe(CancellationToken cancellationToken)
         {
-            _speaker.SetActive(false);
-            
-            var overUIElements = FindObjectsOfType<UIOverCastleCompletePanel>(true)
-                .Select(i => (i, i.transform.parent, i.gameObject.activeSelf))
-                .ToList();
-            foreach (var overUIElementTuple in overUIElements)
+            try
             {
-                overUIElementTuple.i.transform.SetParent(transform, true);
-                overUIElementTuple.i.gameObject.SetActive(overUIElementTuple.activeSelf);
+                _speaker.SetActive(false);
+
+                var overUIElements = FindObjectsOfType<UIOverCastleCompletePanel>(true)
+                    .Select(i => (i, i.transform.parent, i.gameObject.activeSelf))
+                    .ToList();
+                foreach (var overUIElementTuple in overUIElements)
+                {
+                    overUIElementTuple.i.transform.SetParent(transform, true);
+                    overUIElementTuple.i.gameObject.SetActive(overUIElementTuple.activeSelf);
+                }
+
+                var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
+                var castleOriginalParent = activeCastle.transform.parent;
+                activeCastle.transform.SetParent(_castleAnimationRoot, true);
+
+                _animation.Play(_completeClipPart1.name);
+                _fireworks.SetActive(true);
+
+                await AsyncExtensions.WaitForSecondsAsync(_completeClipPart1.length, cancellationToken);
+                if (_data.BeforeGiveCoins != null)
+                    await _data.BeforeGiveCoins();
+
+                if (_data.DialogTextKey != GuidEx.Empty)
+                {
+                    _speaker.SetActive(true);
+                    await _speaker.ShowTextAsync(_data.DialogTextKey, cancellationToken);
+                    await _data.GameProcessor.GiveCoinsEffect.Show(
+                        activeCastle.CoinsAfterComplete,
+                        _speaker.IconRoot.transform,
+                        cancellationToken);
+                }
+
+                _data.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
+
+                await AsyncExtensions.WaitForSecondsAsync(3.0f, cancellationToken);
+
+                if (_data.BeforeSelectNextCastle != null)
+                    await _data.BeforeSelectNextCastle();
+                var castlePosition = activeCastle.transform.position;
+                _data.GameProcessor.SelectNextCastle();
+
+                activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
+                activeCastle.transform.SetParent(_castleAnimationRoot, true);
+                activeCastle.transform.position = castlePosition;
+                activeCastle.transform.localScale = Vector3.one;
+
+                if (_data.AfterSelectNextCastle != null)
+                {
+                    await _data.AfterSelectNextCastle();
+                }
+                else
+                {
+                    await Task.WhenAny(
+                        AsyncExtensions.WaitForSecondsAsync(10.0f, cancellationToken),
+                        AsyncHelpers.WaitForClick(_tapButton, cancellationToken));
+                }
+
+                _animation.Play(_completeClipPart2.name);
+                await AsyncExtensions.WaitForSecondsAsync(_completeClipPart2.length + 2.0f, cancellationToken);
+
+                activeCastle.transform.SetParent(castleOriginalParent);
+
+                _data.GameProcessor.ClearUndoSteps();
+
+                foreach (var overUIElementTuple in overUIElements)
+                    overUIElementTuple.i.transform.SetParent(overUIElementTuple.parent, true);
+
+                ApplicationController.Instance.UIPanelController.PopScreen(this);
             }
-
-            var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
-            var castleOriginalParent = activeCastle.transform.parent;
-            activeCastle.transform.SetParent(_castleAnimationRoot, true);
-
-            _animation.Play(_completeClipPart1.name);
-            _fireworks.SetActive(true);
-            
-            await AsyncExtensions.WaitForSecondsAsync(_completeClipPart1.length, cancellationToken);
-            if (_data.BeforeGiveCoins != null)
-                await _data.BeforeGiveCoins();
-            
-            if (_data.DialogTextKey != GuidEx.Empty)
+            catch (Exception e)
             {
-                _speaker.SetActive(true);
-                await _speaker.ShowTextAsync(_data.DialogTextKey, cancellationToken);
-                await _data.GameProcessor.GiveCoinsEffect.Show(
-                    activeCastle.CoinsAfterComplete, 
-                    _speaker.IconRoot.transform, 
-                    cancellationToken);
+                Debug.LogException(e);
             }
-            
-            _data.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
-            
-            await AsyncExtensions.WaitForSecondsAsync(3.0f, cancellationToken);
-            
-            if (_data.BeforeSelectNextCastle != null)
-                await _data.BeforeSelectNextCastle();
-            var castlePosition = activeCastle.transform.position;
-            _data.GameProcessor.SelectNextCastle();
-            
-            activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
-            activeCastle.transform.SetParent(_castleAnimationRoot, true);
-            activeCastle.transform.position = castlePosition;
-            activeCastle.transform.localScale = Vector3.one;
-            
-            if (_data.AfterSelectNextCastle != null)
-            {
-                await _data.AfterSelectNextCastle();
-            }
-            else
-            {
-                await Task.WhenAny(
-                    AsyncExtensions.WaitForSecondsAsync(10.0f, cancellationToken),
-                    AsyncHelpers.WaitForClick(_tapButton, cancellationToken));
-            }
-
-            _animation.Play(_completeClipPart2.name);
-            await AsyncExtensions.WaitForSecondsAsync(_completeClipPart2.length + 2.0f, cancellationToken);
-            
-            activeCastle.transform.SetParent(castleOriginalParent);
-
-            _data.GameProcessor.ClearUndoSteps();
-            
-            foreach (var overUIElementTuple in overUIElements)
-                overUIElementTuple.i.transform.SetParent(overUIElementTuple.parent, true);
-            
-            ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
     }
     

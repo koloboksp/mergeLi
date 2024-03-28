@@ -235,6 +235,7 @@ public class GameProcessor : MonoBehaviour,
     
                 await PrepareSessionAsync(prepareType, cancellationToken);
                 await ProcessSessionAsync(cancellationToken);
+                prepareType = SessionPrepareType.Lose;
             }
         }
         catch (OperationCanceledException e)
@@ -246,7 +247,8 @@ public class GameProcessor : MonoBehaviour,
     public enum SessionPrepareType
     {
         FirstStart,
-        RestartSession
+        RestartSession,
+        Lose,
     }
     
     private async Task PrepareSessionAsync(SessionPrepareType prepareType, CancellationToken cancellationToken)
@@ -295,20 +297,21 @@ public class GameProcessor : MonoBehaviour,
                 _castleSelector.ActiveCastle.ResetPoints(true);
             }
             
-            if (prepareType == SessionPrepareType.FirstStart)
+            if (prepareType == SessionPrepareType.FirstStart
+                || prepareType == SessionPrepareType.Lose)
             {
                 var startPanel = await ApplicationController.Instance.UIPanelController.PushScreenAsync<UIStartPanel>(
                     new UIStartPanelData()
                     {
                         GameProcessor = this,
-                        Instant = false,
+                        Instant = prepareType != SessionPrepareType.FirstStart,
                     },
                     cancellationToken);
                 await startPanel.ShowAsync(cancellationToken);
-                
                 await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIGameScreen>(
                     new UIGameScreenData() { GameProcessor = this },
                     cancellationToken);
+               
             }
         }
     }

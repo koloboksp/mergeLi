@@ -28,7 +28,6 @@ namespace Achievements
             if (stepExecutionType == StepExecutionType.Undo)
             {
                 _times -= 1;
-
             }
             else
             {
