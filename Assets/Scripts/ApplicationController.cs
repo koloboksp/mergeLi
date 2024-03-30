@@ -25,10 +25,12 @@ namespace Core
         private ISocialService _socialService;
         private SoundController _soundController;
         private SaveController _saveController;
-
+        private IAnalyticsController _analyticsController;
+        
         private TaskCompletionSource<bool> _initialization;
         private bool _initializated = false;
-        
+        private Atom.Version _version;
+
         public static ApplicationController Instance => _instance;
 
         public SaveController SaveController => _saveController;
@@ -38,16 +40,17 @@ namespace Core
         public IAdsController AdsController => _adsController;
         public ISocialService ISocialService => _socialService;
         public SoundController SoundController => _soundController;
+        public IAnalyticsController AnalyticsController => _analyticsController;
 
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static async void Start()
         {
-            
-            
             _instance = new ApplicationController();
             _instance._initialization = new TaskCompletionSource<bool>();
 
+            _instance._version = new(Application.version);
+                
             _instance._saveController = new SaveController();
             await _instance._saveController.InitializeAsync(CancellationToken.None);
             
@@ -66,7 +69,10 @@ namespace Core
             
             _instance._purchaseController = new PurchaseController();
             await _instance._purchaseController.InitializeAsync(purchasesLibrary.Items.Select(i=>i.ProductId));
-            
+
+            _instance._analyticsController = new FirebaseAnalyticsController();
+            await _instance._analyticsController.InitializeAsync(_instance._version);
+
             _instance._adsController = new CASWrapper();
             await _instance._adsController.InitializeAsync();
 

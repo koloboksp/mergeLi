@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "533495091222",
+    "project_id": "mergelines",
+    "storage_bucket": "mergelines.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533495091222:android:9d73ff24f0444121be6537",
+        "android_client_info": {
+          "package_name": "com.WiB.MergeLines"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBO1BI4nBtkOSjOrreV128gvjo_eGXFrcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
