@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Achievements;
+using Analytics;
 using Atom;
 using Core;
 using Core.Buffs;
@@ -13,6 +14,7 @@ using Core.Goals;
 using Core.Steps;
 using Core.Steps.CustomOperations;
 using Core.Tutorials;
+using Save;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -37,6 +39,7 @@ public enum ExplodeType
     ExplodeVertical,
 }
 
+[Serializable]
 public enum StepTag
 {
     Move,
@@ -292,6 +295,8 @@ public class GameProcessor : MonoBehaviour,
                     var foundBuff = _buffs.Find(i => i.Id == buffProgress.Id);
                     foundBuff.SetRestCooldown(buffProgress.RestCooldown);
                 }
+
+                _commonAnalytics.SetProgress(lastSessionProgress.Analytics);
             }
             else
             {
@@ -551,11 +556,6 @@ public class GameProcessor : MonoBehaviour,
                 _notAllBallsGenerated = generateOperationData.NewBallsData.Count < generateOperationData.RequiredAmount;
             _userStepFinished = true;
         }
-
-        var castle = GetCastle();
-        if (castle.Completed)
-            ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
-        ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
         
         try
         {
@@ -564,6 +564,14 @@ public class GameProcessor : MonoBehaviour,
         catch (Exception e)
         {
             Debug.LogException(e);
+        }
+
+        if (step.Tag != StepTag.Select && step.Tag != StepTag.Deselect && step.Tag != StepTag.ChangeSelected)
+        {
+            var castle = GetCastle();
+            if (castle.Completed)
+                ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
+            ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
         }
     }
 
@@ -702,6 +710,11 @@ public class GameProcessor : MonoBehaviour,
             firstUncompletedCastle = _castleSelector.Library.Castles.Last();
 
         return firstUncompletedCastle.Id;
+    }
+
+    public ICommonAnalytics GetCommonAnalyticsAnalytics()
+    {
+        return _commonAnalytics;
     }
 
     public void SelectBall(Vector3Int gridPosition)

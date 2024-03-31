@@ -1,11 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Core;
 using Core.Steps;
+using Save;
 using UnityEngine;
 
-namespace Achievements
+namespace Analytics
 {
-    public class CommonAnalytics : MonoBehaviour
+    public class StepTakeIntoInfo
+    {
+        private readonly StepTag _tag;
+        private int _count;
+
+        public StepTakeIntoInfo(StepTag tag)
+        {
+            _tag = tag;
+        }
+
+        public StepTag Tag => _tag;
+        public int Count => _count;
+
+        public void Use()
+        {
+            _count++;
+        }
+
+        public void SetProgress(int count)
+        {
+            _count = count;
+        }
+    }
+    public sealed class CommonAnalytics : MonoBehaviour, ICommonAnalytics
     {
         [SerializeField] private int _eventInterval = 25;
         [SerializeField] private StepTag[] _stepsTakenInto;
@@ -13,10 +38,10 @@ namespace Achievements
         [SerializeField] private List<StepTag> _buffsTakenInto;
 
         private GameProcessor _gameProcessor;
-        private readonly List<(StepTag stepTag, int count)> _stepsTakenIntoInfo = new();
+        private readonly List<StepTakeIntoInfo> _stepsTakenIntoInfo = new();
         private int _step;
         
-        public virtual void SetData(GameProcessor gameProcessor)
+        public void SetData(GameProcessor gameProcessor)
         {
             ResetSession();
 
@@ -50,26 +75,15 @@ namespace Achievements
 
             ResetSession();
         }
-        
-        private void ResetSession()
-        {
-            _stepsTakenIntoInfo.Clear();
-            foreach (var stepTag in _stepsTakenInto)
-                _stepsTakenIntoInfo.Add((stepTag, 0));
-
-            _step = 0;
-        }
 
         private void GameProcessor_OnStepCompleted(Step step, StepExecutionType executionType)
         {
             var stepTag = step.Tag;
 
-            var foundI = _stepsTakenIntoInfo.FindIndex(i => i.stepTag == stepTag);
+            var foundI = _stepsTakenIntoInfo.FindIndex(i => i.Tag == stepTag);
             if (foundI >= 0)
             {
-                var stepInfo = _stepsTakenIntoInfo[foundI];
-                stepInfo.count++;
-                _stepsTakenIntoInfo[foundI] = stepInfo;
+                _stepsTakenIntoInfo[foundI].Use();
                 _step++;
             }
 
@@ -133,6 +147,43 @@ namespace Achievements
             ApplicationController.Instance.AnalyticsController.OnCastleComplete(
                 _gameProcessor.CastleSelector.ActiveCastle.Id,
                 _step);
+        }
+        
+        private void ResetSession()
+        {
+            _stepsTakenIntoInfo.Clear();
+            foreach (var stepTag in _stepsTakenInto)
+                _stepsTakenIntoInfo.Add(new StepTakeIntoInfo(stepTag));
+
+            _step = 0;
+        }
+
+        public int GetStep()
+        {
+            return _step;
+        }
+
+        public IEnumerable<StepTakeIntoInfo> GetStepsTakenIntoInfos()
+        {
+            return _stepsTakenIntoInfo;
+        }
+
+        public void SetProgress(SessionAnalyticsProgress progress)
+        {
+            if (progress == null) 
+                return;
+            
+            _step = progress.Step;
+
+            if (progress.StepsTakenInto != null)
+            {
+                foreach (var stepTakeIntoInfo in _stepsTakenIntoInfo)
+                {
+                    var progressStepTakenInto = progress.StepsTakenInto.Find(i => i.StepTag == stepTakeIntoInfo.Tag);
+                    if (progressStepTakenInto != null)
+                        stepTakeIntoInfo.SetProgress(progressStepTakenInto.Count);
+                }
+            }
         }
     }
 }

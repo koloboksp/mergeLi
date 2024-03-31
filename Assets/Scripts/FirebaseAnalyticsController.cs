@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Analytics;
 using Firebase;
 using Firebase.Analytics;
 using UnityEngine;
@@ -79,7 +80,7 @@ namespace Core
             }
         }
 
-        public void StepIntervalCompleted(int step, string castleId, IReadOnlyList<(StepTag stepTag, int count)> stepsTakenIntoInfo)
+        public void StepIntervalCompleted(int step, string castleId, IReadOnlyList<StepTakeIntoInfo> stepsTakenIntoInfo)
         {
             try
             {
@@ -90,7 +91,7 @@ namespace Core
                     new StringParameterWrapper(CASTLE_ID, castleId)
                 };
                 parameters.AddRange(stepsTakenIntoInfo
-                    .Select(i => new LongParameterWrapper(i.stepTag.ToString(), i.count)));
+                    .Select(i => new LongParameterWrapper(i.Tag.ToString(), i.Count)));
 
                 FirebaseAnalytics.LogEvent(
                     STEP_INTERVAL_COMPLETE,
@@ -162,7 +163,7 @@ namespace Core
             }
         }
 
-        public void OnLost(string castleId, int step, IReadOnlyList<(StepTag stepTag, int count)> stepsTakenIntoInfo)
+        public void OnLost(string castleId, int step, IReadOnlyList<StepTakeIntoInfo> stepsTakenIntoInfo)
         {
             try
             {
@@ -172,6 +173,8 @@ namespace Core
                     new StringParameterWrapper(CASTLE_ID, castleId),
                     new LongParameterWrapper(STEP, step),
                 };
+                parameters.AddRange(stepsTakenIntoInfo
+                    .Select(i => new LongParameterWrapper(i.Tag.ToString(), i.Count)));
 
                 FirebaseAnalytics.LogEvent(
                     LOST,
@@ -188,7 +191,7 @@ namespace Core
             }
         }
 
-        public void OnRestart(string castleId, int step, int restFieldEmptyCellsCount, IReadOnlyList<(StepTag stepTag, int count)> stepsTakenIntoInfo)
+        public void OnRestart(string castleId, int step, int restFieldEmptyCellsCount, IReadOnlyList<StepTakeIntoInfo> stepsTakenIntoInfo)
         {
             try
             {
@@ -200,7 +203,7 @@ namespace Core
                     new LongParameterWrapper(REST_CELLS, restFieldEmptyCellsCount)
                 };
                 parameters.AddRange(stepsTakenIntoInfo
-                    .Select(i => new LongParameterWrapper(i.stepTag.ToString(), i.count)));
+                    .Select(i => new LongParameterWrapper(i.Tag.ToString(), i.Count)));
 
                 FirebaseAnalytics.LogEvent(
                     RESTART,
