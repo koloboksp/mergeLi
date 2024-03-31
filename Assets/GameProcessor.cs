@@ -140,7 +140,8 @@ public class GameProcessor : MonoBehaviour,
     [SerializeField] private CastleSelector _castleSelector;
     [SerializeField] private GiftsLibrary _giftsLibrary;
     [SerializeField] private AdsLibrary _adsLibrary;
-   
+    [SerializeField] private MusicPlayer _musicPlayer;
+
     //todo extract
     [SerializeField] private GiveCoinsEffect _giveCoinsEffect;
     
@@ -209,6 +210,8 @@ public class GameProcessor : MonoBehaviour,
     private async void Start()
     {
         await ApplicationController.Instance.WaitForInitializationAsync(_cancellationTokenSource.Token);
+        
+        _musicPlayer.SetData(this);
         
         _giftsMarket.Initialize();
         _buffs.AddRange(GetComponentsInChildren<Buff>());

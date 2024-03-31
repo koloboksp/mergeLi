@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Save;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Core
@@ -90,13 +89,13 @@ namespace Core
             ProcessListeners(SoundGroup.Music);
         }
 
-        public static void AddListener(SoundControllerListener listener)
+        public static void AddListener(ISoundControllerListener listener)
         {
             if (!_listeners.Contains(listener))
                 _listeners.Add(listener);
         }
 
-        public static bool RemoveListener(SoundControllerListener listener)
+        public static bool RemoveListener(ISoundControllerListener listener)
         {
             return _listeners.Remove(listener);
         }

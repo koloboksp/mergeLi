@@ -19,6 +19,8 @@ namespace Core
 
     public class SoundControllerListener : MonoBehaviour, ISoundControllerListener
     {
+        public const string MODIFICATOR_NAME = "Controller";
+        
         [SerializeField] private SoundGroup _group = SoundGroup.Sound;
         [SerializeField] private SoundHolder _soundHolder;
 
@@ -37,7 +39,7 @@ namespace Core
         {
             if (_soundHolder != null)
             {
-                _soundHolder.SetVolumeModificator(volume);
+                _soundHolder.SetVolumeModificator(MODIFICATOR_NAME, volume);
             }
         }
     }
