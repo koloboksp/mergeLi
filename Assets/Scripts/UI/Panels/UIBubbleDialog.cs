@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Assets.Scripts.Core;
 using Atom;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ namespace Core
     {
         [SerializeField] private UIText _dialogText;
         [SerializeField] private GameObject _iconRoot;
+        [SerializeField] private UIBubbleSpeakEffect _speakEffect;
+        
         public GameObject IconRoot => _iconRoot;
 
         public async Task ShowTextAsync(GuidEx textKey, CancellationToken cancellationToken)
@@ -16,6 +19,7 @@ namespace Core
             _dialogText.gameObject.SetActive(true);
             
             var text = ApplicationController.Instance.LocalizationController.GetText(textKey);
+            _speakEffect.Play(text);
             await _dialogText.ShowAsync(text, cancellationToken);
         }
 
