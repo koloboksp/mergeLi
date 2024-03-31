@@ -359,11 +359,17 @@
      <Reference Include="Unity.VisualScripting.YamlDotNet">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
      </Reference>
-     <Reference Include="Google.PackageManagerResolver">
-     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\1.2.179\Google.PackageManagerResolver.dll</HintPath>
+     <Reference Include="Firebase.Analytics">
+     <HintPath>D:\Projects\mergeLi\Assets\firebase\Plugins\Firebase.Analytics.dll</HintPath>
      </Reference>
      <Reference Include="AStar">
      <HintPath>D:\Projects\mergeLi\Assets\plugins\AStarLite.1.2.0-beta.111\lib\netstandard2.0\AStar.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.PackageManagerResolver">
+     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\1.2.179\Google.PackageManagerResolver.dll</HintPath>
+     </Reference>
+     <Reference Include="Firebase.App">
+     <HintPath>D:\Projects\mergeLi\Assets\firebase\Plugins\Firebase.App.dll</HintPath>
      </Reference>
      <Reference Include="Unity.Plastic.Antlr3.Runtime">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.collab-proxy@2.0.5\Lib\Editor\PlasticSCM\Unity.Plastic.Antlr3.Runtime.dll</HintPath>
@@ -374,11 +380,14 @@
      <Reference Include="Unity.Plastic.Newtonsoft.Json">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.collab-proxy@2.0.5\Lib\Editor\PlasticSCM\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
      </Reference>
+     <Reference Include="Firebase.TaskExtension">
+     <HintPath>D:\Projects\mergeLi\Assets\firebase\Plugins\Firebase.TaskExtension.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.VersionHandlerImpl">
+     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\1.2.179\Google.VersionHandlerImpl.dll</HintPath>
+     </Reference>
      <Reference Include="log4netPlastic">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.collab-proxy@2.0.5\Lib\Editor\PlasticSCM\log4netPlastic.dll</HintPath>
-     </Reference>
-     <Reference Include="Google.VersionHandler">
-     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.IonicZip">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll</HintPath>
@@ -386,8 +395,8 @@
      <Reference Include="CleverAdsSolutions.Common">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.cleversolutions.ads.unity@19eb37ad20\Runtime\CleverAdsSolutions.Common.dll</HintPath>
      </Reference>
-     <Reference Include="Google.VersionHandlerImpl">
-     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\1.2.179\Google.VersionHandlerImpl.dll</HintPath>
+     <Reference Include="Google.JarResolver">
+     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\1.2.179\Google.JarResolver.dll</HintPath>
      </Reference>
      <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.visualscripting@1.8.0\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
@@ -398,29 +407,20 @@
      <Reference Include="Unity.VisualScripting.TextureAssets">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
      </Reference>
+     <Reference Include="Firebase.Platform">
+     <HintPath>D:\Projects\mergeLi\Assets\firebase\Plugins\Firebase.Platform.dll</HintPath>
+     </Reference>
      <Reference Include="unityplastic">
      <HintPath>D:\Projects\mergeLi\Library\PackageCache\com.unity.collab-proxy@2.0.5\Lib\Editor\PlasticSCM\unityplastic.dll</HintPath>
-     </Reference>
-     <Reference Include="Google.JarResolver">
-     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\1.2.179\Google.JarResolver.dll</HintPath>
-     </Reference>
-     <Reference Include="Firebase.App">
-     <HintPath>D:\Projects\mergeLi\Assets\firebase\Plugins\Firebase.App.dll</HintPath>
-     </Reference>
-     <Reference Include="Firebase.TaskExtension">
-     <HintPath>D:\Projects\mergeLi\Assets\firebase\Plugins\Firebase.TaskExtension.dll</HintPath>
-     </Reference>
-     <Reference Include="Firebase.Analytics">
-     <HintPath>D:\Projects\mergeLi\Assets\firebase\Plugins\Firebase.Analytics.dll</HintPath>
-     </Reference>
-     <Reference Include="Firebase.Editor">
-     <HintPath>D:\Projects\mergeLi\Assets\firebase\Editor\Firebase.Editor.dll</HintPath>
      </Reference>
      <Reference Include="Google.MiniJson">
      <HintPath>D:\Projects\mergeLi\Assets\firebase\Plugins\Google.MiniJson.dll</HintPath>
      </Reference>
-     <Reference Include="Firebase.Platform">
-     <HintPath>D:\Projects\mergeLi\Assets\firebase\Plugins\Firebase.Platform.dll</HintPath>
+     <Reference Include="Firebase.Editor">
+     <HintPath>D:\Projects\mergeLi\Assets\firebase\Editor\Firebase.Editor.dll</HintPath>
+     </Reference>
+     <Reference Include="Google.VersionHandler">
+     <HintPath>D:\Projects\mergeLi\Assets\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
      </Reference>
      <Reference Include="UnityEditor.iOS.Extensions.Xcode">
      <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.3f1\Editor\Data\PlaybackEngines\iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>

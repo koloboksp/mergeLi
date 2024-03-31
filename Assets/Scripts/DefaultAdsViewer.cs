@@ -27,9 +27,16 @@ namespace Core
             success = await ApplicationController.Instance.AdsController.Show(AdvertisingType.Rewarded, cancellationToken);
             if (success)
                 currencyAmount = purchaseItem.CurrencyAmount;
-            
-            OnShowAds?.Invoke(success, adsName, currencyAmount);
 
+            try
+            {
+                OnShowAds?.Invoke(success, adsName, currencyAmount);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+            
             return (success, currencyAmount);
         }
     }

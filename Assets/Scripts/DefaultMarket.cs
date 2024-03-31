@@ -28,8 +28,15 @@ namespace Core
             success = await ApplicationController.Instance.PurchaseController.Buy(purchaseItem.ProductId, cancellationToken);
             if (success)
                 currencyAmount = purchaseItem.CurrencyAmount;
-            
-            OnBought?.Invoke(success, purchaseItem.ProductId, currencyAmount);
+
+            try
+            {
+                OnBought?.Invoke(success, purchaseItem.ProductId, currencyAmount);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
             
             return (success, currencyAmount);
         }

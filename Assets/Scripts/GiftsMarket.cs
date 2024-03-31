@@ -30,7 +30,14 @@ namespace Core
 
         private void Gift_OnCollect(GiftModel sender, bool success)
         {
-            OnCollect?.Invoke(success, sender.Id, sender.CurrencyAmount);
+            try
+            {
+                OnCollect?.Invoke(success, sender.Id, sender.CurrencyAmount);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
     }
 }
