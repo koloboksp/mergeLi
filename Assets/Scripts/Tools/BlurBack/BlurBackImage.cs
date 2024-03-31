@@ -8,6 +8,10 @@ public class BlurBackImage : MonoBehaviour
     [SerializeField] private Image image;
     private GameObject go;
 
+    // Grab blur image only for first open window
+    // Next can use this blured image
+    private static int s_count;
+
     private void Awake()
     {
         var rt = BlurBackHub.GetImage();
@@ -29,15 +33,24 @@ public class BlurBackImage : MonoBehaviour
 
     private async void OnEnable()
     {
-        go.SetActive(false);
+        if (s_count == 0)
+        {
+            go.SetActive(false);
 
-        BlurBackHub.UpdateImage();
+            BlurBackHub.UpdateImage();
 
-        // Wait while Get Image before Window open
-        var frame = Time.frameCount;
-        while (Time.frameCount == frame)
-            await Task.Yield();
+            var frame = Time.frameCount + 1;
+            while (Time.frameCount < frame)
+                await Task.Yield();
 
-        go.SetActive(true);
+            go.SetActive(true);
+        }
+
+        s_count++;
+    }
+
+    private void OnDisable()
+    {
+        s_count = s_count < 0 ? 0 : s_count - 1;
     }
 }
