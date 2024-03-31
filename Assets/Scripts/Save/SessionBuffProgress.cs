@@ -1,8 +1,11 @@
 ﻿using System;
 
-[Serializable]
-public class SessionBuffProgress
+namespace Save
 {
-    public string Id;
-    public int RestCooldown;
+    [Serializable]
+    public class SessionBuffProgress
+    {
+        public string Id;
+        public int RestCooldown;
+    }
 }

@@ -80,12 +80,6 @@ PrefabInstance:
       propertyPath: _owner
       value: 
       objectReference: {fileID: 7047264570851907105}
-    - target: {fileID: 3872328642510413083, guid: e90d0197603a6dd4baf20a06121ceb5e,
-        type: 3}
-      propertyPath: _partBornEffect
-      value: 
-      objectReference: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
-        type: 3}
     - target: {fileID: 3936700016026521816, guid: e90d0197603a6dd4baf20a06121ceb5e,
         type: 3}
       propertyPath: m_Pivot.x

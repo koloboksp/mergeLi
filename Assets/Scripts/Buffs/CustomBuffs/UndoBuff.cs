@@ -23,10 +23,7 @@ public class UndoBuff : Buff
     }
 
     public override string Id => "Undo";
-
-    protected virtual bool UndoAvailable => false;
-    protected virtual StepTag UndoStepTag => StepTag.None;
-
+    
     protected override bool InnerOnClick()
     {
         return _gameProcessor.HasUndoSteps();

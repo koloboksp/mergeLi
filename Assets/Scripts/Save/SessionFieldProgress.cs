@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-[Serializable]
-public class SessionFieldProgress
+namespace Save
 {
-    public List<SessionBallProgress> Balls = new List<SessionBallProgress>();
+    [Serializable]
+    public class SessionFieldProgress
+    {
+        public List<SessionBallProgress> Balls = new List<SessionBallProgress>();
+    }
 }

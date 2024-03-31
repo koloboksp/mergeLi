@@ -514,7 +514,8 @@ MonoBehaviour:
   - {fileID: 1381425421825895795}
   - {fileID: 3588103780351912415}
   - {fileID: 4083506898059494264}
-  _partBornEffect: {fileID: 0}
+  _partBornEffect: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+    type: 3}
 --- !u!1 &7756844663660795983
 GameObject:
   m_ObjectHideFlags: 0

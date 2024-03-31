@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
-[Serializable]
-public class SessionProgress
+namespace Save
 {
-    public SessionFieldProgress Field;
-    public SessionCastleProgress Castle;
-    public List<SessionBuffProgress> Buffs = new();
-    public int Score;
-       
-    public bool IsValid()
+    [Serializable]
+    public class SessionProgress
     {
-        if (Castle == null || string.IsNullOrEmpty(Castle.Id))
-            return false;
+        public SessionFieldProgress Field;
+        public SessionCastleProgress Castle;
+        public List<SessionBuffProgress> Buffs = new();
+        public int Score;
+        public SessionAnalyticsProgress Analytics;
+        
+        public bool IsValid()
+        {
+            if (Castle == null || string.IsNullOrEmpty(Castle.Id))
+                return false;
 
-        return true;
+            return true;
+        }
     }
 }

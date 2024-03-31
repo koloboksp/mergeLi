@@ -68,7 +68,15 @@ public class CastleSelector : MonoBehaviour
     
     private void CastleInstance_OnCompleted()
     {
-        OnCastleCompleted?.Invoke();
+        try
+        {
+            OnCastleCompleted?.Invoke();
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+       
         OnCastleChanged?.Invoke(null);
     }
 

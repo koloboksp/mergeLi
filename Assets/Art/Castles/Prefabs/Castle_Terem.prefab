@@ -964,4 +964,5 @@ MonoBehaviour:
   - {fileID: 4549434697251680212}
   - {fileID: 2865555583166238717}
   - {fileID: 387752129052281079}
-  _partBornEffect: {fileID: 0}
+  _partBornEffect: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+    type: 3}

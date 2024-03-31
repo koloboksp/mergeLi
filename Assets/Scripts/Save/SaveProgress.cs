@@ -2,124 +2,127 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-public class SaveProgress
+namespace Save
 {
-    private readonly SaveController _controller;
-    private readonly string _fileName;
-
-    private Progress _progress = new Progress();
-
-    public SaveProgress(SaveController controller, string fileName)
+    public class SaveProgress
     {
-        _controller = controller;
-        _fileName = fileName;
-    }
+        private readonly SaveController _controller;
+        private readonly string _fileName;
 
-    public void AddCoins(int amount)
-    {
-        _progress.Coins += amount;
-        _controller.Save(_progress, _fileName);
-    }
+        private Progress _progress = new Progress();
 
-    public int GetAvailableCoins()
-    {
-        return _progress.Coins;
-    }
-
-    public void ConsumeCoins(int count)
-    {
-        _progress.Coins -= count;
-        _controller.Save(_progress, _fileName);
-    }
-
-    public bool IsCastleCompleted(string id)
-    {
-        return _progress.CompletedCastles.Contains(id);
-    }
-
-    public void MarkCastleCompleted(string id)
-    {
-        if (_progress.CompletedCastles.Contains(id))
-            return;
-
-        _progress.CompletedCastles.Add(id);
-        _controller.Save(_progress, _fileName);
-    }
-
-    public void SetBestSessionScore(int score)
-    {
-        _progress.BestSessionScore = score;
-        _controller.Save(_progress, _fileName);
-    }
-
-    public int BestSessionScore => _progress.BestSessionScore;
-
-    public bool IsTutorialComplete(string tutorialId)
-    {
-        var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
-        if (tutorialProgress != null)
-            return tutorialProgress.IsComplted;
-
-        return false;
-    }
-
-    public void CompleteTutorial(string tutorialId)
-    {
-        var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
-        if (tutorialProgress != null)
-            tutorialProgress.IsComplted = true;
-        else
+        public SaveProgress(SaveController controller, string fileName)
         {
-            _progress.Tutorials.Add(
-                new TutorialProgress()
-                {
-                    Id = tutorialId,
-                    IsComplted = true,
-                });
+            _controller = controller;
+            _fileName = fileName;
         }
 
-        _controller.Save(_progress, _fileName);
-    }
-
-    public long GetGiftLastCollectedTimestamp(string id)
-    {
-        var giftProgress = _progress.Gifts.Find(i => i.Id == id);
-        if (giftProgress != null)
-            return giftProgress.LastCollectedTimestamp;
-
-        return -1;
-    }
-
-    public async Task<bool> SetGiftLastCollectedTimestamp(string id, long lastCollectedTimestamp)
-    {
-        var giftProgress = _progress.Gifts.Find(i => i.Id == id);
-        if (giftProgress == null)
+        public void AddCoins(int amount)
         {
-            giftProgress = new GiftProgress()
+            _progress.Coins += amount;
+            _controller.Save(_progress, _fileName);
+        }
+
+        public int GetAvailableCoins()
+        {
+            return _progress.Coins;
+        }
+
+        public void ConsumeCoins(int count)
+        {
+            _progress.Coins -= count;
+            _controller.Save(_progress, _fileName);
+        }
+
+        public bool IsCastleCompleted(string id)
+        {
+            return _progress.CompletedCastles.Contains(id);
+        }
+
+        public void MarkCastleCompleted(string id)
+        {
+            if (_progress.CompletedCastles.Contains(id))
+                return;
+
+            _progress.CompletedCastles.Add(id);
+            _controller.Save(_progress, _fileName);
+        }
+
+        public void SetBestSessionScore(int score)
+        {
+            _progress.BestSessionScore = score;
+            _controller.Save(_progress, _fileName);
+        }
+
+        public int BestSessionScore => _progress.BestSessionScore;
+
+        public bool IsTutorialComplete(string tutorialId)
+        {
+            var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
+            if (tutorialProgress != null)
+                return tutorialProgress.IsComplted;
+
+            return false;
+        }
+
+        public void CompleteTutorial(string tutorialId)
+        {
+            var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
+            if (tutorialProgress != null)
+                tutorialProgress.IsComplted = true;
+            else
             {
-                Id = id,
-            };
-            _progress.Gifts.Add(giftProgress);
+                _progress.Tutorials.Add(
+                    new TutorialProgress()
+                    {
+                        Id = tutorialId,
+                        IsComplted = true,
+                    });
+            }
+
+            _controller.Save(_progress, _fileName);
         }
 
-        giftProgress.TimesCollected++;
-        giftProgress.LastCollectedTimestamp = lastCollectedTimestamp;
+        public long GetGiftLastCollectedTimestamp(string id)
+        {
+            var giftProgress = _progress.Gifts.Find(i => i.Id == id);
+            if (giftProgress != null)
+                return giftProgress.LastCollectedTimestamp;
 
-        var saveResult = await _controller.SaveAsync(_progress, _fileName);
+            return -1;
+        }
 
-        return saveResult;
-    }
+        public async Task<bool> SetGiftLastCollectedTimestamp(string id, long lastCollectedTimestamp)
+        {
+            var giftProgress = _progress.Gifts.Find(i => i.Id == id);
+            if (giftProgress == null)
+            {
+                giftProgress = new GiftProgress()
+                {
+                    Id = id,
+                };
+                _progress.Gifts.Add(giftProgress);
+            }
 
-    public async Task InitializeAsync(CancellationToken cancellationToken)
-    {
-        var loadedProgress = await _controller.LoadAsync<Progress>(_fileName, cancellationToken);
-        if (loadedProgress != null)
-            _progress = loadedProgress;
-    }
+            giftProgress.TimesCollected++;
+            giftProgress.LastCollectedTimestamp = lastCollectedTimestamp;
 
-    public void Clear()
-    {
-        _progress = new Progress();
-        _controller.Clear(_fileName);
+            var saveResult = await _controller.SaveAsync(_progress, _fileName);
+
+            return saveResult;
+        }
+
+        public async Task InitializeAsync(CancellationToken cancellationToken)
+        {
+            var loadedProgress = await _controller.LoadAsync<Progress>(_fileName, cancellationToken);
+            if (loadedProgress != null)
+                _progress = loadedProgress;
+        }
+
+        public void Clear()
+        {
+            _progress = new Progress();
+            _controller.Clear(_fileName);
+        }
     }
 }

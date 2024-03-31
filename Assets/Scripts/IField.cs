@@ -24,6 +24,7 @@ public interface IField
     Vector3 GetWorldPosition(Vector3Int gridPosition);
     Vector3 GetWorldPosition(Vector3 gridPosition);
     Vector3 GetWorldCellSize();
+    int CalculateEmptySpacesCount();
 }
 
 public interface IFieldView

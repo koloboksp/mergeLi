@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Achievements;
+using Analytics;
 using Atom;
 using Core;
 using Core.Buffs;
@@ -13,6 +14,7 @@ using Core.Goals;
 using Core.Steps;
 using Core.Steps.CustomOperations;
 using Core.Tutorials;
+using Save;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -37,6 +39,7 @@ public enum ExplodeType
     ExplodeVertical,
 }
 
+[Serializable]
 public enum StepTag
 {
     Move,
@@ -101,6 +104,9 @@ public class GameProcessor : MonoBehaviour,
 
     public event Action<Step, StepExecutionType> OnStepCompleted;
     public event Action<Step, StepExecutionType> OnBeforeStepStarted;
+
+    public event Action OnLose;
+    public event Action OnRestart;
     public event Action OnUndoStepsClear;
     
     public event Action<int> OnScoreChanged;
@@ -116,7 +122,8 @@ public class GameProcessor : MonoBehaviour,
     [SerializeField] private DefaultMarket _market;
     [SerializeField] private DefaultAdsViewer _adsViewer;
     [SerializeField] private GiftsMarket _giftsMarket;
-    
+    [SerializeField] private CommonAnalytics _commonAnalytics;
+
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
     [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
@@ -217,6 +224,8 @@ public class GameProcessor : MonoBehaviour,
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;
         _stepMachine.OnUndoStepsClear += StepMachine_OnUndoStepsClear;
 
+        _commonAnalytics.SetData(this);
+        
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
         
         _castleSelector.Init();
@@ -286,6 +295,8 @@ public class GameProcessor : MonoBehaviour,
                     var foundBuff = _buffs.Find(i => i.Id == buffProgress.Id);
                     foundBuff.SetRestCooldown(buffProgress.RestCooldown);
                 }
+
+                _commonAnalytics.SetProgress(lastSessionProgress.Analytics);
             }
             else
             {
@@ -344,6 +355,15 @@ public class GameProcessor : MonoBehaviour,
             CheckLowEmptySpace();
         }
 
+        try
+        {
+            OnLose?.Invoke();
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+        
         var failPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIGameFailPanel>(
             new UIGameFailPanelData() { GameProcessor = this }, 
             _cancellationTokenSource.Token);
@@ -536,13 +556,23 @@ public class GameProcessor : MonoBehaviour,
                 _notAllBallsGenerated = generateOperationData.NewBallsData.Count < generateOperationData.RequiredAmount;
             _userStepFinished = true;
         }
-
-        var castle = GetCastle();
-        if (castle.Completed)
-            ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
-        ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
         
-        OnStepCompleted?.Invoke(step, executionType);
+        try
+        {
+            OnStepCompleted?.Invoke(step, executionType);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+
+        if (step.Tag != StepTag.Select && step.Tag != StepTag.Deselect && step.Tag != StepTag.ChangeSelected)
+        {
+            var castle = GetCastle();
+            if (castle.Completed)
+                ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
+            ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
+        }
     }
 
     private void StepMachine_OnUndoStepsClear()
@@ -682,6 +712,11 @@ public class GameProcessor : MonoBehaviour,
         return firstUncompletedCastle.Id;
     }
 
+    public ICommonAnalytics GetCommonAnalyticsAnalytics()
+    {
+        return _commonAnalytics;
+    }
+
     public void SelectBall(Vector3Int gridPosition)
     {
         _stepMachine.AddStep(new Step(StepTag.Select, new SelectOperation(gridPosition, true, _field)
@@ -725,11 +760,6 @@ public class GameProcessor : MonoBehaviour,
         }
     }
 
-    public async Task GiveTutorialCoins(int coinsAmount)
-    {
-        
-    }
-
     public void ConsumeCoins(int amount)
     {
         ApplicationController.Instance.SaveController.SaveProgress.ConsumeCoins(amount);
@@ -746,6 +776,15 @@ public class GameProcessor : MonoBehaviour,
 
     public void RestartSession()
     {
+        try
+        {
+            OnRestart?.Invoke();
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+
         _cancellationTokenSource.Cancel();
         _cancellationTokenSource.Dispose();
         
@@ -776,6 +815,4 @@ public class GameProcessor : MonoBehaviour,
         ApplicationController.Instance.SaveController.SaveSettings.ActiveHat = hatName;
         _scene.SetHat(hatName);
     }
-
-   
 }

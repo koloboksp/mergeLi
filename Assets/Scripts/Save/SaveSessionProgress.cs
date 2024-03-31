@@ -2,89 +2,106 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-public class SaveSessionProgress
+namespace Save
 {
-    private SessionProgress _session = new SessionProgress();
-
-    private readonly SaveController _controller;
-    private readonly string _fileName;
-
-    public SaveSessionProgress(SaveController controller, string fileName)
+    public class SaveSessionProgress
     {
-        _controller = controller;
-        _fileName = fileName;
-    }
+        private SessionProgress _session = new SessionProgress();
 
-    public async Task InitializeAsync(CancellationToken cancellationToken)
-    {
-        var loadedSession = await _controller.LoadAsync<SessionProgress>(_fileName, cancellationToken);
-        if (loadedSession != null)
-            _session = loadedSession;
-    }
+        private readonly SaveController _controller;
+        private readonly string _fileName;
+
+        public SaveSessionProgress(SaveController controller, string fileName)
+        {
+            _controller = controller;
+            _fileName = fileName;
+        }
+
+        public async Task InitializeAsync(CancellationToken cancellationToken)
+        {
+            var loadedSession = await _controller.LoadAsync<SessionProgress>(_fileName, cancellationToken);
+            if (loadedSession != null)
+                _session = loadedSession;
+        }
     
-    public void Clear()
-    {
-        _session = new SessionProgress();
-        _controller.Clear(_fileName);
-    }
+        public void Clear()
+        {
+            _session = new SessionProgress();
+            _controller.Clear(_fileName);
+        }
 
-    public int Score => _session.Score;
+        public int Score => _session.Score;
 
-    public SessionCastleProgress Castle => _session.Castle;
+        public SessionCastleProgress Castle => _session.Castle;
     
-    public SessionFieldProgress Field => _session.Field;
+        public SessionFieldProgress Field => _session.Field;
 
-    public IReadOnlyList<SessionBuffProgress> Buffs => _session.Buffs;
+        public IReadOnlyList<SessionBuffProgress> Buffs => _session.Buffs;
 
-    public void ChangeProgress(ISessionProgressHolder sessionProgressHolder)
-    {
-        _session.Score = sessionProgressHolder.GetScore();
+        public SessionAnalyticsProgress Analytics => _session.Analytics;
+
+        public void ChangeProgress(ISessionProgressHolder sessionProgressHolder)
+        {
+            _session.Score = sessionProgressHolder.GetScore();
         
-        var castle = sessionProgressHolder.GetCastle();
-        if (castle.Completed)
-        {
-            _session.Castle = new SessionCastleProgress()
+            var castle = sessionProgressHolder.GetCastle();
+            if (castle.Completed)
             {
-                Id = sessionProgressHolder.GetFirstUncompletedCastle(),
-                Points = 0,
-            };
-        }
-        else
-        {
-            _session.Castle = new SessionCastleProgress()
+                _session.Castle = new SessionCastleProgress()
+                {
+                    Id = sessionProgressHolder.GetFirstUncompletedCastle(),
+                    Points = 0,
+                };
+            }
+            else
             {
-                Id = castle.Id,
-                Points = castle.GetPoints(),
-            };
-        }
+                _session.Castle = new SessionCastleProgress()
+                {
+                    Id = castle.Id,
+                    Points = castle.GetPoints(),
+                };
+            }
         
-        _session.Field = new SessionFieldProgress();
-        foreach (var ball in sessionProgressHolder.GetField().GetAll<IBall>())
-        {
-            var ballProgress = new SessionBallProgress()
+            _session.Field = new SessionFieldProgress();
+            foreach (var ball in sessionProgressHolder.GetField().GetAll<IBall>())
             {
-                GridPosition = ball.IntGridPosition,
-                Points = ball.Points,
-            };
-            _session.Field.Balls.Add(ballProgress);
+                var ballProgress = new SessionBallProgress()
+                {
+                    GridPosition = ball.IntGridPosition,
+                    Points = ball.Points,
+                };
+                _session.Field.Balls.Add(ballProgress);
+            }
+
+            _session.Buffs = new List<SessionBuffProgress>();
+            foreach (var buff in sessionProgressHolder.GetBuffs())
+            {
+                var buffProgress = new SessionBuffProgress
+                {
+                    Id = buff.Id,
+                    RestCooldown = buff.GetRestCooldown()
+                };
+                _session.Buffs.Add(buffProgress);
+            }
+
+            var commonAnalytics = sessionProgressHolder.GetCommonAnalyticsAnalytics();
+            _session.Analytics = new SessionAnalyticsProgress();
+            _session.Analytics.Step = commonAnalytics.GetStep();
+            _session.Analytics.StepsTakenInto = new List<StepTakenInto>();
+            foreach (var stepTakenIntoInfo in commonAnalytics.GetStepsTakenIntoInfos())
+            {
+                _session.Analytics.StepsTakenInto.Add(new StepTakenInto()
+                {
+                    StepTag = stepTakenIntoInfo.Tag,
+                    Count = stepTakenIntoInfo.Count,
+                });   
+            }
+            _controller.Save(_session, _fileName);
         }
 
-        _session.Buffs = new List<SessionBuffProgress>();
-        foreach (var buff in sessionProgressHolder.GetBuffs())
+        public bool IsValid()
         {
-            var buffProgress = new SessionBuffProgress
-            {
-                Id = buff.Id,
-                RestCooldown = buff.GetRestCooldown()
-            };
-            _session.Buffs.Add(buffProgress);
+            return _session.IsValid();
         }
-
-        _controller.Save(_session, _fileName);
-    }
-
-    public bool IsValid()
-    {
-        return _session.IsValid();
     }
 }
