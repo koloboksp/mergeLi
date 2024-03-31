@@ -64,9 +64,15 @@ namespace Core
         
         private void ChangeLanguageBtn_OnClick()
         {
-            var screenData = new UILanguagePanel.UILanguagePanelData();
+            var screenData = new UILanguagePanelData();
             screenData.Selected = ApplicationController.Instance.LocalizationController.ActiveLanguage;
-            screenData.Available = ApplicationController.Instance.LocalizationController.Languages;
+            screenData.Available = ApplicationController.Instance.LocalizationController.LanguagePackDescs
+                .Select(i => new UILanguagePanelLanguageData
+                {
+                    Language = i.Language,
+                    Icon = i.NativeFlag,
+                    Label = i.NativeName,
+                });
             screenData.Changer = ApplicationController.Instance;
             ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UILanguagePanel>(
                 screenData,
@@ -167,8 +173,9 @@ namespace Core
         
         private void SetLanguageBtn()
         {
-            _changeLanguageBtnText.text = ApplicationController.Instance.LocalizationController.ActiveLanguage.ToString();
-            _changeLanguageBtnImage.sprite = ApplicationController.Instance.LocalizationController.GetIcon(ApplicationController.Instance.LocalizationController.ActiveLanguage);
+            var languagePackDesc = ApplicationController.Instance.LocalizationController.GetActivePackDesc();
+            _changeLanguageBtnText.text = languagePackDesc.NativeName;
+            _changeLanguageBtnImage.sprite = languagePackDesc.NativeFlag;
         }
 
 

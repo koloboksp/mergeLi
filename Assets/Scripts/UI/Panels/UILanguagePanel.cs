@@ -62,13 +62,6 @@ namespace Core
             }
         }
         
-        public class UILanguagePanelData : UIScreenData
-        {
-            public SystemLanguage Selected;
-            public IEnumerable<SystemLanguage> Available;
-            public ILanguageChanger Changer;
-        }
-        
         public class Model
         {
             private Action<IEnumerable<UILanguagePanel_LanguageItem.Model>> _onItemsUpdated;
@@ -78,14 +71,15 @@ namespace Core
             private ILanguageChanger _changer;
             public IEnumerable<UILanguagePanel_LanguageItem.Model> Items => _items;
 
-            public void SetData(IEnumerable<SystemLanguage> languages, SystemLanguage selected, ILanguageChanger changer)
+            public void SetData(IEnumerable<UILanguagePanelLanguageData> languages, SystemLanguage selected, ILanguageChanger changer)
             {
                 _changer = changer;
                 
                 _items.AddRange(languages
                     .Select(i => new UILanguagePanel_LanguageItem.Model(this)
-                        .SetLanguage(i)
-                        .SetIcon(ApplicationController.Instance.LocalizationController.GetIcon(i))));
+                        .SetLanguage(i.Language)
+                        .SetIcon(i.Icon)
+                        .SetLabel(i.Label)));
                 _onItemsUpdated?.Invoke(_items);
 
                 foreach (var item in _items)
@@ -110,5 +104,19 @@ namespace Core
                 _onItemSelected?.Invoke(newSelected);
             }
         }
+    }
+    
+    public class UILanguagePanelData : UIScreenData
+    {
+        public SystemLanguage Selected;
+        public IEnumerable<UILanguagePanelLanguageData> Available;
+        public ILanguageChanger Changer;
+    }
+    
+    public class UILanguagePanelLanguageData : UIScreenData
+    {
+        public SystemLanguage Language;
+        public Sprite Icon;
+        public string Label;
     }
 }

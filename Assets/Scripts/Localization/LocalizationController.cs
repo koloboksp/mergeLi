@@ -125,6 +125,8 @@ namespace Assets.Scripts.Core.Localization
             }
         }
 
+        public IEnumerable<LanguagePackDesc> LanguagePackDescs => AvailableLanguagePacks
+            .Select(i => new LanguagePackDesc(i.Key, i.Value.NativeName, i.Value.NativeFlag));
         public bool ActiveLanguageDetected => _saveSettings.ActiveLanguageDetected;
 
         public static bool HasLanguage(SystemLanguage language)
@@ -144,6 +146,23 @@ namespace Assets.Scripts.Core.Localization
                 return AvailableLanguagePacks[foundPairIndex].Value.NativeFlag;
 
             return null;
+        }
+        
+        public LanguagePackDesc GetPackDesc(SystemLanguage language)
+        {
+            var foundPairIndex = AvailableLanguagePacks.FindIndex(i => i.Key == language);
+            if (foundPairIndex >= 0)
+            {
+                var languagePack = AvailableLanguagePacks[foundPairIndex].Value;
+                return new LanguagePackDesc(language, languagePack.NativeName, languagePack.NativeFlag);
+            }
+
+            return new LanguagePackDesc(language, language.ToString(), null);
+        }
+        
+        public LanguagePackDesc GetActivePackDesc()
+        {
+            return GetPackDesc(_saveSettings.ActiveLanguage);
         }
         
         public static LanguagePackDesc GetPackDesc(int i)

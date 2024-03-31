@@ -25,7 +25,7 @@ namespace Core
             _model
                 .OnSelectionChanged(OnSelectionChanged);
 
-            _name.text = _model.Language.ToString();
+            _name.text = _model.Label;
             _icon.sprite = _model.Icon;
         }
         
@@ -48,7 +48,8 @@ namespace Core
             private SystemLanguage _language;
             private Sprite _icon;
             private bool _selected;
-            
+            private string _label;
+
             public Model(UILanguagePanel.Model owner)
             {
                 _owner = owner;
@@ -56,9 +57,9 @@ namespace Core
 
             public bool Selected => _selected;
             public SystemLanguage Language => _language;
-
             public Sprite Icon => _icon;
-            
+            public string Label => _label;
+
             public void SelectMe()
             {
                 _owner.TrySelect(this);
@@ -89,6 +90,12 @@ namespace Core
             public Model SetIcon(Sprite icon)
             {
                 _icon = icon;
+                return this;
+            }
+
+            public Model SetLabel(string label)
+            {
+                _label = label;
                 return this;
             }
         }
