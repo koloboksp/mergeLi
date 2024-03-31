@@ -177,8 +177,7 @@ namespace Core
             _changeLanguageBtnText.text = languagePackDesc.NativeName;
             _changeLanguageBtnImage.sprite = languagePackDesc.NativeFlag;
         }
-
-
+        
         public class Model
         {
          

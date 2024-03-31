@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Steps.CustomOperations;
+﻿using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core
@@ -40,10 +36,17 @@ namespace Core
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
         
-        private void RestartBtn_OnClick()
+        private async void RestartBtn_OnClick()
         {
+            var confirmRestartPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIConfirmRestartPanel>(
+                null, 
+                Application.exitCancellationToken);
+            await confirmRestartPanel.ShowAsync(Application.exitCancellationToken);
+            
             ApplicationController.Instance.UIPanelController.PopScreen(this);
-            _data.GameProcessor.RestartSession();
+            
+            if(confirmRestartPanel.IsConfirmed)
+                _data.GameProcessor.RestartSession();
         }
         
         private void ShopBtn_OnClick()
