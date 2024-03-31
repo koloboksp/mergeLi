@@ -5,13 +5,12 @@ using UnityEngine;
 public class BlurBackHub : MonoBehaviour
 {
     private const float SHOT_SCALE = .2f;
-    private const int BLUR_COUNT = 10;
+    private const int BLUR_COUNT = 5;
     
     [SerializeField] private Camera cam;
     [SerializeField] private Shader blurShader;
 
     private RenderTexture rt;
-    private RenderTexture rt1;
     private Material mat;
 
     private static BlurBackHub s_instance;
@@ -35,11 +34,16 @@ public class BlurBackHub : MonoBehaviour
         if (cam == null || blurShader == null)
             return;
 
-        rt = new RenderTexture((int)(Screen.width * SHOT_SCALE), (int)(Screen.height * SHOT_SCALE), 16, RenderTextureFormat.Default);
-        rt1 = new RenderTexture(rt);
+        mat = new Material(blurShader)
+        {
+            name = "matBlurBack"
+        };
 
-        mat = new Material(blurShader);
-
+        rt = new RenderTexture((int)(Screen.width * SHOT_SCALE), (int)(Screen.height * SHOT_SCALE), 16)
+        {
+            name = "rtBlurBack"
+        };
+        
         s_instance = this;
         enabled = false;
     }
@@ -60,11 +64,12 @@ public class BlurBackHub : MonoBehaviour
     private async void LazyBlur()
     {
         int counter = BLUR_COUNT;
+        var rtTemp = RenderTexture.GetTemporary(rt.width, rt.height, rt.depth, rt.format);
 
         while (counter > 0)
         {
-            Graphics.Blit(rt, rt1, mat);
-            Graphics.Blit(rt1, rt);
+            Graphics.Blit(rt, rtTemp, mat);
+            Graphics.Blit(rtTemp, rt, mat);
 
             counter--;
 
@@ -73,5 +78,7 @@ public class BlurBackHub : MonoBehaviour
             if (!Application.isPlaying)
                 break;
         }
+
+        rtTemp.Release();
     }
 }

@@ -1,12 +1,12 @@
 
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BlurBackImage : MonoBehaviour
 {
-    private readonly Color COLOR = new(0.3f, 0.3f, 0.3f, 1f);
-    
     [SerializeField] private Image image;
+    private GameObject go;
 
     private void Awake()
     {
@@ -15,12 +15,11 @@ public class BlurBackImage : MonoBehaviour
         if (image == null || rt == null)
             return;
 
-        var go = image.gameObject;
+        go = image.gameObject;
         
         DestroyImmediate(image);
 
         var rawImage = go.AddComponent<RawImage>();
-        // rawImage.color = COLOR;
         rawImage.texture = rt;
 
         var btn = go.GetComponent<Button>();
@@ -28,8 +27,17 @@ public class BlurBackImage : MonoBehaviour
             btn.targetGraphic = rawImage;
     }
 
-    private void OnEnable()
+    private async void OnEnable()
     {
+        go.SetActive(false);
+
         BlurBackHub.UpdateImage();
+
+        // Wait while Get Image before Window open
+        var frame = Time.frameCount;
+        while (Time.frameCount == frame)
+            await Task.Yield();
+
+        go.SetActive(true);
     }
 }
