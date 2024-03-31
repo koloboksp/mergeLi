@@ -1128,6 +1128,7 @@ MonoBehaviour:
   image: {fileID: 2632775199043242216}
   castleSettings: {fileID: 11400000, guid: 5a91144ec0ed2c0438a9c8fb05b7beb3, type: 2}
   stageCount: 28
+  _root: {fileID: 0}
   stagePoints:
   - {fileID: 5732039761138080534}
   - {fileID: 1762444101121133025}
@@ -1157,3 +1158,5 @@ MonoBehaviour:
   - {fileID: 2876280064909211887}
   - {fileID: 5634366668509149067}
   - {fileID: 3757370278860816636}
+  _partBornEffect: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+    type: 3}
