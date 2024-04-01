@@ -20,6 +20,14 @@ namespace Core
             _saveSettings = saveSettings;
         }
 
+        public static float GetVolume(SoundGroup group)
+        {
+            if (_volumes.ContainsKey(group))
+                return _volumes[group];
+
+            return 1.0f;
+        }
+        
         public bool SoundEnable
         {
             get => _saveSettings.SoundEnable;

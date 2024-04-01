@@ -27,6 +27,7 @@ namespace Core
         private void OnEnable()
         {
             SoundController.AddListener(this);
+            ChangeVolume(SoundController.GetVolume(Group));
         }
 
         private void OnDisable()
