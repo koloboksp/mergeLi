@@ -15,20 +15,23 @@ namespace Core
 
         private StringBuilder _textBuilder;
 
-        public async Task ShowAsync(string text, CancellationToken cancellationToken)
+        public async Task ShowAsync(
+            string text,
+            CancellationToken exitToken,
+            CancellationToken cancellationToken)
         {
             _textBuilder ??= new StringBuilder();
 
             gameObject.SetActive(true);
 
-            var textLenght = text.Length;
+            var textLength = text.Length;
             var showTime = (float)text.Length / _showingSpeed;
             var showTimer = 0.0f;
             var previousVisibleCharIndex = -1;
 
             while (showTimer < showTime)
             {
-                Application.exitCancellationToken.ThrowIfCancellationRequested();
+                exitToken.ThrowIfCancellationRequested();
 
                 if (cancellationToken.IsCancellationRequested)
                     return;
@@ -38,7 +41,7 @@ namespace Core
                     showTimer = showTime;
 
                 var nTimer = showTimer / showTime;
-                var visibleCharIndex = (int)Mathf.Lerp(0, textLenght, nTimer);
+                var visibleCharIndex = (int)Mathf.Lerp(0, textLength, nTimer);
 
                 if (previousVisibleCharIndex != visibleCharIndex)
                 {
@@ -46,7 +49,7 @@ namespace Core
                     _textBuilder.Clear();
                     _textBuilder.Append(text, 0, visibleCharIndex);
                     _textBuilder.Append("<color=#00000000>");
-                    _textBuilder.Append(text, visibleCharIndex, textLenght - visibleCharIndex);
+                    _textBuilder.Append(text, visibleCharIndex, textLength - visibleCharIndex);
                     _textBuilder.Append("</color>");
                     _text.text = _textBuilder.ToString();
                 }

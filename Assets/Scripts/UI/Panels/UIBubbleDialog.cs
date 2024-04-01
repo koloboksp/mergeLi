@@ -20,7 +20,7 @@ namespace Core
             
             var text = ApplicationController.Instance.LocalizationController.GetText(textKey);
             _speakEffect.Play(text);
-            await _dialogText.ShowAsync(text, cancellationToken);
+            await _dialogText.ShowAsync(text, Application.exitCancellationToken, cancellationToken);
         }
 
         public void SetActive(bool state)

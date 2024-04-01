@@ -79,7 +79,7 @@ namespace Core
 
         private bool _lastState;
         private float _lastTime;
-        private async Task Play(CancellationToken exit)
+        private async Task Play(CancellationToken exitToken)
         {
             _stopPlaying = new CancellationTokenSource();
             
@@ -87,7 +87,7 @@ namespace Core
             {
                 while (true)
                 {
-                    Application.exitCancellationToken.ThrowIfCancellationRequested();
+                    exitToken.ThrowIfCancellationRequested();
 
                     if (_stopPlaying.IsCancellationRequested)
                         break;
@@ -103,9 +103,9 @@ namespace Core
                     _soundHolder.Clip = audioClip;
                     _soundHolder.Play();
 
-                    await SoundBlend(_soundBlendTime, 1, exit, _stopPlaying.Token);
-                    await WaitForPlaying(playTime, exit, _stopPlaying.Token, _stopPlayingCurrentClip.Token);
-                    await SoundBlend(_soundBlendTime, -1, exit, _stopPlaying.Token);
+                    await SoundBlend(_soundBlendTime, 1, exitToken, _stopPlaying.Token);
+                    await WaitForPlaying(playTime, exitToken, _stopPlaying.Token, _stopPlayingCurrentClip.Token);
+                    await SoundBlend(_soundBlendTime, -1, exitToken, _stopPlaying.Token);
 
                     _soundHolder.Stop();
                     
