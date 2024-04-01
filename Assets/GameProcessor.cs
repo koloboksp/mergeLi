@@ -135,7 +135,8 @@ public class GameProcessor : MonoBehaviour,
     [SerializeField] private List<int> _generatedBallsPointsRange = new List<int>();
 
     [SerializeField] private RectTransform _uiScreensRoot;
-    
+    [SerializeField] private UISoundsPlayer _uiSoundsPlayer;
+
     [SerializeField] private PurchasesLibrary _purchasesLibrary;
     [SerializeField] private CastleSelector _castleSelector;
     [SerializeField] private GiftsLibrary _giftsLibrary;
@@ -230,7 +231,8 @@ public class GameProcessor : MonoBehaviour,
         _commonAnalytics.SetData(this);
         
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
-        
+        ApplicationController.Instance.UIPanelController.SetSoundsPlayer(_uiSoundsPlayer);
+
         _castleSelector.Init();
         
         await ProcessGameAsyncSafe(SessionPrepareType.FirstStart, _cancellationTokenSource.Token);

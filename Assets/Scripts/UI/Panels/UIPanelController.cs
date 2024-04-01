@@ -12,32 +12,16 @@ using Object = UnityEngine.Object;
 
 namespace Core
 {
-    public class WaitForScreenClosed : CustomYieldInstruction
-    {
-        private UIPanel _panel;
-        private bool _ready;
-
-        public WaitForScreenClosed(UIPanel panel)
-        {
-            _panel = panel;
-            _panel.OnHided += Panel_OnHided;
-        }
-
-        private void Panel_OnHided(UIPanel sender)
-        {
-            _panel.OnHided -= Panel_OnHided;
-            _ready = true;
-        }
-
-        public override bool keepWaiting => !_ready;
-    }
-
     public class UIPanelController
     {
         private readonly ScreenStack _stack = new ScreenStack();
         private Transform _screensRoot;
-
+        private UISoundsPlayer _soundsPlayer;
+        
+        public UISoundsPlayer SoundsPlayer => _soundsPlayer;
+        
         public void SetScreensRoot(RectTransform screensRoot) => _screensRoot = screensRoot;
+        public void SetSoundsPlayer(UISoundsPlayer soundsPlayer) => _soundsPlayer = soundsPlayer;
 
         public async Task<TPanel> PushScreenAsync<TPanel>(UIScreenData data, CancellationToken cancellationToken) where TPanel : UIPanel
         {
