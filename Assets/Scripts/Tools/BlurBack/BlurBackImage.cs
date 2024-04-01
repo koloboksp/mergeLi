@@ -1,56 +1,87 @@
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BlurBackImage : MonoBehaviour
 {
+    private const float SHOT_SCALE = .2f;
+    private const int BLUR_COUNT = 5;
+
+    private readonly string matName = "matBlurBack";
+    private readonly string rtName = "rtBlurBack";
+    private readonly string shaderName = "Hidden/DropBlurBlit";
+    private readonly string layerName = "UIPopup";
+
+    private static RenderTexture s_rt;
+    private static Material s_mat;
+
     [SerializeField] private Image image;
-    private GameObject go;
-
-    // Grab blur image only for first open window
-    // Next can use this blured image
-    private static int s_count;
-
+    
     private void Awake()
     {
-        var rt = BlurBackHub.GetImage();
-
-        if (image == null || rt == null)
+        if (image == null)
             return;
 
-        go = image.gameObject;
+        if (s_rt == null)
+            s_rt = new RenderTexture((int)(Screen.width * SHOT_SCALE), (int)(Screen.height * SHOT_SCALE), 16)
+            {
+                name = rtName
+            };
+
+        if (s_mat == null)
+            s_mat = new Material(Shader.Find(shaderName))
+            {
+                name = matName
+            };
+
+        var go = image.gameObject;
         
         DestroyImmediate(image);
 
         var rawImage = go.AddComponent<RawImage>();
-        rawImage.texture = rt;
+        rawImage.texture = s_rt;
+        rawImage.color = Color.white;
 
         var btn = go.GetComponent<Button>();
         if (btn != null)
             btn.targetGraphic = rawImage;
     }
 
-    private async void OnEnable()
+    private void OnEnable()
     {
-        if (s_count == 0)
-        {
-            go.SetActive(false);
+        var cam = Camera.main;
+        int layer = 1 << LayerMask.NameToLayer(layerName);
+        cam.cullingMask &= ~layer;
 
-            BlurBackHub.UpdateImage();
+        cam.targetTexture = s_rt;
+        cam.Render();
+        cam.targetTexture = null;
 
-            var frame = Time.frameCount + 1;
-            while (Time.frameCount < frame)
-                await Task.Yield();
+        cam.cullingMask |= layer;
 
-            go.SetActive(true);
-        }
-
-        s_count++;
+        LazyBlur();
     }
 
-    private void OnDisable()
+    private async void LazyBlur()
     {
-        s_count = s_count < 0 ? 0 : s_count - 1;
+        int counter = BLUR_COUNT;
+        var rtTemp = RenderTexture.GetTemporary(s_rt.width, s_rt.height, s_rt.depth, s_rt.format);
+
+        while (counter > 0)
+        {
+            Graphics.Blit(s_rt, rtTemp, s_mat);
+            Graphics.Blit(rtTemp, s_rt, s_mat);
+
+            counter--;
+
+            await Task.Yield();
+
+            if (!Application.isPlaying)
+                break;
+        }
+
+        rtTemp.Release();
     }
 }
