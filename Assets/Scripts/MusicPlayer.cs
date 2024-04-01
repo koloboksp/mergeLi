@@ -36,7 +36,10 @@ namespace Core
             processor.OnRestart += Processor_OnRestart;
             processor.OnLose += Processor_OnLose;
 
-            _playingTask = Play();
+            if (_playingTask == null)
+            {
+                _playingTask = Play(Application.exitCancellationToken);
+            }
         }
 
         private void Stop()
@@ -70,54 +73,72 @@ namespace Core
             }
             else
             {
-                _playingTask = Play();
+                _playingTask = Play(Application.exitCancellationToken);
             }
         }
 
         private bool _lastState;
         private float _lastTime;
-        private async Task Play()
+        private async Task Play(CancellationToken exit)
         {
             _stopPlaying = new CancellationTokenSource();
-
-            while (true)
+            
+            try
             {
-                Application.exitCancellationToken.ThrowIfCancellationRequested();
+                while (true)
+                {
+                    Application.exitCancellationToken.ThrowIfCancellationRequested();
 
-                if (_stopPlaying.IsCancellationRequested)
-                    break;
+                    if (_stopPlaying.IsCancellationRequested)
+                        break;
 
-                _stopPlayingCurrentClip = new CancellationTokenSource();
+                    _stopPlayingCurrentClip = new CancellationTokenSource();
 
-                ShakeIfRequired();
+                    ShakeIfRequired();
 
-                var audioClip = ConsumeClip();
-                var clipLength = audioClip.length;
-                var playTime = clipLength - _soundBlendTime * 2.0f;
+                    var audioClip = ConsumeClip();
+                    var clipLength = audioClip.length;
+                    var playTime = clipLength - _soundBlendTime * 2.0f;
 
-                _soundHolder.Clip = audioClip;
-                _soundHolder.Play();
+                    _soundHolder.Clip = audioClip;
+                    _soundHolder.Play();
 
-                await SoundBlend(_soundBlendTime, 1, _stopPlaying.Token);
-                await WaitForPlaying(playTime, _stopPlaying.Token, _stopPlayingCurrentClip.Token);
-                await SoundBlend(_soundBlendTime, -1, _stopPlaying.Token);
+                    await SoundBlend(_soundBlendTime, 1, exit, _stopPlaying.Token);
+                    await WaitForPlaying(playTime, exit, _stopPlaying.Token, _stopPlayingCurrentClip.Token);
+                    await SoundBlend(_soundBlendTime, -1, exit, _stopPlaying.Token);
 
-                _soundHolder.Stop();
-
-                
+                    _soundHolder.Stop();
+                    
+                    if (_stopPlayingCurrentClip != null)
+                    {
+                        _stopPlayingCurrentClip.Dispose();
+                        _stopPlayingCurrentClip = null;
+                    }
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                Debug.Log(e);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+            finally
+            {
                 if (_stopPlayingCurrentClip != null)
                 {
                     _stopPlayingCurrentClip.Dispose();
                     _stopPlayingCurrentClip = null;
                 }
+                
+                if (_stopPlaying != null)
+                {
+                    _stopPlaying.Dispose();
+                    _stopPlaying = null;
+                }
             }
-
-            if (_stopPlaying != null)
-            {
-                _stopPlaying.Dispose();
-                _stopPlaying = null;
-            }
-
+            
             _soundHolder.SetVolumeModificator(MODIFICATOR_NAME, 0.0f);
         }
 
@@ -128,13 +149,16 @@ namespace Core
             return audioClip;
         }
 
-        private async Task WaitForPlaying(float playTime, CancellationToken stopPlaying, CancellationToken stopPlayingCurrentClip)
+        private async Task WaitForPlaying(float playTime, 
+            CancellationToken exit, 
+            CancellationToken stopPlaying, 
+            CancellationToken stopPlayingCurrentClip)
         {
             var timer = 0.0f;
 
             while (timer <= playTime)
             {
-                Application.exitCancellationToken.ThrowIfCancellationRequested();
+                exit.ThrowIfCancellationRequested();
 
                 if (stopPlaying.IsCancellationRequested)
                     return;
@@ -147,13 +171,17 @@ namespace Core
             }
         }
 
-        private async Task SoundBlend(float muteTime, int direction, CancellationToken stopPlaying)
+        private async Task SoundBlend(
+            float muteTime, 
+            int direction,
+            CancellationToken exit, 
+            CancellationToken stopPlaying)
         {
             var timer = 0.0f;
 
             while (timer <= muteTime)
             {
-                Application.exitCancellationToken.ThrowIfCancellationRequested();
+                exit.ThrowIfCancellationRequested();
 
                 if (stopPlaying.IsCancellationRequested)
                     return;
@@ -197,7 +225,7 @@ namespace Core
             {
                 if (_playingTask == null)
                 {
-                    _playingTask = Play();
+                    _playingTask = Play(Application.exitCancellationToken);
                 }
             }
             else
