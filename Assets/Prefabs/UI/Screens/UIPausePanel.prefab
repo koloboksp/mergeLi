@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23142995376105903}
   - component: {fileID: 6812060707083140057}
   - component: {fileID: 7978392132620958449}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 6539189958932804856}
   - component: {fileID: 5077799451983776531}
   - component: {fileID: 1777266533829667147}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: shopBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -266,7 +266,7 @@ GameObject:
   - component: {fileID: 1405937263447427856}
   - component: {fileID: 5347247181698142683}
   - component: {fileID: 2480033908250639677}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -379,7 +379,7 @@ GameObject:
   - component: {fileID: 3994863757632624278}
   - component: {fileID: 6016218568290839343}
   - component: {fileID: 3246479904945095060}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -460,7 +460,7 @@ GameObject:
   - component: {fileID: 4853694773641524588}
   - component: {fileID: 3380023723880173833}
   - component: {fileID: 8794526198622982327}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: UIPausePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -551,7 +551,7 @@ GameObject:
   - component: {fileID: 5474557406758956070}
   - component: {fileID: 5823567579797731098}
   - component: {fileID: 3377022519652254961}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -686,7 +686,7 @@ GameObject:
   - component: {fileID: 4457559839891968150}
   - component: {fileID: 2921505237682593646}
   - component: {fileID: 3745088130120684870}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -764,7 +764,7 @@ GameObject:
   - component: {fileID: 6379451769341828971}
   - component: {fileID: 5619812152457408448}
   - component: {fileID: 5663700904459770360}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: mainMenuBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -901,7 +901,7 @@ GameObject:
   - component: {fileID: 8264307858343667799}
   - component: {fileID: 3934942481388046200}
   - component: {fileID: 8896665313221189041}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1016,7 +1016,7 @@ GameObject:
   - component: {fileID: 573856831762587980}
   - component: {fileID: 1893478027573078199}
   - component: {fileID: 67039996795593446}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: restartBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1153,7 +1153,7 @@ GameObject:
   - component: {fileID: 5014147107903432041}
   - component: {fileID: 5666725771678797099}
   - component: {fileID: 4587030138750026922}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
