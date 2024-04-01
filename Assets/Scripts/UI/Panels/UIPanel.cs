@@ -53,7 +53,7 @@ namespace Core
 
         public void LockInput(bool state)
         {
-            _canvasGroup.blocksRaycasts = !state;
+            _canvasGroup.interactable = !state;
         }
 
         public async Task ShowAsync(CancellationToken cancellationToken)

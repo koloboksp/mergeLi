@@ -10,9 +10,6 @@ namespace Core
     public class UISettingsPanel : UIPanel
     {
         [SerializeField] private Button _closeBtn;
-        [SerializeField] private Button _changeSkinBtn;
-        [SerializeField] private Button _clearProgressBtn;
-        [SerializeField] private Button _showCastlesBtn;
         
         [SerializeField] private Button _soundEnableBtn;
         [SerializeField] private Image _soundEnableBtnIcon;
@@ -36,11 +33,6 @@ namespace Core
         private void Awake()
         {
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
-            
-            _changeSkinBtn.onClick.AddListener(ChangeSkinBtn_OnClick);
-            _clearProgressBtn.onClick.AddListener(ClearProgressBtn_OnClick);
-            
-            _showCastlesBtn.onClick.AddListener(ShowCastlesBtn_OnClick);
             
             _soundEnableBtn.onClick.AddListener(SoundEnableBtn_OnClick);
             _soundVolumeSlider.onValueChanged.AddListener(SoundVolumeSlider_OnValueChanged);

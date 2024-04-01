@@ -1669,6 +1669,8 @@ GameObject:
   m_Component:
   - component: {fileID: 992459752}
   - component: {fileID: 992459754}
+  - component: {fileID: 992459755}
+  - component: {fileID: 992459756}
   - component: {fileID: 992459753}
   m_Layer: 5
   m_Name: UISoundsPlayer
@@ -1709,7 +1711,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1808,7 +1810,35 @@ MonoBehaviour:
   _click: {fileID: 8300000, guid: 18270f48d4d163946b19b8be77d8932a, type: 3}
   _back: {fileID: 8300000, guid: 9f3a6594c7edbc144a6c45b1fd5ab715, type: 3}
   _unavailable: {fileID: 8300000, guid: 11aa3c17b15ac1d4998298f1c538f37e, type: 3}
+  _source: {fileID: 992459755}
+--- !u!114 &992459755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992459751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96487833592b45e2b138f8df67f948a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _source: {fileID: 992459753}
+  _volume: 0.5
+--- !u!114 &992459756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992459751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2af76247f7c842f3b77bbb04c3831e43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _group: 0
+  _soundHolder: {fileID: 992459755}
 --- !u!224 &1020816754 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2371881068383464677, guid: 7d8cfa57621208d44bc94e624f76aec8,
@@ -3480,7 +3510,7 @@ PrefabInstance:
     - target: {fileID: 5957255816287073239, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
       propertyPath: m_Volume
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7335857329322477467, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}

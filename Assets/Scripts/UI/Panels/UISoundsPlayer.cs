@@ -15,7 +15,7 @@ namespace Core
         [SerializeField] private AudioClip _back;
         [SerializeField] private AudioClip _unavailable;
 
-        [SerializeField] private AudioSource _source;
+        [SerializeField] private SoundHolder _source;
 
         public void Play(UICommonSounds sound)
         {
@@ -27,7 +27,7 @@ namespace Core
             if (sound == UICommonSounds.Unavailable)
                 clip = _unavailable;
 
-            _source.clip = clip;
+            _source.Clip = clip;
             _source.Play();
         }
     }

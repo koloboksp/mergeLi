@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 3696898367836075818}
   - component: {fileID: 2615948356401678943}
   - component: {fileID: 6174549654922210249}
-  - component: {fileID: 2637769873765130055}
+  - component: {fileID: 5957497022716546801}
+  - component: {fileID: 818289453355392109}
   m_Layer: 5
   m_Name: background
   m_TagString: Untagged
@@ -77,7 +78,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2637769873765130055
+--- !u!114 &5957497022716546801
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -86,7 +87,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 686112144704334077}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 578c10221a904f90844814afce9e32e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -121,6 +122,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &818289453355392109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686112144704334077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73c2a28eb58b42d6931203994a969376, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _button: {fileID: 5957497022716546801}
+  _sound: 1
 --- !u!1 &2305112124653678651
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _root: {fileID: 7104141350609223302}
   _canvasGroup: {fileID: 0}
-  _closeBtn: {fileID: 2637769873765130055}
+  _closeBtn: {fileID: 5957497022716546801}
   _container: {fileID: 2316871301394179850}
   _castleLabelPrefab: {fileID: 2665770548817414770}
 --- !u!114 &7528073949927588067
@@ -573,7 +588,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text not found(090af05b87ec46bfaaa0b262138bfdde)
+  m_Text: Castles
 --- !u!114 &9118576176737386849
 MonoBehaviour:
   m_ObjectHideFlags: 0
