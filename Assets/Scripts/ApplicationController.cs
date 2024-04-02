@@ -27,7 +27,7 @@ namespace Core
         private SoundController _soundController;
         private SaveController _saveController;
         private IAnalyticsController _analyticsController;
-        
+        private DependenciesController _dependenciesController;
         private TaskCompletionSource<bool> _initialization;
         private bool _initializated = false;
         private Atom.Version _version;
@@ -42,6 +42,7 @@ namespace Core
         public ISocialService ISocialService => _socialService;
         public SoundController SoundController => _soundController;
         public IAnalyticsController AnalyticsController => _analyticsController;
+        public DependenciesController DependenciesController => _dependenciesController;
 
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -51,7 +52,8 @@ namespace Core
             _instance._initialization = new TaskCompletionSource<bool>();
 
             _instance._version = new(Application.version);
-                
+            _instance._dependenciesController = new DependenciesController();
+            
             _instance._saveController = new SaveController();
             await _instance._saveController.InitializeAsync(CancellationToken.None);
             

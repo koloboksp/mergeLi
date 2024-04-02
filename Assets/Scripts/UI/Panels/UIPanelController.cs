@@ -16,13 +16,9 @@ namespace Core
     {
         private readonly ScreenStack _stack = new ScreenStack();
         private Transform _screensRoot;
-        private UISoundsPlayer _soundsPlayer;
-        
-        public UISoundsPlayer SoundsPlayer => _soundsPlayer;
         
         public void SetScreensRoot(RectTransform screensRoot) => _screensRoot = screensRoot;
-        public void SetSoundsPlayer(UISoundsPlayer soundsPlayer) => _soundsPlayer = soundsPlayer;
-
+       
         public async Task<TPanel> PushScreenAsync<TPanel>(UIScreenData data, CancellationToken cancellationToken) where TPanel : UIPanel
         {
             try

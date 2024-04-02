@@ -16,11 +16,13 @@ namespace Core
         [SerializeField] private float _randomizeSideOffset = 0.1f;
         [SerializeField] private float _randomizeDelay = 1.0f;
         [SerializeField] private float _duration = 0.5f;
+        [SerializeField] private AudioClip _gotClip;
 
         private Transform _from;
         private UIGameScreen_Coins _to;
-
-        public async Task Show(int currencyAmount, Transform from, CancellationToken cancellationToken)
+        private DependencyHolder<SoundsPlayer> _soundPlayer;
+        
+        public async Task Show(int currencyAmount, Transform from, CancellationToken exitToken)
         {
             _from = from;
             _to = GameObject.FindObjectOfType<UIGameScreen_Coins>();
@@ -35,10 +37,10 @@ namespace Core
             if(restCoinsValue > 0)
                 splitCoins.Add(restCoinsValue);
             
-            await Run(splitCoins, cancellationToken);
+            await Run(splitCoins, exitToken);
         }
         
-        private async Task Run(List<int> splitCoins, CancellationToken cancellationToken)
+        private async Task Run(List<int> splitCoins, CancellationToken exitToken)
         {
             
             var list = new List<Task>();
@@ -53,7 +55,7 @@ namespace Core
                                Vector3.Cross(dirToReceiver, Vector3.forward) *
                                Random.Range(-distanceToReceiver * _randomizeSideOffset, distanceToReceiver * _randomizeSideOffset);
 
-                list.Add(StartFx(splitCoins[i], Random.Range(0.0f, _randomizeDelay), startPosition, midPoint, endPosition, _duration, cancellationToken));
+                list.Add(StartFx(splitCoins[i], Random.Range(0.0f, _randomizeDelay), startPosition, midPoint, endPosition, _duration, exitToken));
             }
             await Task.WhenAll(list);
         }
@@ -65,17 +67,17 @@ namespace Core
             Vector3 middlePosition,
             Vector3 endPosition,
             float time,
-            CancellationToken cancellationToken)
+            CancellationToken exitToken)
         {
            
-            await AsyncExtensions.WaitForSecondsAsync(delay, cancellationToken);
+            await AsyncExtensions.WaitForSecondsAsync(delay, exitToken);
             var coin = Instantiate(_coinPrefab, transform);
             
             var timer = 0.0f;
         
             while (timer < time)
             {
-                if (cancellationToken.IsCancellationRequested)
+                if (exitToken.IsCancellationRequested)
                 {
                     DestroyCreated();
                     throw new OperationCanceledException();
@@ -102,7 +104,7 @@ namespace Core
             }
             
             _to.Add(coinValue, false);
-            
+            _soundPlayer.Value.Play(_gotClip);            
             DestroyCreated();
 
             void DestroyCreated()

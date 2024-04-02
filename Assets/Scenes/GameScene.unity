@@ -566,7 +566,6 @@ MonoBehaviour:
   _generatedBallsCountOnStart: 50
   _generatedBallsPointsRange: 2000000040000000200000002000000020000000200000002000000020000000
   _uiScreensRoot: {fileID: 1881252459}
-  _uiSoundsPlayer: {fileID: 992459754}
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,
     type: 3}
   _castleSelector: {fileID: 391481347}
@@ -575,6 +574,7 @@ MonoBehaviour:
   _adsLibrary: {fileID: 3263078032568648822, guid: 85db13592bea76548b097552e82e3578,
     type: 3}
   _musicPlayer: {fileID: 4273870978423060778}
+  _soundsPlayer: {fileID: 992459754}
   _giveCoinsEffect: {fileID: 1636435618}
   _enableTutorial: 1
   _forceTutorial: 0
@@ -593,6 +593,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 738634060}
+  - {fileID: 992459752}
   - {fileID: 97352065}
   - {fileID: 433674897}
   - {fileID: 4273870978423060777}
@@ -1658,7 +1659,7 @@ GameObject:
   - component: {fileID: 992459756}
   - component: {fileID: 992459753}
   m_Layer: 5
-  m_Name: UISoundsPlayer
+  m_Name: soundsPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1671,17 +1672,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 992459751}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 18.93108}
+  m_LocalScale: {x: 0.010416667, y: 0.010416667, z: 0.010416667}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1881252459}
+  m_Father: {fileID: 391481346}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -562.0356, y: -124.109146}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!82 &992459753
@@ -2452,6 +2453,7 @@ MonoBehaviour:
   _randomizeSideOffset: 0.1
   _randomizeDelay: 1
   _duration: 0.5
+  _gotClip: {fileID: 8300000, guid: d3d0bce84b1494a409bd4c2de587aa61, type: 3}
 --- !u!1 &1718292101
 GameObject:
   m_ObjectHideFlags: 0
@@ -2936,8 +2938,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 992459752}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3495,7 +3496,7 @@ PrefabInstance:
     - target: {fileID: 5957255816287073239, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
       propertyPath: m_Volume
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7335857329322477467, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}

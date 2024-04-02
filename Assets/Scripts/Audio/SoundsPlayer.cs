@@ -9,7 +9,7 @@ namespace Core
         Unavailable,
     }
     
-    public class UISoundsPlayer : MonoBehaviour
+    public class SoundsPlayer : MonoBehaviour
     {
         [SerializeField] private AudioClip _click;
         [SerializeField] private AudioClip _back;
@@ -27,6 +27,12 @@ namespace Core
             if (sound == UICommonSounds.Unavailable)
                 clip = _unavailable;
 
+            _source.Clip = clip;
+            _source.Play();
+        }
+
+        public void Play(AudioClip clip)
+        {
             _source.Clip = clip;
             _source.Play();
         }

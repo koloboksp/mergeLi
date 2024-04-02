@@ -189,7 +189,7 @@ RectTransform:
   m_Children:
   - {fileID: 5600580804864240008}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -257,6 +257,7 @@ MonoBehaviour:
   _randomizeStartPosition: 0.1
   _randomizeSideOffset: 0.1
   _randomizeDelay: 0.5
+  _gotClip: {fileID: 8300000, guid: 241776ae56a8b2f4ba3853529be0ed91, type: 3}
 --- !u!111 &5600580805448456365
 Animation:
   m_ObjectHideFlags: 0

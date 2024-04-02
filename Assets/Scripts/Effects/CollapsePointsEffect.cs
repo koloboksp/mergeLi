@@ -18,7 +18,10 @@ namespace Core.Effects
         [SerializeField] private float _randomizeStartPosition = 0.1f;
         [SerializeField] private float _randomizeSideOffset = 0.1f;
         [SerializeField] private float _randomizeDelay = 0.1f;
+        [SerializeField] private AudioClip _gotClip;
 
+        private DependencyHolder<SoundsPlayer> _soundsPlayer;
+        
         public float Duration => _duration;
 
         public void Run(int points, int partsCount)
@@ -73,15 +76,17 @@ namespace Core.Effects
             Vector3 endPosition,
             float time,
             List<IPointsEffectReceiver> receivers,
-            CancellationToken cancellationToken)
+            CancellationToken exitToken)
         {
-            await AsyncExtensions.WaitForSecondsAsync(delay, cancellationToken);
+            await AsyncExtensions.WaitForSecondsAsync(delay, exitToken);
             var coin = Instantiate(_coinPrefab, transform);
 
             var timer = 0.0f;
 
             while (timer < time)
             {
+                exitToken.ThrowIfCancellationRequested();
+
                 var pathParam = timer / time;
                 var f = _movingSpeed.Evaluate(pathParam);
                 var pathDerivedParam = f * 2.0f;
@@ -101,9 +106,10 @@ namespace Core.Effects
 
                 await Task.Yield();
             }
-
+            
             foreach (var receiver in receivers)
                 receiver.Receive(points);
+            _soundsPlayer.Value.Play(_gotClip);
 
             Destroy(coin.gameObject);
         }

@@ -9,6 +9,8 @@ namespace UI.Common
         [SerializeField] private UIExtendedButton _button;
         [SerializeField] private UICommonSounds _sound;
 
+        private DependencyHolder<SoundsPlayer> _soundsPlayer;
+        
         private void Awake()
         {
             _button.onPressed.AddListener(Button_OnPressed);
@@ -17,12 +19,12 @@ namespace UI.Common
         
         private void Button_OnPressed()
         {
-            ApplicationController.Instance.UIPanelController.SoundsPlayer.Play(_sound);
+            _soundsPlayer.Value.Play(_sound);
         }
         
         private void Button_OnClickFail()
         {
-            ApplicationController.Instance.UIPanelController.SoundsPlayer.Play(UICommonSounds.Unavailable);
+            _soundsPlayer.Value.Play(UICommonSounds.Unavailable);
         }
     }
 }

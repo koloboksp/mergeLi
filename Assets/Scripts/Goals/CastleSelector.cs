@@ -21,34 +21,6 @@ public class CastleSelector : MonoBehaviour
     public CastleLibrary Library => _library;
     public Castle ActiveCastle => _castleInstance;
     
-    //private void PlayerInfo_OnCastleChanged()
-    //{
-    //    if (_castleInstance != null)
-    //    {
-    //        _castleInstance.OnCompleted -= CastleInstance_OnCompleted;
-    //        _castleInstance.OnPartSelected -= CastleInstance_OnPartSelected;
-    //        Destroy(_castleInstance.gameObject);
-    //        _castleInstance = null;
-    //    }
-    //    
-    //    var lastSelectedCastle = _gameProcessor.PlayerInfo.GetLastSelectedCastle();
-    //    var castlePrefab = _library.GetCastle(lastSelectedCastle);
- //
-    //    _castleInstance = Instantiate(castlePrefab, _castleRoot);
-    //    _castleInstance.gameObject.name = castlePrefab.Id;
-    //    _castleInstance.View.Root.anchorMin = Vector2.zero;
-    //    _castleInstance.View.Root.anchorMax = Vector2.one;
-    //    _castleInstance.View.Root.offsetMin = Vector2.zero;
-    //    _castleInstance.View.Root.offsetMax = Vector2.zero;
-    //    _castleInstance.View.Root.localScale = Vector3.one;
-    //    
-    //    _castleInstance.Init(_gameProcessor);
-    //    
-    //    _castleInstance.OnCompleted += CastleInstance_OnCompleted;
-    //    _castleInstance.OnPartSelected += CastleInstance_OnPartSelected;
-    //    CastleInstance_OnPartSelected();
-    //}
-
     private CoinsEffectReceiver _coinsEffectReceiver;
 
     private void CastleInstance_OnPartSelected()
