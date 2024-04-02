@@ -2563,7 +2563,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e621c595a0b44e38650ecc05904c390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _controlPrefab: {fileID: 289039251854693768, guid: d0f01e9d51de75a45b3d968d45e11506,
+  _controlPrefab: {fileID: 3897340319734333952, guid: d0f01e9d51de75a45b3d968d45e11506,
     type: 3}
   _cost: 15
   _cooldown: 3
