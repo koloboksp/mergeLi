@@ -109,6 +109,7 @@ MonoBehaviour:
   _commonCanvasGroup: {fileID: 361860153389972734}
   _cooldownImage: {fileID: 5851025016480618384}
   _tutorialElement: {fileID: 4811659676462618302}
+  _onBeginDragClip: {fileID: 8300000, guid: 424ded36315f40f449da0cbb09aa4a86, type: 3}
 --- !u!225 &361860153389972734
 CanvasGroup:
   m_ObjectHideFlags: 0

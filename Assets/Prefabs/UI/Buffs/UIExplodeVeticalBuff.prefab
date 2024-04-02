@@ -124,6 +124,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5195995245139343535, guid: 7e988115fe0279447aed78a8e6e82004,
+        type: 3}
+      propertyPath: _onBeginDragClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 9b628fb6f4268c241b23645b99ebfc71, type: 3}
     - target: {fileID: 5851025016480618384, guid: 7e988115fe0279447aed78a8e6e82004,
         type: 3}
       propertyPath: m_Sprite

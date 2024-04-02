@@ -1,19 +1,31 @@
 using Core;
+using UI.Common;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class UIUndoBuff : UIBuff
+public class UIClickBuff : UIBuff
 {
-    [SerializeField] private Button _clickArea;
+    [SerializeField] private UIExtendedButton _clickArea;
+    [SerializeField] private AudioClip _onClickClip;
+
+    private DependencyHolder<SoundsPlayer> _soundPlayer;
 
     protected void Awake()
-    { 
+    {
         _clickArea.onClick.AddListener(ClickArea_OnClick);
+        _clickArea.onClickFail.AddListener(ClickArea_OnFail);
     }
 
     private void ClickArea_OnClick()
     {
-        if(!ShowShopScreenRequired())
+        if (!ShowShopScreenRequired())
+        {
+            _soundPlayer.Value.Play(_onClickClip);
             _onClick?.Invoke();
+        }
+    }
+
+    private void ClickArea_OnFail()
+    {
+        _soundPlayer.Value.Play(UICommonSounds.Unavailable);
     }
 }

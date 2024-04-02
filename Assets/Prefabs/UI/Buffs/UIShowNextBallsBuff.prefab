@@ -134,7 +134,8 @@ MonoBehaviour:
   _commonCanvasGroup: {fileID: 1121543904352386154}
   _cooldownImage: {fileID: 1200133683739018556}
   _tutorialElement: {fileID: 5986701194182795071}
-  _clickArea: {fileID: 5276997843610766536}
+  _clickArea: {fileID: 5377954581184389212}
+  _onClickClip: {fileID: 8300000, guid: 7d0915d48893b3b48ba183f190adb5f8, type: 3}
 --- !u!225 &1121543904352386154
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -428,7 +429,7 @@ GameObject:
   - component: {fileID: 3081913597818355499}
   - component: {fileID: 3441906138689562165}
   - component: {fileID: 3014578179062603031}
-  - component: {fileID: 5276997843610766536}
+  - component: {fileID: 5377954581184389212}
   m_Layer: 5
   m_Name: btn
   m_TagString: Untagged
@@ -499,7 +500,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5276997843610766536
+--- !u!114 &5377954581184389212
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -508,7 +509,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5452100046210230866}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 578c10221a904f90844814afce9e32e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
