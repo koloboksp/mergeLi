@@ -42,8 +42,6 @@ namespace Core
         public ISocialService ISocialService => _socialService;
         public SoundController SoundController => _soundController;
         public IAnalyticsController AnalyticsController => _analyticsController;
-        public DependenciesController DependenciesController => _dependenciesController;
-
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static async void Start()

@@ -12,11 +12,6 @@ namespace Core
 
         public float Time => _source.time;
 
-        public AudioClip Clip
-        {
-            set => _source.clip = value;
-        }
-
         public void SetVolumeModificator(string source, float volume)
         {
             var foundI = _volumeModificators.FindIndex(i => i.source == source);
@@ -53,9 +48,24 @@ namespace Core
             }
         }
 
-        public void Play()
+        public void Play(AudioClip clip)
         {
+            _source.clip = clip;
+            _source.loop = false;
             _source.Play();
+        }
+        
+        public void StartPlay(AudioClip clip)
+        {
+            _source.clip = clip;
+            _source.loop = true;
+            _source.Play();
+        }
+        
+        public void StopPlay()
+        {
+            _source.loop = false;
+            _source.Stop();
         }
         
         public void Pause()

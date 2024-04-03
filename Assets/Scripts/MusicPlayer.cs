@@ -100,8 +100,7 @@ namespace Core
                     var clipLength = audioClip.length;
                     var playTime = clipLength - _soundBlendTime * 2.0f;
 
-                    _soundHolder.Clip = audioClip;
-                    _soundHolder.Play();
+                    _soundHolder.Play(audioClip);
 
                     await SoundBlend(_soundBlendTime, 1, exitToken, _stopPlaying.Token);
                     await WaitForPlaying(playTime, exitToken, _stopPlaying.Token, _stopPlayingCurrentClip.Token);

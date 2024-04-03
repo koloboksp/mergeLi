@@ -11,7 +11,7 @@ namespace Core
             {
                 if (!_initialized)
                 {
-                    _value = ApplicationController.Instance.DependenciesController.Get<T>();
+                    _value = DependenciesController.Instance.Get<T>();
                     _initialized = true;
                 }
 

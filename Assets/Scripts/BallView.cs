@@ -48,11 +48,12 @@ namespace Core
             if (_ballSkin != null)
                 Destroy(_ballSkin.gameObject);
 
+            
             var skin = container.GetSkin($"ball") as BallSkin;
             _ballSkin = Object.Instantiate(skin, _root);
             _ballSkin.transform.localPosition = Vector3.zero;
             _ballSkin.transform.localRotation = Quaternion.identity;
-           
+            
             Ball_OnPointsChanged(_ball.Points, true);
             Ball_OnSelectedChanged();
             Ball_TransparencyChanged();

@@ -27,14 +27,22 @@ namespace Core
             if (sound == UICommonSounds.Unavailable)
                 clip = _unavailable;
 
-            _source.Clip = clip;
-            _source.Play();
+            _source.Play(clip);
         }
 
         public void Play(AudioClip clip)
         {
-            _source.Clip = clip;
-            _source.Play();
+            _source.Play(clip);
+        }
+
+        public void StartPlay(AudioClip clip)
+        {
+            _source.StartPlay(clip);
+        }
+
+        public void StopPlay()
+        {
+            _source.StopPlay();
         }
     }
 }

@@ -6,6 +6,10 @@ namespace Core
 {
     public class DependenciesController
     {
+        private static readonly DependenciesController _instance = new DependenciesController();
+
+        public static DependenciesController Instance => _instance;
+        
         private readonly Dictionary<Type, object> _dependencies = new();
         public void Set<T>(T value) where T : class
         {

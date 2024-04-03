@@ -250,6 +250,11 @@ MonoBehaviour:
   _ballIcon: {fileID: 4679713789189145075}
   _hatAnchor: {fileID: 2209189013310432}
   _canvasGroup: {fileID: 4679713789989440160}
+  _onSelectClip: {fileID: 8300000, guid: eb8dab6560268d641a10a7338eb4d433, type: 3}
+  _onMoveClip: {fileID: 8300000, guid: 6e342e67055f3a543acd25878b65f909, type: 3}
+  _onUpgradeClip: {fileID: 8300000, guid: e470d417613c99b4ba5ff23c9eb6c3aa, type: 3}
+  _onDowngradeClip: {fileID: 8300000, guid: 5f538d31a71b63d4bbe705ec9137db68, type: 3}
+  _onPathNotFoundClip: {fileID: 8300000, guid: 6ab7aed1a2be4934a93d0b44c15afb70, type: 3}
 --- !u!225 &4679713789989440160
 CanvasGroup:
   m_ObjectHideFlags: 0

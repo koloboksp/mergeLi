@@ -10,6 +10,7 @@ namespace Core.Steps.CustomOperations
         private readonly Vector3Int _position;
         private readonly bool _selectState;
         private readonly IField _field;
+        
         public SelectOperation(Vector3Int position, bool selectState, IField field)
         {
             _position = position;

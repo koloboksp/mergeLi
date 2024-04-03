@@ -213,6 +213,7 @@ public class GameProcessor : MonoBehaviour,
         await ApplicationController.Instance.WaitForInitializationAsync(_cancellationTokenSource.Token);
         
         _musicPlayer.SetData(this);
+        DependenciesController.Instance.Set(_soundsPlayer);
         
         _giftsMarket.Initialize();
         _buffs.AddRange(GetComponentsInChildren<Buff>());
@@ -231,7 +232,7 @@ public class GameProcessor : MonoBehaviour,
         _commonAnalytics.SetData(this);
         
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
-        ApplicationController.Instance.DependenciesController.Set(_soundsPlayer);
+        
         _castleSelector.Init();
         
         await ProcessGameAsyncSafe(SessionPrepareType.FirstStart, _cancellationTokenSource.Token);
@@ -570,7 +571,9 @@ public class GameProcessor : MonoBehaviour,
             Debug.LogException(e);
         }
 
-        if (step.Tag != StepTag.Select && step.Tag != StepTag.Deselect && step.Tag != StepTag.ChangeSelected)
+        if (step.Tag != StepTag.Select 
+            && step.Tag != StepTag.Deselect 
+            && step.Tag != StepTag.ChangeSelected)
         {
             var castle = GetCastle();
             if (castle.Completed)
