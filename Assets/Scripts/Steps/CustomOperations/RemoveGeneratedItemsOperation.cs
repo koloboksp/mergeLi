@@ -23,7 +23,7 @@ namespace Core.Steps.CustomOperations
         {
             foreach (var itemPosition in _itemsPositions)
                 _balls.AddRange(_field.GetSomething<Ball>(itemPosition));
-            _field.DestroyBalls(_balls);
+            _field.DestroyBalls(_balls, true);
 
             return null;
         }

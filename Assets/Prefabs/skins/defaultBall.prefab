@@ -255,6 +255,8 @@ MonoBehaviour:
   _onUpgradeClip: {fileID: 8300000, guid: e470d417613c99b4ba5ff23c9eb6c3aa, type: 3}
   _onDowngradeClip: {fileID: 8300000, guid: 5f538d31a71b63d4bbe705ec9137db68, type: 3}
   _onPathNotFoundClip: {fileID: 8300000, guid: 6ab7aed1a2be4934a93d0b44c15afb70, type: 3}
+  _destroyEffectPrefab: {fileID: 5600580805448456366, guid: 14a662a9344a3274c9fabd6bac889aa0,
+    type: 3}
 --- !u!225 &4679713789989440160
 CanvasGroup:
   m_ObjectHideFlags: 0

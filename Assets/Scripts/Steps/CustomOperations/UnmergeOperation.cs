@@ -24,7 +24,7 @@ namespace Core.Steps.CustomOperations
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var foundBalls = _field.GetSomething<Ball>(_position).ToList();
-            _field.DestroyBalls(foundBalls);
+            _field.DestroyBalls(foundBalls, true);
             for (int ballI = 0; ballI < _mergeablesNum; ballI++)
                 _field.CreateBall(_position, _points);
 

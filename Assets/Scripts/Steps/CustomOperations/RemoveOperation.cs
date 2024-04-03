@@ -36,24 +36,40 @@ namespace Core.Steps.CustomOperations
             if (foundBalls.Count != 0)
             {
                 var maxDistanceToCheckingPosition = foundBalls.Max(ball => (ball.IntGridPosition - _pointerIndex).magnitude);
+                
+                var removeBallTasks = new List<Task>();
                 foreach (var ball in foundBalls)
                 {
-                    var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab,
-                        _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ball.IntGridPosition)),
-                        Quaternion.identity,
-                        _field.View.Root);
-
                     var distanceToBall = (ball.IntGridPosition - _pointerIndex).magnitude;
-                    destroyBallEffect.Run(ball.GetColorIndex(), distanceToBall / maxDistanceToCheckingPosition);
+                    removeBallTasks.Add(RemoveBallWithDelay(ball, distanceToBall / maxDistanceToCheckingPosition, cancellationToken));
                 }
 
+                await Task.WhenAll(removeBallTasks);
+                
+                //foreach (var ball in foundBalls)
+                //{
+                //    var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab,
+                //        _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ball.IntGridPosition)),
+                //        Quaternion.identity,
+                //        _field.View.Root);
+//
+                //    var distanceToBall = (ball.IntGridPosition - _pointerIndex).magnitude;
+                //    destroyBallEffect.Run(ball.GetColorIndex());//distanceToBall / maxDistanceToCheckingPosition);
+                //}
+
                 _removedBalls.AddRange(foundBalls.Select(i => new BallDesc(i.IntGridPosition, i.Points)));
-                _field.DestroyBalls(foundBalls);
+                //_field.DestroyBalls(foundBalls, false);
             }
 
             return null;
         }
 
+        private async Task RemoveBallWithDelay(Ball ball, float delay, CancellationToken cancellationToken)
+        {
+            await AsyncExtensions.WaitForSecondsAsync(delay * 0.15f, cancellationToken);
+            _field.DestroyBalls(new List<Ball>(){ball}, false);
+            
+        }
         public override Operation GetInverseOperation()
         {
             return new AddOperation(_removedBalls, _field);

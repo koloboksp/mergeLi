@@ -324,11 +324,12 @@ public class Field : MonoBehaviour, IField
         return null;
     }
 
-    public void DestroyBalls(List<Ball> ballsToRemove)
+    public void DestroyBalls(List<Ball> ballsToRemove, bool force)
     {
         foreach (var ball in ballsToRemove)
         {
             _balls.Remove(ball);
+            ball.Remove(force);
             Destroy(ball.gameObject);
         }
     }
@@ -346,7 +347,7 @@ public class Field : MonoBehaviour, IField
     public void Clear()
     {
         var ballsToRemove = new List<Ball>(_balls);
-        DestroyBalls(ballsToRemove);
+        DestroyBalls(ballsToRemove, true);
     }
 
     public void Init()

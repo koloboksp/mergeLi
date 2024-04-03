@@ -12,25 +12,26 @@ namespace Core.Effects
     {
         [SerializeField] List<DestroyBallEffectColorVariant> _colorVariants;
         [SerializeField] private float _duration = 2.0f;
-        [SerializeField] private float _delayScaler = 0.15f;
+        [SerializeField] private AudioClip _clip;
+
+        private DependencyHolder<SoundsPlayer> _soundsPlayer;
         
-        public void Run(int colorIndex, float delay)
+        public void Run(int colorIndex)
         {
             var wrapColorIndex = colorIndex % _colorVariants.Count;
-            _ = StartEffectAsync(_colorVariants[wrapColorIndex], delay * _delayScaler, Application.exitCancellationToken);
+            _ = StartEffectAsync(_colorVariants[wrapColorIndex], Application.exitCancellationToken);
         }
 
-        private async Task StartEffectAsync(DestroyBallEffectColorVariant variant, float delay, CancellationToken cancellationToken)
+        private async Task StartEffectAsync(DestroyBallEffectColorVariant variant, CancellationToken cancellationToken)
         {
             try
             {
-                await AsyncExtensions.WaitForSecondsAsync(delay, cancellationToken);
-
-               // var variantInstance = Instantiate(variant, transform);
-               // variantInstance.Run();
-
+                var variantInstance = Instantiate(variant, transform);
+                variantInstance.Run();
+                _soundsPlayer.Value.Play(_clip);
+                
                 await AsyncExtensions.WaitForSecondsAsync(_duration, cancellationToken);
-
+                
                 Destroy(gameObject);
             }
             catch (OperationCanceledException e)

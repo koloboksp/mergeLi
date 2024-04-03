@@ -83,14 +83,16 @@ namespace Core.Steps.CustomOperations
 
             var collapseLineWithResultPoints = _pointsCalculator.GetPoints(_collapseLines);
 
-            foreach (var ballPair in _ballsToRemove)
-            {
-                var destroyBallEffect = Object.Instantiate(_destroyBallEffectPrefab, 
-                    _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ballPair.ball.IntGridPosition)), Quaternion.identity, 
-                    _field.View.Root);
-                
-                destroyBallEffect.Run(ballPair.ball.GetColorIndex(), ballPair.distance / maxDistanceToCheckingPosition);
-            }
+           // foreach (var ballPair in _ballsToRemove)
+           // {
+           //     var destroyBallEffect = Object.Instantiate(
+           //         _destroyBallEffectPrefab, 
+           //         _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ballPair.ball.IntGridPosition)), 
+           //         Quaternion.identity, 
+           //         _field.View.Root);
+           //     
+           //     destroyBallEffect.Run(ballPair.ball.GetColorIndex(), ballPair.distance / maxDistanceToCheckingPosition);
+           // }
 
             var sumPoints = 0;
             foreach (var collapseLine in collapseLineWithResultPoints)
@@ -116,7 +118,14 @@ namespace Core.Steps.CustomOperations
                     collapsePointsEffect.Run(sumGroupPoints, valueTuples.Count);
                 }
             }
-            _field.DestroyBalls(_ballsToRemove.ConvertAll(i=>i.ball));
+
+            var removeBallTasks = new List<Task>();
+            foreach (var ballPair in _ballsToRemove)
+                removeBallTasks.Add(RemoveBallWithDelay(ballPair.ball, ballPair.distance / maxDistanceToCheckingPosition, cancellationToken));
+            
+            await Task.WhenAll(removeBallTasks);
+            
+            //_field.DestroyBalls(_ballsToRemove.ConvertAll(i => i.ball));
             _pointsAdded = sumPoints;
 
             if(_pointsAdded != 0)
@@ -125,6 +134,12 @@ namespace Core.Steps.CustomOperations
             return null;
         }
 
+        private async Task RemoveBallWithDelay(Ball ball, float delay, CancellationToken cancellationToken)
+        {
+            await AsyncExtensions.WaitForSecondsAsync(delay * 0.15f, cancellationToken);
+            _field.DestroyBalls(new List<Ball>(){ball}, false);
+        }
+        
         public override Operation GetInverseOperation()
         {
             return new UncollapseOperation(_collapseLines, _pointsAdded, _field, _pointsChangeListener);

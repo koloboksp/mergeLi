@@ -1,4 +1,5 @@
 using System;
+using Core.Effects;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -31,10 +32,18 @@ namespace Core
         [SerializeField] private AudioClip _onDowngradeClip;
         [SerializeField] private AudioClip _onPathNotFoundClip;
 
+        [SerializeField] private DestroyBallEffect _destroyEffectPrefab;
+
+        private BallView _view;
         private Hat _hat;
         private DependencyHolder<SoundsPlayer> _soundsPlayer;
 
         public UnityAction<BallState> ChangeStateEvent;
+
+        public override BallView View
+        {
+            set => _view = value;
+        }
 
         public override bool Selected
         {
@@ -106,6 +115,20 @@ namespace Core
 
             if (hat != null)
                 _hat = Instantiate(hat, _hatAnchor);
+        }
+
+        public override void Remove(bool force)
+        {
+            if (force)
+                return;
+            
+            var destroyBallEffect = Object.Instantiate(
+                _destroyEffectPrefab, 
+                transform.position, 
+                Quaternion.identity, 
+                _view.Ball.Field.View.Root);
+                
+            destroyBallEffect.Run(_view.Ball.GetColorIndex());
         }
     }
 }

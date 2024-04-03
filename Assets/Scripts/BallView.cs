@@ -24,7 +24,8 @@ namespace Core
       
         private BallSkin _ballSkin;
         private Color _mainColor = Color.magenta;
-        
+
+        public Ball Ball => _ball;
         public RectTransform Root => _root;
         
         public void SetData()
@@ -53,6 +54,7 @@ namespace Core
             _ballSkin = Object.Instantiate(skin, _root);
             _ballSkin.transform.localPosition = Vector3.zero;
             _ballSkin.transform.localRotation = Quaternion.identity;
+            _ballSkin.View = this;
             
             Ball_OnPointsChanged(_ball.Points, true);
             Ball_OnSelectedChanged();
@@ -94,5 +96,10 @@ namespace Core
         }
 
         public Color MainColor => _mainColor;
+
+        public void Remove(bool force)
+        {
+            _ballSkin.Remove(force);
+        }
     }
 }

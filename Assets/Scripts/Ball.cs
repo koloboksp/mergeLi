@@ -207,6 +207,11 @@ namespace Core
         {
             OnPathNotFound?.Invoke();
         }
+
+        public void Remove(bool force)
+        {
+            _view.Remove(force);
+        }
     }
     
 }
