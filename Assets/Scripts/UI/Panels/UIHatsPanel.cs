@@ -36,7 +36,7 @@ namespace Core
 
         private void OnItemsUpdated(IEnumerable<UIHatsPanel_HatItem.Model> items)
         {
-            var oldViews = _container.content.GetComponents<UISkinPanel_SkinItem>();
+            var oldViews = _container.content.GetComponents<UIHatsPanel_HatItem>();
             foreach (var oldView in oldViews)
                 Destroy(oldView.gameObject);
 

@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using Assets.Scripts.Core;
 using Atom;
+using UI.Panels;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core
@@ -39,6 +41,8 @@ namespace Core
 
         [SerializeField] private UIAnyGiftIndicator _anyGiftIndicator;
         
+        [FormerlySerializedAs("_cheatsPanelBtn")] [SerializeField] private Button _cheatsBtn;
+
         private Model _model;
         private UIStartPanelData _data;
         private UIStartPanelChoice _choice;
@@ -57,6 +61,8 @@ namespace Core
             _rateUsBtn.onClick.AddListener(RateUsBtn_OnClick);
             _achievementsBtn.onClick.AddListener(ShowAchievementsBtn_OnClick);
             _leaderboardBtn.onClick.AddListener(ShowLeaderboardBtn_OnClick);
+            
+            _cheatsBtn.onClick.AddListener(ShowCheatsBtn_OnClick);
         }
         
         private void CloseBtn_OnClick()
@@ -187,7 +193,17 @@ namespace Core
             
             await ApplicationController.Instance.ISocialService.ShowLeaderboardUIAsync(Application.exitCancellationToken);
         }
-        
+
+        private async void ShowCheatsBtn_OnClick()
+        {
+            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICheatsPanel>(
+                new UICheatsPanelData()
+                {
+                    GameProcessor = _data.GameProcessor,
+                },
+                Application.exitCancellationToken);
+        }
+
         private void ContinueBtn_OnClick()
         {
             _choice = UIStartPanelChoice.Continue;

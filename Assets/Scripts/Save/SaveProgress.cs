@@ -47,6 +47,8 @@ namespace Save
             _progress.CompletedCastles.Add(id);
             _controller.Save(_progress, _fileName);
         }
+        
+       
 
         public void SetBestSessionScore(int score)
         {
@@ -124,5 +126,50 @@ namespace Save
             _progress = new Progress();
             _controller.Clear(_fileName);
         }
+#if DEBUG
+        public void DebugChangeCastleComplete(string id, bool state)
+        {
+            if (state)
+            {
+                if (!_progress.CompletedCastles.Contains(id))
+                {
+                    _progress.CompletedCastles.Add(id);
+                    _controller.Save(_progress, _fileName);
+                }
+            }
+            else
+            {
+                if(_progress.CompletedCastles.Remove(id))
+                    _controller.Save(_progress, _fileName);
+            }
+        }
+        
+        public void DebugChangeTutorialCompleteState(string tutorialId, bool state)
+        {
+            var tutorialProgress = _progress.Tutorials.Find(i => string.Equals(i.Id, tutorialId, StringComparison.Ordinal));
+
+            if (state)
+            {
+                if (tutorialProgress != null)
+                    tutorialProgress.IsComplted = true;
+                else
+                {
+                    _progress.Tutorials.Add(
+                        new TutorialProgress()
+                        {
+                            Id = tutorialId,
+                            IsComplted = true,
+                        });
+                }
+            }
+            else
+            {
+                if (tutorialProgress != null)
+                    _progress.Tutorials.Remove(tutorialProgress);
+            }
+
+            _controller.Save(_progress, _fileName);
+        }
+#endif
     }
 }

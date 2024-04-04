@@ -176,6 +176,8 @@ public class GameProcessor : MonoBehaviour,
     public CastleSelector CastleSelector => _castleSelector;
 
     public UIFxLayer UIFxLayer => _uiFxLayer;
+
+    public TutorialController TutorialController => _tutorialController;
     
     private void Awake()
     {

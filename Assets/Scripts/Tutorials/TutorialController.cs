@@ -19,6 +19,7 @@ namespace Core.Tutorials
         
         public GameProcessor GameProcessor => _gameProcessor;
 
+        public IReadOnlyList<Tutorial> AvailableTutorials => _availableTutorials;
         public UITutorialFocuser Focuser => _tutorialFocuser;
         public UITutorialFinger Finger => _tutorialFinger;
         public UITutorialDialog Dialog => _tutorialDialog;
