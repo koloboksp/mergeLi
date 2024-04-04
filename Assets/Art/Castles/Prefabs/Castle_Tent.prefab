@@ -96,6 +96,8 @@ MonoBehaviour:
   _root: {fileID: 3936700016026521816}
   stagePoints:
   - {fileID: 3114969110155972010}
+  _partCompleteEffect: {fileID: 1354426967308176600, guid: 468404cb59fd05b42beb5ad5ed670e1f,
+    type: 3}
 --- !u!1 &8346226606943086954
 GameObject:
   m_ObjectHideFlags: 0
@@ -163,5 +165,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _model: {fileID: 1331044023927043937}
-  _castleView: {fileID: 3872328642510413083}
-  _root: {fileID: 3114969110155972010}

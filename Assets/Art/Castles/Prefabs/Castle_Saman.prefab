@@ -1198,5 +1198,5 @@ MonoBehaviour:
   - {fileID: 8029246222025907130}
   - {fileID: 1591846919979021477}
   - {fileID: 2837273627540889089}
-  _partBornEffect: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+  _partCompleteEffect: {fileID: 1354426967308176600, guid: 468404cb59fd05b42beb5ad5ed670e1f,
     type: 3}

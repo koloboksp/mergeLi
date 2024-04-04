@@ -1158,5 +1158,5 @@ MonoBehaviour:
   - {fileID: 2876280064909211887}
   - {fileID: 5634366668509149067}
   - {fileID: 3757370278860816636}
-  _partBornEffect: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+  _partCompleteEffect: {fileID: 1354426967308176600, guid: 468404cb59fd05b42beb5ad5ed670e1f,
     type: 3}

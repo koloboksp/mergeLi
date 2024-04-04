@@ -376,7 +376,7 @@ MonoBehaviour:
   - {fileID: 5029482092552635990}
   - {fileID: 5542163965599427710}
   - {fileID: 6246790797903871062}
-  _partBornEffect: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+  _partCompleteEffect: {fileID: 1354426967308176600, guid: 468404cb59fd05b42beb5ad5ed670e1f,
     type: 3}
 --- !u!1 &8070474356798729987
 GameObject:

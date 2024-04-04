@@ -9,6 +9,7 @@ using Core;
 using Core.Effects;
 using Core.Steps.CustomOperations;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class CastleViewer : MonoBehaviour
@@ -170,7 +171,7 @@ public class CastleViewer : MonoBehaviour
     public event Action<bool, float, int, int, int> OnPartProgressStart;
     public event Action<bool, float> OnPartBornStart;
     
-    [SerializeField] private ExplodeEffect _partBornEffect;
+    [SerializeField] private CastlePartCompleteEffect _partCompleteEffect;
     
     private readonly List<Operation> _operations = new ();
     private Task _operationsExecutor;
@@ -204,7 +205,7 @@ public class CastleViewer : MonoBehaviour
     
     public void ShowPartComplete(int partIndex, bool instant)
     {
-        var operation = new ShowPartCompleteOperation(partIndex, this, _partBornEffect);
+        var operation = new ShowPartCompleteOperation(partIndex, this, _partCompleteEffect);
         if (instant)
             operation.ExecuteInstant();
         else
@@ -291,12 +292,12 @@ public class CastleViewer : MonoBehaviour
             _target.mat.SetFloat(prop, v1);
         }
         
-        protected async Task PlayEffect(ExplodeEffect effectPrefab, Transform target, CancellationToken cancellationToken)
+        protected async Task PlayEffect(CastlePartCompleteEffect completeEffect, Transform target, CancellationToken cancellationToken)
         {
             var findObjectOfType = FindObjectOfType<UIFxLayer>();
-            var effect = Instantiate(effectPrefab, findObjectOfType.transform);
+            var effect = Instantiate(completeEffect, findObjectOfType.transform);
             effect.transform.position = target.position;
-            effect.Run(0.0f);
+            effect.Run();
 
             await AsyncExtensions.WaitForSecondsAsync(effect.Duration, cancellationToken);
         }
@@ -305,11 +306,17 @@ public class CastleViewer : MonoBehaviour
     
     public class ShowPartCompleteOperation : Operation
     {
-        private readonly ExplodeEffect _bornEffect;
-        public ShowPartCompleteOperation(int partIndex, CastleViewer target, ExplodeEffect bornEffect) 
+        private readonly CastlePartCompleteEffect _completeEffect;
+        
+        private DependencyHolder<SoundsPlayer> _soundPlayer;
+        public ShowPartCompleteOperation(
+            int partIndex, 
+            CastleViewer target, 
+            CastlePartCompleteEffect completeEffect) 
             : base(partIndex, target)
         {
-            _bornEffect = bornEffect;
+           
+            _completeEffect = completeEffect;
         }
 
         public override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -322,7 +329,7 @@ public class CastleViewer : MonoBehaviour
             Target.mat.SetFloat(Target.BAR_LOAD, 1);
             Target.mat.SetFloat(Target.BAR_OVER, 0);
             
-            await PlayEffect(_bornEffect, this.Target.stagePoints[PartIndex],  cancellationToken);
+            await PlayEffect(_completeEffect, this.Target.stagePoints[PartIndex],  cancellationToken);
             await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.BAR_OVER, 0, 1, cancellationToken);
             await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.GLOW, 0, 1, cancellationToken);
             await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.GLOW, 1, 0, cancellationToken);
