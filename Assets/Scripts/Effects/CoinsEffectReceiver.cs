@@ -13,10 +13,17 @@ namespace Core.Effects
     
     public class CoinsEffectReceiver : MonoBehaviour, IPointsEffectReceiver
     {
+        [SerializeField] private Transform _anchor;
+        
         public event Action<int> OnReceive;
         
         public int Priority => 0;
-        public Transform Anchor => transform;
+        public Transform Anchor
+        {
+            get => _anchor == null ? transform : _anchor;
+            set => _anchor = value;
+        }
+
         public void Receive(int amount)
         {
             OnReceive?.Invoke(amount);

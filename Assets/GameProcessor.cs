@@ -408,8 +408,6 @@ public class GameProcessor : MonoBehaviour,
             _cancellationTokenSource.Token);
 
         await castleCompletePanel.ShowAsync(_cancellationTokenSource.Token);
-        
-        SelectNextCastle();
     }
     
     void Field_OnPointerDown(Vector3Int pointerGridPosition)

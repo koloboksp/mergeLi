@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Core.Effects
 {
@@ -27,7 +29,7 @@ namespace Core.Effects
         public void Run(int points, int partsCount)
         {
             _points.text = points.ToString();
-
+            
             var receivers = SceneManager.GetActiveScene().GetRootGameObjects()
                 .SelectMany(i => i.GetComponentsInChildren<IPointsEffectReceiver>())
                 .OrderBy(i => i.Priority)
@@ -37,14 +39,22 @@ namespace Core.Effects
             var restCoinsValue = points - partPoints * partsCount;
 
             var splitPartPoints = new List<int>();
-            for (int i = 0; i < partsCount; i++)
+            for (var i = 0; i < partsCount; i++)
                 splitPartPoints.Add(partPoints);
             if (restCoinsValue > 0)
                 splitPartPoints.Add(restCoinsValue);
+            
+            _ = StartFxAsync(splitPartPoints, receivers);
+        }
 
+        private async Task StartFxAsync(
+            IReadOnlyList<int> splitPartPoints, 
+            IReadOnlyList<IPointsEffectReceiver> receivers)
+        {
+            var _fxTasks = new List<Task>();
             var mainReceiver = receivers[0];
 
-            for (int partI = 0; partI < splitPartPoints.Count; partI++)
+            for (var partI = 0; partI < splitPartPoints.Count; partI++)
             {
                 Vector3 randDirection = Random.insideUnitCircle;
                 var startPosition = transform.position + randDirection * _randomizeStartPosition;
@@ -56,62 +66,71 @@ namespace Core.Effects
                                Vector3.Cross(dirToReceiver, Vector3.forward) *
                                Random.Range(-distanceToReceiver * _randomizeSideOffset, distanceToReceiver * _randomizeSideOffset);
 
-                _ = StartFxAsync(
+                _fxTasks.Add(StartCoinFxAsync(
                     splitPartPoints[partI],
                     Random.Range(0.0f, _randomizeDelay),
                     startPosition, midPoint, endPosition,
                     _duration,
                     receivers,
-                    Application.exitCancellationToken);
+                    Application.exitCancellationToken));
             }
 
-            Destroy(gameObject, _duration + _randomizeDelay);
+            await Task.WhenAll(_fxTasks);
+            
+            Destroy(gameObject);
         }
-
-        private async Task StartFxAsync(
+        
+        private async Task StartCoinFxAsync(
             int points,
             float delay,
             Vector3 startPosition,
             Vector3 middlePosition,
             Vector3 endPosition,
             float time,
-            List<IPointsEffectReceiver> receivers,
+            IReadOnlyList<IPointsEffectReceiver> receivers,
             CancellationToken exitToken)
         {
-            await AsyncExtensions.WaitForSecondsAsync(delay, exitToken);
-            var coin = Instantiate(_coinPrefab, transform);
-
-            var timer = 0.0f;
-
-            while (timer < time)
+            try
             {
-                exitToken.ThrowIfCancellationRequested();
+                await AsyncExtensions.WaitForSecondsAsync(delay, exitToken);
+                var coin = Instantiate(_coinPrefab, transform);
 
-                var pathParam = timer / time;
-                var f = _movingSpeed.Evaluate(pathParam);
-                var pathDerivedParam = f * 2.0f;
-                var startDerivedPosition = startPosition;
-                var endDerivedPosition = middlePosition;
+                var timer = 0.0f;
 
-                if (f >= 0.5f)
+                while (timer < time)
                 {
-                    startDerivedPosition = middlePosition;
-                    endDerivedPosition = endPosition;
-                    pathDerivedParam = (f - 0.5f) * 2.0f;
+                    exitToken.ThrowIfCancellationRequested();
+
+                    var pathParam = timer / time;
+                    var f = _movingSpeed.Evaluate(pathParam);
+                    var pathDerivedParam = f * 2.0f;
+                    var startDerivedPosition = startPosition;
+                    var endDerivedPosition = middlePosition;
+
+                    if (f >= 0.5f)
+                    {
+                        startDerivedPosition = middlePosition;
+                        endDerivedPosition = endPosition;
+                        pathDerivedParam = (f - 0.5f) * 2.0f;
+                    }
+
+                    coin.transform.position = Vector3.Lerp(startDerivedPosition, endDerivedPosition, pathDerivedParam);
+
+                    timer += Time.deltaTime;
+
+                    await Task.Yield();
                 }
-
-                coin.transform.position = Vector3.Lerp(startDerivedPosition, endDerivedPosition, pathDerivedParam);
-
-                timer += Time.deltaTime;
-
-                await Task.Yield();
-            }
             
-            foreach (var receiver in receivers)
-                receiver.Receive(points);
-            _soundsPlayer.Value.Play(_gotClip);
+                foreach (var receiver in receivers)
+                    receiver.Receive(points);
+                _soundsPlayer.Value.Play(_gotClip);
 
-            Destroy(coin.gameObject);
+                Destroy(coin.gameObject);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
     }
 }

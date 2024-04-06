@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7047264570851907106}
   - component: {fileID: 7047264570851907105}
+  - component: {fileID: 7362073124006868371}
   m_Layer: 5
   m_Name: Castle_02_Hut
   m_TagString: Untagged
@@ -58,6 +59,20 @@ MonoBehaviour:
     m8B: 3220381813
     mCF: 1639819191
   _root: {fileID: 7047264570851907106}
+  _coinsEffectReceiver: {fileID: 7362073124006868371}
+--- !u!114 &7362073124006868371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7047264570851907107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c6b74ff6fb4f43b7e0a4fb36f9a57a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anchor: {fileID: 0}
 --- !u!1001 &6738483264874734370
 PrefabInstance:
   m_ObjectHideFlags: 0

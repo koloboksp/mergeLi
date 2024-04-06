@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8508746258051257580}
   - component: {fileID: 8508746258051257583}
+  - component: {fileID: -3895089274880438473}
   m_Layer: 5
   m_Name: Castle_05_Terem
   m_TagString: Untagged
@@ -58,6 +59,20 @@ MonoBehaviour:
     m8B: 3034164881
     mCF: 1505571791
   _root: {fileID: 8508746258051257580}
+  _coinsEffectReceiver: {fileID: -3895089274880438473}
+--- !u!114 &-3895089274880438473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8508746258051257581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c6b74ff6fb4f43b7e0a4fb36f9a57a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anchor: {fileID: 0}
 --- !u!1001 &650280433571110953
 PrefabInstance:
   m_ObjectHideFlags: 0

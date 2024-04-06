@@ -20,13 +20,13 @@ namespace Core.Goals
         [SerializeField] private int _coinsAfterComplete;
         [SerializeField] private GuidEx _nameKey;
         [SerializeField] private RectTransform _root;
+        [SerializeField] private CoinsEffectReceiver _coinsEffectReceiver;
 
         private GameProcessor _gameProcessor;
         private readonly List<CastlePart> _parts = new();
         private bool _completed;
         private int _points;
         private CastlePart _selectedPart;
-        private CoinsEffectReceiver _coinsEffectReceiver;
         
         public string Id => gameObject.name;
         public RectTransform Root => _root;
@@ -89,6 +89,8 @@ namespace Core.Goals
 
             _gameProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
             OnScoreChanged(0, true);
+
+            _coinsEffectReceiver.OnReceive += CoinsEffectReceiver_OnReceive;
         }
 
         private void OnDestroy()
@@ -184,10 +186,6 @@ namespace Core.Goals
             {
                 if (_selectedPart != null)
                 {
-                    _coinsEffectReceiver.OnReceive -= CoinsEffectReceiver_OnReceive;
-                    Destroy(_coinsEffectReceiver);
-                    _coinsEffectReceiver = null;
-
                     _selectedPart.Select(false);
                 }
 
@@ -196,9 +194,7 @@ namespace Core.Goals
                 if (_selectedPart != null)
                 {
                     _selectedPart.Select(true);
-
-                    _coinsEffectReceiver = _selectedPart.AddComponent<CoinsEffectReceiver>();
-                    _coinsEffectReceiver.OnReceive += CoinsEffectReceiver_OnReceive;
+                    _coinsEffectReceiver.Anchor = _selectedPart.transform;
                 }
 
 
