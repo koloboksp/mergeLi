@@ -33,16 +33,13 @@ namespace Core
 
         public void SetData(GameProcessor processor)
         {
-            processor.OnRestart += Processor_OnRestart;
-            processor.OnLose += Processor_OnLose;
-
             if (_playingTask == null)
             {
                 _playingTask = Play(Application.exitCancellationToken);
             }
         }
 
-        private void Stop()
+        public void Stop()
         {
             if (_stopPlaying != null)
             {
@@ -51,18 +48,8 @@ namespace Core
 
             _playingTask = null;
         }
-
-        private void Processor_OnLose()
-        {
-            PlayNext();
-        }
-
-        private void Processor_OnRestart()
-        {
-            PlayNext();
-        }
-
-        private void PlayNext()
+        
+        public void PlayNext()
         {
             if (_playingTask != null)
             {

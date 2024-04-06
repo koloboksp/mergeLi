@@ -179,6 +179,9 @@ public class GameProcessor : MonoBehaviour,
 
     public TutorialController TutorialController => _tutorialController;
     
+    public MusicPlayer MusicPlayer => _musicPlayer;
+    public SoundsPlayer SoundsPlayer => _soundsPlayer;
+
     private void Awake()
     {
         _pointsCalculator = new PointsCalculator(this);
@@ -378,6 +381,8 @@ public class GameProcessor : MonoBehaviour,
 
         await failPanel.ShowAsync(_cancellationTokenSource.Token);
         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
+        
+        _musicPlayer.PlayNext();
     }
     
     private async void CastleSelector_OnCastleCompleted(Castle castle)
@@ -804,6 +809,8 @@ public class GameProcessor : MonoBehaviour,
         
         _cancellationTokenSource = new CancellationTokenSource();
         _ = ProcessGameAsyncSafe(SessionPrepareType.RestartSession, _cancellationTokenSource.Token);
+        
+        _musicPlayer.PlayNext();
     }
 
     public void PauseGameProcess(bool pause)

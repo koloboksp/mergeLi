@@ -16,7 +16,8 @@ namespace Core
         [SerializeField] private AudioClip _unavailable;
 
         [SerializeField] private SoundHolder _source;
-
+        [SerializeField] private SoundHolder _exclusiveSource;
+        
         public void Play(UICommonSounds sound)
         {
             AudioClip clip = null;
@@ -34,6 +35,11 @@ namespace Core
         {
             _source.Play(clip);
         }
+        
+        public void PlayExclusive(AudioClip clip)
+        {
+            _exclusiveSource.Play(clip);
+        }
 
         public void StartPlay(AudioClip clip)
         {
@@ -43,6 +49,11 @@ namespace Core
         public void StopPlay()
         {
             _source.StopPlay();
+        }
+
+        public void StopPlayExclusive()
+        {
+            _exclusiveSource.StopPlay();
         }
     }
 }

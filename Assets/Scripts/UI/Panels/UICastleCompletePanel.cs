@@ -18,6 +18,7 @@ namespace Core
         [SerializeField] private UIBubbleDialog _speaker;
         
         [SerializeField] private Button _tapButton;
+        [SerializeField] private AudioClip _completeClip;
 
         private UICastleCompletePanelData _data;
         
@@ -33,7 +34,9 @@ namespace Core
             try
             {
                 _speaker.SetActive(false);
-
+                _data.GameProcessor.MusicPlayer.Stop();
+                _data.GameProcessor.SoundsPlayer.PlayExclusive(_completeClip);
+                
                 var overUIElements = FindObjectsOfType<UIOverCastleCompletePanel>(true)
                     .Select(i => (i, i.transform.parent, i.gameObject.activeSelf))
                     .ToList();
@@ -46,7 +49,7 @@ namespace Core
                 var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
                 var castleOriginalParent = activeCastle.transform.parent;
                 activeCastle.transform.SetParent(_castleAnimationRoot, true);
-
+                
                 _animation.Play(_completeClipPart1.name);
                 _fireworks.SetActive(true);
 
@@ -100,6 +103,8 @@ namespace Core
                     overUIElementTuple.i.transform.SetParent(overUIElementTuple.parent, true);
 
                 ApplicationController.Instance.UIPanelController.PopScreen(this);
+                _data.GameProcessor.SoundsPlayer.StopPlayExclusive();
+                _data.GameProcessor.MusicPlayer.PlayNext();
             }
             catch (Exception e)
             {

@@ -259,6 +259,7 @@ MonoBehaviour:
   _fireworks: {fileID: 7113342272658343842}
   _speaker: {fileID: 1728031255354519943}
   _tapButton: {fileID: 6954008695023706842}
+  _completeClip: {fileID: 8300000, guid: eca5fb0522b873748a1c455564bd6af1, type: 3}
 --- !u!111 &7045932823999599021
 Animation:
   m_ObjectHideFlags: 0
