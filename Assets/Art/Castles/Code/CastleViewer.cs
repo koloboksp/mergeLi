@@ -67,6 +67,8 @@ public class CastleViewer : MonoBehaviour
         glowTime = castleSettings.glowTime;
         flipCurve = castleSettings.flipCurve;
         glowCurve = castleSettings.glowCurve;
+
+        _destroyTokenSource = new CancellationTokenSource();
     }
 
     private void SetAll(float barBorn, float barLoad, float barOver, float glow, float gray)
@@ -175,7 +177,14 @@ public class CastleViewer : MonoBehaviour
     
     private readonly List<Operation> _operations = new ();
     private Task _operationsExecutor;
+    private CancellationTokenSource _destroyTokenSource;
     
+    private void OnDestroy()
+    {
+        _destroyTokenSource.Cancel();
+        _destroyTokenSource.Dispose();
+    }
+
     public void ShowPartBorn(int partIndex, bool instant)
     {
         var operation = new ShowBornProgressOperation(partIndex, 0, 1, this);
@@ -217,20 +226,21 @@ public class CastleViewer : MonoBehaviour
         _operations.Add(operation);
 
         if (_operationsExecutor == null)
-            _operationsExecutor = WaitForOperationsSafe(Application.exitCancellationToken);
+            _operationsExecutor = WaitForOperationsSafe(_destroyTokenSource.Token, Application.exitCancellationToken);
     }
     
-    private async Task WaitForOperationsSafe(CancellationToken exitToken)
+    private async Task WaitForOperationsSafe(CancellationToken destroyToken, CancellationToken exitToken)
     {
         try
         {
             while (_operations.Count > 0)
             {
+                destroyToken.ThrowIfCancellationRequested();
                 exitToken.ThrowIfCancellationRequested();
-
+                
                 var operation = _operations[0];
 
-                await operation.ExecuteAsync(exitToken);
+                await operation.ExecuteAsync(destroyToken, exitToken);
 
                 _operations.RemoveAt(0);
             }
@@ -263,18 +273,26 @@ public class CastleViewer : MonoBehaviour
             _target = target;
         }
 
-        public virtual async Task ExecuteAsync(CancellationToken cancellationToken) { }
+        public virtual async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken) { }
         
         public virtual void ExecuteInstant() { }
         
-        protected async Task ChangeValueOperationAsync(AnimationCurve curve, float duration, int prop, float v0, float v1, CancellationToken cancellationToken)
+        protected async Task ChangeValueOperationAsync(
+            AnimationCurve curve, 
+            float duration,
+            int prop,
+            float v0,
+            float v1,
+            CancellationToken destroyToken,
+            CancellationToken exitToken)
         {
             float timer = duration;
             float scale = v1 - v0;
 
             while (timer > 0)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                destroyToken.ThrowIfCancellationRequested();
+                exitToken.ThrowIfCancellationRequested();
             
                 timer -= Time.deltaTime;
                 if (timer < 0)
@@ -292,16 +310,19 @@ public class CastleViewer : MonoBehaviour
             _target.mat.SetFloat(prop, v1);
         }
         
-        protected async Task PlayEffect(CastlePartCompleteEffect completeEffect, Transform target, CancellationToken cancellationToken)
+        protected async Task PlayEffect(
+            CastlePartCompleteEffect completeEffect,
+            Transform target,
+            CancellationToken destroyToken,
+            CancellationToken exitToken)
         {
             var findObjectOfType = FindObjectOfType<UIFxLayer>();
             var effect = Instantiate(completeEffect, findObjectOfType.transform);
             effect.transform.position = target.position;
             effect.Run();
-
-            await AsyncExtensions.WaitForSecondsAsync(effect.Duration, cancellationToken);
+            
+            await AsyncExtensions.WaitForSecondsAsync(effect.Duration, destroyToken, exitToken);
         }
-
     }
     
     public class ShowPartCompleteOperation : Operation
@@ -319,7 +340,7 @@ public class CastleViewer : MonoBehaviour
             _completeEffect = completeEffect;
         }
 
-        public override async Task ExecuteAsync(CancellationToken cancellationToken)
+        public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
         {
             float duration = Target.flipTime + Target.flipTime + Target.flipTime;
             Target.OnPartCompleteStart?.Invoke(false, duration);
@@ -329,10 +350,10 @@ public class CastleViewer : MonoBehaviour
             Target.mat.SetFloat(Target.BAR_LOAD, 1);
             Target.mat.SetFloat(Target.BAR_OVER, 0);
             
-            await PlayEffect(_completeEffect, this.Target.stagePoints[PartIndex],  cancellationToken);
-            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.BAR_OVER, 0, 1, cancellationToken);
-            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.GLOW, 0, 1, cancellationToken);
-            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.GLOW, 1, 0, cancellationToken);
+            await PlayEffect(_completeEffect, this.Target.stagePoints[PartIndex], destroyToken, exitToken);
+            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.BAR_OVER, 0, 1, destroyToken, exitToken);
+            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.GLOW, 0, 1, destroyToken, exitToken);
+            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.GLOW, 1, 0, destroyToken, exitToken);
         }
         
         public override void ExecuteInstant()
@@ -361,7 +382,7 @@ public class CastleViewer : MonoBehaviour
             _maxPoints = maxPoints;
         }
 
-        public override async Task ExecuteAsync(CancellationToken cancellationToken)
+        public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
         {
             var duration = Target.flipTime;
             Target.OnPartProgressStart?.Invoke(false, duration, _oldPoints, _newPoints, _maxPoints);
@@ -374,7 +395,14 @@ public class CastleViewer : MonoBehaviour
             var nOldPoints = (float)_oldPoints / _maxPoints;
             var nNewPoints = (float)_newPoints / _maxPoints;
             
-            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.BAR_LOAD, nOldPoints, nNewPoints, cancellationToken);
+            await ChangeValueOperationAsync(
+                Target.flipCurve, 
+                Target.flipTime, 
+                Target.BAR_LOAD, 
+                nOldPoints, 
+                nNewPoints, 
+                destroyToken,
+                exitToken);
         }
         
         public override void ExecuteInstant()
@@ -405,7 +433,7 @@ public class CastleViewer : MonoBehaviour
             _nEndValue = nEndValue;
         }
 
-        public override async Task ExecuteAsync(CancellationToken cancellationToken)
+        public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
         {
             var duration = Target.flipTime;
             Target.OnPartBornStart?.Invoke(false, duration);
@@ -415,7 +443,14 @@ public class CastleViewer : MonoBehaviour
             Target.mat.SetFloat(Target.BAR_LOAD, 0);
             Target.mat.SetFloat(Target.BAR_OVER, 0);
 
-            await ChangeValueOperationAsync(Target.flipCurve, Target.flipTime, Target.BAR_BORN, _nStartValue, _nEndValue, cancellationToken);
+            await ChangeValueOperationAsync(
+                Target.flipCurve,
+                Target.flipTime, 
+                Target.BAR_BORN, 
+                _nStartValue, 
+                _nEndValue, 
+                destroyToken,
+                exitToken);
         }
         
         public override void ExecuteInstant()

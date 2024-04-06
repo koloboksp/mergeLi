@@ -366,6 +366,8 @@ public class GameProcessor : MonoBehaviour,
             CheckLowEmptySpace();
         }
 
+        ClearUndoSteps();
+
         try
         {
             OnLose?.Invoke();
@@ -493,14 +495,14 @@ public class GameProcessor : MonoBehaviour,
             new MoveOperation(from, to, _field),
             new MergeOperation(to, _field),
             new CollapseOperation(to, _collapsePointsEffectPrefab,
-                _destroyBallEffectPrefab, _field, _pointsCalculator, this),
+                _field, _pointsCalculator, this),
             new CheckIfGenerationIsNecessary(
                 null,
                 new List<Operation>()
                 {
                     new GenerateOperation(_generatedBallsCountAfterMerge,
                         _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
-                    new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab,
+                    new CollapseOperation(_collapsePointsEffectPrefab,
                         _field, _pointsCalculator, this)
                 })));
     }
@@ -512,14 +514,14 @@ public class GameProcessor : MonoBehaviour,
                 .SubscribeCompleted(OnDeselectBall),
             new MoveOperation(from, to, _field),
             new CollapseOperation(to, _collapsePointsEffectPrefab,
-                _destroyBallEffectPrefab, _field, _pointsCalculator, this),
+                _field, _pointsCalculator, this),
             new CheckIfGenerationIsNecessary(
                 null,
                 new List<Operation>()
                 {
                     new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove,
                         _generatedBallsPointsRange, _field),
-                    new CollapseOperation(_collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field,
+                    new CollapseOperation(_collapsePointsEffectPrefab, _field,
                         _pointsCalculator, this)
                 })));
     }
@@ -682,7 +684,7 @@ public class GameProcessor : MonoBehaviour,
                 new SpendOperation(cost, this, true),
                 new GradeOperation(ballsIndexes, gradeLevel, _field),
                 new ConfirmBuffUseOperation(buff),
-                new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _destroyBallEffectPrefab, _field, _pointsCalculator, this)));
+                new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _field, _pointsCalculator, this)));
     }
 
     public void SelectNextCastle()
@@ -796,7 +798,8 @@ public class GameProcessor : MonoBehaviour,
         {
             Debug.LogException(e);
         }
-        
+        ClearUndoSteps();
+
         _cancellationTokenSource.Cancel();
         _cancellationTokenSource.Dispose();
         

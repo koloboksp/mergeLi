@@ -16,15 +16,18 @@ namespace Core.Steps.CustomOperations
         private readonly IField _field;
         private readonly IPointsCalculator _pointsCalculator;
         private readonly IPointsChangeListener _pointsChangeListener;
-        private readonly DestroyBallEffect _destroyBallEffectPrefab;
         private readonly CollapsePointsEffect _collapsePointsEffectPrefab;
 
         private readonly List<(Ball ball, float distance)> _ballsToRemove = new();
         private readonly List<List<BallDesc>> _collapseLines = new();
         private int _pointsAdded;
 
-        public CollapseOperation(Vector3Int position, CollapsePointsEffect collapsePointsEffectPrefab,
-            DestroyBallEffect destroyBallEffectPrefab, IField field, IPointsCalculator pointsCalculator, IPointsChangeListener pointsChangeListener)
+        public CollapseOperation(
+            Vector3Int position, 
+            CollapsePointsEffect collapsePointsEffectPrefab,
+            IField field, 
+            IPointsCalculator pointsCalculator, 
+            IPointsChangeListener pointsChangeListener)
         {
             _positionSource = PositionSource.Fixed;
             _position = position;
@@ -32,18 +35,19 @@ namespace Core.Steps.CustomOperations
             _pointsCalculator = pointsCalculator;
             _pointsChangeListener = pointsChangeListener;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
-            _destroyBallEffectPrefab = destroyBallEffectPrefab;
         }
 
-        public CollapseOperation(CollapsePointsEffect collapsePointsEffectPrefab, DestroyBallEffect destroyBallEffectPrefab, IField field, 
-            IPointsCalculator pointsCalculator, IPointsChangeListener pointsChangeListener)
+        public CollapseOperation(
+            CollapsePointsEffect collapsePointsEffectPrefab,
+            IField field, 
+            IPointsCalculator pointsCalculator,
+            IPointsChangeListener pointsChangeListener)
         {
             _positionSource = PositionSource.FromData;
             _field = field;
             _pointsCalculator = pointsCalculator;
             _pointsChangeListener = pointsChangeListener;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
-            _destroyBallEffectPrefab = destroyBallEffectPrefab;
         }
     
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
@@ -82,18 +86,7 @@ namespace Core.Steps.CustomOperations
             Owner.SetData(data);
 
             var collapseLineWithResultPoints = _pointsCalculator.GetPoints(_collapseLines);
-
-           // foreach (var ballPair in _ballsToRemove)
-           // {
-           //     var destroyBallEffect = Object.Instantiate(
-           //         _destroyBallEffectPrefab, 
-           //         _field.View.Root.TransformPoint(_field.GetPositionFromGrid(ballPair.ball.IntGridPosition)), 
-           //         Quaternion.identity, 
-           //         _field.View.Root);
-           //     
-           //     destroyBallEffect.Run(ballPair.ball.GetColorIndex(), ballPair.distance / maxDistanceToCheckingPosition);
-           // }
-
+            
             var sumPoints = 0;
             foreach (var collapseLine in collapseLineWithResultPoints)
             {
