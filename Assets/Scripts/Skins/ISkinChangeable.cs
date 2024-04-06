@@ -1,4 +1,7 @@
-﻿public interface ISkinChangeable
+﻿namespace Skins
 {
-    public void ChangeSkin(SkinContainer container);
+    public interface ISkinChangeable
+    {
+        public void ChangeSkin(SkinContainer container);
+    }
 }

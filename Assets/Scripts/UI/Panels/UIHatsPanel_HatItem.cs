@@ -7,24 +7,34 @@ namespace Core
     public class UIHatsPanel_HatItem : MonoBehaviour
     {
         [SerializeField] private Button _button;
-        [SerializeField] private Image _icon;
         [SerializeField] private Text _name;
         [SerializeField] private GameObject _selectionFrame;
+        [SerializeField] private UIHatsPanel_HatItem_FakeField _fakeField;
+        [SerializeField] private UIHatsPanel_HatItem_FakeScene _fakeScene;
 
         private Model _model;
+        private GameProcessor _gameProcessor;
         
         private void Awake()
         {
             _button.onClick.AddListener(OnClick);
         }
         
-        public void SetModel(Model model)
+        public void SetModel(Model model, GameProcessor gameProcessor)
         {
             _model = model;
             _model
                 .OnSelectionChanged(OnSelectionChanged);
 
-            _name.text = _model.Name;
+            _name.text = _model.Id;
+
+            _gameProcessor = gameProcessor;
+
+            _fakeScene.GameProcessor = gameProcessor;
+            _fakeScene.ActiveSkin = gameProcessor.Scene.ActiveSkin;
+            _fakeScene.ActiveHat = model.Hat;
+
+            _fakeField.CreateBall(Vector3Int.zero, 2);
         }
         
         private void OnClick()
@@ -40,18 +50,21 @@ namespace Core
         public class Model
         {
             private Action _onSelectedStateChanged;
-            
+
+            private readonly Hat _hat;
             private readonly UIHatsPanel.Model _owner;
-            private string _name;
             private bool _selected;
             
-            public Model(UIHatsPanel.Model owner)
+            public Model(Hat hat, UIHatsPanel.Model owner)
             {
+                _hat = hat;
                 _owner = owner;
             }
 
+            public Hat Hat => _hat;
             public bool Selected => _selected;
-            public string Name => _name;
+            public string Id => _hat.Id;
+            public bool Available => _hat.Available;
 
             public void SelectMe()
             {
@@ -72,12 +85,6 @@ namespace Core
                     _selected = newState;
                     _onSelectedStateChanged?.Invoke();
                 }
-            }
-
-            public Model SetName(string name)
-            {
-                _name = name;
-                return this;
             }
         }
     }

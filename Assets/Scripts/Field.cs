@@ -46,12 +46,12 @@ public class Field : MonoBehaviour, IField
     public bool IsEmpty => _balls.Count < _size.x * _size.y;
     public Vector2Int Size => _size;
     
-    public Scene Scene => _scene;
+    public IScene Scene => _scene;
     public IFieldView View => _view;
 
+    
     public List<(Vector3Int intPosition, int points)> NextBallsData => _nextBallsData;
-    public object BallPrefab => _ballPrefab;
-
+   
     private void Awake()
     { 
         _cellSize = new Vector3(View.RootSize.x / Size.x, View.RootSize.x / Size.y, 0);;
@@ -270,7 +270,7 @@ public class Field : MonoBehaviour, IField
         return result;
     }
     
-    public void DestroySomething(Ball ball)
+    public void DestroyBall(Ball ball)
     {
         _balls.Remove(ball);
         Destroy(ball.gameObject);

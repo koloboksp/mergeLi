@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class HatsLibrary : MonoBehaviour
+namespace Skins
 {
-    [SerializeField] private List<Hat> _hats;
+    public class HatsLibrary : MonoBehaviour
+    {
+        [SerializeField] private List<Hat> _hats;
 
-    public IEnumerable<Hat> Hats => _hats;
+        public IEnumerable<Hat> Hats => _hats;
     
-    public Hat GetHat(string hatName)
-    {
-        return _hats.Find(i => i.Name == hatName);
-    }
+        public Hat GetHat(string hatName)
+        {
+            return _hats.Find(i => i.Id == hatName);
+        }
 
-    public Hat GetDefaultHat()
-    {
-        return _hats[0];
+        public Hat GetDefaultHat()
+        {
+            return _hats[0];
+        }
     }
 }

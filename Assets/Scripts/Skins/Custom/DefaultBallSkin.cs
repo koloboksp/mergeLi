@@ -1,11 +1,12 @@
 using System;
+using Core;
 using Core.Effects;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
-namespace Core
+namespace Skins.Custom
 {
     public class DefaultBallSkin : BallSkin
     {
@@ -35,7 +36,7 @@ namespace Core
         [SerializeField] private DestroyBallEffect _destroyEffectPrefab;
 
         private BallView _view;
-        private Hat _hat;
+        private HatView _hatView;
         private DependencyHolder<SoundsPlayer> _soundsPlayer;
 
         public UnityAction<BallState> ChangeStateEvent;
@@ -105,16 +106,16 @@ namespace Core
             _soundsPlayer.Value.Play(_onPathNotFoundClip);
         }
 
-        public override void SetHat(Hat hat)
+        public override void SetHat(HatView hatView)
         {
-            if (_hat != null)
+            if (_hatView != null)
             {
-                Destroy(_hat.gameObject);
-                _hat = null;
+                Destroy(_hatView.gameObject);
+                _hatView = null;
             }
 
-            if (hat != null)
-                _hat = Instantiate(hat, _hatAnchor);
+            if (hatView != null)
+                _hatView = Instantiate(hatView, _hatAnchor);
         }
 
         public override void Remove(bool force)

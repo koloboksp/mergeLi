@@ -261,8 +261,8 @@ public class CastleViewer : MonoBehaviour
     
     public class Operation
     {
-        private int _partIndex;
-        private CastleViewer _target; 
+        private readonly int _partIndex;
+        private readonly CastleViewer _target; 
 
         public int PartIndex => _partIndex;
         public CastleViewer Target => _target;

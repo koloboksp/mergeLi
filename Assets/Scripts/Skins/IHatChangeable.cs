@@ -1,4 +1,7 @@
-﻿public interface IHatChangeable
+﻿namespace Skins
 {
-    public void ChangeHat(Hat hat);
+    public interface IHatChangeable
+    {
+        public void ChangeHat(Hat hat);
+    }
 }

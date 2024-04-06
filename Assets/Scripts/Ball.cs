@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace Core
 {
-    
     public class Ball : MonoBehaviour, IBall
     {
         public event Action OnSelectedChanged;
@@ -19,7 +18,7 @@ namespace Core
         public static event Action<Ball, bool> OnMovingStateChangedGlobal;
 
         [SerializeField] private Vector3 _gridPosition;
-        [SerializeField] private Field _field;
+        [SerializeField] private IField _field;
         [SerializeField] private BallView _view;
     
         private int _points = 1;
@@ -36,7 +35,7 @@ namespace Core
         public Vector3 GridPosition => _gridPosition;
         public Vector3Int IntGridPosition => _field.TransformToIntPosition(_gridPosition);
         
-        public Field Field => _field;
+        public IField Field => _field;
         public float Transparency
         {
             get => _transparency;
@@ -97,7 +96,7 @@ namespace Core
             UpdatePoints(newPoints, false);
             
             foreach (var other in others)
-                _field.DestroySomething(other as Ball);
+                _field.DestroyBall(other as Ball);
         }
 
         public bool CanGrade(int level)
@@ -145,7 +144,7 @@ namespace Core
             UpdatePoints(newPoints, false);
         }
 
-        public void SetData(Field field, Vector3 startPosition, int points)
+        public void SetData(IField field, Vector3 startPosition, int points)
         {
             _field = field;
             UpdatePoints(points, true);

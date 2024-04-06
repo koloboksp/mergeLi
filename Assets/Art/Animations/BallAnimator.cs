@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Core;
+using Skins.Custom;
 
 public class BallAnimator : MonoBehaviour
 {

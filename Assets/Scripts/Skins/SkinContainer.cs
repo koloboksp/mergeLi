@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
-using Core;
 using UnityEngine;
 
-public class SkinContainer : MonoBehaviour
+namespace Skins
 {
-    [SerializeField] private string _name;
-    [SerializeField] private List<Skin> _skins;
-    
-    public string Name => _name;
-    
-    public Skin GetSkin(string name)
+    public class SkinContainer : MonoBehaviour
     {
-        return _skins.Find(i => i.Name == name);
+        [SerializeField] private string _name;
+        [SerializeField] private List<Skin> _skins;
+    
+        public string Name => _name;
+    
+        public Skin GetSkin(string name)
+        {
+            return _skins.Find(i => i.Name == name);
+        }
     }
 }

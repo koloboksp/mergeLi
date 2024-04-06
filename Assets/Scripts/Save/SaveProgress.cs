@@ -85,6 +85,15 @@ namespace Save
             _controller.Save(_progress, _fileName);
         }
 
+        public bool IsHatBought(string id)
+        {
+            var hatProgress = _progress.Hats.Find(i => i.Id == id);
+            if (hatProgress != null)
+                return true;
+
+            return false;
+        }
+        
         public long GetGiftLastCollectedTimestamp(string id)
         {
             var giftProgress = _progress.Gifts.Find(i => i.Id == id);
@@ -126,6 +135,7 @@ namespace Save
             _progress = new Progress();
             _controller.Clear(_fileName);
         }
+        
 #if DEBUG
         public void DebugChangeCastleComplete(string id, bool state)
         {

@@ -1,8 +1,17 @@
 using System;
+using Core;
 using Core.Steps.CustomOperations;
+using Skins;
 using UnityEngine;
 
-public class Scene : MonoBehaviour
+public interface IScene
+{
+    SkinContainer ActiveSkin { get; }
+    GameProcessor GameProcessor { get; }
+    Hat ActiveHat { get; }
+}
+
+public class Scene : MonoBehaviour, IScene
 {
     [SerializeField] private SkinsLibrary _skinsLibrary;
     [SerializeField] private HatsLibrary _hatsLibrary;
@@ -11,7 +20,7 @@ public class Scene : MonoBehaviour
     [SerializeField] private Transform _sceneRoot;
     
     private SkinContainer _activeSkin;
-    private string _activeHat;
+    private Hat _activeHat;
     
     public GameProcessor GameProcessor => _gameProcessor;
     public Field Field => _field;
@@ -20,6 +29,7 @@ public class Scene : MonoBehaviour
     public SkinsLibrary SkinLibrary => _skinsLibrary;
     public SkinContainer ActiveSkin => _activeSkin;
     public HatsLibrary HatsLibrary => _hatsLibrary;
+    public Hat ActiveHat => _activeHat;
     
     public void SetSkin(string skinName)
     {
@@ -34,13 +44,13 @@ public class Scene : MonoBehaviour
     
     public void SetHat(string hatName)
     {
-        var hat = _hatsLibrary.GetHat(hatName);
-        if (hat == null)
-            hat = _hatsLibrary.GetDefaultHat();
+        _activeHat = _hatsLibrary.GetHat(hatName);
+        if (_activeHat == null)
+            _activeHat = _hatsLibrary.GetDefaultHat();
         
         var hatChangeables = _field.gameObject.GetComponentsInChildren<IHatChangeable>();
         foreach (var hatChangeable in hatChangeables)
-            hatChangeable.ChangeHat(hat);
+            hatChangeable.ChangeHat(_activeHat);
     }
 }
 

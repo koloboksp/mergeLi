@@ -15,6 +15,7 @@ using Core.Steps;
 using Core.Steps.CustomOperations;
 using Core.Tutorials;
 using Save;
+using Skins;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -163,6 +164,7 @@ public class GameProcessor : MonoBehaviour,
     private CancellationTokenSource _cancellationTokenSource;
     private readonly List<Buff> _buffs = new();
     private readonly List<Achievement> _achievements = new ();
+    private readonly List<Hat> _hats = new ();
 
     public Scene Scene => _scene;
     public int Score => _score;
@@ -181,6 +183,7 @@ public class GameProcessor : MonoBehaviour,
     
     public MusicPlayer MusicPlayer => _musicPlayer;
     public SoundsPlayer SoundsPlayer => _soundsPlayer;
+    public IReadOnlyList<Hat> Hats => _hats;
 
     private void Awake()
     {
@@ -228,6 +231,12 @@ public class GameProcessor : MonoBehaviour,
         _achievements.AddRange(GetComponentsInChildren<Achievement>());
         foreach (var achievement in _achievements)
             achievement.SetData(this);
+
+        foreach (var hat in _scene.HatsLibrary.Hats)
+        {
+            hat.SetData(ApplicationController.Instance.SaveController.SaveProgress);
+            _hats.Add(hat);
+        }
         
         _field.OnPointerDown += Field_OnPointerDown;
         _stepMachine.OnBeforeStepStarted += StepMachine_OnBeforeStepStarted;

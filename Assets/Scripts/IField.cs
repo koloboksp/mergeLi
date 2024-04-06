@@ -15,6 +15,7 @@ public interface IField
     void DestroyBalls(List<Ball> ballsToRemove, bool force);
     List<(Vector3Int intPosition, int points)> GenerateBalls(int count, List<int> availableValues);
     Vector3Int CreateBall(Vector3Int position, int points);
+    public Vector3 GetPositionFromGrid(Vector3 gridPosition);
     Vector3 GetPositionFromGrid(Vector3Int gridPosition);
     public IFieldView View { get; }
     void GenerateNextBallPositions(int count, List<int> availableValues);
@@ -25,6 +26,10 @@ public interface IField
     Vector3 GetWorldPosition(Vector3 gridPosition);
     Vector3 GetWorldCellSize();
     int CalculateEmptySpacesCount();
+    Vector3Int TransformToIntPosition(Vector3 gridPosition);
+    List<Vector2Int> GetPath(Vector3Int from, Vector3Int to);
+    void DestroyBall(Ball ball);
+    IScene Scene { get; }
 }
 
 public interface IFieldView

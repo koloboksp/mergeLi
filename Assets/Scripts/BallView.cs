@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Skins;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
@@ -37,6 +38,7 @@ namespace Core
             _ball.OnPathNotFound += Ball_OnPathNotFound;
 
             ChangeSkin(_ball.Field.Scene.ActiveSkin);
+            ChangeHat(_ball.Field.Scene.ActiveHat);
         }
 
         private void Ball_OnMovingStateChanged()
@@ -48,7 +50,6 @@ namespace Core
         {
             if (_ballSkin != null)
                 Destroy(_ballSkin.gameObject);
-
             
             var skin = container.GetSkin($"ball") as BallSkin;
             _ballSkin = Object.Instantiate(skin, _root);
@@ -65,7 +66,7 @@ namespace Core
         {
             if (_ballSkin != null)
             {
-                _ballSkin.SetHat(hat);
+                _ballSkin.SetHat(hat.View);
             }
         }
         

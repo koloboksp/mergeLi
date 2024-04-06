@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using Core;
+using Skins.Custom;
 
 public class BlobFacer : MonoBehaviour
 {
