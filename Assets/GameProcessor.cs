@@ -235,7 +235,7 @@ public class GameProcessor : MonoBehaviour,
         
         ApplicationController.Instance.UIPanelController.SetScreensRoot(_uiScreensRoot);
         
-        _castleSelector.Init();
+        _castleSelector.SetData();
         
         await ProcessGameAsyncSafe(SessionPrepareType.FirstStart, _cancellationTokenSource.Token);
     }
@@ -284,6 +284,7 @@ public class GameProcessor : MonoBehaviour,
         }
         else
         {
+            _castleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
             _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
             
             if (HasPreviousSessionGame)
@@ -379,8 +380,10 @@ public class GameProcessor : MonoBehaviour,
         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
     }
     
-    private async void CastleSelector_OnCastleCompleted()
+    private async void CastleSelector_OnCastleCompleted(Castle castle)
     {
+        ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
+
         _ = ProcessCastleCompleteAsync(GuidEx.Empty, null, null, null);
     }
 
@@ -577,9 +580,6 @@ public class GameProcessor : MonoBehaviour,
             && step.Tag != StepTag.Deselect 
             && step.Tag != StepTag.ChangeSelected)
         {
-            var castle = GetCastle();
-            if (castle.Completed)
-                ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
             ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
         }
     }
@@ -793,7 +793,7 @@ public class GameProcessor : MonoBehaviour,
         {
             Debug.LogException(e);
         }
-
+        
         _cancellationTokenSource.Cancel();
         _cancellationTokenSource.Dispose();
         

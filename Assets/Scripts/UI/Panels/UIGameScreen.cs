@@ -53,7 +53,7 @@ namespace Core
             OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
 
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
-            CastleSelector_OnCastleChanged(null);
+            CastleSelector_OnCastleChanged(_data.GameProcessor.CastleSelector.ActiveCastle);
 
             foreach (var buff in _data.GameProcessor.Buffs)
             {

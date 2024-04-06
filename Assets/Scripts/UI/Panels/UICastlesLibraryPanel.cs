@@ -57,7 +57,7 @@ namespace Core
                 
                 var castle = Instantiate(itemsPrefab, _container.content);
                 castle.gameObject.name = itemsPrefab.Id;
-                castle.Init(_gameProcessor);
+                castle.SetData(_gameProcessor);
                 if (castle.Root.sizeDelta.x > _container.content.sizeDelta.x)
                 {
                     var scaleFactor = _container.content.sizeDelta.x / castle.Root.sizeDelta.x;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Core;
+using Core.Goals;
 using Core.Steps;
 using Save;
 using UnityEngine;
@@ -142,10 +143,10 @@ namespace Analytics
             }
         }
         
-        private void CastleSelector_OnCastleCompleted()
+        private void CastleSelector_OnCastleCompleted(Castle castle)
         {
             ApplicationController.Instance.AnalyticsController.OnCastleComplete(
-                _gameProcessor.CastleSelector.ActiveCastle.Id,
+                castle.Id,
                 _step);
         }
         

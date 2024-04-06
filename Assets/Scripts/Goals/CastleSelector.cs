@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class CastleSelector : MonoBehaviour
 {
-    public event Action OnCastleCompleted;
+    public event Action<Castle> OnCastleCompleted;
     public event Action<Castle> OnCastleChanged;
     
     [SerializeField] private GameProcessor _gameProcessor;
@@ -21,38 +21,19 @@ public class CastleSelector : MonoBehaviour
     public CastleLibrary Library => _library;
     public Castle ActiveCastle => _castleInstance;
     
-    private CoinsEffectReceiver _coinsEffectReceiver;
-
-    private void CastleInstance_OnPartSelected()
-    {
-        if (_coinsEffectReceiver != null)
-        {
-            Destroy(_coinsEffectReceiver);
-            _coinsEffectReceiver = null;
-        }
-
-        var selectedCastlePart = _castleInstance.GetSelectedCastlePart();
-        if (selectedCastlePart != null)
-        {
-            _coinsEffectReceiver = selectedCastlePart.AddComponent<CoinsEffectReceiver>();
-        }
-    }
-    
-    private void CastleInstance_OnCompleted()
+    private void CastleInstance_OnCompleted(Castle castle)
     {
         try
         {
-            OnCastleCompleted?.Invoke();
+            OnCastleCompleted?.Invoke(castle);
         }
         catch (Exception e)
         {
             Debug.LogException(e);
         }
-       
-        OnCastleChanged?.Invoke(null);
     }
 
-    public void Init()
+    public void SetData()
     {
        // _gameProcessor.PlayerInfo.OnCastleChanged += PlayerInfo_OnCastleChanged;
        // PlayerInfo_OnCastleChanged();
@@ -63,7 +44,6 @@ public class CastleSelector : MonoBehaviour
         if (_castleInstance != null)
         {
             _castleInstance.OnCompleted -= CastleInstance_OnCompleted;
-            _castleInstance.OnPartSelected -= CastleInstance_OnPartSelected;
             Destroy(_castleInstance.gameObject);
             _castleInstance = null;
         }
@@ -78,12 +58,10 @@ public class CastleSelector : MonoBehaviour
         _castleInstance.View.Root.offsetMax = Vector2.zero;
         _castleInstance.View.Root.localScale = Vector3.one;
         
-        _castleInstance.Init(_gameProcessor);
+        _castleInstance.SetData(_gameProcessor);
         
         _castleInstance.OnCompleted += CastleInstance_OnCompleted;
-        _castleInstance.OnPartSelected += CastleInstance_OnPartSelected;
-        CastleInstance_OnPartSelected();
-        
+       
         OnCastleChanged?.Invoke(null);
     }
 

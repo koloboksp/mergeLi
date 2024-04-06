@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Atom;
+using Core.Effects;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,10 +13,9 @@ namespace Core.Goals
 {
     public class Castle : MonoBehaviour, ICastle
     {
-        public event Action OnCompleted;
+        public event Action<Castle> OnCompleted;
         public event Action OnPartSelected;
-        public event Action OnProgressChanged;
-
+     
         [SerializeField] private CastleViewer _view;
         [SerializeField] private int _coinsAfterComplete;
         [SerializeField] private GuidEx _nameKey;
@@ -23,9 +23,11 @@ namespace Core.Goals
 
         private GameProcessor _gameProcessor;
         private readonly List<CastlePart> _parts = new();
+        private bool _completed;
         private int _points;
         private CastlePart _selectedPart;
-
+        private CoinsEffectReceiver _coinsEffectReceiver;
+        
         public string Id => gameObject.name;
         public RectTransform Root => _root;
 
@@ -53,6 +55,11 @@ namespace Core.Goals
                     return part.Cost;
             }
 
+            if (_parts.Count > 0)
+            {
+                return _parts[^1].Cost;
+            }
+
             return int.MaxValue;
         }
 
@@ -73,7 +80,7 @@ namespace Core.Goals
             return _points;
         }
 
-        public void Init(GameProcessor gameProcessor)
+        public void SetData(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;
 
@@ -91,17 +98,19 @@ namespace Core.Goals
 
         private void GameProcessor_OnScoreChanged(int additionalPoints)
         {
-            OnScoreChanged(additionalPoints, false);
+            if (additionalPoints < 0)
+                OnScoreChanged(additionalPoints, false);
         }
 
         private void OnScoreChanged(int additionalPoints, bool instant)
         {
-            var completed = ProcessPoints(additionalPoints, instant);
+            var oldCompletedState = _completed;
+            _completed = ProcessPoints(additionalPoints, instant);
 
-            OnProgressChanged?.Invoke();
-
-            if (completed)
-                OnCompleted?.Invoke();
+            if (oldCompletedState != _completed && _completed)
+            {
+                OnCompleted?.Invoke(this);
+            }
         }
 
         private bool ProcessPoints(int additionalPoints, bool instant)
@@ -174,15 +183,32 @@ namespace Core.Goals
             if (newSelectedPart != _selectedPart)
             {
                 if (_selectedPart != null)
+                {
+                    _coinsEffectReceiver.OnReceive -= CoinsEffectReceiver_OnReceive;
+                    Destroy(_coinsEffectReceiver);
+                    _coinsEffectReceiver = null;
+
                     _selectedPart.Select(false);
+                }
 
                 _selectedPart = newSelectedPart;
 
                 if (_selectedPart != null)
+                {
                     _selectedPart.Select(true);
+
+                    _coinsEffectReceiver = _selectedPart.AddComponent<CoinsEffectReceiver>();
+                    _coinsEffectReceiver.OnReceive += CoinsEffectReceiver_OnReceive;
+                }
+
 
                 OnPartSelected?.Invoke();
             }
+        }
+
+        private void CoinsEffectReceiver_OnReceive(int amount)
+        {
+            OnScoreChanged(amount, false);
         }
 
         public void SetPoints(int points, bool instant)
@@ -210,9 +236,10 @@ namespace Core.Goals
                 part.ChangeUnlockState(false, true);
                 part.SetPoints(0, true);
             }
+
             _view.SetStage(0);
         }
-        
+
         public void ShowAsCompleted()
         {
             foreach (var part in _parts)
