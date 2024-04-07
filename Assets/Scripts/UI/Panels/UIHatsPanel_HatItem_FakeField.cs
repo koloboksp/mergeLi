@@ -39,6 +39,8 @@ namespace Core
             var subComponents = ball.GetComponents<ISubComponent>();
             foreach (var subComponent in subComponents)
                 subComponent.SetData();
+
+            ball.View.ShowHat(true);
             
             return position;
         }

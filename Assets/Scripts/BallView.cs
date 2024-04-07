@@ -73,8 +73,11 @@ namespace Core
         private void Ball_OnSelectedChanged()
         {
             _ballSkin.Selected = _ball.Selected;
+            
             if (_ball.Selected)
+            {
                 _root.transform.SetAsLastSibling();
+            }
         }
 
         private void Ball_OnPointsChanged(int oldPoints, bool force)
@@ -101,6 +104,11 @@ namespace Core
         public void Remove(bool force)
         {
             _ballSkin.Remove(force);
+        }
+
+        public void ShowHat(bool activeState)
+        {
+            _ballSkin.ShowHat(activeState);
         }
     }
 }

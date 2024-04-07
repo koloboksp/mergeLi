@@ -14,5 +14,6 @@ namespace Skins
         public abstract void PathNotFount();
         public abstract void SetHat(HatView hatView);
         public abstract void Remove(bool force);
+        public abstract void ShowHat(bool activeState);
     }
 }

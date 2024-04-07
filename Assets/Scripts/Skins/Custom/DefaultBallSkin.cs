@@ -51,6 +51,8 @@ namespace Skins.Custom
             set
             {
                 ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle);
+                _hatAnchor.gameObject.SetActive(value);
+                
                 if (value)
                 {
                     _soundsPlayer.Value.Play(_onSelectClip);
@@ -115,7 +117,9 @@ namespace Skins.Custom
             }
 
             if (hatView != null)
+            {
                 _hatView = Instantiate(hatView, _hatAnchor);
+            }
         }
 
         public override void Remove(bool force)
@@ -130,6 +134,11 @@ namespace Skins.Custom
                 _view.Ball.Field.View.Root);
                 
             destroyBallEffect.Run(_view.Ball.GetColorIndex());
+        }
+
+        public override void ShowHat(bool activeState)
+        {
+            _hatAnchor.gameObject.SetActive(activeState);
         }
     }
 }
