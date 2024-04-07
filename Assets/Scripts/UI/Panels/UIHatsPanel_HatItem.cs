@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core
@@ -8,6 +10,7 @@ namespace Core
     {
         [SerializeField] private Button _button;
         [SerializeField] private Text _name;
+        [SerializeField] private Image _lockIcon;
         [SerializeField] private GameObject _selectionFrame;
         [SerializeField] private UIHatsPanel_HatItem_FakeField _fakeField;
         [SerializeField] private UIHatsPanel_HatItem_FakeScene _fakeScene;
@@ -22,21 +25,33 @@ namespace Core
         
         public void SetModel(Model model, GameProcessor gameProcessor)
         {
-            _model = model;
-            _model
-                .OnSelectionChanged(OnSelectionChanged);
-
-            _name.text = _model.Id;
-
             _gameProcessor = gameProcessor;
 
+            _model = model;
+            _model
+                .OnSelectionChanged(OnSelectionChanged)
+                .OnAvailableChanged(OnAvailableChanged);
+            
+            _name.text = _model.Id;
+            SetLockIcon();
+            
             _fakeScene.GameProcessor = gameProcessor;
             _fakeScene.ActiveSkin = gameProcessor.Scene.ActiveSkin;
             _fakeScene.ActiveHat = model.Hat;
 
             _fakeField.CreateBall(Vector3Int.zero, 2);
         }
-        
+
+        private void OnAvailableChanged()
+        {
+            SetLockIcon();
+        }
+
+        private void SetLockIcon()
+        {
+            _lockIcon.gameObject.SetActive(!_model.Available);
+        }
+
         private void OnClick()
         {
             _model.SelectMe();
@@ -50,6 +65,7 @@ namespace Core
         public class Model
         {
             private Action _onSelectedStateChanged;
+            private Action _onAvailableStateChanged;
 
             private readonly Hat _hat;
             private readonly UIHatsPanel.Model _owner;
@@ -72,20 +88,32 @@ namespace Core
                 _owner.TrySelect(this);
             }
             
-            public Model OnSelectionChanged(Action onSelectionChanged)
+            public Model OnSelectionChanged(Action onChanged)
             {
-                _onSelectedStateChanged = onSelectionChanged;
+                _onSelectedStateChanged = onChanged;
                 _onSelectedStateChanged?.Invoke();
                 return this;
             }
+            
+            public Model OnAvailableChanged(Action onChanged)
+            {
+                _onAvailableStateChanged = onChanged;
+                return this;
+            }
 
-            public void SetSelectedState(bool newState)
+            internal void SetSelectedState(bool newState)
             {
                 if (_selected != newState)
                 {
                     _selected = newState;
                     _onSelectedStateChanged?.Invoke();
                 }
+            }
+            
+            public async Task Buy()
+            {
+                await Hat.Buy();
+                _onAvailableStateChanged?.Invoke();
             }
         }
     }

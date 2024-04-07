@@ -191,7 +191,7 @@ namespace Core
             {
                 if (_selected.Cost < _saveProgress.GetAvailableCoins())
                 {
-                    await _selected.Hat.Buy();
+                    await _selected.Buy();
                     _onBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
                     
                     return true;
