@@ -58,16 +58,19 @@ namespace Core
                 }
 
                 _cancellationTokenSource = new CancellationTokenSource();
-                _ = UpScaleAsync(_cancellationTokenSource.Token);
+                _ = UpScaleAsync(_cancellationTokenSource.Token, Application.exitCancellationToken);
             }
         }
 
-        private async Task UpScaleAsync(CancellationToken cancellationToken)
+        private async Task UpScaleAsync(CancellationToken cancellationToken, CancellationToken exitToken)
         {
             var time = 0.5f;
             var timer = 0.0f;
+            
             while (timer < time)
             {
+                exitToken.ThrowIfCancellationRequested();
+                
                 if (cancellationToken.IsCancellationRequested)
                     return;
                 

@@ -49,7 +49,7 @@ namespace Core
             OnLowEmptySpaceChanged(false);
             _data.GameProcessor.OnScoreChanged += OnScoreChanged;
             OnScoreChanged(0);
-            _data.GameProcessor.OnConsumeCurrency += GameProcessor_OnConsumeCurrency;
+            ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
             OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
 
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
@@ -88,7 +88,7 @@ namespace Core
             _data.GameProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
 
             _data.GameProcessor.OnScoreChanged -= OnScoreChanged;
-            _data.GameProcessor.OnConsumeCurrency -= GameProcessor_OnConsumeCurrency;
+            ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency -= SaveController_OnConsumeCurrency;
 
             _data.GameProcessor.CastleSelector.OnCastleChanged -= CastleSelector_OnCastleChanged;
             var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
@@ -169,7 +169,7 @@ namespace Core
             yield return null;
         }
 
-        private void GameProcessor_OnConsumeCurrency(int amount)
+        private void SaveController_OnConsumeCurrency(int amount)
         {
             OnConsumeCurrency(amount, false);
         }

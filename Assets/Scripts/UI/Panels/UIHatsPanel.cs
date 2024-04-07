@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Save;
 using Skins;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Core
@@ -13,14 +16,19 @@ namespace Core
         [SerializeField] private ScrollRect _container;
         [SerializeField] private UIHatsPanel_HatItem _itemPrefab;
         [SerializeField] private Button _buyBtn;
+        [SerializeField] private Text _buyBtnPriceLabel;
         [SerializeField] private Text _alreadyHaveLabel;
-
+        [SerializeField] private UIGameScreen_Coins _coins;
+        
         private Model _model;
         private UIHatsPanelData _data;
+        private UIHatsPanel_HatItem.Model _selectedItem;
         
         private void Awake()
         {
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
+            _buyBtn.onClick.AddListener(BuyBtn_OnClick);
+            _coins.OnClick += Coins_OnClick;
         }
 
         private void CloseBtn_OnClick()
@@ -28,6 +36,29 @@ namespace Core
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
 
+        private async void BuyBtn_OnClick()
+        {
+            if (_model.CanBuySelectedItem())
+            {
+                var buyResult = await _model.BuySelectedItem();
+                if (buyResult)
+                {
+                    
+                }
+            }
+            else
+            {
+                await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIShopPanel>(
+                    new UIShopPanelData()
+                    {
+                        GameProcessor = _data.GameProcessor,
+                        Market = _data.GameProcessor.Market,
+                        Items = UIShopPanel.FillShopItems(_data.GameProcessor),
+                    },
+                    Application.exitCancellationToken);
+            }
+        }
+        
         public override void SetData(UIScreenData undefinedData)
         {
             _data = undefinedData as UIHatsPanelData;
@@ -36,9 +67,45 @@ namespace Core
                 .OnItemsUpdated(OnItemsUpdated)
                 .OnBoughtButtonActiveChanged(OnBoughtButtonActiveChanged);
             
-            _model.SetData(_data.Hats, _data.SelectedHat, _data.HatsChanger);
+            _model.SetData(
+                _data.Hats, 
+                _data.SelectedHat, 
+                _data.HatsChanger, 
+                ApplicationController.Instance.SaveController.SaveProgress);
+            
+            ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
+            OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
         }
 
+        protected override void InnerHide()
+        {
+            base.InnerHide();
+            
+            ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency -= SaveController_OnConsumeCurrency;
+        }
+
+        private void SaveController_OnConsumeCurrency(int amount)
+        {
+            OnConsumeCurrency(amount, false);
+        }
+
+        private void OnConsumeCurrency(int amount, bool force)
+        {
+            _coins.Add(-amount, force);
+        }
+        
+        private async void Coins_OnClick()
+        {
+            await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIShopPanel>(
+                new UIShopPanelData()
+                {
+                    GameProcessor = _data.GameProcessor,
+                    Market = _data.GameProcessor.Market,
+                    Items = UIShopPanel.FillShopItems(_data.GameProcessor),
+                },
+                Application.exitCancellationToken);
+        }
+        
         private void OnItemsUpdated(IEnumerable<UIHatsPanel_HatItem.Model> items)
         {
             var oldViews = _container.content.GetComponents<UIHatsPanel_HatItem>();
@@ -56,9 +123,12 @@ namespace Core
 
         private void OnBoughtButtonActiveChanged(bool active, UIHatsPanel_HatItem.Model selected)
         {
+            _selectedItem = selected;
+            
             if (active)
             {
                 _buyBtn.gameObject.SetActive(true);
+                _buyBtnPriceLabel.text = _selectedItem.Cost.ToString();
                 _alreadyHaveLabel.gameObject.SetActive(false);
             }
             else
@@ -74,10 +144,18 @@ namespace Core
             private Action<bool, UIHatsPanel_HatItem.Model> _onBoughtButtonActiveChanged;
 
             private readonly List<UIHatsPanel_HatItem.Model> _items = new List<UIHatsPanel_HatItem.Model>();
-            private IHatsChanger _changer;
+            private UIHatsPanel_HatItem.Model _selected;
             
-            public void SetData(IEnumerable<Hat> hats, Hat selectedHat, IHatsChanger changer)
+            private IHatsChanger _changer;
+            private SaveProgress _saveProgress;
+            
+            public void SetData(
+                IEnumerable<Hat> hats,
+                Hat selectedHat, 
+                IHatsChanger changer,
+                SaveProgress saveProgress)
             {
+                _saveProgress = saveProgress;
                 _changer = changer;
                 
                 _items.AddRange(hats
@@ -87,8 +165,8 @@ namespace Core
                 var initialSelected = _items.Find(i => i.Hat == selectedHat);
                 if (initialSelected == null)
                     initialSelected = _items.FirstOrDefault();
-                
-                if(initialSelected != null)
+
+                if (initialSelected != null)
                     TrySelect(initialSelected);
             }
 
@@ -104,15 +182,35 @@ namespace Core
                 return this;
             }
 
+            public bool CanBuySelectedItem()
+            {
+                return _selected.Cost < _saveProgress.GetAvailableCoins();
+            }
+
+            public async Task<bool> BuySelectedItem()
+            {
+                if (_selected.Cost < _saveProgress.GetAvailableCoins())
+                {
+                    await _selected.Hat.Buy();
+                    _onBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
+                    
+                    return true;
+                }
+                
+                return false;
+            }
+            
             internal void TrySelect(UIHatsPanel_HatItem.Model newSelected)
             {
-                foreach (var item in _items)
-                    item.SetSelectedState(item == newSelected);
-
-                if (newSelected.Available)
-                    _changer.SetHat(newSelected.Id);
+                _selected = newSelected;
                 
-                _onBoughtButtonActiveChanged?.Invoke(!newSelected.Available, newSelected);
+                foreach (var item in _items)
+                    item.SetSelectedState(item == _selected);
+
+                if (_selected.Available)
+                    _changer.SetHat(_selected.Id);
+                
+                _onBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
             }
         }
     }

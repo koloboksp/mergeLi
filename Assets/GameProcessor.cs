@@ -114,7 +114,7 @@ public class GameProcessor : MonoBehaviour,
     public event Action<bool> OnLowEmptySpaceChanged;
     public event Action<bool> OnFreeSpaceIsOverChanged; 
 
-    public event Action<int> OnConsumeCurrency;
+   // public event Action<int> OnConsumeCurrency;
     public event Action<int> OnAddCurrency;
 
     [SerializeField] private Scene _scene;
@@ -786,8 +786,6 @@ public class GameProcessor : MonoBehaviour,
     public void ConsumeCoins(int amount)
     {
         ApplicationController.Instance.SaveController.SaveProgress.ConsumeCoins(amount);
-        
-        OnConsumeCurrency?.Invoke(amount);
     }
 
     public void AddCurrency(int amount)

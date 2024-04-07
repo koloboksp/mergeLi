@@ -6,6 +6,8 @@ namespace Save
 {
     public class SaveProgress
     {
+        public event Action<int> OnConsumeCurrency;
+        
         private readonly SaveController _controller;
         private readonly string _fileName;
 
@@ -28,10 +30,12 @@ namespace Save
             return _progress.Coins;
         }
 
-        public void ConsumeCoins(int count)
+        public void ConsumeCoins(int amount)
         {
-            _progress.Coins -= count;
+            _progress.Coins -= amount;
             _controller.Save(_progress, _fileName);
+            
+            OnConsumeCurrency?.Invoke(amount);
         }
 
         public bool IsCastleCompleted(string id)
@@ -92,6 +96,25 @@ namespace Save
                 return true;
 
             return false;
+        }
+        
+        public void BuyHat(string id)
+        {
+            var hatProgress = _progress.Hats.Find(i => string.Equals(i.Id, id, StringComparison.Ordinal));
+            if (hatProgress != null)
+            {
+                
+            }
+            else
+            {
+                _progress.Hats.Add(
+                    new HatProgress()
+                    {
+                        Id = id,
+                    });
+            }
+            
+            _controller.Save(_progress, _fileName);
         }
         
         public long GetGiftLastCollectedTimestamp(string id)
@@ -180,6 +203,34 @@ namespace Save
 
             _controller.Save(_progress, _fileName);
         }
+
+        public void DebugChangeHatBought(string id, bool state)
+        {
+            if (state)
+            {
+                if (_progress.Hats.Find(i => i.Id == id) != null)
+                {
+                    _progress.Hats.Add(
+                        new HatProgress()
+                        {
+                            Id = id,
+                        });
+                    _controller.Save(_progress, _fileName);
+                }
+            }
+            else
+            {
+                if (_progress.Hats.RemoveAll(i => i.Id == id) > 0)
+                    _controller.Save(_progress, _fileName);
+            }
+        }
+        
+        public void DebugSetCoins(int count)
+        {
+            _progress.Coins = count;
+            _controller.Save(_progress, _fileName);
+        }
 #endif
+        
     }
 }

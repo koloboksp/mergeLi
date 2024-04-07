@@ -65,6 +65,7 @@ namespace Core
             public bool Selected => _selected;
             public string Id => _hat.Id;
             public bool Available => _hat.Available;
+            public int Cost => _hat.Cost;
 
             public void SelectMe()
             {
