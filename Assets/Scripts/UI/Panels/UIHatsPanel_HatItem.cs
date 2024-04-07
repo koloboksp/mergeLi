@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Atom;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -32,7 +33,7 @@ namespace Core
                 .OnSelectionChanged(OnSelectionChanged)
                 .OnAvailableChanged(OnAvailableChanged);
             
-            _name.text = _model.Id;
+            _name.text = ApplicationController.Instance.LocalizationController.GetText(_model.NameKey);
             SetLockIcon();
             
             _fakeScene.GameProcessor = gameProcessor;
@@ -82,6 +83,7 @@ namespace Core
             public string Id => _hat.Id;
             public bool Available => _hat.Available;
             public int Cost => _hat.Cost;
+            public GuidEx NameKey => Hat.NameKey;
 
             public void SelectMe()
             {

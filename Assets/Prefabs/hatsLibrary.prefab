@@ -48,6 +48,11 @@ MonoBehaviour:
   _isFree: 0
   _cost: 30
   _hatView: {fileID: 1193866018883370369}
+  _nameKey:
+    m03: 4142426259
+    m47: 3402449540
+    m8B: 2164405267
+    mCF: 1720610784
 --- !u!1 &1116677967992718025
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,6 +177,11 @@ MonoBehaviour:
   _isFree: 1
   _cost: 0
   _hatView: {fileID: 2874018374223441235}
+  _nameKey:
+    m03: 4090389543
+    m47: 179326363
+    m8B: 2967753317
+    mCF: 2561565801
 --- !u!1 &1718016895502999477
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,6 +451,11 @@ MonoBehaviour:
   _isFree: 1
   _cost: 0
   _hatView: {fileID: 5534983334662596011}
+  _nameKey:
+    m03: 2215366714
+    m47: 2302296155
+    m8B: 2450322461
+    mCF: 2799230718
 --- !u!1 &6766332876348857793
 GameObject:
   m_ObjectHideFlags: 0

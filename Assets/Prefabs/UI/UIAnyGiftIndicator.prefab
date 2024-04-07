@@ -182,11 +182,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6288550315363047766}
+  - component: {fileID: 2558430079351784825}
   - component: {fileID: 4391774730095598363}
   - component: {fileID: 5611211464670836208}
   - component: {fileID: 6338179249586222584}
   m_Layer: 5
-  m_Name: readyLbl
+  m_Name: takeLbl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,6 +213,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2558430079351784825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1600777416903327013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3af2499ac920dc48a31c82df90c9b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Target: {fileID: 5611211464670836208}
+  _id:
+    m03: 2506734954
+    m47: 3693365546
+    m8B: 2543099583
+    mCF: 2836143481
 --- !u!222 &4391774730095598363
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -253,7 +272,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ready!
+  m_Text: Text not found(9569bd6adc24492a97949ebfa90c1d79)
 --- !u!114 &6338179249586222584
 MonoBehaviour:
   m_ObjectHideFlags: 0
