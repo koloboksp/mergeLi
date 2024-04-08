@@ -108,5 +108,32 @@ namespace Core
         }
 
         public IScene Scene => _scene;
+        public IReadOnlyList<(Vector3Int intPosition, int points)> NextBallsData { get; }
+        public bool IsEmpty { get; }
+
+        public Vector3 ScreenPointToWorld(Vector3 position)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Vector3Int GetPointGridIntPosition(Vector3 position)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Clear()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Ball PureCreateBall(Vector3Int gridPosition, int points)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<(Vector3Int gridPosition, int points)> AddBalls(IEnumerable<(Vector3Int gridPosition, int points)> newBallsData)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

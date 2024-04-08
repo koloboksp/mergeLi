@@ -11,34 +11,35 @@ namespace Core
         [SerializeField] private Text _sessionScoreLabel;
         [SerializeField] private Text _bestScoreLabel;
         [SerializeField] private UIProgressBar _partProgressBar;
-        
+        [SerializeField] private UIScore _sessionScore;
+
         [SerializeField] private UIUpScaleEffect _iconUpScaleEffect;
         [SerializeField] private int _effectPriority;
-
-        public void SetSessionScore(int sessionScore, int bestSessionScore)
-        {
-            _sessionScoreLabel.text = sessionScore.ToString();
-            _bestScoreLabel.text = bestSessionScore.ToString();
-        }
         
         public void InstantSet(int points, int maxPoints)
         {
             _partProgressBar.InstantSet(points, maxPoints);
         }
+
+        public void InstantSetSession(int sessionPoints, int previousSessionPoints)
+        {
+            _sessionScore.InstantSet(sessionPoints, previousSessionPoints);
+        }
         
-        public void Set(float duration, int oldPoints, int newPoints, int maxPoints)
+        public void Set(float duration, 
+            int oldPoints,
+            int newPoints, 
+            int maxPoints)
         {
             _partProgressBar.Set(duration, oldPoints, newPoints, maxPoints);
         }
         
-        public void InstantComplete()
+        public void SetSession(float duration, 
+            int sessionOldPoints,
+            int sessionNewPoints, 
+            int previousSessionPoints)
         {
-            
-        }
-
-        public void Complete(float duration)
-        {
-           
+            _sessionScore.Set(duration, sessionOldPoints, sessionNewPoints, previousSessionPoints);
         }
         
         public int Priority => _effectPriority;
@@ -47,6 +48,11 @@ namespace Core
         public void Receive(int amount)
         {
             _iconUpScaleEffect.Add();
+        }
+
+        public void ReceiveFinished()
+        {
+            
         }
     }
 }

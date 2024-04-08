@@ -31,12 +31,8 @@ namespace Core
             SoundController.RemoveListener(this);
         }
 
-        public void SetData(GameProcessor processor)
+        public void SetData()
         {
-            if (_playingTask == null)
-            {
-                _playingTask = Play(Application.exitCancellationToken);
-            }
         }
 
         public void Stop()
@@ -63,9 +59,7 @@ namespace Core
                 _playingTask = Play(Application.exitCancellationToken);
             }
         }
-
-        private bool _lastState;
-        private float _lastTime;
+        
         private async Task Play(CancellationToken exitToken)
         {
             _stopPlaying = new CancellationTokenSource();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Core.Effects;
 using Core.Goals;
 using Unity.VisualScripting;
@@ -17,6 +18,7 @@ public class CastleSelector : MonoBehaviour
     [SerializeField] private Material _selectionMaterial;
 
     private Castle _castleInstance;
+    private List<string> _completedInSessionCastles = new List<string>();
     
     public CastleLibrary Library => _library;
     public Castle ActiveCastle => _castleInstance;
@@ -25,6 +27,7 @@ public class CastleSelector : MonoBehaviour
     {
         try
         {
+            _completedInSessionCastles.Add(castle.Id);
             OnCastleCompleted?.Invoke(castle);
         }
         catch (Exception e)
@@ -33,10 +36,21 @@ public class CastleSelector : MonoBehaviour
         }
     }
 
+    public int GetEarnedPoints()
+    {
+        var earnedPoints = 0;
+        
+        if (ActiveCastle != null)
+        {
+            earnedPoints += ActiveCastle.GetPoints();
+        }
+
+        return earnedPoints;
+    }
+    
     public void SetData()
     {
-       // _gameProcessor.PlayerInfo.OnCastleChanged += PlayerInfo_OnCastleChanged;
-       // PlayerInfo_OnCastleChanged();
+      
     }
 
     public void SelectActiveCastle(string id)

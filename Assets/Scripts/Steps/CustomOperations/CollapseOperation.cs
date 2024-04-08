@@ -118,10 +118,9 @@ namespace Core.Steps.CustomOperations
             
             await Task.WhenAll(removeBallTasks);
             
-            //_field.DestroyBalls(_ballsToRemove.ConvertAll(i => i.ball));
             _pointsAdded = sumPoints;
 
-            if(_pointsAdded != 0)
+            if (_pointsAdded != 0)
                 _pointsChangeListener.AddPoints(_pointsAdded);
 
             return null;

@@ -56,6 +56,10 @@ namespace Save
 
         public void SetBestSessionScore(int score)
         {
+            if (_progress.BestSessionScore < score)
+            {
+                
+            }
             _progress.BestSessionScore = score;
             _controller.Save(_progress, _fileName);
         }

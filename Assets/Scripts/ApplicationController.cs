@@ -27,7 +27,6 @@ namespace Core
         private SoundController _soundController;
         private SaveController _saveController;
         private IAnalyticsController _analyticsController;
-        private DependenciesController _dependenciesController;
         private TaskCompletionSource<bool> _initialization;
         private bool _initializated = false;
         private Atom.Version _version;
@@ -50,7 +49,6 @@ namespace Core
             _instance._initialization = new TaskCompletionSource<bool>();
 
             _instance._version = new(Application.version);
-            _instance._dependenciesController = new DependenciesController();
             
             _instance._saveController = new SaveController();
             await _instance._saveController.InitializeAsync(CancellationToken.None);
@@ -84,6 +82,7 @@ namespace Core
                 _ = _instance._socialService.AuthenticateAsync(CancellationToken.None);
             
             _instance._uiPanelController = new UIPanelController();
+            DependenciesController.Instance.Set(_instance._uiPanelController);
             
             _instance._initializated = true;
             _instance._initialization.SetResult(true);

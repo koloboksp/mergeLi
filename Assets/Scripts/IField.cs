@@ -30,6 +30,13 @@ public interface IField
     List<Vector2Int> GetPath(Vector3Int from, Vector3Int to);
     void DestroyBall(Ball ball);
     IScene Scene { get; }
+    IReadOnlyList<(Vector3Int intPosition, int points)> NextBallsData { get; }
+    bool IsEmpty { get; }
+    Vector3 ScreenPointToWorld(Vector3 position);
+    Vector3Int GetPointGridIntPosition(Vector3 position);
+    void Clear();
+    Ball PureCreateBall(Vector3Int gridPosition, int points);
+    public List<(Vector3Int gridPosition, int points)> AddBalls(IEnumerable<(Vector3Int gridPosition, int points)> newBallsData);
 }
 
 public interface IFieldView

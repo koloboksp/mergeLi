@@ -7,8 +7,8 @@ namespace Core.Effects
     {
         int Priority { get; }
         Transform Anchor { get; }
-        
         void Receive(int amount);
+        void ReceiveFinished();
     }
     
     public class CoinsEffectReceiver : MonoBehaviour, IPointsEffectReceiver
@@ -16,7 +16,8 @@ namespace Core.Effects
         [SerializeField] private Transform _anchor;
         
         public event Action<int> OnReceive;
-        
+        public event Action OnReceiveFinished;
+
         public int Priority => 0;
         public Transform Anchor
         {
@@ -27,6 +28,11 @@ namespace Core.Effects
         public void Receive(int amount)
         {
             OnReceive?.Invoke(amount);
+        }
+        
+        public void ReceiveFinished()
+        {
+            OnReceiveFinished?.Invoke();
         }
     }
 }

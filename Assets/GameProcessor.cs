@@ -70,9 +70,10 @@ public enum StepTag
     None,
 }
 
+
+
 public class GameProcessor : MonoBehaviour, 
     IRules, 
-    IPointsChangeListener, 
     ISessionProgressHolder,
     ISkinChanger,
     IHatsChanger
@@ -106,17 +107,18 @@ public class GameProcessor : MonoBehaviour,
     public event Action<Step, StepExecutionType> OnStepCompleted;
     public event Action<Step, StepExecutionType> OnBeforeStepStarted;
 
-    public event Action OnLose;
-    public event Action OnRestart;
+   // public event Action OnLose;
+   // public event Action OnRestart;
     public event Action OnUndoStepsClear;
     
-    public event Action<int> OnScoreChanged;
-    public event Action<bool> OnLowEmptySpaceChanged;
-    public event Action<bool> OnFreeSpaceIsOverChanged; 
+   // public event Action<int> OnScoreChanged;
+   // public event Action<bool> OnLowEmptySpaceChanged;
+   // public event Action<bool> OnFreeSpaceIsOverChanged; 
 
    // public event Action<int> OnConsumeCurrency;
     public event Action<int> OnAddCurrency;
 
+    [SerializeField] private SessionProcessor _sessionProcessor;
     [SerializeField] private Scene _scene;
     [SerializeField] private Field _field;
     [SerializeField] private StepMachine _stepMachine;
@@ -147,8 +149,6 @@ public class GameProcessor : MonoBehaviour,
     //todo extract
     [SerializeField] private GiveCoinsEffect _giveCoinsEffect;
     
-    [SerializeField] private bool _enableTutorial = true;
-    [SerializeField] private bool _forceTutorial;
     [SerializeField] private TutorialController _tutorialController;
     [FormerlySerializedAs("_fxLayer")] [SerializeField] private UIFxLayer _uiFxLayer;
 
@@ -158,14 +158,15 @@ public class GameProcessor : MonoBehaviour,
     private Ball _otherSelectedBall;
     private PointsCalculator _pointsCalculator;
     private int _score;
-    private bool _userStepFinished = false;
-    private bool _notAllBallsGenerated = false;
     private int _bestSessionScore;
-    private CancellationTokenSource _cancellationTokenSource;
+
+    private DependencyHolder<UIPanelController> _panelController;
+    
     private readonly List<Buff> _buffs = new();
     private readonly List<Achievement> _achievements = new ();
     private readonly List<Hat> _hats = new ();
 
+    public SessionProcessor SessionProcessor => _sessionProcessor;
     public Scene Scene => _scene;
     public int Score => _score;
     public IMarket Market => _market;
@@ -185,10 +186,15 @@ public class GameProcessor : MonoBehaviour,
     public SoundsPlayer SoundsPlayer => _soundsPlayer;
     public IReadOnlyList<Hat> Hats => _hats;
 
+    public int GeneratedBallsCountAfterMerge => _generatedBallsCountAfterMerge;
+    public int GeneratedBallsCountAfterMove => _generatedBallsCountAfterMove ;
+    public int GeneratedBallsCountOnStart => _generatedBallsCountOnStart;
+    public List<int> GeneratedBallsPointsRange => _generatedBallsPointsRange;
+
+    
     private void Awake()
     {
         _pointsCalculator = new PointsCalculator(this);
-        _cancellationTokenSource = new CancellationTokenSource();
         
         _market.OnBought += Market_OnBought;
         _giftsMarket.OnCollect += GiftsMarket_OnCollect;
@@ -212,15 +218,14 @@ public class GameProcessor : MonoBehaviour,
 
     private void OnDestroy()
     {
-        _cancellationTokenSource.Cancel();
-        _cancellationTokenSource.Dispose();
+        
     }
 
     private async void Start()
     {
-        await ApplicationController.Instance.WaitForInitializationAsync(_cancellationTokenSource.Token);
+        await ApplicationController.Instance.WaitForInitializationAsync(Application.exitCancellationToken);
         
-        _musicPlayer.SetData(this);
+        _musicPlayer.SetData();
         DependenciesController.Instance.Set(_soundsPlayer);
         
         _giftsMarket.Initialize();
@@ -249,181 +254,8 @@ public class GameProcessor : MonoBehaviour,
         
         _castleSelector.SetData();
         
-        await ProcessGameAsyncSafe(SessionPrepareType.FirstStart, _cancellationTokenSource.Token);
-    }
-    
-    private async Task ProcessGameAsyncSafe(SessionPrepareType prepareType, CancellationToken cancellationToken)
-    {
-        try
-        {
-            while (true)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    throw new OperationCanceledException();
-    
-                await PrepareSessionAsync(prepareType, cancellationToken);
-                await ProcessSessionAsync(cancellationToken);
-                prepareType = SessionPrepareType.Lose;
-            }
-        }
-        catch (OperationCanceledException e)
-        {
-            Debug.Log(e);
-        }
-    }
-
-    public enum SessionPrepareType
-    {
-        FirstStart,
-        RestartSession,
-        Lose,
-    }
-    
-    private async Task PrepareSessionAsync(SessionPrepareType prepareType, CancellationToken cancellationToken)
-    {
-        _bestSessionScore = ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore;
-        
-        var activeSkinName = ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin;
-        _scene.SetSkin(activeSkinName);
-            
-        var activeHatName = ApplicationController.Instance.SaveController.SaveSettings.ActiveHat;
-        _scene.SetHat(activeHatName);
-
-        
-        if (_enableTutorial && _tutorialController.CanStartTutorial(_forceTutorial))
-        {
-            await StartTutorial(_forceTutorial);
-        }
-        else
-        {
-            _castleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
-            _castleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
-            
-            if (HasPreviousSessionGame)
-            {
-                var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
-                _score = lastSessionProgress.Score;
-
-                _castleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
-                _castleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points, true);
-            
-                var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => (i.GridPosition, i.Points));
-                _field.AddBalls(ballsProgressData);
-
-                foreach (var buffProgress in lastSessionProgress.Buffs)
-                {
-                    var foundBuff = _buffs.Find(i => i.Id == buffProgress.Id);
-                    foundBuff.SetRestCooldown(buffProgress.RestCooldown);
-                }
-
-                _commonAnalytics.SetProgress(lastSessionProgress.Analytics);
-            }
-            else
-            {
-                _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
-            
-                ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
-                _field.Clear();
-                _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
-                _castleSelector.ActiveCastle.ResetPoints(true);
-            }
-            
-            if (prepareType == SessionPrepareType.FirstStart
-                || prepareType == SessionPrepareType.Lose)
-            {
-                var startPanel = await ApplicationController.Instance.UIPanelController.PushScreenAsync<UIStartPanel>(
-                    new UIStartPanelData()
-                    {
-                        GameProcessor = this,
-                        Instant = prepareType != SessionPrepareType.FirstStart,
-                    },
-                    cancellationToken);
-                await startPanel.ShowAsync(cancellationToken);
-                await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIGameScreen>(
-                    new UIGameScreenData() { GameProcessor = this },
-                    cancellationToken);
-               
-            }
-        }
-    }
-    
-    private async Task StartTutorial(bool forceTutorial)
-    {
-        await _tutorialController.TryStartTutorial(forceTutorial, _cancellationTokenSource.Token);
-    }
-    
-    private async Task ProcessSessionAsync(CancellationToken cancellationToken)
-    {
-        _field.GenerateNextBallPositions(_generatedBallsCountAfterMove, _generatedBallsPointsRange);
-
-        while (true)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            
-            if (!_field.IsEmpty && _notAllBallsGenerated) 
-                break;
-
-            _userStepFinished = false;
-            _notAllBallsGenerated = false;
-
-            while (!_userStepFinished)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                await Task.Yield();
-            }
-
-            CheckLowEmptySpace();
-        }
-
-        ClearUndoSteps();
-
-        try
-        {
-            OnLose?.Invoke();
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-        }
-        
-        var failPanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIGameFailPanel>(
-            new UIGameFailPanelData() { GameProcessor = this }, 
-            _cancellationTokenSource.Token);
-
-        await failPanel.ShowAsync(_cancellationTokenSource.Token);
-        ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
-        
-        _musicPlayer.PlayNext();
-    }
-    
-    private async void CastleSelector_OnCastleCompleted(Castle castle)
-    {
-        ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
-
-        _ = ProcessCastleCompleteAsync(GuidEx.Empty, null, null, null);
-    }
-
-    public async Task ProcessCastleCompleteAsync(
-        GuidEx dialogTextKey,
-        Func<Task> beforeGiveCoins, 
-        Func<Task> beforeSelectNextCastle,
-        Func<Task> afterSelectNextCastle)
-    {
-        //wait for last animation is playing 
-        await AsyncExtensions.WaitForSecondsAsync(2.0f, _cancellationTokenSource.Token);
-        
-        var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastleCompletePanel>(
-            new UICastleCompletePanelData()
-            {
-                GameProcessor = this, 
-                DialogTextKey = dialogTextKey,
-                BeforeGiveCoins = beforeGiveCoins,
-                BeforeSelectNextCastle = beforeSelectNextCastle,
-                AfterSelectNextCastle = afterSelectNextCastle,
-            }, 
-            _cancellationTokenSource.Token);
-
-        await castleCompletePanel.ShowAsync(_cancellationTokenSource.Token);
+        _sessionProcessor.SetData(this);
+        await _sessionProcessor.ProcessGameAsyncSafe(Application.exitCancellationToken);
     }
     
     void Field_OnPointerDown(Vector3Int pointerGridPosition)
@@ -504,7 +336,7 @@ public class GameProcessor : MonoBehaviour,
             new MoveOperation(from, to, _field),
             new MergeOperation(to, _field),
             new CollapseOperation(to, _collapsePointsEffectPrefab,
-                _field, _pointsCalculator, this),
+                _field, _pointsCalculator, _sessionProcessor),
             new CheckIfGenerationIsNecessary(
                 null,
                 new List<Operation>()
@@ -512,7 +344,7 @@ public class GameProcessor : MonoBehaviour,
                     new GenerateOperation(_generatedBallsCountAfterMerge,
                         _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
                     new CollapseOperation(_collapsePointsEffectPrefab,
-                        _field, _pointsCalculator, this)
+                        _field, _pointsCalculator, _sessionProcessor)
                 })));
     }
 
@@ -523,7 +355,7 @@ public class GameProcessor : MonoBehaviour,
                 .SubscribeCompleted(OnDeselectBall),
             new MoveOperation(from, to, _field),
             new CollapseOperation(to, _collapsePointsEffectPrefab,
-                _field, _pointsCalculator, this),
+                _field, _pointsCalculator, _sessionProcessor),
             new CheckIfGenerationIsNecessary(
                 null,
                 new List<Operation>()
@@ -531,7 +363,7 @@ public class GameProcessor : MonoBehaviour,
                     new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove,
                         _generatedBallsPointsRange, _field),
                     new CollapseOperation(_collapsePointsEffectPrefab, _field,
-                        _pointsCalculator, this)
+                        _pointsCalculator, _sessionProcessor)
                 })));
     }
 
@@ -554,18 +386,7 @@ public class GameProcessor : MonoBehaviour,
                 if (buff.RestCooldown != 0)
                     step.AddOperations(new List<Operation>() { new ProcessBuffCooldownOperation(buff) });
     }
-
-    private void CheckLowEmptySpace()
-    {
-        var emptyCellsCount = _field.CalculateEmptySpacesCount();
-        var threshold = Mathf.Max(_generatedBallsCountAfterMerge, _generatedBallsCountAfterMove);
-        var lowSpace = emptyCellsCount <= threshold;
-        var freeSpaceIsOver = emptyCellsCount <= 0;
-
-        OnLowEmptySpaceChanged?.Invoke(lowSpace);
-        OnFreeSpaceIsOverChanged?.Invoke(freeSpaceIsOver);
-    }
-
+    
     private void StepMachine_OnStepCompleted(Step step, StepExecutionType executionType)
     {
         if (UndoStepTags.ContainsKey(step.Tag))
@@ -577,8 +398,9 @@ public class GameProcessor : MonoBehaviour,
 
             var generateOperationData = step.GetData<GenerateOperationData>();
             if (generateOperationData != null)
-                _notAllBallsGenerated = generateOperationData.NewBallsData.Count < generateOperationData.RequiredAmount;
-            _userStepFinished = true;
+                _sessionProcessor.SetNotAllBallsGenerated(generateOperationData.NewBallsData.Count < generateOperationData.RequiredAmount);
+
+            _sessionProcessor.TriggerUserStepFinished();
         }
         
         try
@@ -622,24 +444,6 @@ public class GameProcessor : MonoBehaviour,
     }
 
     public int CurrencyAmount => ApplicationController.Instance.SaveController.SaveProgress.GetAvailableCoins();
-
-
-    public void AddPoints(int points)
-    {
-        _score += points;
-        
-        ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(_score);
-        OnScoreChanged?.Invoke(points);
-    }
-
-    public void RemovePoints(int points)
-    {
-        _score -= points;
-        
-        ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(_score);
-        
-        OnScoreChanged?.Invoke(-points);
-    }
     
     public void UseUndoBuff(int cost, UndoBuff buff)
     {
@@ -693,7 +497,7 @@ public class GameProcessor : MonoBehaviour,
                 new SpendOperation(cost, this, true),
                 new GradeOperation(ballsIndexes, gradeLevel, _field),
                 new ConfirmBuffUseOperation(buff),
-                new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _field, _pointsCalculator, this)));
+                new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor)));
     }
 
     public void SelectNextCastle()
@@ -794,35 +598,7 @@ public class GameProcessor : MonoBehaviour,
 
         OnAddCurrency?.Invoke(amount);
     }
-
-    public void RestartSession()
-    {
-        try
-        {
-            OnRestart?.Invoke();
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-        }
-        ClearUndoSteps();
-
-        _cancellationTokenSource.Cancel();
-        _cancellationTokenSource.Dispose();
-        
-        _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
-            
-        ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
-        _field.Clear();
-        _field.GenerateBalls(_generatedBallsCountOnStart, _generatedBallsPointsRange);
-        _castleSelector.ActiveCastle.ResetPoints(true);
-        
-        _cancellationTokenSource = new CancellationTokenSource();
-        _ = ProcessGameAsyncSafe(SessionPrepareType.RestartSession, _cancellationTokenSource.Token);
-        
-        _musicPlayer.PlayNext();
-    }
-
+    
     public void PauseGameProcess(bool pause)
     {
         
@@ -839,4 +615,6 @@ public class GameProcessor : MonoBehaviour,
         ApplicationController.Instance.SaveController.SaveSettings.ActiveHat = hatName;
         _scene.SetHat(hatName);
     }
+    
+    
 }

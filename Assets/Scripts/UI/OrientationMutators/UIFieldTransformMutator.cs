@@ -19,7 +19,7 @@ namespace Core.UI.OrientationMutators
             var leftBottom = derivedCorners[0];
             var rightTop = derivedCorners[2];
             
-            _owner.Data.GameProcessor.Scene.Field.AdaptSize(leftBottom, rightTop, derived.rect.size);
+          //  _owner.Data.GameProcessor.Scene.Field.AdaptSize(leftBottom, rightTop, derived.rect.size);
         }
     }
 }

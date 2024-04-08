@@ -50,7 +50,7 @@ public class Field : MonoBehaviour, IField
     public IFieldView View => _view;
 
     
-    public List<(Vector3Int intPosition, int points)> NextBallsData => _nextBallsData;
+    public IReadOnlyList<(Vector3Int intPosition, int points)> NextBallsData => _nextBallsData;
    
     private void Awake()
     { 

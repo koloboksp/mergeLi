@@ -49,6 +49,7 @@ namespace Core
                 var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
                 var castleOriginalParent = activeCastle.transform.parent;
                 activeCastle.transform.SetParent(_castleAnimationRoot, true);
+                var restCastlePoints = activeCastle.RestPoints();
                 
                 _animation.Play(_completeClipPart1.name);
                 _fireworks.SetActive(true);
@@ -80,6 +81,7 @@ namespace Core
                 activeCastle.transform.SetParent(_castleAnimationRoot, true);
                 activeCastle.transform.position = castlePosition;
                 activeCastle.transform.localScale = Vector3.one;
+                activeCastle.SetPoints(restCastlePoints, true);
 
                 if (_data.AfterSelectNextCastle != null)
                 {

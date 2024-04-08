@@ -45,9 +45,9 @@ namespace Core
             _data = undefinedData as UIGameScreenData;
             _data.GameProcessor.OnStepCompleted += OnStepCompleted;
             _data.GameProcessor.OnBeforeStepStarted += OnBeforeStepStarted;
-            _data.GameProcessor.OnLowEmptySpaceChanged += OnLowEmptySpaceChanged;
+            _data.GameProcessor.SessionProcessor.OnLowEmptySpaceChanged += OnLowEmptySpaceChanged;
             OnLowEmptySpaceChanged(false);
-            _data.GameProcessor.OnScoreChanged += OnScoreChanged;
+            _data.GameProcessor.SessionProcessor.OnScoreChanged += OnScoreChanged;
             OnScoreChanged(0);
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
             OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
@@ -85,9 +85,8 @@ namespace Core
             
             _data.GameProcessor.OnStepCompleted -= OnStepCompleted;
             _data.GameProcessor.OnBeforeStepStarted -= OnBeforeStepStarted;
-            _data.GameProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
-
-            _data.GameProcessor.OnScoreChanged -= OnScoreChanged;
+            _data.GameProcessor.SessionProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
+            _data.GameProcessor.SessionProcessor.OnScoreChanged -= OnScoreChanged;
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency -= SaveController_OnConsumeCurrency;
 
             _data.GameProcessor.CastleSelector.OnCastleChanged -= CastleSelector_OnCastleChanged;
@@ -120,16 +119,24 @@ namespace Core
 
                 var nextPointsGoal = activeCastle.GetLastPartCost();
                 var currentPointsGoal = activeCastle.GetLastPartPoints();
+                var score = _data.GameProcessor.Score;
+               // var score = _data.GameProcessor.Score;
+
                 _score.InstantSet(currentPointsGoal, nextPointsGoal);
+                _score.InstantSetSession(score, score);
             }
         }
 
         private void View_OnPartProgressStart(bool instant, float duration, int oldPoints, int newPoints, int maxPoints)
         {
             if (instant)
+            {
                 _score.InstantSet(newPoints, maxPoints);
+            }
             else
+            {
                 _score.Set(duration, oldPoints, newPoints, maxPoints);
+            }
         }
 
         private void View_OnPartBornStart(bool instant, float duration)
@@ -138,10 +145,6 @@ namespace Core
 
         private void View_OnPartCompleteStart(bool instant, float duration)
         {
-            if (instant)
-                _score.InstantComplete();
-            else
-                _score.Complete(duration);
         }
 
         private void OnBeforeStepStarted(Step sender, StepExecutionType executionType)
@@ -160,15 +163,10 @@ namespace Core
         }
 
         private void OnScoreChanged(int additionalPoints)
-        {
-            //_score.SetSessionScore(_data.GameProcessor.Score, _data.GameProcessor.BestSessionScore);
+        { ;
+            _score.SetSession(0.1f, _data.GameProcessor.Score, _data.GameProcessor.Score, _data.GameProcessor.Score);
         }
-
-        private IEnumerator ShowGoalReachAnimation()
-        {
-            yield return null;
-        }
-
+        
         private void SaveController_OnConsumeCurrency(int amount)
         {
             OnConsumeCurrency(amount, false);
@@ -217,6 +215,7 @@ namespace Core
             _buffsContainerRoot.gameObject.SetActive(false);
             _score.gameObject.SetActive(false);
             _coins.gameObject.SetActive(false);
+            _anyGiftIndicator.gameObject.SetActive(false);
             _showPauseBtn.gameObject.SetActive(false);
             _lowSpaceWarning.gameObject.SetActive(false);
         }
@@ -226,7 +225,10 @@ namespace Core
             if (element == UIGameScreenElement.ProgressBar)
                 _score.gameObject.SetActive(active);
             if (element == UIGameScreenElement.Coins)
+            {
                 _coins.gameObject.SetActive(active);
+                _anyGiftIndicator.gameObject.SetActive(active);
+            }
             if (element == UIGameScreenElement.Buffs)
                 _buffsContainerRoot.gameObject.SetActive(active);
             if (element == UIGameScreenElement.Settings)

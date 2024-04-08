@@ -76,7 +76,8 @@ namespace Core.Effects
             }
 
             await Task.WhenAll(_fxTasks);
-            
+            foreach (var receiver in receivers)
+                receiver.ReceiveFinished();
             Destroy(gameObject);
         }
         

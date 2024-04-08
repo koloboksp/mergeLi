@@ -46,7 +46,7 @@ namespace Core
             ApplicationController.Instance.UIPanelController.PopScreen(this);
             
             if(confirmRestartPanel.IsConfirmed)
-                _data.GameProcessor.RestartSession();
+                _data.GameProcessor.SessionProcessor.RestartSession();
         }
         
         private void ShopBtn_OnClick()

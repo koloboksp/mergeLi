@@ -48,15 +48,15 @@ namespace Analytics
 
             _gameProcessor = gameProcessor;
             _gameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
-            _gameProcessor.OnRestart += GameProcessor_OnRestart;
-            _gameProcessor.OnLose += GameProcessor_OnLose;
+            _gameProcessor.SessionProcessor.OnRestart += SessionProcessor_OnRestart;
+            _gameProcessor.SessionProcessor.OnLose += SessionProcessor_OnLose;
             _gameProcessor.AdsViewer.OnShowAds += AdsViewer_OnShowAds;
             _gameProcessor.GiftsMarket.OnCollect += GiftsMarket_OnCollect;
             _gameProcessor.Market.OnBought += Market_OnBought;
             _gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
         }
 
-        private void GameProcessor_OnRestart()
+        private void SessionProcessor_OnRestart()
         {
             ApplicationController.Instance.AnalyticsController.OnRestart(
                 _gameProcessor.CastleSelector.ActiveCastle.Id,
@@ -67,7 +67,7 @@ namespace Analytics
             ResetSession();
         }
 
-        private void GameProcessor_OnLose()
+        private void SessionProcessor_OnLose()
         {
             ApplicationController.Instance.AnalyticsController.OnLost(
                 _gameProcessor.CastleSelector.ActiveCastle.Id,

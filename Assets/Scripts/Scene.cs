@@ -23,7 +23,7 @@ public class Scene : MonoBehaviour, IScene
     private Hat _activeHat;
     
     public GameProcessor GameProcessor => _gameProcessor;
-    public Field Field => _field;
+    public IField Field => _field;
     public Transform SceneRoot => _sceneRoot;
     
     public SkinsLibrary SkinLibrary => _skinsLibrary;

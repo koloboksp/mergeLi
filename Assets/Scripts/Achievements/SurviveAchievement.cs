@@ -13,7 +13,7 @@ namespace Achievements
             base.SetData(gameProcessor);
             
             GameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
-            GameProcessor.OnFreeSpaceIsOverChanged += GameProcessor_OnFreeSpaceIsOverChanged;
+            GameProcessor.SessionProcessor.OnFreeSpaceIsOverChanged += GameProcessor_OnFreeSpaceIsOverChanged;
         }
 
         private void GameProcessor_OnStepCompleted(Step step, StepExecutionType stepExecutionType)

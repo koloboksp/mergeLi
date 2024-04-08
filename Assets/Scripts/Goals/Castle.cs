@@ -87,34 +87,40 @@ namespace Core.Goals
             gameObject.GetComponentsInChildren(_parts);
             _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
 
-            _gameProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
-            OnScoreChanged(0, true);
-
+            _gameProcessor.SessionProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
+            _completed = ProcessPoints(0, true);
+            
             _coinsEffectReceiver.OnReceive += CoinsEffectReceiver_OnReceive;
+            _coinsEffectReceiver.OnReceiveFinished += CoinsEffectReceiver_OnReceiveFinished;
         }
 
         private void OnDestroy()
         {
-            _gameProcessor.OnScoreChanged -= GameProcessor_OnScoreChanged;
+            _gameProcessor.SessionProcessor.OnScoreChanged -= GameProcessor_OnScoreChanged;
         }
 
-        private void GameProcessor_OnScoreChanged(int additionalPoints)
+        private void CoinsEffectReceiver_OnReceive(int amount)
         {
-            if (additionalPoints < 0)
-                OnScoreChanged(additionalPoints, false);
+            ProcessPoints(amount, false);
         }
-
-        private void OnScoreChanged(int additionalPoints, bool instant)
+        
+        private void CoinsEffectReceiver_OnReceiveFinished()
         {
             var oldCompletedState = _completed;
-            _completed = ProcessPoints(additionalPoints, instant);
+            _completed = ProcessPoints(0, false);
 
             if (oldCompletedState != _completed && _completed)
             {
                 OnCompleted?.Invoke(this);
             }
         }
-
+        
+        private void GameProcessor_OnScoreChanged(int additionalPoints)
+        {
+            if (additionalPoints < 0)
+                _completed = ProcessPoints(additionalPoints, false);
+        }
+        
         private bool ProcessPoints(int additionalPoints, bool instant)
         {
             _points += additionalPoints;
@@ -124,7 +130,7 @@ namespace Core.Goals
             if (_points >= castleCost)
             {
                 completed = true;
-                _points = castleCost;
+             //   _points = castleCost;
             }
 
             ApplyPointsToParts((int)Mathf.Sign(additionalPoints), instant);
@@ -196,27 +202,21 @@ namespace Core.Goals
                     _selectedPart.Select(true);
                     _coinsEffectReceiver.Anchor = _selectedPart.transform;
                 }
-
-
+                
                 OnPartSelected?.Invoke();
             }
-        }
-
-        private void CoinsEffectReceiver_OnReceive(int amount)
-        {
-            OnScoreChanged(amount, false);
         }
 
         public void SetPoints(int points, bool instant)
         {
             _points = points;
-            OnScoreChanged(0, instant);
+            _completed = ProcessPoints(points, instant);
         }
 
         public void ResetPoints(bool instant)
         {
             _points = 0;
-            OnScoreChanged(0, instant);
+            _completed = ProcessPoints(0, instant);
         }
 
         public void ForceComplete()
@@ -256,6 +256,11 @@ namespace Core.Goals
                 else
                     part.ChangeUnlockState(false, true);
             }
+        }
+
+        public int RestPoints()
+        {
+            return _points - GetCost();
         }
     }
 }
