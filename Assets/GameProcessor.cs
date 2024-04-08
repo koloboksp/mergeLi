@@ -135,7 +135,7 @@ public class GameProcessor : MonoBehaviour,
     [SerializeField] private int _generatedBallsCountAfterMerge = 2;
     [SerializeField] private int _generatedBallsCountAfterMove = 3;
     [SerializeField] private int _generatedBallsCountOnStart = 5;
-    [SerializeField] private List<int> _generatedBallsPointsRange = new List<int>();
+    [SerializeField] private int[] _generatedBallsPointsRange;
 
     [SerializeField] private RectTransform _uiScreensRoot;
    
@@ -189,7 +189,7 @@ public class GameProcessor : MonoBehaviour,
     public int GeneratedBallsCountAfterMerge => _generatedBallsCountAfterMerge;
     public int GeneratedBallsCountAfterMove => _generatedBallsCountAfterMove ;
     public int GeneratedBallsCountOnStart => _generatedBallsCountOnStart;
-    public List<int> GeneratedBallsPointsRange => _generatedBallsPointsRange;
+    public int[] GeneratedBallsPointsRange => _generatedBallsPointsRange;
 
     
     private void Awake()

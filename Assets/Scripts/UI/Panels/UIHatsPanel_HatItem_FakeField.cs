@@ -23,7 +23,7 @@ namespace Core
             throw new System.NotImplementedException();
         }
 
-        public List<(Vector3Int intPosition, int points)> GenerateBalls(int count, List<int> availableValues)
+        public List<BallDesc> GenerateBalls(int count, int[] availableValues)
         {
             throw new System.NotImplementedException();
         }
@@ -56,7 +56,7 @@ namespace Core
         }
 
         public IFieldView View { get; }
-        public void GenerateNextBallPositions(int count, List<int> availableValues)
+        public void GenerateNextBallPositions(int count, int[] availableValues)
         {
             throw new System.NotImplementedException();
         }
@@ -108,7 +108,7 @@ namespace Core
         }
 
         public IScene Scene => _scene;
-        public IReadOnlyList<(Vector3Int intPosition, int points)> NextBallsData { get; }
+        public IReadOnlyList<BallDesc> NextBallsData { get; }
         public bool IsEmpty { get; }
 
         public Vector3 ScreenPointToWorld(Vector3 position)
@@ -131,7 +131,7 @@ namespace Core
             throw new System.NotImplementedException();
         }
 
-        public List<(Vector3Int gridPosition, int points)> AddBalls(IEnumerable<(Vector3Int gridPosition, int points)> newBallsData)
+        public List<BallDesc> AddBalls(IEnumerable<BallDesc> newBallsData)
         {
             throw new System.NotImplementedException();
         }

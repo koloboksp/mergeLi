@@ -11,12 +11,12 @@ namespace Core.Steps.CustomOperations
         private readonly Vector3Int _position;
         private readonly int _amount;
         private readonly int _maxAmount;
-        private readonly List<int> _availableValues;
+        private readonly int[] _availableValues;
         private readonly IField _field;
 
-        private readonly List<(Vector3Int position, int points)> _generatedItems = new();
+        private readonly List<BallDesc> _generatedItems = new();
         
-        public GenerateOperation(int amount, int maxAmount, List<int> availableValues, IField field)
+        public GenerateOperation(int amount, int maxAmount, int[] availableValues, IField field)
         {
             _amount = amount;
             _maxAmount = maxAmount;
@@ -39,13 +39,13 @@ namespace Core.Steps.CustomOperations
 
         public override Operation GetInverseOperation()
         {
-            return new RemoveGeneratedItemsOperation(_generatedItems.Select(i => i.position), _field);
+            return new RemoveGeneratedItemsOperation(_generatedItems.Select(i => i.GridPosition), _field);
         }
     }
 
     public class GenerateOperationData
     {
         public int RequiredAmount;
-        public List<(Vector3Int position, int points)> NewBallsData;
+        public List<BallDesc> NewBallsData;
     }
 }

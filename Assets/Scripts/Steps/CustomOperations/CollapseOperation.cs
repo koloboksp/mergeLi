@@ -57,7 +57,7 @@ namespace Core.Steps.CustomOperations
             if (_positionSource == PositionSource.Fixed)
                 checkingPositions.Add(_position);
             else if (_positionSource == PositionSource.FromData)
-                checkingPositions.AddRange(Owner.GetData<GenerateOperationData>().NewBallsData.Select(i => i.position));
+                checkingPositions.AddRange(Owner.GetData<GenerateOperationData>().NewBallsData.Select(i => i.GridPosition));
 
             var data = new CollapseOperationData();
 

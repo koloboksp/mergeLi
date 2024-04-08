@@ -15,7 +15,7 @@ namespace Core.Tutorials
         
         protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
-            var ballsInfos = _balls.Select(i => (i.GridPosition, i.Points));
+            var ballsInfos = _balls.Select(i => new BallDesc(i.GridPosition, i.Points));
             _field.AddBalls(ballsInfos);
             var nextBallsInfos = _nextBalls.Select(i => (i.GridPosition, i.Points));
             _field.SetNextBalls(nextBallsInfos);

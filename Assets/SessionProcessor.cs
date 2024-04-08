@@ -196,7 +196,7 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
             _gameProcessor.CastleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
             _gameProcessor.CastleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points, true);
         
-            var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => (i.GridPosition, i.Points));
+            var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => new BallDesc(i.GridPosition, i.Points));
             _gameProcessor.GetField().AddBalls(ballsProgressData);
 
             foreach (var buffProgress in lastSessionProgress.Buffs)

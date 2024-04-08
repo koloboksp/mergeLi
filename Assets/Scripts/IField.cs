@@ -13,12 +13,12 @@ public interface IField
     IEnumerable<T> GetSomething<T>(Vector3Int position) where T : class;
     List<List<Ball>> CheckCollapse(Vector3Int checkingPosition);
     void DestroyBalls(List<Ball> ballsToRemove, bool force);
-    List<(Vector3Int intPosition, int points)> GenerateBalls(int count, List<int> availableValues);
+    List<BallDesc> GenerateBalls(int count, int[] availableValues);
     Vector3Int CreateBall(Vector3Int position, int points);
     public Vector3 GetPositionFromGrid(Vector3 gridPosition);
     Vector3 GetPositionFromGrid(Vector3Int gridPosition);
     public IFieldView View { get; }
-    void GenerateNextBallPositions(int count, List<int> availableValues);
+    void GenerateNextBallPositions(int count, int[] availableValues);
     IEnumerable<T> GetAll<T>();
     Vector2Int Size { get; }
     Vector3 CellSize();
@@ -30,13 +30,13 @@ public interface IField
     List<Vector2Int> GetPath(Vector3Int from, Vector3Int to);
     void DestroyBall(Ball ball);
     IScene Scene { get; }
-    IReadOnlyList<(Vector3Int intPosition, int points)> NextBallsData { get; }
+    IReadOnlyList<BallDesc> NextBallsData { get; }
     bool IsEmpty { get; }
     Vector3 ScreenPointToWorld(Vector3 position);
     Vector3Int GetPointGridIntPosition(Vector3 position);
     void Clear();
     Ball PureCreateBall(Vector3Int gridPosition, int points);
-    public List<(Vector3Int gridPosition, int points)> AddBalls(IEnumerable<(Vector3Int gridPosition, int points)> newBallsData);
+    public List<BallDesc> AddBalls(IEnumerable<BallDesc> newBallsData);
 }
 
 public interface IFieldView

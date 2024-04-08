@@ -41,7 +41,7 @@ public class Field : MonoBehaviour, IField
     
     private Vector3 _cellSize;
     
-    private readonly List<(Vector3Int intPosition, int points)> _nextBallsData = new();
+    private readonly List<BallDesc> _nextBallsData = new();
 
     public bool IsEmpty => _balls.Count < _size.x * _size.y;
     public Vector2Int Size => _size;
@@ -50,7 +50,7 @@ public class Field : MonoBehaviour, IField
     public IFieldView View => _view;
 
     
-    public IReadOnlyList<(Vector3Int intPosition, int points)> NextBallsData => _nextBallsData;
+    public IReadOnlyList<BallDesc> NextBallsData => _nextBallsData;
    
     private void Awake()
     { 
@@ -111,7 +111,7 @@ public class Field : MonoBehaviour, IField
         return CalculatePath(from, to);
     }
 
-    public List<(Vector3Int intPosition, int points)> GenerateBalls(int num, List<int> availableValues)
+    public List<BallDesc> GenerateBalls(int num, int[] availableValues)
     {
         return AddBalls(num, availableValues);
     }
@@ -135,7 +135,7 @@ public class Field : MonoBehaviour, IField
         return newBall;
     }
     
-    public void GenerateNextBallPositions(int count, List<int> availableValues)
+    public void GenerateNextBallPositions(int count, int[] availableValues)
     {
         var freeIndexes = new List<Vector3Int>();
         for (var x = 0; x < _size.x; x++)
@@ -144,7 +144,7 @@ public class Field : MonoBehaviour, IField
         foreach (var ball in _balls)
             freeIndexes.Remove(ball.IntGridPosition);
         foreach (var nextBall in _nextBallsData)
-            freeIndexes.Remove(nextBall.intPosition);
+            freeIndexes.Remove(nextBall.GridPosition);
 
         for (var i = 0; i < count; i++)
         {
@@ -153,7 +153,7 @@ public class Field : MonoBehaviour, IField
             var randomElementIndex = Random.Range(0, freeIndexes.Count);
             var freeIndex = freeIndexes[randomElementIndex];
             freeIndexes.RemoveAt(randomElementIndex);
-            _nextBallsData.Add((freeIndex, availableValues[Random.Range(0, availableValues.Count - 1)]));
+            _nextBallsData.Add(new BallDesc(freeIndex, availableValues[Random.Range(0, availableValues.Length - 1)]));
         }
     }
 
@@ -169,10 +169,10 @@ public class Field : MonoBehaviour, IField
         return _cellSize;
     }
 
-    public List<(Vector3Int intPosition, int points)> AddBalls(int amount, List<int> availableValues)
+    public List<BallDesc> AddBalls(int amount, int[] availableValues)
     {
         foreach (var ball in _balls)
-            _nextBallsData.RemoveAll(i => i.intPosition == ball.IntGridPosition);
+            _nextBallsData.RemoveAll(i => i.GridPosition == ball.IntGridPosition);
 
         if (_nextBallsData.Count < amount)
             GenerateNextBallPositions(amount - _nextBallsData.Count, availableValues);
@@ -186,26 +186,25 @@ public class Field : MonoBehaviour, IField
             }
         }
         
-        var newBallsData = new List<(Vector3Int intPosition, int points)>();
+        var newBallsData = new List<BallDesc>();
         foreach (var ballData in _nextBallsData)
-            newBallsData.Add((ballData.intPosition, ballData.points));
+            newBallsData.Add(new BallDesc(ballData.GridPosition, ballData.Points));
         
-
         _nextBallsData.Clear();
 
         foreach (var ballsPosition in newBallsData)
-            CreateBall(ballsPosition.intPosition, ballsPosition.points);
+            CreateBall(ballsPosition.GridPosition, ballsPosition.Points);
         
         return newBallsData;
     }
 
-    public List<(Vector3Int gridPosition, int points)> AddBalls(IEnumerable<(Vector3Int gridPosition, int points)> newBallsData)
+    public List<BallDesc> AddBalls(IEnumerable<BallDesc> newBallsData)
     {
-        var result = new List<(Vector3Int gridPosition, int points)>();
+        var result = new List<BallDesc>();
         foreach (var ballData in newBallsData)
         {
-            var gridPosition = CreateBall(ballData.gridPosition, ballData.points);
-            result.Add((gridPosition, ballData.points));
+            var gridPosition = CreateBall(ballData.GridPosition, ballData.Points);
+            result.Add(new BallDesc(gridPosition, ballData.Points));
         }
 
         return result;
