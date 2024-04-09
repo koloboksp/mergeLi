@@ -354,7 +354,7 @@ public class Field : MonoBehaviour, IField
         
     }
 
-    public void SetNextBalls(IEnumerable<(Vector3Int gridPosition, int points)> nextBallsInfos)
+    public void SetNextBalls(IEnumerable<BallDesc> nextBallsInfos)
     {
         _nextBallsData.Clear();
         _nextBallsData.AddRange(nextBallsInfos);

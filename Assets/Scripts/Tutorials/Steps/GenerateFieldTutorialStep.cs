@@ -9,16 +9,14 @@ namespace Core.Tutorials
 {
     public class GenerateFieldTutorialStep : TutorialStep
     {
-        [SerializeField] public List<BallDesc> _balls;
-        [SerializeField] public List<BallDesc> _nextBalls;
+        [SerializeField] public BallDesc[] _balls;
+        [SerializeField] public BallDesc[] _nextBalls;
         [SerializeField] public Field _field;
         
         protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
-            var ballsInfos = _balls.Select(i => new BallDesc(i.GridPosition, i.Points));
-            _field.AddBalls(ballsInfos);
-            var nextBallsInfos = _nextBalls.Select(i => (i.GridPosition, i.Points));
-            _field.SetNextBalls(nextBallsInfos);
+            _field.AddBalls(_balls);
+            _field.SetNextBalls(_nextBalls);
 
             return true;
         }
