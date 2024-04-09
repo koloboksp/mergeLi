@@ -79,7 +79,7 @@ namespace Core
         {
             var data = new UICastleLibraryPanelData
             {
-                Selected = _data.GameProcessor.GetFirstUncompletedCastle(),
+                Selected = _data.GameProcessor.SessionProcessor.GetFirstUncompletedCastle(),
                 Castles = _data.GameProcessor.CastleSelector.Library.Castles,
                 GameProcessor = _data.GameProcessor
             };
@@ -236,7 +236,7 @@ namespace Core
 
         private void SetPlayButton()
         {
-            if (_data.GameProcessor.HasPreviousSessionGame)
+            if (_data.GameProcessor.SessionProcessor.HasPreviousSessionGame)
             {
                 _playLabelBtn.Id = _continueLocKey;
             }

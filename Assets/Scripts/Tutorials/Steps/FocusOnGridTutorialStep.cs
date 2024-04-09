@@ -14,8 +14,8 @@ namespace Core.Tutorials
 
         protected override async Task<bool> InnerInitAsync(CancellationToken cancellationToken)
         {
-            var worldPosition = Tutorial.Controller.GameProcessor.GetField().GetWorldPosition(_gridPosition);
-            var cellSize = Tutorial.Controller.GameProcessor.GetField().GetWorldCellSize();
+            var worldPosition = Tutorial.Controller.GameProcessor.Field.GetWorldPosition(_gridPosition);
+            var cellSize = Tutorial.Controller.GameProcessor.Field.GetWorldCellSize();
             _focusedRect = new Rect(worldPosition - cellSize * _rectScale * 0.5f, cellSize * _rectScale);
             
             return true;

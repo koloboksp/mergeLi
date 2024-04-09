@@ -85,7 +85,7 @@ namespace Core
         {
             var data = new UICastleLibraryPanelData
             {
-                Selected = _data.GameProcessor.GetFirstUncompletedCastle(),
+                Selected = _data.GameProcessor.SessionProcessor.GetFirstUncompletedCastle(),
                 Castles = _data.GameProcessor.CastleSelector.Library.Castles,
                 GameProcessor = _data.GameProcessor
             };

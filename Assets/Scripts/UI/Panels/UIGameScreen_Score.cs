@@ -44,13 +44,23 @@ namespace Core
         
         public int Priority => _effectPriority;
         public Transform Anchor => _iconUpScaleEffect.Root;
-      
-        public void Receive(int amount)
+
+        public void ReceiveStart(int amount)
+        {
+            
+        }
+
+        public void Receive(int partAmount)
         {
             _iconUpScaleEffect.Add();
         }
 
         public void ReceiveFinished()
+        {
+            
+        }
+
+        public void Refund(int amount)
         {
             
         }

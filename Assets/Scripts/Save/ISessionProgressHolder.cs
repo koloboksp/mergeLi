@@ -6,11 +6,11 @@ namespace Save
 {
     public interface ISessionProgressHolder
     {
-        ICastle GetCastle();
+        IReadOnlyList<ICastle> GetCompletedCastles();
+        ICastle GetActiveCastle();
         IField GetField();
         IEnumerable<IBuff> GetBuffs();
-        int GetScore();
-
+        
         string GetFirstUncompletedCastle();
 
         ICommonAnalytics GetCommonAnalyticsAnalytics();

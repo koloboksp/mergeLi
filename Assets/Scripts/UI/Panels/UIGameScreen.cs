@@ -47,14 +47,14 @@ namespace Core
             _data.GameProcessor.OnBeforeStepStarted += OnBeforeStepStarted;
             _data.GameProcessor.SessionProcessor.OnLowEmptySpaceChanged += OnLowEmptySpaceChanged;
             OnLowEmptySpaceChanged(false);
-            _data.GameProcessor.SessionProcessor.OnScoreChanged += OnScoreChanged;
-            OnScoreChanged(0);
+            
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
             OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
-
+       
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
             CastleSelector_OnCastleChanged(_data.GameProcessor.CastleSelector.ActiveCastle);
-
+            Castle_OnPointsChanged(0);
+            
             foreach (var buff in _data.GameProcessor.Buffs)
             {
                 var uiBuff = Instantiate(buff.ControlPrefab, _buffsContainer.content);
@@ -86,16 +86,15 @@ namespace Core
             _data.GameProcessor.OnStepCompleted -= OnStepCompleted;
             _data.GameProcessor.OnBeforeStepStarted -= OnBeforeStepStarted;
             _data.GameProcessor.SessionProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
-            _data.GameProcessor.SessionProcessor.OnScoreChanged -= OnScoreChanged;
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency -= SaveController_OnConsumeCurrency;
 
             _data.GameProcessor.CastleSelector.OnCastleChanged -= CastleSelector_OnCastleChanged;
             var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
             if (activeCastle != null)
             {
-                activeCastle.View.OnPartBornStart -= View_OnPartBornStart;
-                activeCastle.View.OnPartCompleteStart -= View_OnPartCompleteStart;
-                activeCastle.View.OnPartProgressStart -= View_OnPartProgressStart;
+                activeCastle.View.OnPartBornStart -= CastleView_OnPartBornStart;
+                activeCastle.View.OnPartCompleteStart -= CastleView_OnPartCompleteStart;
+                activeCastle.View.OnPartProgressStart -= CastleView_OnPartProgressStart;
             }
 
             base.InnerHide();
@@ -105,29 +104,33 @@ namespace Core
         {
             if (previousCastle != null)
             {
-                previousCastle.View.OnPartBornStart -= View_OnPartBornStart;
-                previousCastle.View.OnPartCompleteStart -= View_OnPartCompleteStart;
-                previousCastle.View.OnPartProgressStart -= View_OnPartProgressStart;
+                previousCastle.View.OnPartBornStart -= CastleView_OnPartBornStart;
+                previousCastle.View.OnPartCompleteStart -= CastleView_OnPartCompleteStart;
+                previousCastle.View.OnPartProgressStart -= CastleView_OnPartProgressStart;
+                previousCastle.OnPointsAdd += Castle_OnPointsChanged;
+                previousCastle.OnPointsRefund -= Castle_OnPointsChanged;
             }
 
             var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
             if (activeCastle != null)
             {
-                activeCastle.View.OnPartBornStart += View_OnPartBornStart;
-                activeCastle.View.OnPartCompleteStart += View_OnPartCompleteStart;
-                activeCastle.View.OnPartProgressStart += View_OnPartProgressStart;
-
+                activeCastle.View.OnPartBornStart += CastleView_OnPartBornStart;
+                activeCastle.View.OnPartCompleteStart += CastleView_OnPartCompleteStart;
+                activeCastle.View.OnPartProgressStart += CastleView_OnPartProgressStart;
+                activeCastle.OnPointsAdd += Castle_OnPointsChanged;
+                activeCastle.OnPointsRefund += Castle_OnPointsChanged;
+                
                 var nextPointsGoal = activeCastle.GetLastPartCost();
                 var currentPointsGoal = activeCastle.GetLastPartPoints();
-                var score = _data.GameProcessor.Score;
-               // var score = _data.GameProcessor.Score;
+                var score = _data.GameProcessor.SessionProcessor.GetScore();
+                var bestScore = ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore;
 
                 _score.InstantSet(currentPointsGoal, nextPointsGoal);
-                _score.InstantSetSession(score, score);
+                _score.InstantSetSession(score, bestScore);
             }
         }
 
-        private void View_OnPartProgressStart(bool instant, float duration, int oldPoints, int newPoints, int maxPoints)
+        private void CastleView_OnPartProgressStart(bool instant, float duration, int oldPoints, int newPoints, int maxPoints)
         {
             if (instant)
             {
@@ -139,12 +142,20 @@ namespace Core
             }
         }
 
-        private void View_OnPartBornStart(bool instant, float duration)
+        private void CastleView_OnPartBornStart(bool instant, float duration)
         {
         }
 
-        private void View_OnPartCompleteStart(bool instant, float duration)
+        private void CastleView_OnPartCompleteStart(bool instant, float duration)
         {
+        }
+
+        private void Castle_OnPointsChanged(int dPoints)
+        {
+            var score = _data.GameProcessor.SessionProcessor.GetScore();
+            var bestScore = ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore;
+
+            _score.SetSession(0.1f, score, score, bestScore);
         }
 
         private void OnBeforeStepStarted(Step sender, StepExecutionType executionType)
@@ -160,11 +171,6 @@ namespace Core
         private void OnLowEmptySpaceChanged(bool state)
         {
             _lowSpaceWarning.SetActive(state);
-        }
-
-        private void OnScoreChanged(int additionalPoints)
-        { ;
-            _score.SetSession(0.1f, _data.GameProcessor.Score, _data.GameProcessor.Score, _data.GameProcessor.Score);
         }
         
         private void SaveController_OnConsumeCurrency(int amount)

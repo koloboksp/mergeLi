@@ -7,16 +7,21 @@ namespace Core.Effects
     {
         int Priority { get; }
         Transform Anchor { get; }
-        void Receive(int amount);
+        
+        void ReceiveStart(int amount);
+        void Receive(int partAmount);
         void ReceiveFinished();
+        void Refund(int amount);
     }
     
     public class CoinsEffectReceiver : MonoBehaviour, IPointsEffectReceiver
     {
         [SerializeField] private Transform _anchor;
         
+        public event Action<int> OnReceiveStart;
         public event Action<int> OnReceive;
         public event Action OnReceiveFinished;
+        public event Action<int> OnRefund;
 
         public int Priority => 0;
         public Transform Anchor
@@ -25,14 +30,24 @@ namespace Core.Effects
             set => _anchor = value;
         }
 
-        public void Receive(int amount)
+        public void ReceiveStart(int amount)
         {
-            OnReceive?.Invoke(amount);
+            OnReceiveStart?.Invoke(amount);
+        }
+        
+        public void Receive(int partAmount)
+        {
+            OnReceive?.Invoke(partAmount);
         }
         
         public void ReceiveFinished()
         {
             OnReceiveFinished?.Invoke();
+        }
+
+        public void Refund(int amount)
+        {
+            OnRefund?.Invoke(amount);
         }
     }
 }

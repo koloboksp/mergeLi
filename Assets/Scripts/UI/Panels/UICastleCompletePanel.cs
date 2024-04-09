@@ -75,7 +75,7 @@ namespace Core
                 if (_data.BeforeSelectNextCastle != null)
                     await _data.BeforeSelectNextCastle();
                 var castlePosition = activeCastle.transform.position;
-                _data.GameProcessor.SelectNextCastle();
+                _data.GameProcessor.SessionProcessor.SelectNextCastle();
 
                 activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
                 activeCastle.transform.SetParent(_castleAnimationRoot, true);

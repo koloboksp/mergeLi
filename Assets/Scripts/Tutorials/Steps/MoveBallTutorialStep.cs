@@ -12,7 +12,7 @@ namespace Core.Tutorials
 
         protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
-            var balls = Tutorial.Controller.GameProcessor.GetField().GetSomething<Ball>(_to);
+            var balls = Tutorial.Controller.GameProcessor.Field.GetSomething<Ball>(_to);
             if (balls.Count() > 0)
                 await Tutorial.Controller.GameProcessor.MergeBall(_from, _to, cancellationToken);
             else

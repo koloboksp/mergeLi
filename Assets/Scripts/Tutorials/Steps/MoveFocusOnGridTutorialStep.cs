@@ -15,7 +15,7 @@ namespace Core.Tutorials
 
         protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
-            var field = Tutorial.Controller.GameProcessor.GetField();
+            var field = Tutorial.Controller.GameProcessor.Field;
 
             Vector3 from = _fromGridPosition;
             Vector3 to = _toGridPosition;

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Analytics;
 using Atom;
 using Core;
 using Core.Goals;
+using Save;
 using UnityEngine;
 
-public class SessionProcessor : MonoBehaviour, IPointsChangeListener
+public class SessionProcessor : MonoBehaviour, 
+    ISessionProgressHolder
 {
     public event Action OnLose;
     public event Action OnRestart;
@@ -19,42 +22,15 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
     [SerializeField] private bool _enableTutorial;
     [SerializeField] private bool _forceTutorial;
     
-    // private GameProcessor _gameProcessor;
-    // private List<string> _completedCastle = new List<string>();
-    //
-    // public void SetData(GameProcessor gameProcessor)
-    // {
-    //     _gameProcessor = gameProcessor;
-    // }
-    //     
-    // public int GetEarnedPoints()
-    // {
-    //     var earnedPoints = 0;
-    //     
-    //     if (_gameProcessor._castleSelector.ActiveCastle != null)
-    //     {
-    //         earnedPoints += _gameProcessor._castleSelector.ActiveCastle.GetPoints();
-    //     }
-    //
-    //     return earnedPoints;
-    // }
-    //     
-    // public void Reset()
-    // {
-    //     //_gameProcessor._castleSelector.
-    //     //_points = 0;
-    //     //_completed = ProcessPoints(0, instant);
-    // }
-
     private CancellationTokenSource _restartTokenSource;
     private CancellationTokenSource _loseTokenSource;
+    private readonly List<CompletedCastleDesc> _completedCastles = new();
     
     private GameProcessor _gameProcessor;
     private DependencyHolder<UIPanelController> _panelController;
    
     private bool _userStepFinished = false;
     private bool _notAllBallsGenerated = false;
-    private int _score;
     
     public void SetData(GameProcessor gameProcessor)
     {
@@ -125,6 +101,7 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
                             Debug.LogException(e);
                         }
                         
+                        ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(GetScore());
                         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
 
                         _gameProcessor.MusicPlayer.PlayNext();
@@ -147,6 +124,8 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
                             exitToken);
 
                         await failPanel.ShowAsync(exitToken);
+                        
+                        ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(GetScore());
                         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
         
                         _gameProcessor.MusicPlayer.PlayNext();
@@ -191,13 +170,13 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
         if (HasPreviousSessionGame)
         {
             var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
-            _score = lastSessionProgress.Score;
-
-            _gameProcessor.CastleSelector.SelectActiveCastle(lastSessionProgress.Castle.Id);
-            _gameProcessor.CastleSelector.ActiveCastle.SetPoints(lastSessionProgress.Castle.Points, true);
+            
+            _completedCastles.AddRange(lastSessionProgress.CompletedCastles.Select(i=>new CompletedCastleDesc(i.Id, i.Points)));
+            _gameProcessor.CastleSelector.SelectActiveCastle(lastSessionProgress.ActiveCastle.Id);
+            _gameProcessor.CastleSelector.ActiveCastle.SetPoints(lastSessionProgress.ActiveCastle.Points, true);
         
             var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => new BallDesc(i.GridPosition, i.Points));
-            _gameProcessor.GetField().AddBalls(ballsProgressData);
+            _gameProcessor.Field.AddBalls(ballsProgressData);
 
             foreach (var buffProgress in lastSessionProgress.Buffs)
             {
@@ -205,22 +184,22 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
                 foundBuff.SetRestCooldown(buffProgress.RestCooldown);
             }
 
-            _gameProcessor.GetCommonAnalyticsAnalytics().SetProgress(lastSessionProgress.Analytics);
+            _gameProcessor.CommonAnalytics.SetProgress(lastSessionProgress.Analytics);
         }
         else
         {
             _gameProcessor.CastleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
         
             ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
-            _gameProcessor.GetField().Clear();
-            _gameProcessor.GetField().GenerateBalls(_gameProcessor.GeneratedBallsCountOnStart, _gameProcessor.GeneratedBallsPointsRange);
+            _gameProcessor.Field.Clear();
+            _gameProcessor.Field.GenerateBalls(_gameProcessor.GeneratedBallsCountOnStart, _gameProcessor.GeneratedBallsPointsRange);
             _gameProcessor.CastleSelector.ActiveCastle.ResetPoints(true);
         }
     }
     
     private async Task ProcessSessionAsync(CancellationToken restartToken, CancellationToken loseToken, CancellationToken cancellationToken)
     {
-        _gameProcessor.GetField().GenerateNextBallPositions(_gameProcessor.GeneratedBallsCountAfterMove, _gameProcessor.GeneratedBallsPointsRange);
+        _gameProcessor.Field.GenerateNextBallPositions(_gameProcessor.GeneratedBallsCountAfterMove, _gameProcessor.GeneratedBallsPointsRange);
 
         while (true)
         {
@@ -228,7 +207,7 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
             restartToken.ThrowIfCancellationRequested();
             loseToken.ThrowIfCancellationRequested();
 
-            if (!_gameProcessor.GetField().IsEmpty && _notAllBallsGenerated)
+            if (!_gameProcessor.Field.IsEmpty && _notAllBallsGenerated)
             {
                 _loseTokenSource.Cancel();
             }
@@ -253,6 +232,8 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
     {
         ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
 
+        _completedCastles.Add(new CompletedCastleDesc(castle.Id, castle.GetPoints()));
+        
         _ = ProcessCastleCompleteAsync(GuidEx.Empty, null, null, null, Application.exitCancellationToken);
     }
     
@@ -279,7 +260,27 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
 
         await castleCompletePanel.ShowAsync(exitToken);
     }
-    
+
+    public IReadOnlyList<ICastle> GetCompletedCastles()
+    {
+        return _completedCastles;
+    }
+
+    public ICastle GetActiveCastle()
+    {
+        return _gameProcessor.CastleSelector.ActiveCastle;
+    }
+
+    public IField GetField()
+    {
+        return _gameProcessor.Field;
+    }
+
+    public IEnumerable<IBuff> GetBuffs()
+    {
+        return _gameProcessor.Buffs;
+    }
+
     public string GetFirstUncompletedCastle()
     {
         var firstUncompletedCastle = _gameProcessor.CastleSelector.Library.Castles.FirstOrDefault(i => !ApplicationController.Instance.SaveController.SaveProgress.IsCastleCompleted(i.Id));
@@ -288,10 +289,20 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
 
         return firstUncompletedCastle.Id;
     }
+
+    public void SelectNextCastle()
+    {
+        _gameProcessor.CastleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
+    }
     
+    public ICommonAnalytics GetCommonAnalyticsAnalytics()
+    {
+        return _gameProcessor.CommonAnalytics;
+    }
+
     private void CheckLowEmptySpace()
     {
-        var emptyCellsCount = _gameProcessor.GetField().CalculateEmptySpacesCount();
+        var emptyCellsCount = _gameProcessor.Field.CalculateEmptySpacesCount();
         var threshold = Mathf.Max(_gameProcessor.GeneratedBallsCountAfterMerge, _gameProcessor.GeneratedBallsCountAfterMove);
         var lowSpace = emptyCellsCount <= threshold;
         var freeSpaceIsOver = emptyCellsCount <= 0;
@@ -318,26 +329,36 @@ public class SessionProcessor : MonoBehaviour, IPointsChangeListener
     {
         _notAllBallsGenerated = state;
     }
-
-    public void AddPoints(int points)
-    {
-        _score += points;
-        
-        ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(_score);
-        OnScoreChanged?.Invoke(points);
-    }
-
-    public void RemovePoints(int points)
-    {
-        _score -= points;
-        
-        ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(_score);
-        
-        OnScoreChanged?.Invoke(-points);
-    }
-
+    
     public void RestartSession()
     {
         _restartTokenSource.Cancel();
+    }
+
+    public int GetScore()
+    {
+        var score = 0;
+        score += _completedCastles.Sum(i => i.GetPoints());
+        score += _gameProcessor.CastleSelector.ActiveCastle.GetPoints();
+
+        return score;
+    }
+    
+    public class CompletedCastleDesc : ICastle
+    {
+        public string Id { get; }
+        private int Points { get; }
+        public bool Completed { get; }
+
+        public CompletedCastleDesc(string id, int points)
+        {
+            Id = id;
+            Points = points;
+        }
+        
+        public int GetPoints()
+        {
+            return Points;
+        }
     }
 }

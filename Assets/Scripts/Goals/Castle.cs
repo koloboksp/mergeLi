@@ -15,6 +15,9 @@ namespace Core.Goals
     {
         public event Action<Castle> OnCompleted;
         public event Action OnPartSelected;
+        
+        public event Action<int> OnPointsAdd;
+        public event Action<int> OnPointsRefund;
      
         [SerializeField] private CastleViewer _view;
         [SerializeField] private int _coinsAfterComplete;
@@ -87,21 +90,24 @@ namespace Core.Goals
             gameObject.GetComponentsInChildren(_parts);
             _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
 
-            _gameProcessor.SessionProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
+           // _gameProcessor.SessionProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
             _completed = ProcessPoints(0, true);
             
             _coinsEffectReceiver.OnReceive += CoinsEffectReceiver_OnReceive;
             _coinsEffectReceiver.OnReceiveFinished += CoinsEffectReceiver_OnReceiveFinished;
+            _coinsEffectReceiver.OnRefund += CoinsEffectReceiver_OnRefund;
         }
 
         private void OnDestroy()
         {
-            _gameProcessor.SessionProcessor.OnScoreChanged -= GameProcessor_OnScoreChanged;
+          //  _gameProcessor.SessionProcessor.OnScoreChanged -= GameProcessor_OnScoreChanged;
         }
 
         private void CoinsEffectReceiver_OnReceive(int amount)
         {
             ProcessPoints(amount, false);
+            
+            OnPointsAdd?.Invoke(amount);
         }
         
         private void CoinsEffectReceiver_OnReceiveFinished()
@@ -115,11 +121,18 @@ namespace Core.Goals
             }
         }
         
-        private void GameProcessor_OnScoreChanged(int additionalPoints)
+        void CoinsEffectReceiver_OnRefund(int refundPoints)
         {
-            if (additionalPoints < 0)
-                _completed = ProcessPoints(additionalPoints, false);
+            _completed = ProcessPoints(-refundPoints, false);
+            
+            OnPointsRefund?.Invoke(refundPoints);
         }
+        
+       //private void GameProcessor_OnScoreChanged(int additionalPoints)
+       //{
+       //    if (additionalPoints < 0)
+       //        _completed = ProcessPoints(additionalPoints, false);
+       //}
         
         private bool ProcessPoints(int additionalPoints, bool instant)
         {

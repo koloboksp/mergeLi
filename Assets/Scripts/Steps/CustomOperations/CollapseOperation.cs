@@ -15,7 +15,6 @@ namespace Core.Steps.CustomOperations
         private readonly bool _selectState;
         private readonly IField _field;
         private readonly IPointsCalculator _pointsCalculator;
-        private readonly IPointsChangeListener _pointsChangeListener;
         private readonly CollapsePointsEffect _collapsePointsEffectPrefab;
 
         private readonly List<(Ball ball, float distance)> _ballsToRemove = new();
@@ -26,27 +25,23 @@ namespace Core.Steps.CustomOperations
             Vector3Int position, 
             CollapsePointsEffect collapsePointsEffectPrefab,
             IField field, 
-            IPointsCalculator pointsCalculator, 
-            IPointsChangeListener pointsChangeListener)
+            IPointsCalculator pointsCalculator)
         {
             _positionSource = PositionSource.Fixed;
             _position = position;
             _field = field;
             _pointsCalculator = pointsCalculator;
-            _pointsChangeListener = pointsChangeListener;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
         }
 
         public CollapseOperation(
             CollapsePointsEffect collapsePointsEffectPrefab,
             IField field, 
-            IPointsCalculator pointsCalculator,
-            IPointsChangeListener pointsChangeListener)
+            IPointsCalculator pointsCalculator)
         {
             _positionSource = PositionSource.FromData;
             _field = field;
             _pointsCalculator = pointsCalculator;
-            _pointsChangeListener = pointsChangeListener;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
         }
     
@@ -119,10 +114,7 @@ namespace Core.Steps.CustomOperations
             await Task.WhenAll(removeBallTasks);
             
             _pointsAdded = sumPoints;
-
-            if (_pointsAdded != 0)
-                _pointsChangeListener.AddPoints(_pointsAdded);
-
+            
             return null;
         }
 
@@ -134,7 +126,7 @@ namespace Core.Steps.CustomOperations
         
         public override Operation GetInverseOperation()
         {
-            return new UncollapseOperation(_collapseLines, _pointsAdded, _field, _pointsChangeListener);
+            return new UncollapseOperation(_collapseLines, _pointsAdded, _field);
         }
 
         public enum PositionSource

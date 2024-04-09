@@ -1,25 +1,26 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Effects;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Core.Steps.CustomOperations
 {
     public class UncollapseOperation : Operation
     {
         private readonly IField _field;
-        private readonly IPointsChangeListener _pointsChangeListener;
-
+        
         private readonly List<List<BallDesc>> _uncollapseBallsLines;
         private readonly int _pointsToRemove;
         
         public UncollapseOperation(List<List<BallDesc>> uncollapseBallsLines, int pointsToRemove,
-            IField field, IPointsChangeListener pointsChangeListener)
+            IField field)
         {
             _uncollapseBallsLines = uncollapseBallsLines;
             _pointsToRemove = pointsToRemove;
             _field = field;
-            _pointsChangeListener = pointsChangeListener;
         }
 
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
@@ -36,8 +37,13 @@ namespace Core.Steps.CustomOperations
             foreach (var uniqueBall in uniqueBalls)
                 _field.CreateBall(uniqueBall.GridPosition, uniqueBall.Points);
 
-            _pointsChangeListener.RemovePoints(_pointsToRemove);
-
+            var receivers = SceneManager.GetActiveScene().GetRootGameObjects()
+                .SelectMany(i => i.GetComponentsInChildren<IPointsEffectReceiver>())
+                .OrderBy(i => i.Priority)
+                .ToList();
+            foreach (var receiver in receivers)
+                receiver.Refund(_pointsToRemove);
+            
             return null;
         }
     }

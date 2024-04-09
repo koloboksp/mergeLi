@@ -73,8 +73,7 @@ public enum StepTag
 
 
 public class GameProcessor : MonoBehaviour, 
-    IRules, 
-    ISessionProgressHolder,
+    IRules,
     ISkinChanger,
     IHatsChanger
 {
@@ -106,16 +105,9 @@ public class GameProcessor : MonoBehaviour,
 
     public event Action<Step, StepExecutionType> OnStepCompleted;
     public event Action<Step, StepExecutionType> OnBeforeStepStarted;
-
-   // public event Action OnLose;
-   // public event Action OnRestart;
+    
     public event Action OnUndoStepsClear;
     
-   // public event Action<int> OnScoreChanged;
-   // public event Action<bool> OnLowEmptySpaceChanged;
-   // public event Action<bool> OnFreeSpaceIsOverChanged; 
-
-   // public event Action<int> OnConsumeCurrency;
     public event Action<int> OnAddCurrency;
 
     [SerializeField] private SessionProcessor _sessionProcessor;
@@ -168,14 +160,15 @@ public class GameProcessor : MonoBehaviour,
 
     public SessionProcessor SessionProcessor => _sessionProcessor;
     public Scene Scene => _scene;
-    public int Score => _score;
+    public IField Field => _field;
     public IMarket Market => _market;
     public IAdsViewer AdsViewer => _adsViewer;
     public GiftsMarket GiftsMarket => _giftsMarket;
     public PurchasesLibrary PurchasesLibrary => _purchasesLibrary;
     public GiftsLibrary GiftsLibrary => _giftsLibrary;
     public AdsLibrary AdsLibrary => _adsLibrary;
-
+    public ICommonAnalytics CommonAnalytics => _commonAnalytics;
+    
     public CastleSelector CastleSelector => _castleSelector;
 
     public UIFxLayer UIFxLayer => _uiFxLayer;
@@ -190,6 +183,10 @@ public class GameProcessor : MonoBehaviour,
     public int GeneratedBallsCountAfterMove => _generatedBallsCountAfterMove ;
     public int GeneratedBallsCountOnStart => _generatedBallsCountOnStart;
     public int[] GeneratedBallsPointsRange => _generatedBallsPointsRange;
+
+    public int MinimalBallsInLine => _minimalBallsInLine;
+    public List<Buff> Buffs => _buffs;
+    public int CurrencyAmount => ApplicationController.Instance.SaveController.SaveProgress.GetAvailableCoins();
 
     
     private void Awake()
@@ -336,7 +333,7 @@ public class GameProcessor : MonoBehaviour,
             new MoveOperation(from, to, _field),
             new MergeOperation(to, _field),
             new CollapseOperation(to, _collapsePointsEffectPrefab,
-                _field, _pointsCalculator, _sessionProcessor),
+                _field, _pointsCalculator),
             new CheckIfGenerationIsNecessary(
                 null,
                 new List<Operation>()
@@ -344,7 +341,7 @@ public class GameProcessor : MonoBehaviour,
                     new GenerateOperation(_generatedBallsCountAfterMerge,
                         _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
                     new CollapseOperation(_collapsePointsEffectPrefab,
-                        _field, _pointsCalculator, _sessionProcessor)
+                        _field, _pointsCalculator)
                 })));
     }
 
@@ -355,7 +352,7 @@ public class GameProcessor : MonoBehaviour,
                 .SubscribeCompleted(OnDeselectBall),
             new MoveOperation(from, to, _field),
             new CollapseOperation(to, _collapsePointsEffectPrefab,
-                _field, _pointsCalculator, _sessionProcessor),
+                _field, _pointsCalculator),
             new CheckIfGenerationIsNecessary(
                 null,
                 new List<Operation>()
@@ -363,7 +360,7 @@ public class GameProcessor : MonoBehaviour,
                     new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove,
                         _generatedBallsPointsRange, _field),
                     new CollapseOperation(_collapsePointsEffectPrefab, _field,
-                        _pointsCalculator, _sessionProcessor)
+                        _pointsCalculator)
                 })));
     }
 
@@ -416,7 +413,7 @@ public class GameProcessor : MonoBehaviour,
             && step.Tag != StepTag.Deselect 
             && step.Tag != StepTag.ChangeSelected)
         {
-            ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
+            ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this.SessionProcessor);
         }
     }
 
@@ -431,19 +428,6 @@ public class GameProcessor : MonoBehaviour,
         return _stepMachine.HasUndoSteps();
     }
 
-    public int MinimalBallsInLine => _minimalBallsInLine;
-    public List<Buff> Buffs => _buffs;
-
-    public bool HasPreviousSessionGame
-    {
-        get
-        {
-            var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
-            return lastSessionProgress.IsValid();
-        }
-    }
-
-    public int CurrencyAmount => ApplicationController.Instance.SaveController.SaveProgress.GetAvailableCoins();
     
     public void UseUndoBuff(int cost, UndoBuff buff)
     {
@@ -497,53 +481,14 @@ public class GameProcessor : MonoBehaviour,
                 new SpendOperation(cost, this, true),
                 new GradeOperation(ballsIndexes, gradeLevel, _field),
                 new ConfirmBuffUseOperation(buff),
-                new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor)));
+                new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _field, _pointsCalculator)));
     }
-
-    public void SelectNextCastle()
-    {
-        _castleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
-    }
-
+    
     public void ClearUndoSteps()
     {
         _stepMachine.ClearUndoSteps();
     }
-
-    public ICastle GetCastle()
-    {
-        return _castleSelector.ActiveCastle;
-    }
-
-    public IField GetField()
-    {
-        return _field;
-    }
-
-    public IEnumerable<IBuff> GetBuffs()
-    {
-        return _buffs;
-    }
-
-    public int GetScore()
-    {
-        return _score;
-    }
-
-    public string GetFirstUncompletedCastle()
-    {
-        var firstUncompletedCastle = _castleSelector.Library.Castles.FirstOrDefault(i => !ApplicationController.Instance.SaveController.SaveProgress.IsCastleCompleted(i.Id));
-        if (firstUncompletedCastle == null)
-            firstUncompletedCastle = _castleSelector.Library.Castles.Last();
-
-        return firstUncompletedCastle.Id;
-    }
-
-    public ICommonAnalytics GetCommonAnalyticsAnalytics()
-    {
-        return _commonAnalytics;
-    }
-
+    
     public void SelectBall(Vector3Int gridPosition)
     {
         _stepMachine.AddStep(new Step(StepTag.Select, new SelectOperation(gridPosition, true, _field)

@@ -61,7 +61,7 @@ namespace Analytics
             ApplicationController.Instance.AnalyticsController.OnRestart(
                 _gameProcessor.CastleSelector.ActiveCastle.Id,
                 _step,
-                _gameProcessor.GetField().CalculateEmptySpacesCount(),
+                _gameProcessor.Field.CalculateEmptySpacesCount(),
                 _stepsTakenIntoInfo);
 
             ResetSession();
@@ -94,7 +94,7 @@ namespace Analytics
                     step.Tag,
                     _gameProcessor.CastleSelector.ActiveCastle.Id,
                     _step,
-                    _gameProcessor.GetField().CalculateEmptySpacesCount());
+                    _gameProcessor.Field.CalculateEmptySpacesCount());
             }
 
             if (foundI >= 0 && _step % _eventInterval == 0)
@@ -139,7 +139,7 @@ namespace Analytics
                     rewardAmount,
                     _gameProcessor.CastleSelector.ActiveCastle.Id,
                     _step,
-                    _gameProcessor.GetField().CalculateEmptySpacesCount());
+                    _gameProcessor.Field.CalculateEmptySpacesCount());
             }
         }
         

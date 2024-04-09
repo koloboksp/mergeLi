@@ -12,7 +12,7 @@ namespace Core.Tutorials
         protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             Tutorial.Controller.GameProcessor.SelectBall(_ballPosition);
-            var enumerable = Tutorial.Controller.GameProcessor.GetField().GetAll<Ball>();
+            var enumerable = Tutorial.Controller.GameProcessor.Field.GetAll<Ball>();
             var first = enumerable.First();
 
             await AsyncExtensions.WaitForSecondsAsync(1.0f, cancellationToken);

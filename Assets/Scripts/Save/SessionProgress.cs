@@ -8,14 +8,14 @@ namespace Save
     public class SessionProgress
     {
         public SessionFieldProgress Field;
-        public SessionCastleProgress Castle;
+        public SessionCastleProgress ActiveCastle;
+        public List<SessionCastleProgress> CompletedCastles = new();
         public List<SessionBuffProgress> Buffs = new();
-        public int Score;
         public SessionAnalyticsProgress Analytics;
         
         public bool IsValid()
         {
-            if (Castle == null || string.IsNullOrEmpty(Castle.Id))
+            if (ActiveCastle == null || !ActiveCastle.IsValid)
                 return false;
 
             return true;

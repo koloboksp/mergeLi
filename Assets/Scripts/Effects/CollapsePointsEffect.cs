@@ -44,10 +44,11 @@ namespace Core.Effects
             if (restCoinsValue > 0)
                 splitPartPoints.Add(restCoinsValue);
             
-            _ = StartFxAsync(splitPartPoints, receivers);
+            _ = StartFxAsync(points, splitPartPoints, receivers);
         }
 
         private async Task StartFxAsync(
+            int points,
             IReadOnlyList<int> splitPartPoints, 
             IReadOnlyList<IPointsEffectReceiver> receivers)
         {
@@ -75,9 +76,12 @@ namespace Core.Effects
                     Application.exitCancellationToken));
             }
 
+            foreach (var receiver in receivers)
+                receiver.ReceiveStart(points);
             await Task.WhenAll(_fxTasks);
             foreach (var receiver in receivers)
                 receiver.ReceiveFinished();
+            
             Destroy(gameObject);
         }
         

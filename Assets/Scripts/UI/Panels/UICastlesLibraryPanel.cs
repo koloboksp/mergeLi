@@ -73,8 +73,8 @@ namespace Core
                 {
                     var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
                 
-                    if (lastSessionProgress.IsValid() && castle.name == lastSessionProgress.Castle.Id)
-                        castle.SetPoints(lastSessionProgress.Castle.Points, true);
+                    if (lastSessionProgress.IsValid() && castle.name == lastSessionProgress.ActiveCastle.Id)
+                        castle.SetPoints(lastSessionProgress.ActiveCastle.Points, true);
                     else
                         castle.ShowAsLocked();
                 }

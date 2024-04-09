@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,11 +30,10 @@ namespace Save
             _session = new SessionProgress();
             _controller.Clear(_fileName);
         }
+        
+        public SessionCastleProgress ActiveCastle => _session.ActiveCastle;
+        public IReadOnlyList<SessionCastleProgress> CompletedCastles => _session.CompletedCastles;
 
-        public int Score => _session.Score;
-
-        public SessionCastleProgress Castle => _session.Castle;
-    
         public SessionFieldProgress Field => _session.Field;
 
         public IReadOnlyList<SessionBuffProgress> Buffs => _session.Buffs;
@@ -42,26 +42,24 @@ namespace Save
 
         public void ChangeProgress(ISessionProgressHolder sessionProgressHolder)
         {
-            _session.Score = sessionProgressHolder.GetScore();
-        
-            var castle = sessionProgressHolder.GetCastle();
-            if (castle.Completed)
-            {
-                _session.Castle = new SessionCastleProgress()
+            var completedCastles = sessionProgressHolder.GetCompletedCastles();
+            _session.CompletedCastles.Clear();
+            _session.CompletedCastles.AddRange(
+                completedCastles.Select(i => new SessionCastleProgress()
                 {
-                    Id = sessionProgressHolder.GetFirstUncompletedCastle(),
-                    Points = 0,
-                };
-            }
-            else
+                    IsValid = true,
+                    Id = i.Id,
+                    Points = i.GetPoints(),
+                }));
+
+            var activeCastle = sessionProgressHolder.GetActiveCastle();
+            _session.ActiveCastle = new SessionCastleProgress()
             {
-                _session.Castle = new SessionCastleProgress()
-                {
-                    Id = castle.Id,
-                    Points = castle.GetPoints(),
-                };
-            }
-        
+                IsValid = true,
+                Id = activeCastle.Id,
+                Points = activeCastle.GetPoints(),
+            };
+            
             _session.Field = new SessionFieldProgress();
             foreach (var ball in sessionProgressHolder.GetField().GetAll<IBall>())
             {
