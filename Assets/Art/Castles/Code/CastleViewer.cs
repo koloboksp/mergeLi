@@ -209,7 +209,9 @@ public class CastleViewer : MonoBehaviour
         if (instant)
             operation.ExecuteInstant();
         else
+        {
             AddOperation(operation);
+        }
     }
     
     public void ShowPartComplete(int partIndex, bool instant)
@@ -373,7 +375,7 @@ public class CastleViewer : MonoBehaviour
     {
         private readonly int _oldPoints; 
         private readonly int _newPoints;
-        private readonly int _maxPoints;
+        private int _maxPoints;
         public ShowPartProgressOperation(int partIndex, int oldPoints, int newPoints, int maxPoints, CastleViewer target) 
             : base(partIndex, target)
         {
@@ -382,6 +384,13 @@ public class CastleViewer : MonoBehaviour
             _maxPoints = maxPoints;
         }
 
+        public int MaxPoints
+        {
+            set
+            {
+                _maxPoints = value;
+            }
+        }
         public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
         {
             var duration = Target.flipTime;

@@ -51,8 +51,8 @@ public enum StepTag
     ExplodeVertical,
     NextBalls,
     Downgrade,
-    
     Undo,
+    
     Select,
     Deselect,
     ChangeSelected,
@@ -102,6 +102,7 @@ public class GameProcessor : MonoBehaviour,
         { ExplodeType.ExplodeHorizontal, StepTag.ExplodeHorizontal },
         { ExplodeType.ExplodeVertical, StepTag.ExplodeVertical },
     };
+    
 
     public event Action<Step, StepExecutionType> OnStepCompleted;
     public event Action<Step, StepExecutionType> OnBeforeStepStarted;
@@ -409,12 +410,7 @@ public class GameProcessor : MonoBehaviour,
             Debug.LogException(e);
         }
 
-        if (step.Tag != StepTag.Select 
-            && step.Tag != StepTag.Deselect 
-            && step.Tag != StepTag.ChangeSelected)
-        {
-            ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this.SessionProcessor);
-        }
+        _sessionProcessor.TriggerStepFinished(step);
     }
 
     private void StepMachine_OnUndoStepsClear()

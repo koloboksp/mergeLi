@@ -8,6 +8,7 @@ using Atom;
 using Core.Effects;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core.Goals
 {
@@ -23,12 +24,13 @@ namespace Core.Goals
         [SerializeField] private int _coinsAfterComplete;
         [SerializeField] private GuidEx _nameKey;
         [SerializeField] private RectTransform _root;
-        [SerializeField] private CoinsEffectReceiver _coinsEffectReceiver;
+        [FormerlySerializedAs("_coinsEffectReceiver")] [SerializeField] private CoinsEffectReceiver _pointsReceiver;
 
         private GameProcessor _gameProcessor;
         private readonly List<CastlePart> _parts = new();
         private bool _completed;
         private int _points;
+        private int _animatedPoints;
         private CastlePart _selectedPart;
         
         public string Id => gameObject.name;
@@ -90,72 +92,65 @@ namespace Core.Goals
             gameObject.GetComponentsInChildren(_parts);
             _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
 
-           // _gameProcessor.SessionProcessor.OnScoreChanged += GameProcessor_OnScoreChanged;
-            _completed = ProcessPoints(0, true);
-            
-            _coinsEffectReceiver.OnReceive += CoinsEffectReceiver_OnReceive;
-            _coinsEffectReceiver.OnReceiveFinished += CoinsEffectReceiver_OnReceiveFinished;
-            _coinsEffectReceiver.OnRefund += CoinsEffectReceiver_OnRefund;
+            _points = 0;
+            _completed = false;
+            ApplyPointsToParts(Order.Increase, true);
+
+            _pointsReceiver.OnReceiveStart += PointsReceiver_OnReceiveStart; 
+            _pointsReceiver.OnReceive += PointsReceiver_OnReceive;
+            _pointsReceiver.OnReceiveFinished += PointsReceiver_OnReceiveFinished;
+            _pointsReceiver.OnRefund += PointsReceiver_OnRefund;
         }
 
-        private void OnDestroy()
+        private void PointsReceiver_OnReceiveStart(int amount)
         {
-          //  _gameProcessor.SessionProcessor.OnScoreChanged -= GameProcessor_OnScoreChanged;
+            _points += amount;
         }
 
-        private void CoinsEffectReceiver_OnReceive(int amount)
+        private void PointsReceiver_OnReceive(int partAmount)
         {
-            ProcessPoints(amount, false);
-            
-            OnPointsAdd?.Invoke(amount);
+            _animatedPoints += partAmount;
+            ApplyPointsToParts(Order.Increase, false);
+
+            OnPointsAdd?.Invoke(partAmount);
         }
         
-        private void CoinsEffectReceiver_OnReceiveFinished()
+        private void PointsReceiver_OnReceiveFinished()
         {
             var oldCompletedState = _completed;
-            _completed = ProcessPoints(0, false);
+            _completed = UpdateCompleteState();
 
-            if (oldCompletedState != _completed && _completed)
+            if (oldCompletedState != _completed)
             {
-                OnCompleted?.Invoke(this);
+                if (_completed)
+                    OnCompleted?.Invoke(this);
             }
         }
         
-        void CoinsEffectReceiver_OnRefund(int refundPoints)
+        void PointsReceiver_OnRefund(int refundPoints)
         {
-            _completed = ProcessPoints(-refundPoints, false);
-            
+            _points -= refundPoints;
+            _animatedPoints = _points;
+            _completed = UpdateCompleteState();
+            ApplyPointsToParts(Order.Decrease, false);
+
             OnPointsRefund?.Invoke(refundPoints);
         }
         
-       //private void GameProcessor_OnScoreChanged(int additionalPoints)
-       //{
-       //    if (additionalPoints < 0)
-       //        _completed = ProcessPoints(additionalPoints, false);
-       //}
-        
-        private bool ProcessPoints(int additionalPoints, bool instant)
+        private bool UpdateCompleteState()
         {
-            _points += additionalPoints;
-
             var castleCost = _parts.Sum(i => i.Cost);
-            var completed = false;
-            if (_points >= castleCost)
-            {
-                completed = true;
-             //   _points = castleCost;
-            }
-
-            ApplyPointsToParts((int)Mathf.Sign(additionalPoints), instant);
-
+            var completed = _points >= castleCost;
+            
             return completed;
         }
 
-        private void ApplyPointsToParts(int direction, bool instant)
+        
+        private void ApplyPointsToParts(Order order, bool instant)
         {
             var partStates = new List<(int consumePoints, int cost, bool unlocked)>();
 
-            var restScore = _points;
+            var restScore = _animatedPoints;
             var newSelectedPartIndex = 0;
             for (var partI = 0; partI < _parts.Count; partI++)
             {
@@ -177,7 +172,7 @@ namespace Core.Goals
                 restScore -= consumePoints;
             }
 
-            if (direction >= 0)
+            if (order == Order.Increase)
             {
                 for (var index = 0; index < _parts.Count; index++)
                 {
@@ -213,7 +208,7 @@ namespace Core.Goals
                 if (_selectedPart != null)
                 {
                     _selectedPart.Select(true);
-                    _coinsEffectReceiver.Anchor = _selectedPart.transform;
+                    _pointsReceiver.Anchor = _selectedPart.transform;
                 }
                 
                 OnPartSelected?.Invoke();
@@ -223,19 +218,26 @@ namespace Core.Goals
         public void SetPoints(int points, bool instant)
         {
             _points = points;
-            _completed = ProcessPoints(points, instant);
+            _animatedPoints = _points;
+            _completed = UpdateCompleteState();
+            ApplyPointsToParts(Order.Increase, instant);
         }
 
         public void ResetPoints(bool instant)
         {
             _points = 0;
-            _completed = ProcessPoints(0, instant);
+            _animatedPoints = _points;
+            _completed = UpdateCompleteState();
+            ApplyPointsToParts(Order.Increase, instant);
         }
 
         public void ForceComplete()
         {
-            var requiredPoints = GetCost() - _points;
-            ProcessPoints(requiredPoints, false);
+            var oldPointsValue = _points;
+            _points = GetCost();
+            _animatedPoints = oldPointsValue;
+            _completed = UpdateCompleteState();
+            ApplyPointsToParts(Order.Increase, false);
         }
 
         public void ShowAsLocked()
@@ -275,5 +277,12 @@ namespace Core.Goals
         {
             return _points - GetCost();
         }
+        
+        public enum Order
+        {
+            Increase,
+            Decrease,
+        }
+
     }
 }

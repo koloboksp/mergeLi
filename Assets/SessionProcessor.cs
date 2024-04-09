@@ -7,12 +7,21 @@ using Analytics;
 using Atom;
 using Core;
 using Core.Goals;
+using Core.Steps;
 using Save;
 using UnityEngine;
 
 public class SessionProcessor : MonoBehaviour, 
     ISessionProgressHolder
 {
+    public static readonly List<StepTag> NonSaveTags = new()
+    {
+        { StepTag.Select },
+        { StepTag.Deselect },
+        { StepTag.ChangeSelected },
+        { StepTag.NoPath}
+    };
+    
     public event Action OnLose;
     public event Action OnRestart;
     public event Action<int> OnScoreChanged;
@@ -103,6 +112,7 @@ public class SessionProcessor : MonoBehaviour,
                         
                         ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(GetScore());
                         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
+                        _completedCastles.Clear();
 
                         _gameProcessor.MusicPlayer.PlayNext();
                         
@@ -127,7 +137,8 @@ public class SessionProcessor : MonoBehaviour,
                         
                         ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(GetScore());
                         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
-        
+                        _completedCastles.Clear();
+                        
                         _gameProcessor.MusicPlayer.PlayNext();
                         
                         var startPanel1 = await _panelController.Value.PushScreenAsync<UIStartPanel>(
@@ -170,8 +181,8 @@ public class SessionProcessor : MonoBehaviour,
         if (HasPreviousSessionGame)
         {
             var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
-            
-            _completedCastles.AddRange(lastSessionProgress.CompletedCastles.Select(i=>new CompletedCastleDesc(i.Id, i.Points)));
+
+            _completedCastles.AddRange(lastSessionProgress.CompletedCastles.Select(i => new CompletedCastleDesc(i.Id, i.Points)));
             _gameProcessor.CastleSelector.SelectActiveCastle(lastSessionProgress.ActiveCastle.Id);
             _gameProcessor.CastleSelector.ActiveCastle.SetPoints(lastSessionProgress.ActiveCastle.Points, true);
         
@@ -325,6 +336,14 @@ public class SessionProcessor : MonoBehaviour,
         _userStepFinished = true;
     }
 
+    internal void TriggerStepFinished(Step step)
+    {
+        if (!NonSaveTags.Contains(step.Tag))
+        {
+            ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
+        }
+    }
+    
     internal void SetNotAllBallsGenerated(bool state)
     {
         _notAllBallsGenerated = state;
@@ -361,4 +380,6 @@ public class SessionProcessor : MonoBehaviour,
             return Points;
         }
     }
+
+    
 }
