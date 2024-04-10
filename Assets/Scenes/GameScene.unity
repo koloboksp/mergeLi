@@ -1136,7 +1136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enableTutorial: 1
-  _forceTutorial: 0
+  _forceTutorial: 1
 --- !u!1 &623220713
 GameObject:
   m_ObjectHideFlags: 0

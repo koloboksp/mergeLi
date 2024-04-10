@@ -197,12 +197,14 @@ namespace Core
 
         private async void ShowCheatsBtn_OnClick()
         {
+#if DEBUG
             ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICheatsPanel>(
                 new UICheatsPanelData()
                 {
                     GameProcessor = _data.GameProcessor,
                 },
                 Application.exitCancellationToken);
+#endif
         }
 
         private void ContinueBtn_OnClick()

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if DEBUG
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.Panels
@@ -19,3 +20,4 @@ namespace UI.Panels
         }
     }
 }
+#endif

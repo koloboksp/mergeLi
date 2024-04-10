@@ -1,4 +1,5 @@
-﻿using Core;
+﻿#if DEBUG
+using Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,3 +44,4 @@ namespace UI.Panels
         }
     }
 }
+#endif

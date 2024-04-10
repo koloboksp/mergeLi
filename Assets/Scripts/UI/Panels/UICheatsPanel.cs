@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if DEBUG
+using System;
 using System.Collections.Generic;
 using Core;
 using UnityEngine;
@@ -229,3 +230,4 @@ namespace UI.Panels
         }
     }
 }
+#endif
