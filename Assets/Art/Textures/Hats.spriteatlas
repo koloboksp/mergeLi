@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Hats
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 1024
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_IgnorePlatformSupport: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: bf55b800ae2da4a41a60bf236ee503fc, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 129dd0b8eefc4b641ac70e14b8286efa: 21300000
+    - 6cfdfe0a335ace34791777318dcc03ce: 21300000
+    - 19e91c5bdf9443948b074a3267fb0246: 21300000
+    - a8b8e1dcdd71e3242bf3510d611d601d: 21300000
+    - 8e0cb98de1320d24b8deb72300a1dd87: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 129dd0b8eefc4b641ac70e14b8286efa, type: 3}
+  - {fileID: 21300000, guid: 6cfdfe0a335ace34791777318dcc03ce, type: 3}
+  - {fileID: 21300000, guid: 19e91c5bdf9443948b074a3267fb0246, type: 3}
+  - {fileID: 21300000, guid: a8b8e1dcdd71e3242bf3510d611d601d, type: 3}
+  - {fileID: 21300000, guid: 8e0cb98de1320d24b8deb72300a1dd87, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - hat_magic
+  - hat_viking
+  - hat_leprecon
+  - hat_sherif
+  - hat_amanita
+  m_RenderDataMap: {}
+  m_Tag: Hats
+  m_IsVariant: 0
