@@ -37,6 +37,7 @@ namespace UI.Panels
             var common = new List<ValueHolder>();
             valueHolders.Add(("common", common));
             common.Add(new CoinsIntHolder("coins"));
+            common.Add(new BestScoreIntHolder("bestSessionScore"));
             foreach (var tutorial in data.GameProcessor.TutorialController.AvailableTutorials)
                 common.Add(new TutorialCompleteBoolHolder(tutorial.Id));
             
@@ -188,6 +189,19 @@ namespace UI.Panels
         protected override void OnValueChanged(int value)
         {
             ApplicationController.Instance.SaveController.SaveProgress.DebugSetCoins(value);
+        }
+    }
+    
+    public class BestScoreIntHolder : IntHolder
+    {
+        public BestScoreIntHolder(string id) : base(id)
+        {
+            Value = ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore;
+        }
+
+        protected override void OnValueChanged(int value)
+        {
+            ApplicationController.Instance.SaveController.SaveProgress.DebugSetBestSessionScore(value);
         }
     }
     

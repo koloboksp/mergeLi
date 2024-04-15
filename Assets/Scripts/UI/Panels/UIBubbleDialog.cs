@@ -31,5 +31,10 @@ namespace Core
                 _dialogText.gameObject.SetActive(false);
             }
         }
+        
+        public void SetDialogActive(bool state)
+        {
+            _dialogText.gameObject.SetActive(state);
+        }
     }
 }

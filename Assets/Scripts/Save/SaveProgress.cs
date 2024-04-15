@@ -231,6 +231,12 @@ namespace Save
             _progress.Coins = count;
             _controller.Save(_progress, _fileName);
         }
+        
+        public void DebugSetBestSessionScore(int bestSessionScore)
+        {
+            _progress.BestSessionScore = bestSessionScore;
+            _controller.Save(_progress, _fileName);
+        }
 #endif
         
     }
