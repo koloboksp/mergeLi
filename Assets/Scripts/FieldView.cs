@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Core.Steps;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -6,15 +7,23 @@ using UnityEngine.UI;
 
 public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointerUpHandler
 {
+    private readonly List<CanvasGroup> _noAllocFoundCanvasGroups = new();
+
     [SerializeField] private Field _model;
     [SerializeField] private Canvas _canvas;
+    [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private RectTransform _root;
 
     private bool _stepExecuted = false;
     public Canvas Canvas => _canvas;
     public Transform Root => _root;
     public Vector2 RootSize => _root.rect.size;
-   
+    
+    public void LockInput(bool lockState)
+    {
+        _canvasGroup.interactable = !lockState;
+    }
+
     private void Awake()
     {
         _model.Scene.GameProcessor.OnBeforeStepStarted += GameProcessor_OnBeforeStepStarted;
@@ -33,7 +42,11 @@ public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointe
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        if(_stepExecuted) return;
+        if (!UIBuff.ParentGroupAllowsInteraction(_root, _noAllocFoundCanvasGroups))
+            return;
+
+        if (_stepExecuted)
+            return;
         
         var localPosition = Root.InverseTransformPoint(_model.ScreenPointToWorld(eventData.position));
       

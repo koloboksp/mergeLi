@@ -129,6 +129,7 @@ RectTransform:
   - {fileID: 4378246184112680849}
   - {fileID: 3240155125326220544}
   - {fileID: 3646203346968565506}
+  - {fileID: 357807903264180754}
   m_Father: {fileID: 7104141350609223302}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -429,6 +430,7 @@ GameObject:
   - component: {fileID: 7104141350609223302}
   - component: {fileID: -6349528303588479732}
   - component: {fileID: 3409849567436986639}
+  - component: {fileID: 7619951855517028213}
   m_Layer: 5
   m_Name: UIGameFailPanel
   m_TagString: Untagged
@@ -450,7 +452,6 @@ RectTransform:
   m_Children:
   - {fileID: 4819808728985147002}
   - {fileID: 988175563464294666}
-  - {fileID: 357807903264180754}
   m_Father: {fileID: 0}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -473,6 +474,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _root: {fileID: 7104141350609223302}
   _canvasGroup: {fileID: 0}
+  _animation: {fileID: 7619951855517028213}
+  _show: {fileID: 7400000, guid: f2a75aaefde60d447abe0a059f44d3a2, type: 2}
+  _panel: {fileID: 798817150933857529}
   _closeBtn: {fileID: 484267232241082460}
   _nextBtn: {fileID: 7376984692547726806}
   _kingDialog: {fileID: 7737896361521385621}
@@ -535,6 +539,22 @@ MonoBehaviour:
   title: {fileID: 3095492105114440963}
   buttons:
   - {fileID: 573856831762587980}
+--- !u!111 &7619951855517028213
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305112124653678651}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: f2a75aaefde60d447abe0a059f44d3a2, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: f2a75aaefde60d447abe0a059f44d3a2, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &3610015050273447716
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,6 +567,7 @@ GameObject:
   - component: {fileID: 5823567579797731098}
   - component: {fileID: 3377022519652254961}
   - component: {fileID: 484267232241082460}
+  - component: {fileID: 9095482961709962440}
   m_Layer: 5
   m_Name: bg
   m_TagString: Untagged
@@ -656,6 +677,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &9095482961709962440
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3610015050273447716}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5870212608837358361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1260,7 +1293,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 7104141350609223302}
+    m_TransformParent: {fileID: 988175563464294666}
     m_Modifications:
     - target: {fileID: 1034396180999790358, guid: 7d8cfa57621208d44bc94e624f76aec8,
         type: 3}

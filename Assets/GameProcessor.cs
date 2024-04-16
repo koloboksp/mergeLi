@@ -265,7 +265,7 @@ public class GameProcessor : MonoBehaviour,
         await _sessionProcessor.ProcessGameAsyncSafe(Application.exitCancellationToken);
     }
     
-    void Field_OnPointerDown(Vector3Int pointerGridPosition)
+    private void Field_OnPointerDown(Vector3Int pointerGridPosition)
     {
         var balls = _field.GetSomething<Ball>(pointerGridPosition).ToList();
         Ball ball = null;

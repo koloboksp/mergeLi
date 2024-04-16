@@ -43,4 +43,5 @@ public interface IFieldView
 {
     Transform Root { get; }
     Vector2 RootSize { get; }
+    void LockInput(bool state);
 }

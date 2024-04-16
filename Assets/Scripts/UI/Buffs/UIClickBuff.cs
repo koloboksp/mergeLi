@@ -17,6 +17,9 @@ public class UIClickBuff : UIBuff
 
     private void ClickArea_OnClick()
     {
+        if (!ParentGroupAllowsInteraction())
+            return;
+        
         if (!ShowShopScreenRequired())
         {
             _soundPlayer.Value.Play(_onClickClip);
