@@ -58,16 +58,18 @@ namespace Core
                 if (_data.BeforeGiveCoins != null)
                     await _data.BeforeGiveCoins();
 
+                _speaker.SetActive(true);
+                
                 if (_data.DialogTextKey != GuidEx.Empty)
                 {
-                    _speaker.SetActive(true);
                     await _speaker.ShowTextAsync(_data.DialogTextKey, exitToken);
-                    await _data.GameProcessor.GiveCoinsEffect.Show(
-                        activeCastle.CoinsAfterComplete,
-                        _speaker.IconRoot.transform,
-                        exitToken);
                 }
 
+                await _data.GameProcessor.GiveCoinsEffect.Show(
+                    activeCastle.CoinsAfterComplete,
+                    _speaker.IconRoot.transform,
+                    exitToken);
+                
                 _data.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
 
                 await AsyncExtensions.WaitForSecondsAsync(3.0f, exitToken);

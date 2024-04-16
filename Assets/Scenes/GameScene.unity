@@ -564,8 +564,8 @@ MonoBehaviour:
   _minimalBallsInLine: 5
   _generatedBallsCountAfterMerge: 2
   _generatedBallsCountAfterMove: 3
-  _generatedBallsCountOnStart: 50
-  _generatedBallsPointsRange: 2000000040000000200000002000000020000000200000002000000020000000
+  _generatedBallsCountOnStart: 60
+  _generatedBallsPointsRange: 2000000040000000200000000100000002000000040000002000000020000000
   _uiScreensRoot: {fileID: 1881252459}
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,
     type: 3}
@@ -4030,12 +4030,12 @@ PrefabInstance:
     - target: {fileID: 6592400405660253716, guid: d33d11ca88ec9454f991757ba8bdbeb8,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 5.802429
+      value: 5.80249
       objectReference: {fileID: 0}
     - target: {fileID: 6592400405660253716, guid: d33d11ca88ec9454f991757ba8bdbeb8,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 91.21008
+      value: 91.21002
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

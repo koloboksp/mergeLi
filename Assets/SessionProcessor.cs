@@ -10,6 +10,7 @@ using Core.Goals;
 using Core.Steps;
 using Save;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SessionProcessor : MonoBehaviour, 
     ISessionProgressHolder
@@ -128,7 +129,21 @@ public class SessionProcessor : MonoBehaviour,
                         {
                             Debug.LogException(e);
                         }
-        
+                        await AsyncExtensions.WaitForSecondsAsync(1.0f, exitToken);
+
+                        var balls = _gameProcessor.Scene.Field.GetAll<Ball>()
+                            .ToList();
+
+                        for (int i = 0; i < 10; i++)
+                        {
+                            var rIndex = Random.Range(0, balls.Count);
+                            var ball = balls[rIndex];
+                            ball.Select(true);
+                            balls.RemoveAt(rIndex);
+                        }
+                        
+                        await AsyncExtensions.WaitForSecondsAsync(2.5f, exitToken);
+                            
                         var failPanel = await _panelController.Value.PushPopupScreenAsync<UIGameFailPanel>(
                             new UIGameFailPanelData() { GameProcessor = _gameProcessor }, 
                             exitToken);

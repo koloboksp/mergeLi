@@ -34,27 +34,31 @@ namespace Core
                 exitToken.ThrowIfCancellationRequested();
 
                 if (cancellationToken.IsCancellationRequested)
-                    return;
-
-                showTimer += Time.deltaTime;
-                if (showTimer > showTime)
-                    showTimer = showTime;
-
-                var nTimer = showTimer / showTime;
-                var visibleCharIndex = (int)Mathf.Lerp(0, textLength, nTimer);
-
-                if (previousVisibleCharIndex != visibleCharIndex)
                 {
-                    previousVisibleCharIndex = visibleCharIndex;
-                    _textBuilder.Clear();
-                    _textBuilder.Append(text, 0, visibleCharIndex);
-                    _textBuilder.Append("<color=#00000000>");
-                    _textBuilder.Append(text, visibleCharIndex, textLength - visibleCharIndex);
-                    _textBuilder.Append("</color>");
-                    _text.text = _textBuilder.ToString();
+                    _text.text = text;
                 }
+                else
+                {
+                    showTimer += Time.deltaTime;
+                    if (showTimer > showTime)
+                        showTimer = showTime;
 
-                await Task.Yield();
+                    var nTimer = showTimer / showTime;
+                    var visibleCharIndex = (int)Mathf.Lerp(0, textLength, nTimer);
+
+                    if (previousVisibleCharIndex != visibleCharIndex)
+                    {
+                        previousVisibleCharIndex = visibleCharIndex;
+                        _textBuilder.Clear();
+                        _textBuilder.Append(text, 0, visibleCharIndex);
+                        _textBuilder.Append("<color=#00000000>");
+                        _textBuilder.Append(text, visibleCharIndex, textLength - visibleCharIndex);
+                        _textBuilder.Append("</color>");
+                        _text.text = _textBuilder.ToString();
+                    }
+
+                    await Task.Yield();
+                }
             }
         }
     }

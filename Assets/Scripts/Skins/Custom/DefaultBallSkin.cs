@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Core;
 using Core.Effects;
 using UnityEngine;
@@ -25,6 +27,7 @@ namespace Skins.Custom
         [SerializeField] private Text _valueLabel;
         [SerializeField] private Image _ballIcon;
         [SerializeField] private Transform _hatAnchor;
+        [SerializeField] private Transform _faceAnchor;
         [SerializeField] private CanvasGroup _canvasGroup;
 
         [SerializeField] private AudioClip _onSelectClip;
@@ -33,17 +36,20 @@ namespace Skins.Custom
         [SerializeField] private AudioClip _onDowngradeClip;
         [SerializeField] private AudioClip _onPathNotFoundClip;
 
+        [SerializeField] private BlobFace _facePrefab;
         [SerializeField] private DestroyBallEffect _destroyEffectPrefab;
 
         private BallView _view;
+        private BlobFace _face;
         private HatView _hatView;
         private DependencyHolder<SoundsPlayer> _soundsPlayer;
 
         public UnityAction<BallState> ChangeStateEvent;
 
-        public override BallView View
+        public override void SetData(BallView view)
         {
-            set => _view = value;
+            _view = view;
+            _face = GameObject.Instantiate(_facePrefab, _faceAnchor);
         }
 
         public override bool Selected
@@ -52,9 +58,11 @@ namespace Skins.Custom
             {
                 ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle);
                 _hatAnchor.gameObject.SetActive(value);
+                _faceAnchor.gameObject.SetActive(value);
                 
                 if (value)
                 {
+                    _face.ShowLocal(BallState.Select);
                     _soundsPlayer.Value.Play(_onSelectClip);
                 }
             }
@@ -67,27 +75,41 @@ namespace Skins.Custom
                 ChangeStateEvent?.Invoke(value ? BallState.Move : BallState.Idle);
                 if (value)
                 {
+                    _faceAnchor.gameObject.SetActive(true);
+                    _face.ShowLocal(BallState.Move);
+                    
                     _soundsPlayer.Value.StartPlay(_onMoveClip);
                 }
                 else
                 {
+                    _faceAnchor.gameObject.SetActive(true);
+                    _face.ShowLocal(BallState.Idle);
+                    RestartHideFaceAfter();
                     _soundsPlayer.Value.StopPlay();
                 }
             }
         }
-
+        
         public override void SetPoints(int points, int oldPoints, bool force)
         {
             _valueLabel.text = points.ToString();
 
             if (force)
                 return;
+            
             var ballState = points >= oldPoints ? BallState.Upgrade : BallState.Downgrade;
 
             ChangeStateEvent?.Invoke(ballState);
 
             if (ballState == BallState.Upgrade)
+            {
                 _soundsPlayer.Value.Play(_onUpgradeClip);
+                
+                _faceAnchor.gameObject.SetActive(true);
+                _face.ShowLocal(BallState.Upgrade);
+                RestartHideFaceAfter();
+            }
+
             if (ballState == BallState.Downgrade)
                 _soundsPlayer.Value.Play(_onDowngradeClip);
         }
@@ -106,6 +128,9 @@ namespace Skins.Custom
         {
             ChangeStateEvent?.Invoke(BallState.PathNotFound);
             _soundsPlayer.Value.Play(_onPathNotFoundClip);
+            
+            _faceAnchor.gameObject.SetActive(true);
+            _face.ShowLocal(BallState.PathNotFound);
         }
 
         public override void SetHat(HatView hatView)
@@ -139,6 +164,23 @@ namespace Skins.Custom
         public override void ShowHat(bool activeState)
         {
             _hatAnchor.gameObject.SetActive(activeState);
+        }
+
+        private Coroutine _hideAfter;
+        IEnumerator HideFaceAfter()
+        {
+            yield return new WaitForSeconds(1.5f);
+            _faceAnchor.gameObject.SetActive(false);
+        }
+
+        private void RestartHideFaceAfter()
+        {
+            if (_hideAfter != null)
+            {
+                StopCoroutine(_hideAfter);
+                _hideAfter = null;
+            }
+            _hideAfter = StartCoroutine(HideFaceAfter());
         }
     }
 }

@@ -196,6 +196,7 @@ public class GameProcessor : MonoBehaviour,
         
         _market.OnBought += Market_OnBought;
         _giftsMarket.OnCollect += GiftsMarket_OnCollect;
+        _adsViewer.OnShowAds += AdsViewer_OnShow;
     }
 
     private void GiftsMarket_OnCollect(bool result, string productId, int amount)
@@ -214,6 +215,14 @@ public class GameProcessor : MonoBehaviour,
         }
     }
 
+    private void AdsViewer_OnShow(bool result, string productId, int amount)
+    {
+        if (result)
+        {
+            AddCurrency(amount);
+        }
+    }
+    
     private void OnDestroy()
     {
         

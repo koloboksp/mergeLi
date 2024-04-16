@@ -2203,7 +2203,7 @@ MonoBehaviour:
   blinkStep: 0.1
   blinkCount: 2
   eyesRoot: {fileID: 6919208252406915155}
-  changeBlobStates: 18
+  changeBlobStates: -1
   faces:
   - state: 5
     eyesRoot: {fileID: 4301388731407177035}

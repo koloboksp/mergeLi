@@ -1,5 +1,41 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &797742788793768689
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7325432542532625277}
+  m_Layer: 5
+  m_Name: faceAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7325432542532625277
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 797742788793768689}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4679713789189145077}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -49.62}
+  m_SizeDelta: {x: 1, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2708421524655143283
 GameObject:
   m_ObjectHideFlags: 0
@@ -144,6 +180,7 @@ RectTransform:
   m_Children:
   - {fileID: 4679713790568643538}
   - {fileID: 2209189013310432}
+  - {fileID: 7325432542532625277}
   m_Father: {fileID: 4679713789989440163}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -249,12 +286,15 @@ MonoBehaviour:
   _valueLabel: {fileID: 4679713790568643539}
   _ballIcon: {fileID: 4679713789189145075}
   _hatAnchor: {fileID: 2209189013310432}
+  _faceAnchor: {fileID: 7325432542532625277}
   _canvasGroup: {fileID: 4679713789989440160}
   _onSelectClip: {fileID: 8300000, guid: eb8dab6560268d641a10a7338eb4d433, type: 3}
   _onMoveClip: {fileID: 8300000, guid: 6e342e67055f3a543acd25878b65f909, type: 3}
   _onUpgradeClip: {fileID: 8300000, guid: e470d417613c99b4ba5ff23c9eb6c3aa, type: 3}
   _onDowngradeClip: {fileID: 8300000, guid: 5f538d31a71b63d4bbe705ec9137db68, type: 3}
   _onPathNotFoundClip: {fileID: 8300000, guid: 6ab7aed1a2be4934a93d0b44c15afb70, type: 3}
+  _facePrefab: {fileID: 1143749767009140062, guid: 9ac5a2a7477c9f34797ce9f32de83a53,
+    type: 3}
   _destroyEffectPrefab: {fileID: 5600580805448456366, guid: 14a662a9344a3274c9fabd6bac889aa0,
     type: 3}
 --- !u!225 &4679713789989440160
@@ -330,8 +370,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a3539258d11a944392fac99d5c3d854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballSkin: {fileID: 4679713789989440162}
-  bodyObject: {fileID: 4679713789189145077}
 --- !u!1 &4679713790568643541
 GameObject:
   m_ObjectHideFlags: 0

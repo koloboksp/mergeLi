@@ -36,7 +36,7 @@ namespace Core
             _ball.OnMovingStateChanged += Ball_OnMovingStateChanged;
             _ball.OnTransparencyChanged += Ball_TransparencyChanged;
             _ball.OnPathNotFound += Ball_OnPathNotFound;
-
+            
             ChangeSkin(_ball.Field.Scene.ActiveSkin);
             ChangeHat(_ball.Field.Scene.ActiveHat);
         }
@@ -55,7 +55,7 @@ namespace Core
             _ballSkin = Object.Instantiate(skin, _root);
             _ballSkin.transform.localPosition = Vector3.zero;
             _ballSkin.transform.localRotation = Quaternion.identity;
-            _ballSkin.View = this;
+            _ballSkin.SetData(this);
             
             Ball_OnPointsChanged(_ball.Points, true);
             Ball_OnSelectedChanged();

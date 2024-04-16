@@ -1,4 +1,5 @@
 
+using System.Collections;
 using Core;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -58,44 +59,42 @@ public class BlobFace : MonoBehaviour
     [Space(8)]
     [SerializeField] private DefaultBallSkin.BallState changeBlobStates;
     [SerializeField] private List<Face> faces;
-
-    private static BlobFace s_instance;
-    private static Transform s_root;
-
+    
     private void Awake()
     {
         foreach (var face in faces)
             face.Init();
-
-        gameObject.SetActive(false);
+       // gameObject.SetActive(false);
+    }
+    
+    private void Start()
+    {
+        
 
         TurnFaceCycle();
         BlinkEyesCycle();
-
-        s_instance = this;
     }
 
+   // private void OnDestroy()
+   // {
+   //     s_instance = null;
+   // }
+//
+   // public static void Show(Transform root, DefaultBallSkin.BallState state)
+   // {
+   //     if (s_instance != null)
+   //         s_instance.ShowLocal(root, state);
+   // }
 
-    private void OnDestroy()
+    public void ShowLocal(DefaultBallSkin.BallState state)
     {
-        s_instance = null;
-    }
-
-    public static void Show(Transform root, DefaultBallSkin.BallState state)
-    {
-        if (s_instance != null)
-            s_instance.ShowLocal(root, state);
-    }
-
-    public void ShowLocal(Transform root, DefaultBallSkin.BallState state)
-    {
-        if (root == null)
-            return;
+       //if (root == null)
+       //    return;
 
         if ((changeBlobStates & state) != state)
             return;
 
-        s_root = root;
+       // s_root = root;
 
         gameObject.SetActive(true);
 
@@ -103,40 +102,33 @@ public class BlobFace : MonoBehaviour
             face.Show(state);
     }
 
-    private void Update()
-    {
-        if (s_root == null)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
+    //private void Update()
+    //{
+    //    if (s_root == null)
+    //    {
+    //        gameObject.SetActive(false);
+    //        return;
+    //    }
+//
+    //    transform.SetPositionAndRotation(s_root.position, s_root.rotation);
+    //    transform.localScale = s_root.localScale;
+    //}
 
-        transform.SetPositionAndRotation(s_root.position, s_root.rotation);
-        transform.localScale = s_root.localScale;
-    }
-
-    private async void TurnFaceCycle()
+    private IEnumerator TurnFaceCycle()
     {
         while (true)
         {
-            await Task.Delay(RandomTime(flipTime));
-
-            if (!Application.isPlaying)
-                return;
-
+            yield return new WaitForSeconds(RandomTime(flipTime));
             transform.localScale = Vector3.Scale(new Vector3(-1f, 1f, 1f), transform.localScale);
         }
     }
 
-    private async void BlinkEyesCycle()
+    private IEnumerator BlinkEyesCycle()
     {
         while (true)
         {
-            await Task.Delay(RandomTime(blinkWait));
-
-            if (!Application.isPlaying)
-                return;
-
+            yield return new WaitForSeconds(RandomTime(blinkWait));
+           
             bool isOpen = true;
 
             for (int i = 0; i < blinkCount * 2; i++)
@@ -145,10 +137,7 @@ public class BlobFace : MonoBehaviour
 
                 eyesRoot.localScale = new Vector3(1f, isOpen ? 1f : BLINK_SCALE, 1f);
 
-                await Task.Delay((int)(1000 * blinkStep));
-
-                if (!Application.isPlaying)
-                    return;
+                yield return new WaitForSeconds((int)(1000 * blinkStep));
             }
         }
     }

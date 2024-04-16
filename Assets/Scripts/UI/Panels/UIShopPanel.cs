@@ -85,6 +85,7 @@ namespace Core
         {
             foreach (var oldView in _items)
                 Destroy(oldView.gameObject);
+            _items.Clear();
 
             _marketItemPrefab.gameObject.SetActive(false);
             _adsItemPrefab.gameObject.SetActive(false);
@@ -92,16 +93,17 @@ namespace Core
             
             foreach (var item in items)
             {
-                UIShopPanel_Item itemView = item.Item switch
+                var itemView = item.Item switch
                 {
                     ShopPanelMarketItem => Instantiate(_marketItemPrefab, _purchasesContainer.content),
                     ShopPanelAdsItem => Instantiate(_adsItemPrefab, _purchasesContainer.content),
                     ShopPanelGiftItem => Instantiate(_giftItemPrefab, _purchasesContainer.content),
                     _ => null
                 };
-                _items.Add(itemView);
                 itemView.gameObject.SetActive(true);
                 itemView.SetModel(item);
+                
+                _items.Add(itemView);
             }
         }
         
