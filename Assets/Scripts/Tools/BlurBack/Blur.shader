@@ -1,11 +1,16 @@
-Shader "Hidden/DropBlurBlit"
+Shader "Calc/Blur"
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
+        [NoScaleOffset] _MainTex("Texture", 2D) = "white" {}
     }
     SubShader
     {
+        Tags
+        {
+            "PreviewType" = "Plane"
+        }
+        
         Pass
         {
             CGPROGRAM
