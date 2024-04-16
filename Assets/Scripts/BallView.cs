@@ -87,6 +87,8 @@ namespace Core
             if (foundAssociation != null)
                 _mainColor = foundAssociation.Color;
             _ballSkin.MainColor = _mainColor;
+            
+            _root.transform.SetAsLastSibling();
         }
         
         private void Ball_TransparencyChanged()

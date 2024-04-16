@@ -87,7 +87,7 @@ namespace Skins.Custom
                 {
                     _faceAnchor.gameObject.SetActive(true);
                     _face.ShowLocal(BallState.Idle);
-                    HideFaceWithDelay();
+                    HideFaceWithDelay(0.1f);
                     _soundsPlayer.Value.StopPlay();
                 }
             }
@@ -110,7 +110,7 @@ namespace Skins.Custom
                 
                 _faceAnchor.gameObject.SetActive(true);
                 _face.ShowLocal(BallState.Upgrade);
-                HideFaceWithDelay();
+                HideFaceWithDelay(1.0f);
             }
 
             if (ballState == BallState.Downgrade)
@@ -169,9 +169,9 @@ namespace Skins.Custom
             _hatAnchor.gameObject.SetActive(activeState);
         }
         
-        private IEnumerator HideFaceWithDelayCoroutine()
+        private IEnumerator HideFaceWithDelayCoroutine(float delay)
         {
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(delay);
             ChangeStateEvent?.Invoke(BallState.AutoDeselect);
             
             yield return new WaitForSeconds(0.5f);
@@ -188,10 +188,10 @@ namespace Skins.Custom
             }
         }
         
-        private void HideFaceWithDelay()
+        private void HideFaceWithDelay(float delay)
         {
             BreakHideFaceWithDelay();
-            _hideFaceWithDelay = StartCoroutine(HideFaceWithDelayCoroutine());
+            _hideFaceWithDelay = StartCoroutine(HideFaceWithDelayCoroutine(delay));
         }
     }
 }

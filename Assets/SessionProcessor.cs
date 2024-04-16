@@ -148,13 +148,18 @@ public class SessionProcessor : MonoBehaviour,
                         var balls = _gameProcessor.Scene.Field.GetAll<Ball>()
                             .ToList();
 
-                        for (int i = 0; i < 10; i++)
+                        var ballsToSelect = new List<Ball>();
+                        for (var i = 0; i < 10; i++)
                         {
                             var rIndex = Random.Range(0, balls.Count);
-                            var ball = balls[rIndex];
-                            ball.Select(true);
+                            ballsToSelect.Add(balls[rIndex]);
                             balls.RemoveAt(rIndex);
                         }
+
+                        ballsToSelect = ballsToSelect.OrderByDescending(i => i.GridPosition.y)
+                            .ToList();
+                        foreach (var ball in ballsToSelect)
+                            ball.Select(true);
 
                         // Wait while the user watches for happy blobs
                         await AsyncExtensions.WaitForSecondsAsync(2.5f, exitToken);
