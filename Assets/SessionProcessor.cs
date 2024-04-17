@@ -79,6 +79,7 @@ public class SessionProcessor : MonoBehaviour,
                     },
                     exitToken);
                 
+                ApplicationController.UnloadLogoScene();
                 await startPanel.ShowAsync(exitToken);
                 
                 PrepareSession();

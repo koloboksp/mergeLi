@@ -90,7 +90,12 @@ namespace Core
         
         public static void LoadGameScene()
         {
-            SceneManager.LoadSceneAsync("GameScene");
+            SceneManager.LoadSceneAsync("GameScene", LoadSceneMode.Additive);
+        }
+        
+        public static void UnloadLogoScene()
+        {
+            SceneManager.UnloadSceneAsync("LogoScene", UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
         }
 
         public SystemLanguage Language
