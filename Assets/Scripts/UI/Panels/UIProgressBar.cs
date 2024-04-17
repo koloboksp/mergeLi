@@ -23,6 +23,7 @@ namespace Core
         private int _maxValue;
         private int _desiredValue;
         private int _value;
+        private float _fValue;
 
         private int _startValue;
         private float _time;
@@ -31,6 +32,7 @@ namespace Core
         public void InstantSet(int value, int maxValue)
         {   
             _value = value;
+            _fValue = _value;
             _desiredValue = value;
             _maxValue = maxValue;
             
@@ -46,6 +48,7 @@ namespace Core
             _time = duration;
 
             _value = oldValue;
+            _fValue = _value;
             _startValue = _value;
             _desiredValue = newValue;
             _maxValue = maxValue;
@@ -64,7 +67,9 @@ namespace Core
                 _timer += Time.deltaTime;
                 
                 var nTimer = Mathf.Clamp01(_timer / _time);
-                _value = _startValue + (int)((_desiredValue - _startValue) * nTimer);
+                _fValue = _startValue + (float)((_desiredValue - _startValue) * nTimer);
+                _value = Mathf.FloorToInt(_fValue);
+                
                 UpdateValueBar();
                 UpdateValueLabels();
             }
@@ -82,7 +87,7 @@ namespace Core
         
         private void UpdateValueBar()
         {
-            var nValue = (float)_value / _maxValue;
+            var nValue = _fValue / _maxValue;
             _barRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _rect.rect.width * nValue);
         }
         

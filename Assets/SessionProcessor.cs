@@ -66,6 +66,9 @@ public class SessionProcessor : MonoBehaviour,
             if (_enableTutorial && _gameProcessor.TutorialController.CanStartTutorial(_forceTutorial))
             {
                 await _gameProcessor.TutorialController.TryStartTutorial(_forceTutorial, exitToken);
+                
+                _gameProcessor.CastleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
+                _gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
             }
             else
             {
@@ -287,11 +290,12 @@ public class SessionProcessor : MonoBehaviour,
 
         _completedCastles.Add(new CompletedCastleDesc(castle.Id, castle.GetPoints()));
         
-        _ = ProcessCastleCompleteAsync(GuidEx.Empty, null, null, null, Application.exitCancellationToken);
+        _ = ProcessCastleCompleteAsync(GuidEx.Empty, false, null, null, null, Application.exitCancellationToken);
     }
     
     public async Task ProcessCastleCompleteAsync(
         GuidEx dialogTextKey,
+        bool manualGiveCoins,
         Func<Task> beforeGiveCoins, 
         Func<Task> beforeSelectNextCastle,
         Func<Task> afterSelectNextCastle,
@@ -305,6 +309,7 @@ public class SessionProcessor : MonoBehaviour,
             {
                 GameProcessor = _gameProcessor, 
                 DialogTextKey = dialogTextKey,
+                ManualGiveCoins = manualGiveCoins,
                 BeforeGiveCoins = beforeGiveCoins,
                 BeforeSelectNextCastle = beforeSelectNextCastle,
                 AfterSelectNextCastle = afterSelectNextCastle,

@@ -10,9 +10,9 @@ namespace Core.Tutorials
        
         public override async Task OnExecuteAsync(TutorialStep step, CancellationToken cancellationToken)
         {
+            step.Tutorial.Controller.Focuser.gameObject.SetActive(true);
             if (step is IFocusedOnSomething focusedOnSomething)
             {
-                step.Tutorial.Controller.Focuser.gameObject.SetActive(true);
                 await step.Tutorial.Controller.Focuser.FocusOnAsync(focusedOnSomething.GetFocusedRect(), _smooth, cancellationToken);
             }
             else

@@ -1878,7 +1878,7 @@ Transform:
   m_Children:
   - {fileID: 8691295248254765105}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2025090940685713392
 MonoBehaviour:
@@ -2477,6 +2477,7 @@ MonoBehaviour:
   _requiredSteps:
   - {fileID: 2245726071340801575}
   - {fileID: 2920793340914494469}
+  - {fileID: 3012643144159010509}
   - {fileID: 3863141700337174883}
 --- !u!114 &5582629361688441163
 MonoBehaviour:
@@ -3018,6 +3019,7 @@ Transform:
   m_Children:
   - {fileID: 4394544674828759046}
   - {fileID: 2943056409080489473}
+  - {fileID: 667770257416095457}
   - {fileID: 8750829234568341942}
   m_Father: {fileID: 8691295248254765105}
   m_RootOrder: -1
@@ -4146,6 +4148,56 @@ MonoBehaviour:
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
   _wait: 1
+--- !u!1 &7156860783778133162
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 667770257416095457}
+  - component: {fileID: 3012643144159010509}
+  m_Layer: 0
+  m_Name: showUIGameScreenProgressBar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &667770257416095457
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7156860783778133162}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5111569889021526649}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3012643144159010509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7156860783778133162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b12ee0ec81384354851f051f51bb393f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tutorial: {fileID: 7747690254940513010}
+  _analyticsEventName: 
+  _progressBar: 1
+  _coins: 0
+  _buffs: 0
+  _settingsBtn: 0
 --- !u!1 &7180594504721771164
 GameObject:
   m_ObjectHideFlags: 0
