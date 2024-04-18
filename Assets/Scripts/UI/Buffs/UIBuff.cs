@@ -106,6 +106,11 @@ public class UIBuff : MonoBehaviour
 
     public void UnsubscribeModel()
     {
+        _model
+            .ReleaseAvailableStateChanged(AvailableStateChanged)
+            .ReleaseRestCooldownChanged(RestCooldownChanged)
+            .ReleaseDragPhaseChanged(OnDragPhaseChanged);
+        
         _onClick -= _model.OnClick;
         _onBeginDrag -= _model.OnBeginDrag;
         _onDrag -= _model.OnDrag;
