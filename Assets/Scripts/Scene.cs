@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Core;
 using Core.Steps.CustomOperations;
 using Skins;
@@ -9,6 +10,8 @@ public interface IScene
     SkinContainer ActiveSkin { get; }
     GameProcessor GameProcessor { get; }
     Hat ActiveHat { get; }
+    HatsLibrary HatsLibrary { get; }
+    int[] ActiveHats { get; }
 }
 
 public class Scene : MonoBehaviour, IScene
@@ -51,6 +54,22 @@ public class Scene : MonoBehaviour, IScene
         var hatChangeables = _field.gameObject.GetComponentsInChildren<IHatChangeable>();
         foreach (var hatChangeable in hatChangeables)
             hatChangeable.ChangeHat(_activeHat);
+    }
+    
+    public int[] ActiveHats
+    {
+        get
+        {
+            var availableHats = _hatsLibrary.Hats;
+            var hatIndexes = new List<int>();
+            for (var index = 0; index < availableHats.Count; index++)
+            {
+                if (availableHats[index].Available)
+                    hatIndexes.Add(index);
+            }
+
+            return hatIndexes.ToArray();
+        }
     }
 }
 

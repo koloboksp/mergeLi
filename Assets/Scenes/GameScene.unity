@@ -565,7 +565,7 @@ MonoBehaviour:
   _minimalBallsInLine: 5
   _generatedBallsCountAfterMerge: 2
   _generatedBallsCountAfterMove: 3
-  _generatedBallsCountOnStart: 3
+  _generatedBallsCountOnStart: 70
   _generatedBallsPointsRange: 2000000040000000200000000100000002000000040000002000000020000000
   _uiScreensRoot: {fileID: 1881252459}
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,

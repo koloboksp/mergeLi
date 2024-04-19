@@ -8,5 +8,6 @@ namespace Save
     {
         public Vector3Int GridPosition;
         public int Points;
+        public int Hat;
     }
 }

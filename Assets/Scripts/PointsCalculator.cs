@@ -32,7 +32,7 @@ namespace Core.Steps.CustomOperations
                     overPointsCoef = (index - minimalBallsInLine + 1) + 1;
                 
                 resultBallsInLinePoints.Add(
-                    new BallDesc(ballInLine.GridPosition, ballInLine.Points * overPointsCoef * (lineIndex + 1)));
+                    new BallDesc(ballInLine.GridPosition, ballInLine.Points * overPointsCoef * (lineIndex + 1), 0));
             }
 
             return resultBallsInLinePoints;

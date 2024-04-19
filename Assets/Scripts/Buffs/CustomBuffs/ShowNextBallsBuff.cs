@@ -38,7 +38,10 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
         for (var index = 0; index < nextBallsData.Count; index++)
         {
             var nextBallData = nextBallsData[index];
-            var ball = _gameProcessor.Scene.Field.PureCreateBall(nextBallData.GridPosition, nextBallData.Points);
+            var ball = _gameProcessor.Scene.Field.PureCreateBall(
+                nextBallData.GridPosition, 
+                nextBallData.Points,
+                nextBallData.Hat);
             _balls.Add(ball);
 
             if (index == 0)

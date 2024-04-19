@@ -11,8 +11,10 @@ namespace Core.Steps.CustomOperations
         private readonly Vector3Int _position;
         private readonly IField _field;
 
-        private int _pointsBeforeMerge;
-        private int _mergeablesCount;
+        //private int _pointsBeforeMerge;
+        //private int _mergeablesCount;
+        private readonly List<BallDesc> _mergedBalls = new List<BallDesc>();
+        
         public MergeOperation(Vector3Int position, IField field)
         {
             _position = position;
@@ -21,19 +23,16 @@ namespace Core.Steps.CustomOperations
     
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
-            var meargeables = _field.GetSomething<IFieldMergeable>(_position).ToList();
+            var meargeables = _field.GetSomething<IBall>(_position).ToList();
             var targetMergeable = meargeables[0];
             var otherMergeables = meargeables.GetRange(1, meargeables.Count - 1);
 
-            _mergeablesCount = meargeables.Count;
-            if(targetMergeable is IBall targetBall)
-                _pointsBeforeMerge = targetBall.Points;
-            
+            foreach (var ball in meargeables)
+                _mergedBalls.Add(new BallDesc(ball.IntGridPosition, ball.Points, ball.Hat));
+                
             Owner.SetData(new MergeOperationData()
             {
-                Position = _position,
-                PointsBeforeMerge = _pointsBeforeMerge,
-                MergeablesCount = _mergeablesCount,
+                MergedBalls = new List<BallDesc>(_mergedBalls)
             });
             
             await targetMergeable.MergeAsync(otherMergeables, cancellationToken);
@@ -43,14 +42,12 @@ namespace Core.Steps.CustomOperations
         
         public override Operation GetInverseOperation()
         {
-            return new UnmergeOperation(_position, _pointsBeforeMerge, _mergeablesCount, _field);
+            return new UnmergeOperation(_mergedBalls, _field);
         }
     }
     
     public class MergeOperationData
     {
-        public Vector3Int Position;
-        public int PointsBeforeMerge;
-        public int MergeablesCount;
+        public List<BallDesc> MergedBalls;
     }
 }

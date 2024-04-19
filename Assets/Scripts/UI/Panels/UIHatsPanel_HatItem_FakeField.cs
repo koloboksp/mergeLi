@@ -23,19 +23,19 @@ namespace Core
             throw new System.NotImplementedException();
         }
 
-        public List<BallDesc> GenerateBalls(int count, int[] availableValues)
+        public List<BallDesc> GenerateBalls(int count, int[] availableValues, int[] availableHats)
         {
             throw new System.NotImplementedException();
         }
 
-        public Vector3Int CreateBall(Vector3Int position, int points)
+        public Vector3Int CreateBall(Vector3Int position, int points, int hat)
         {
             var ball = Instantiate(_ballPrefab, transform);
             ball.transform.localScale = Vector3.one;
             ball.transform.position = Vector3.zero;
             ball.transform.rotation = Quaternion.identity;
 
-            ball.SetData(this, Vector3.zero, points);
+            ball.SetData(this, Vector3.zero, points, hat);
             var subComponents = ball.GetComponents<ISubComponent>();
             foreach (var subComponent in subComponents)
                 subComponent.SetData();
@@ -56,7 +56,7 @@ namespace Core
         }
 
         public IFieldView View { get; }
-        public void GenerateNextBallPositions(int count, int[] availableValues)
+        public void GenerateNextBallPositions(int count, int[] availableValues, int[] availableHats)
         {
             throw new System.NotImplementedException();
         }
@@ -126,7 +126,7 @@ namespace Core
             throw new System.NotImplementedException();
         }
 
-        public Ball PureCreateBall(Vector3Int gridPosition, int points)
+        public Ball PureCreateBall(Vector3Int gridPosition, int points, int hat)
         {
             throw new System.NotImplementedException();
         }

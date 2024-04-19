@@ -12,22 +12,24 @@ namespace Core.Steps.CustomOperations
         private readonly int _amount;
         private readonly int _maxAmount;
         private readonly int[] _availableValues;
+        private readonly int[] _availableHats;
         private readonly IField _field;
 
         private readonly List<BallDesc> _generatedItems = new();
         
-        public GenerateOperation(int amount, int maxAmount, int[] availableValues, IField field)
+        public GenerateOperation(int amount, int maxAmount, int[] availableValues, int[] availableHats, IField field)
         {
             _amount = amount;
             _maxAmount = maxAmount;
             _availableValues = availableValues;
+            _availableHats = availableHats;
             _field = field;
         }
     
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
-            _generatedItems.AddRange(_field.GenerateBalls(_amount, _availableValues));
-            _field.GenerateNextBallPositions(_maxAmount, _availableValues);
+            _generatedItems.AddRange(_field.GenerateBalls(_amount, _availableValues, _availableHats));
+            _field.GenerateNextBallPositions(_maxAmount, _availableValues, _availableHats);
             Owner.SetData(new GenerateOperationData()
             {
                 RequiredAmount = _amount,

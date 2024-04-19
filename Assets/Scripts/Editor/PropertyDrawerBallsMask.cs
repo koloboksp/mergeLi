@@ -77,7 +77,7 @@ public class PropertyDrawerBallsMask : PropertyDrawer
             var ballInfo = userData.BallsMask.Balls.Find(i => i.GridPosition == userData.GridPosition);
             if (ballInfo == null)
             {
-                userData.BallsMask.Balls.Add(new BallDesc(userData.GridPosition, -1));
+                userData.BallsMask.Balls.Add(new BallDesc(userData.GridPosition, -1, 0));
                 userData.BindIntegerField.SetEnabled(true);
                 userData.BindIntegerField.SetValueWithoutNotify(-1);
                 dirty = true;

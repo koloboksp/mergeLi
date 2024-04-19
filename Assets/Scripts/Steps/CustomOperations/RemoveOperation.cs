@@ -57,7 +57,7 @@ namespace Core.Steps.CustomOperations
                 //    destroyBallEffect.Run(ball.GetColorIndex());//distanceToBall / maxDistanceToCheckingPosition);
                 //}
 
-                _removedBalls.AddRange(foundBalls.Select(i => new BallDesc(i.IntGridPosition, i.Points)));
+                _removedBalls.AddRange(foundBalls.Select(i => new BallDesc(i.IntGridPosition, i.Points, i.Hat)));
                 //_field.DestroyBalls(foundBalls, false);
             }
 
