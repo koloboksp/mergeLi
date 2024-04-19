@@ -326,6 +326,7 @@ Animation:
   - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
   - {fileID: 7400000, guid: ea53f3d0287847042806291f35cee4c7, type: 2}
   - {fileID: 7400000, guid: 226a8cc97d078bd47875348c3ee7f41a, type: 2}
+  - {fileID: 7400000, guid: ccf1711c3cb54ac4491bc96f086d562d, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
@@ -358,6 +359,8 @@ MonoBehaviour:
     clip: {fileID: 7400000, guid: 226a8cc97d078bd47875348c3ee7f41a, type: 2}
   - state: 16
     clip: {fileID: 7400000, guid: ea53f3d0287847042806291f35cee4c7, type: 2}
+  - state: 64
+    clip: {fileID: 7400000, guid: ccf1711c3cb54ac4491bc96f086d562d, type: 2}
 --- !u!114 &470944024834822428
 MonoBehaviour:
   m_ObjectHideFlags: 0

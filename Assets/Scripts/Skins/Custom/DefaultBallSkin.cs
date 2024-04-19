@@ -21,7 +21,8 @@ namespace Skins.Custom
             Move = 4,
             PathNotFound = 8,
             Upgrade = 16,
-            Downgrade = 32
+            Downgrade = 32,
+            AutoDeselect = 1 << 6,
         }
 
         [SerializeField] private Text _valueLabel;
@@ -43,13 +44,14 @@ namespace Skins.Custom
         private BlobFace _face;
         private HatView _hatView;
         private DependencyHolder<SoundsPlayer> _soundsPlayer;
-
+        private Coroutine _hideFaceWithDelay;
+        
         public UnityAction<BallState> ChangeStateEvent;
 
         public override void SetData(BallView view)
         {
             _view = view;
-            _face = GameObject.Instantiate(_facePrefab, _faceAnchor);
+            _face = Instantiate(_facePrefab, _faceAnchor);
         }
 
         public override bool Selected
@@ -62,6 +64,7 @@ namespace Skins.Custom
                 
                 if (value)
                 {
+                    BreakHideFaceWithDelay();
                     _face.ShowLocal(BallState.Select);
                     _soundsPlayer.Value.Play(_onSelectClip);
                 }
@@ -84,7 +87,7 @@ namespace Skins.Custom
                 {
                     _faceAnchor.gameObject.SetActive(true);
                     _face.ShowLocal(BallState.Idle);
-                    RestartHideFaceAfter();
+                    HideFaceWithDelay(0.1f);
                     _soundsPlayer.Value.StopPlay();
                 }
             }
@@ -107,7 +110,7 @@ namespace Skins.Custom
                 
                 _faceAnchor.gameObject.SetActive(true);
                 _face.ShowLocal(BallState.Upgrade);
-                RestartHideFaceAfter();
+                HideFaceWithDelay(1.0f);
             }
 
             if (ballState == BallState.Downgrade)
@@ -165,22 +168,30 @@ namespace Skins.Custom
         {
             _hatAnchor.gameObject.SetActive(activeState);
         }
-
-        private Coroutine _hideAfter;
-        IEnumerator HideFaceAfter()
+        
+        private IEnumerator HideFaceWithDelayCoroutine(float delay)
         {
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(delay);
+            ChangeStateEvent?.Invoke(BallState.AutoDeselect);
+            
+            yield return new WaitForSeconds(0.5f);
+            ChangeStateEvent?.Invoke(BallState.Idle);
             _faceAnchor.gameObject.SetActive(false);
         }
 
-        private void RestartHideFaceAfter()
+        private void BreakHideFaceWithDelay()
         {
-            if (_hideAfter != null)
+            if (_hideFaceWithDelay != null)
             {
-                StopCoroutine(_hideAfter);
-                _hideAfter = null;
+                StopCoroutine(_hideFaceWithDelay);
+                _hideFaceWithDelay = null;
             }
-            _hideAfter = StartCoroutine(HideFaceAfter());
+        }
+        
+        private void HideFaceWithDelay(float delay)
+        {
+            BreakHideFaceWithDelay();
+            _hideFaceWithDelay = StartCoroutine(HideFaceWithDelayCoroutine(delay));
         }
     }
 }

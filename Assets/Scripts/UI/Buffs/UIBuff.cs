@@ -10,6 +10,8 @@ using UnityEngine.UI;
 
 public class UIBuff : MonoBehaviour
 {
+    private static readonly List<CanvasGroup> _noAllocFoundCanvasGroups = new(); 
+    
     protected Action _onClick;
     protected Action<PointerEventData> _onBeginDrag;
     protected Action<PointerEventData> _onEndDrag;
@@ -104,10 +106,41 @@ public class UIBuff : MonoBehaviour
 
     public void UnsubscribeModel()
     {
+        _model
+            .ReleaseAvailableStateChanged(AvailableStateChanged)
+            .ReleaseRestCooldownChanged(RestCooldownChanged)
+            .ReleaseDragPhaseChanged(OnDragPhaseChanged);
+        
         _onClick -= _model.OnClick;
         _onBeginDrag -= _model.OnBeginDrag;
         _onDrag -= _model.OnDrag;
         _onEndDrag -= _model.OnEndDrag;
+    }
+
+    protected bool ParentGroupAllowsInteraction()
+    {
+        return ParentGroupAllowsInteraction(transform, _noAllocFoundCanvasGroups);
+    }
+    
+    public static bool ParentGroupAllowsInteraction(Transform transform, List<CanvasGroup> canvasGroupCache)
+    {
+        var t = transform;
+        while (t != null)
+        {
+            t.GetComponents(canvasGroupCache);
+            for (var i = 0; i < canvasGroupCache.Count; i++)
+            {
+                if (canvasGroupCache[i].enabled && !canvasGroupCache[i].interactable)
+                    return false;
+
+                if (canvasGroupCache[i].ignoreParentGroups)
+                    return true;
+            }
+
+            t = t.parent;
+        }
+
+        return true;
     }
 }
 

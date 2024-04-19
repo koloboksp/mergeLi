@@ -58,20 +58,30 @@ namespace Core
                 if (_data.BeforeGiveCoins != null)
                     await _data.BeforeGiveCoins();
 
-                _speaker.SetActive(true);
                 
-                if (_data.DialogTextKey != GuidEx.Empty)
+
+                if (_data.ManualGiveCoins)
                 {
-                    await _speaker.ShowTextAsync(_data.DialogTextKey, exitToken);
+                    
                 }
-
-                await _data.GameProcessor.GiveCoinsEffect.Show(
-                    activeCastle.CoinsAfterComplete,
-                    _speaker.IconRoot.transform,
-                    exitToken);
+                else
+                {
+                    _speaker.SetActive(true);
                 
-                _data.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
+                    if (_data.DialogTextKey != GuidEx.Empty)
+                    {
+                        await _speaker.ShowTextAsync(_data.DialogTextKey, exitToken);
+                    }
+                    
+                    await _data.GameProcessor.GiveCoinsEffect.Show(
+                        activeCastle.CoinsAfterComplete,
+                        _speaker.IconRoot.transform,
+                        exitToken);
+                
+                    _data.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
 
+                }
+                
                 await AsyncExtensions.WaitForSecondsAsync(3.0f, exitToken);
 
                 if (_data.BeforeSelectNextCastle != null)
@@ -121,7 +131,8 @@ namespace Core
     {
         public GameProcessor GameProcessor { get; set; }
         public GuidEx DialogTextKey { get; set; }
-        
+        public bool ManualGiveCoins { get; set; }
+
         public Func<Task> BeforeGiveCoins;
         public Func<Task> BeforeSelectNextCastle;
         public Func<Task> AfterSelectNextCastle;

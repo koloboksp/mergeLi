@@ -13,13 +13,15 @@ namespace Core
 {
     public class UIGameFailPanel : UIPanel
     {
+        [SerializeField] private Animation _animation;
+        [SerializeField] private AnimationClip _show;
+        [SerializeField] private GameObject _panel;
         [SerializeField] private Button _closeBtn;
         [SerializeField] private Button _nextBtn;
         [SerializeField] private UIBubbleDialog _kingDialog;
         [SerializeField] private GuidEx[] _kingDialogKeys;
 
-        [SerializeField] private AudioClip _completeClip;
-
+        
         [SerializeField] private AnimationCurve _animationSteps;
         
         [SerializeField] private GameObject _sessionScorePanel;
@@ -49,26 +51,32 @@ namespace Core
             _data = undefinedData as UIGameFailPanelData;
             _model = new Model();
 
+            
             _ = ShowWithAnimation();
         }
 
         private async Task ShowWithAnimation()
         {
             var inputTokenSource = new CancellationTokenSource();
-
-            _nextBtn.gameObject.SetActive(false);
-            _sessionScorePanel.SetActive(false);
-            _sessionScoreLabel.text = "--";
-            _newScoreRecordAnimation.gameObject.SetActive(false);
-            _kingDialog.SetDialogActive(false);
             
             try
             {
-                _data.GameProcessor.MusicPlayer.Stop();
-                _data.GameProcessor.SoundsPlayer.PlayExclusive(_completeClip);
-
+                // Prepare
+                _nextBtn.gameObject.SetActive(false);
+                _sessionScorePanel.SetActive(false);
+                _sessionScoreLabel.text = "--";
+                _newScoreRecordAnimation.gameObject.SetActive(false);
+                _kingDialog.SetDialogActive(false);
+                
+                // Show panel
+                _animation.Play(_show.name);
+                await AsyncExtensions.WaitForSecondsAsync(_show.length, inputTokenSource.Token, Application.exitCancellationToken);
+                
+                // Show panel and wait
+                _panel.SetActive(true);
                 await AsyncExtensions.WaitForSecondsAsync(2.5f, inputTokenSource.Token, Application.exitCancellationToken);
                 
+                // Show score
                 var saveController = ApplicationController.Instance.SaveController;
                 var sessionScore = _data.GameProcessor.SessionProcessor.GetScore();
                 if (sessionScore >= 0)
@@ -83,8 +91,7 @@ namespace Core
                         (step, count) =>
                         {
                             var value = Mathf.Lerp(0, sessionScore, (float)(step + 1) / (float)(count));
-                            //var fromSeconds = DateTime.MinValue + TimeSpan.FromSeconds(value);
-
+                            value = Mathf.RoundToInt(value);
                             if (step < count - 1)
                                 _data.GameProcessor.SoundsPlayer.Play(_countdownClip);
                             else
@@ -93,10 +100,13 @@ namespace Core
                             sessionScorePanelScaleEffect.SetMaxScale();
                             _sessionScoreLabel.text = $"{value.ToString()}";
                         });
+                    
+                    // Wait for calculation effect
                     await sessionScoreCalculationEffect.Execute(inputTokenSource.Token, Application.exitCancellationToken);
 
                     await AsyncExtensions.WaitForSecondsAsync(1.0f, inputTokenSource.Token, Application.exitCancellationToken);
 
+                    // Show new best score
                     if (sessionScore > saveController.SaveProgress.BestSessionScore)
                     {
                         _newScoreRecordAnimation.gameObject.SetActive(true);
@@ -112,13 +122,16 @@ namespace Core
                     }
                 }
 
+               
                 await AsyncExtensions.WaitForSecondsAsync(1.5f, inputTokenSource.Token, Application.exitCancellationToken);
 
+                // Show a motivating phrase
                 var kingDialogKey = _kingDialogKeys[Random.Range(0, _kingDialogKeys.Length)];
                 await _kingDialog.ShowTextAsync(kingDialogKey, inputTokenSource.Token);
-                
+                // Wait for user reads motivational phrase
                 await AsyncExtensions.WaitForSecondsAsync(1.5f, inputTokenSource.Token, Application.exitCancellationToken);
 
+                // Show next button
                 _nextBtn.gameObject.SetActive(true);
             }
             catch (OperationCanceledException e)

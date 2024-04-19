@@ -64,55 +64,24 @@ public class BlobFace : MonoBehaviour
     {
         foreach (var face in faces)
             face.Init();
-       // gameObject.SetActive(false);
     }
     
     private void Start()
     {
-        
-
         TurnFaceCycle();
         BlinkEyesCycle();
     }
-
-   // private void OnDestroy()
-   // {
-   //     s_instance = null;
-   // }
-//
-   // public static void Show(Transform root, DefaultBallSkin.BallState state)
-   // {
-   //     if (s_instance != null)
-   //         s_instance.ShowLocal(root, state);
-   // }
-
+    
     public void ShowLocal(DefaultBallSkin.BallState state)
     {
-       //if (root == null)
-       //    return;
-
         if ((changeBlobStates & state) != state)
             return;
-
-       // s_root = root;
-
+        
         gameObject.SetActive(true);
 
         foreach (var face in faces)
             face.Show(state);
     }
-
-    //private void Update()
-    //{
-    //    if (s_root == null)
-    //    {
-    //        gameObject.SetActive(false);
-    //        return;
-    //    }
-//
-    //    transform.SetPositionAndRotation(s_root.position, s_root.rotation);
-    //    transform.localScale = s_root.localScale;
-    //}
 
     private IEnumerator TurnFaceCycle()
     {

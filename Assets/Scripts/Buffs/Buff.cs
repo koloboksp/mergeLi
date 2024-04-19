@@ -234,4 +234,22 @@ public abstract class Buff : MonoBehaviour, IBuff
         _availableStateChanged += onChanged;
         return this;
     }
+    
+    public Buff ReleaseRestCooldownChanged(Action onChanged)
+    {
+        _restCooldownChanged -= onChanged;
+        return this;
+    }
+    
+    public Buff ReleaseDragPhaseChanged(Action<DragPhase> onChanged)
+    {
+        _dragPhaseChanged -= onChanged;
+        return this;
+    }
+    
+    public Buff ReleaseAvailableStateChanged(Action onChanged)
+    {
+        _availableStateChanged -= onChanged;
+        return this;
+    }
 }

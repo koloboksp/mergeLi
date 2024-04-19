@@ -50,6 +50,8 @@ namespace Core.Buffs
             ChangeDragPhase(DragPhase.End);
 
             var pointerGridPosition = _gameProcessor.Scene.Field.GetPointGridIntPosition(_gameProcessor.Scene.Field.ScreenPointToWorld(eventData.position));
+            var affectingArea = GetAffectingArea(pointerGridPosition);
+            UpdateAffectingArea(pointerGridPosition, affectingArea);
             _affectedAreas.Clear();
             foreach (var affectingBuffArea in _affectingBuffAreas)
                 _affectedAreas.Add(pointerGridPosition + affectingBuffArea.LocalGridPosition);

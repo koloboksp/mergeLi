@@ -10,6 +10,7 @@ using Core.Goals;
 using Core.Steps;
 using Save;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class SessionProcessor : MonoBehaviour, 
@@ -32,6 +33,9 @@ public class SessionProcessor : MonoBehaviour,
     [SerializeField] private bool _enableTutorial;
     [SerializeField] private bool _forceTutorial;
     
+    [SerializeField] private AudioClip _failClip;
+
+
     private CancellationTokenSource _restartTokenSource;
     private CancellationTokenSource _loseTokenSource;
     private readonly List<CompletedCastleDesc> _completedCastles = new();
@@ -55,16 +59,22 @@ public class SessionProcessor : MonoBehaviour,
             _gameProcessor.Scene.SetSkin(activeSkinName);
             var activeHatName = ApplicationController.Instance.SaveController.SaveSettings.ActiveHat;
             _gameProcessor.Scene.SetHat(activeHatName);
+
+            UIGameScreen gameScreen = null;
+            UIStartPanel startPanel = null;
             
             if (_enableTutorial && _gameProcessor.TutorialController.CanStartTutorial(_forceTutorial))
             {
                 await _gameProcessor.TutorialController.TryStartTutorial(_forceTutorial, exitToken);
+                
+                _gameProcessor.CastleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
+                _gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
             }
             else
             {
                 _gameProcessor.MusicPlayer.PlayNext();
                 
-                var startPanel = await _panelController.Value.PushScreenAsync<UIStartPanel>(
+                startPanel = await _panelController.Value.PushScreenAsync<UIStartPanel>(
                     new UIStartPanelData()
                     {
                         GameProcessor = _gameProcessor,
@@ -72,11 +82,12 @@ public class SessionProcessor : MonoBehaviour,
                     },
                     exitToken);
                 
+                ApplicationController.UnloadLogoScene();
                 await startPanel.ShowAsync(exitToken);
                 
                 PrepareSession();
                 
-                await _panelController.Value.PushPopupScreenAsync<UIGameScreen>(
+                gameScreen = await _panelController.Value.PushPopupScreenAsync<UIGameScreen>(
                     new UIGameScreenData()
                     {
                         GameProcessor = _gameProcessor
@@ -129,46 +140,66 @@ public class SessionProcessor : MonoBehaviour,
                         {
                             Debug.LogException(e);
                         }
+                        gameScreen.LockInput(true);
+                        _gameProcessor.Field.View.LockInput(true);
+                        
+                        // Turn on win music
+                        _gameProcessor.MusicPlayer.Stop();
+                        _gameProcessor.SoundsPlayer.PlayExclusive(_failClip);
+                        
                         await AsyncExtensions.WaitForSecondsAsync(1.0f, exitToken);
 
                         var balls = _gameProcessor.Scene.Field.GetAll<Ball>()
                             .ToList();
 
-                        for (int i = 0; i < 10; i++)
+                        var ballsToSelect = new List<Ball>();
+                        for (var i = 0; i < 10; i++)
                         {
                             var rIndex = Random.Range(0, balls.Count);
-                            var ball = balls[rIndex];
-                            ball.Select(true);
+                            ballsToSelect.Add(balls[rIndex]);
                             balls.RemoveAt(rIndex);
                         }
-                        
+
+                        ballsToSelect = ballsToSelect.OrderByDescending(i => i.GridPosition.y)
+                            .ToList();
+                        foreach (var ball in ballsToSelect)
+                            ball.Select(true);
+
+                        // Wait while the user watches for happy blobs
                         await AsyncExtensions.WaitForSecondsAsync(2.5f, exitToken);
-                            
+                        
                         var failPanel = await _panelController.Value.PushPopupScreenAsync<UIGameFailPanel>(
                             new UIGameFailPanelData() { GameProcessor = _gameProcessor }, 
                             exitToken);
 
                         await failPanel.ShowAsync(exitToken);
                         
+                        // Turn on environment music
+                        _gameProcessor.MusicPlayer.PlayNext();
+                        _gameProcessor.SoundsPlayer.StopPlayExclusive();
+
                         ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(GetScore());
                         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
                         _completedCastles.Clear();
                         
                         _gameProcessor.MusicPlayer.PlayNext();
                         
-                        var startPanel1 = await _panelController.Value.PushScreenAsync<UIStartPanel>(
+                        startPanel = await _panelController.Value.PushScreenAsync<UIStartPanel>(
                             new UIStartPanelData()
                             {
                                 GameProcessor = _gameProcessor,
                                 Instant = true,
                             },
                             exitToken);
-                        await startPanel1.ShowAsync(exitToken);
+                        await startPanel.ShowAsync(exitToken);
                         
                         PrepareSession();
-                        await _panelController.Value.PushPopupScreenAsync<UIGameScreen>(
+                        gameScreen = await _panelController.Value.PushPopupScreenAsync<UIGameScreen>(
                             new UIGameScreenData() { GameProcessor = _gameProcessor },
                             exitToken);
+                        
+                        gameScreen.LockInput(false);
+                        _gameProcessor.Field.View.LockInput(false);
                     }
                     else if (exception.CancellationToken == exitToken)
                     {
@@ -177,8 +208,7 @@ public class SessionProcessor : MonoBehaviour,
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
-                    throw;
+                    Debug.LogException(e);
                 }
             }
         }
@@ -260,11 +290,12 @@ public class SessionProcessor : MonoBehaviour,
 
         _completedCastles.Add(new CompletedCastleDesc(castle.Id, castle.GetPoints()));
         
-        _ = ProcessCastleCompleteAsync(GuidEx.Empty, null, null, null, Application.exitCancellationToken);
+        _ = ProcessCastleCompleteAsync(GuidEx.Empty, false, null, null, null, Application.exitCancellationToken);
     }
     
     public async Task ProcessCastleCompleteAsync(
         GuidEx dialogTextKey,
+        bool manualGiveCoins,
         Func<Task> beforeGiveCoins, 
         Func<Task> beforeSelectNextCastle,
         Func<Task> afterSelectNextCastle,
@@ -278,6 +309,7 @@ public class SessionProcessor : MonoBehaviour,
             {
                 GameProcessor = _gameProcessor, 
                 DialogTextKey = dialogTextKey,
+                ManualGiveCoins = manualGiveCoins,
                 BeforeGiveCoins = beforeGiveCoins,
                 BeforeSelectNextCastle = beforeSelectNextCastle,
                 AfterSelectNextCastle = afterSelectNextCastle,

@@ -272,6 +272,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7104141350609223302}
   - component: {fileID: 5469745169818681847}
+  - component: {fileID: 8207339442302078783}
   m_Layer: 5
   m_Name: UIGameScreen
   m_TagString: Untagged
@@ -320,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _root: {fileID: 7104141350609223302}
-  _canvasGroup: {fileID: 0}
+  _canvasGroup: {fileID: 8207339442302078783}
   _buffsContainerRoot: {fileID: 7425829141263939423}
   _buffsContainer: {fileID: 1044764078765523264}
   _score: {fileID: 6257001310207207579}
@@ -329,6 +330,18 @@ MonoBehaviour:
   _showPauseBtn: {fileID: 3637436258990822143}
   _lowSpaceWarning: {fileID: 8112737322585709290}
   _anyGiftIndicator: {fileID: 560122666694758428}
+--- !u!225 &8207339442302078783
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305112124653678651}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2315417767646231163
 GameObject:
   m_ObjectHideFlags: 0
@@ -2475,7 +2488,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:

@@ -17,6 +17,9 @@ namespace Core
 {
     public class ApplicationController : ILanguage, ILanguageChanger
     {
+        private const string LOGOSCENE_NAME = "LogoScene";
+        private const string GAMESCENE_NAME = "GameScene";
+        
         private static ApplicationController _instance;
 
         private PurchaseController _purchaseController;
@@ -90,7 +93,14 @@ namespace Core
         
         public static void LoadGameScene()
         {
-            SceneManager.LoadSceneAsync("GameScene");
+            SceneManager.LoadSceneAsync(GAMESCENE_NAME, LoadSceneMode.Additive);
+        }
+        
+        public static void UnloadLogoScene()
+        {
+            var scene = SceneManager.GetSceneByName(LOGOSCENE_NAME);
+            if (scene.IsValid()) 
+                SceneManager.UnloadSceneAsync(scene, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
         }
 
         public SystemLanguage Language

@@ -11,6 +11,7 @@ namespace Core.Tutorials
                 new UIGameScreenData() { GameProcessor = Tutorial.Controller.GameProcessor }, 
                 cancellationToken);
             gameScreen.HideAllElements();
+            ApplicationController.UnloadLogoScene();
             
             return true;
         }
