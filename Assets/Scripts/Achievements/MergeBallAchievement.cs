@@ -1,4 +1,5 @@
-﻿using Core.Steps;
+﻿using System.Linq;
+using Core.Steps;
 using Core.Steps.CustomOperations;
 using UnityEngine;
 
@@ -32,8 +33,8 @@ namespace Achievements
             {
                 return;
             }
-            
-            if (mergeData.PointsBeforeMerge * mergeData.MergeablesCount == _targetBallPoints)
+
+            if (mergeData.MergedBalls.Sum(i => i.Points) == _targetBallPoints)
             {
                 Unlock();
             }

@@ -13,6 +13,7 @@ namespace Core
         public event Action OnMovingStateChanged;
         public event Action OnTransparencyChanged;
         public event Action<int, bool> OnPointsChanged;
+        public event Action<int, bool> OnHatChanged;
         public event Action OnPathNotFound;
 
         public static event Action<Ball, bool> OnMovingStateChangedGlobal;
@@ -22,6 +23,7 @@ namespace Core
         [SerializeField] private BallView _view;
     
         private int _points = 1;
+        private int _hat = 0;
         private bool _selected;
         private bool _moving;
         private float _moveSpeed = 15.0f;
@@ -29,6 +31,8 @@ namespace Core
         
         public BallView View => _view;
         public int Points => _points;
+        public int Hat => _hat;
+
         public bool Selected => _selected;
         public bool Moving => _moving;
 
@@ -46,7 +50,8 @@ namespace Core
             }
         }
 
-       
+     
+
         public async Task InnerMove(Vector3Int to, CancellationToken cancellationToken)
         {
             var path = _field.GetPath(new Vector3Int((int)_gridPosition.x, (int)_gridPosition.y), to);
@@ -144,10 +149,11 @@ namespace Core
             UpdatePoints(newPoints, false);
         }
 
-        public void SetData(IField field, Vector3 startPosition, int points)
+        public void SetData(IField field, Vector3 startPosition, int points, int hat)
         {
             _field = field;
             UpdatePoints(points, true);
+            UpdateHat(hat, true);
             
             UpdateGridPosition(startPosition);
         }
@@ -200,6 +206,13 @@ namespace Core
             var oldPoints = _points;
             _points = newPoints;
             OnPointsChanged?.Invoke(oldPoints, force);
+        }
+
+        private void UpdateHat(int newHat, bool force)
+        {
+            var oldHat = _hat;
+            _hat = newHat;
+            OnHatChanged?.Invoke(oldHat, force);
         }
 
         public void PathNotFound()

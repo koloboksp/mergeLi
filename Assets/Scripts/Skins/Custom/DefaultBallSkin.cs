@@ -52,6 +52,8 @@ namespace Skins.Custom
         {
             _view = view;
             _face = Instantiate(_facePrefab, _faceAnchor);
+            
+           
         }
 
         public override bool Selected
@@ -59,7 +61,7 @@ namespace Skins.Custom
             set
             {
                 ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle);
-                _hatAnchor.gameObject.SetActive(value);
+              //  _hatAnchor.gameObject.SetActive(value);
                 _faceAnchor.gameObject.SetActive(value);
                 
                 if (value)
@@ -136,7 +138,7 @@ namespace Skins.Custom
             _face.ShowLocal(BallState.PathNotFound);
         }
 
-        public override void SetHat(HatView hatView)
+        public void SetHat1(HatView hatView)
         {
             if (_hatView != null)
             {
@@ -146,6 +148,7 @@ namespace Skins.Custom
 
             if (hatView != null)
             {
+                _hatAnchor.gameObject.SetActive(true);
                 _hatView = Instantiate(hatView, _hatAnchor);
             }
         }
@@ -168,7 +171,28 @@ namespace Skins.Custom
         {
             _hatAnchor.gameObject.SetActive(activeState);
         }
-        
+
+        public override void SetHat(int hat, int oldHat, bool force)
+        {
+            
+            if (_view.Ball.Hat != 0)
+            {
+                for (var hatI = 0; hatI < _view.Ball.Field.Scene.HatsLibrary.Hats.Count; hatI++)
+                {
+                    _hatAnchor.gameObject.SetActive(true);
+                    var hatL = _view.Ball.Field.Scene.HatsLibrary.Hats[hatI];
+                    if (_view.Ball.Hat == hatI && hatL.Available)
+                    {
+                        SetHat1(hatL.View);
+                    }
+                }
+            }
+            else
+            {
+                SetHat1(null);
+            }
+        }
+
         private IEnumerator HideFaceWithDelayCoroutine(float delay)
         {
             yield return new WaitForSeconds(delay);

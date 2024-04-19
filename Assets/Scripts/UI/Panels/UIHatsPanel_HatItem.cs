@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Atom;
 using UnityEngine;
@@ -37,10 +38,13 @@ namespace Core
             SetLockIcon();
             
             _fakeScene.GameProcessor = gameProcessor;
+            _fakeScene.HatsLibrary = gameProcessor.Scene.HatsLibrary;
             _fakeScene.ActiveSkin = gameProcessor.Scene.ActiveSkin;
             _fakeScene.ActiveHat = model.Hat;
 
-            _fakeField.CreateBall(Vector3Int.zero, 2);
+            var indexOf = gameProcessor.Scene.HatsLibrary.Hats.ToList().IndexOf(model.Hat);
+
+            _fakeField.CreateBall(Vector3Int.zero, 2, indexOf);
         }
 
         private void OnAvailableChanged()

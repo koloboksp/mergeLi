@@ -262,6 +262,9 @@ public class GameProcessor : MonoBehaviour,
         _castleSelector.SetData();
         
         _sessionProcessor.SetData(this);
+
+        Application.targetFrameRate = 60;
+        
         await _sessionProcessor.ProcessGameAsyncSafe(Application.exitCancellationToken);
     }
     
@@ -349,11 +352,13 @@ public class GameProcessor : MonoBehaviour,
                 new List<Operation>()
                 {
                     new GenerateOperation(_generatedBallsCountAfterMerge,
-                        _generatedBallsCountAfterMove, _generatedBallsPointsRange, _field),
+                        _generatedBallsCountAfterMove, _generatedBallsPointsRange, _scene.ActiveHats, _field),
                     new CollapseOperation(_collapsePointsEffectPrefab,
                         _field, _pointsCalculator)
                 })));
     }
+
+   
 
     private void MoveStep(Vector3Int from, Vector3Int to)
     {
@@ -368,7 +373,7 @@ public class GameProcessor : MonoBehaviour,
                 new List<Operation>()
                 {
                     new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove,
-                        _generatedBallsPointsRange, _field),
+                        _generatedBallsPointsRange, _scene.ActiveHats, _field),
                     new CollapseOperation(_collapsePointsEffectPrefab, _field,
                         _pointsCalculator)
                 })));

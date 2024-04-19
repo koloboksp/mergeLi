@@ -7,7 +7,7 @@ namespace Skins
     {
         [SerializeField] private List<Hat> _hats;
 
-        public IEnumerable<Hat> Hats => _hats;
+        public IReadOnlyList<Hat> Hats => _hats;
     
         public Hat GetHat(string hatName)
         {

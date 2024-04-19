@@ -32,13 +32,14 @@ namespace Core
         public void SetData()
         {
             _ball.OnPointsChanged += Ball_OnPointsChanged;
+            _ball.OnHatChanged += Ball_OnHatChanged;
             _ball.OnSelectedChanged += Ball_OnSelectedChanged;
             _ball.OnMovingStateChanged += Ball_OnMovingStateChanged;
             _ball.OnTransparencyChanged += Ball_TransparencyChanged;
             _ball.OnPathNotFound += Ball_OnPathNotFound;
             
             ChangeSkin(_ball.Field.Scene.ActiveSkin);
-            ChangeHat(_ball.Field.Scene.ActiveHat);
+            //ChangeHat(_ball.Field.Scene.ActiveHat);
         }
 
         private void Ball_OnMovingStateChanged()
@@ -58,16 +59,17 @@ namespace Core
             _ballSkin.SetData(this);
             
             Ball_OnPointsChanged(_ball.Points, true);
+            Ball_OnHatChanged(_ball.Hat, true);
             Ball_OnSelectedChanged();
             Ball_TransparencyChanged();
         }
         
         public void ChangeHat(Hat hat)
         {
-            if (_ballSkin != null)
-            {
-                _ballSkin.SetHat(hat.View);
-            }
+            //if (_ballSkin != null)
+            //{
+            //    _ballSkin.SetHat(hat.View);
+            //}
         }
         
         private void Ball_OnSelectedChanged()
@@ -90,6 +92,18 @@ namespace Core
             
             _root.transform.SetAsLastSibling();
         }
+        
+        private void Ball_OnHatChanged(int oldHat, bool force)
+        {
+            _ballSkin.SetHat(_ball.Hat, oldHat, force);
+            //var foundAssociation = _colorsAssociations.Find(i => i.Points == _ball.Points);
+            //if (foundAssociation != null)
+            //    _mainColor = foundAssociation.Color;
+            //_ballSkin.MainColor = _mainColor;
+            //
+            //_root.transform.SetAsLastSibling();
+        }
+        
         
         private void Ball_TransparencyChanged()
         {

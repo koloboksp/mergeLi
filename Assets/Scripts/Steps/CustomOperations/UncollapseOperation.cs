@@ -35,7 +35,7 @@ namespace Core.Steps.CustomOperations
             }
             
             foreach (var uniqueBall in uniqueBalls)
-                _field.CreateBall(uniqueBall.GridPosition, uniqueBall.Points);
+                _field.CreateBall(uniqueBall.GridPosition, uniqueBall.Points, uniqueBall.Hat);
 
             var receivers = SceneManager.GetActiveScene().GetRootGameObjects()
                 .SelectMany(i => i.GetComponentsInChildren<IPointsEffectReceiver>())

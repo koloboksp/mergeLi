@@ -111,23 +111,23 @@ public class Field : MonoBehaviour, IField
         return CalculatePath(from, to);
     }
 
-    public List<BallDesc> GenerateBalls(int num, int[] availableValues)
+    public List<BallDesc> GenerateBalls(int num, int[] availableValues, int[] availableHats)
     {
-        return AddBalls(num, availableValues);
+        return AddBalls(num, availableValues, availableHats);
     }
 
-    public Vector3Int CreateBall(Vector3Int position, int points)
+    public Vector3Int CreateBall(Vector3Int position, int points, int hat)
     {
-        var newBall = PureCreateBall(position, points);
+        var newBall = PureCreateBall(position, points, hat);
         _balls.Add(newBall);
         
         return position;
     }
     
-    public Ball PureCreateBall(Vector3Int position, int points)
+    public Ball PureCreateBall(Vector3Int position, int points, int hat)
     {
         var newBall = Instantiate(_ballPrefab, _view.Root);
-        newBall.SetData(this, position, points);
+        newBall.SetData(this, position, points, hat);
         var subComponents = newBall.GetComponents<ISubComponent>();
         foreach (var subComponent in subComponents)
             subComponent.SetData();
@@ -135,25 +135,52 @@ public class Field : MonoBehaviour, IField
         return newBall;
     }
     
-    public void GenerateNextBallPositions(int count, int[] availableValues)
+    public void GenerateNextBallPositions(int count, int[] availableValues, int[] availableHats)
     {
         var freeIndexes = new List<Vector3Int>();
+        var usedHats = new List<int>();
         for (var x = 0; x < _size.x; x++)
         for (var y = 0; y < _size.y; y++)
             freeIndexes.Add(new Vector3Int(x, y, 0));
         foreach (var ball in _balls)
+        {
             freeIndexes.Remove(ball.IntGridPosition);
+            if (ball.Hat != 0)
+                usedHats.Add(ball.Hat);
+        }
+
         foreach (var nextBall in _nextBallsData)
             freeIndexes.Remove(nextBall.GridPosition);
 
+        var hatsToAdd = new List<int>();
+        foreach (var activeHat in availableHats)
+        {
+            if (usedHats.Contains(activeHat))
+            {
+                
+            }
+            else
+            {
+                hatsToAdd.Add(activeHat);
+            }
+        }
+        
         for (var i = 0; i < count; i++)
         {
-            if(freeIndexes.Count <= 0) break;
+            if (freeIndexes.Count <= 0) break;
             
             var randomElementIndex = Random.Range(0, freeIndexes.Count);
             var freeIndex = freeIndexes[randomElementIndex];
             freeIndexes.RemoveAt(randomElementIndex);
-            _nextBallsData.Add(new BallDesc(freeIndex, availableValues[Random.Range(0, availableValues.Length - 1)]));
+
+            var hat = 0;
+            if (hatsToAdd.Count > 0)
+            {
+                hat = hatsToAdd[0];
+                hatsToAdd.RemoveAt(0);
+            }
+            
+            _nextBallsData.Add(new BallDesc(freeIndex, availableValues[Random.Range(0, availableValues.Length - 1)], hat));
         }
     }
 
@@ -169,13 +196,13 @@ public class Field : MonoBehaviour, IField
         return _cellSize;
     }
 
-    public List<BallDesc> AddBalls(int amount, int[] availableValues)
+    public List<BallDesc> AddBalls(int amount, int[] availableValues, int[] availableHats)
     {
         foreach (var ball in _balls)
             _nextBallsData.RemoveAll(i => i.GridPosition == ball.IntGridPosition);
 
         if (_nextBallsData.Count < amount)
-            GenerateNextBallPositions(amount - _nextBallsData.Count, availableValues);
+            GenerateNextBallPositions(amount - _nextBallsData.Count, availableValues, availableHats);
         else
         {
             if (_nextBallsData.Count > amount)
@@ -188,12 +215,12 @@ public class Field : MonoBehaviour, IField
         
         var newBallsData = new List<BallDesc>();
         foreach (var ballData in _nextBallsData)
-            newBallsData.Add(new BallDesc(ballData.GridPosition, ballData.Points));
+            newBallsData.Add(new BallDesc(ballData.GridPosition, ballData.Points, ballData.Hat));
         
         _nextBallsData.Clear();
 
-        foreach (var ballsPosition in newBallsData)
-            CreateBall(ballsPosition.GridPosition, ballsPosition.Points);
+        foreach (var ballData in newBallsData)
+            CreateBall(ballData.GridPosition, ballData.Points, ballData.Hat);
         
         return newBallsData;
     }
@@ -203,8 +230,8 @@ public class Field : MonoBehaviour, IField
         var result = new List<BallDesc>();
         foreach (var ballData in newBallsData)
         {
-            var gridPosition = CreateBall(ballData.GridPosition, ballData.Points);
-            result.Add(new BallDesc(gridPosition, ballData.Points));
+            var gridPosition = CreateBall(ballData.GridPosition, ballData.Points, ballData.Hat);
+            result.Add(new BallDesc(gridPosition, ballData.Points, ballData.Hat));
         }
 
         return result;

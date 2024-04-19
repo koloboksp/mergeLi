@@ -65,7 +65,7 @@ namespace Core.Steps.CustomOperations
                     _collapseLines.Add(new List<BallDesc>());
                     foreach (var ball in collapseLine)
                     {
-                        _collapseLines[^1].Add(new BallDesc(ball.IntGridPosition, ball.Points));
+                        _collapseLines[^1].Add(new BallDesc(ball.IntGridPosition, ball.Points, ball.Hat));
                         maxDistanceToCheckingPosition = Mathf.Max(maxDistanceToCheckingPosition, (ball.IntGridPosition - checkingPosition).magnitude);
                     }
                 }

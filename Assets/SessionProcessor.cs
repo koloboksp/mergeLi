@@ -231,7 +231,7 @@ public class SessionProcessor : MonoBehaviour,
             _gameProcessor.CastleSelector.SelectActiveCastle(lastSessionProgress.ActiveCastle.Id);
             _gameProcessor.CastleSelector.ActiveCastle.SetPoints(lastSessionProgress.ActiveCastle.Points, true);
         
-            var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => new BallDesc(i.GridPosition, i.Points));
+            var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => new BallDesc(i.GridPosition, i.Points, i.Hat));
             _gameProcessor.Field.AddBalls(ballsProgressData);
 
             foreach (var buffProgress in lastSessionProgress.Buffs)
@@ -248,14 +248,20 @@ public class SessionProcessor : MonoBehaviour,
         
             ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
             _gameProcessor.Field.Clear();
-            _gameProcessor.Field.GenerateBalls(_gameProcessor.GeneratedBallsCountOnStart, _gameProcessor.GeneratedBallsPointsRange);
+            _gameProcessor.Field.GenerateBalls(
+                _gameProcessor.GeneratedBallsCountOnStart, 
+                _gameProcessor.GeneratedBallsPointsRange, 
+                _gameProcessor.Scene.ActiveHats);
             _gameProcessor.CastleSelector.ActiveCastle.ResetPoints(true);
         }
     }
     
     private async Task ProcessSessionAsync(CancellationToken restartToken, CancellationToken loseToken, CancellationToken cancellationToken)
     {
-        _gameProcessor.Field.GenerateNextBallPositions(_gameProcessor.GeneratedBallsCountAfterMove, _gameProcessor.GeneratedBallsPointsRange);
+        _gameProcessor.Field.GenerateNextBallPositions(
+            _gameProcessor.GeneratedBallsCountAfterMove, 
+            _gameProcessor.GeneratedBallsPointsRange,
+            _gameProcessor.Scene.ActiveHats);
 
         while (true)
         {

@@ -6,6 +6,7 @@ public interface IBall : IFieldMovable, IFieldSelectable, IFieldMergeable
 {
     public Vector3Int IntGridPosition { get; }
     public int Points { get; }
+    public int Hat { get; }
 }
 
 public interface IField
@@ -13,12 +14,12 @@ public interface IField
     IEnumerable<T> GetSomething<T>(Vector3Int position) where T : class;
     List<List<Ball>> CheckCollapse(Vector3Int checkingPosition);
     void DestroyBalls(List<Ball> ballsToRemove, bool force);
-    List<BallDesc> GenerateBalls(int count, int[] availableValues);
-    Vector3Int CreateBall(Vector3Int position, int points);
+    List<BallDesc> GenerateBalls(int count, int[] availableValues, int[] availableHats);
+    Vector3Int CreateBall(Vector3Int position, int points, int hat);
     public Vector3 GetPositionFromGrid(Vector3 gridPosition);
     Vector3 GetPositionFromGrid(Vector3Int gridPosition);
     public IFieldView View { get; }
-    void GenerateNextBallPositions(int count, int[] availableValues);
+    void GenerateNextBallPositions(int count, int[] availableValues, int[] availableHats);
     IEnumerable<T> GetAll<T>();
     Vector2Int Size { get; }
     Vector3 CellSize();
@@ -35,7 +36,7 @@ public interface IField
     Vector3 ScreenPointToWorld(Vector3 position);
     Vector3Int GetPointGridIntPosition(Vector3 position);
     void Clear();
-    Ball PureCreateBall(Vector3Int gridPosition, int points);
+    Ball PureCreateBall(Vector3Int gridPosition, int points, int hat);
     public List<BallDesc> AddBalls(IEnumerable<BallDesc> newBallsData);
 }
 
