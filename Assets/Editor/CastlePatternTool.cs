@@ -9,21 +9,23 @@ public class CastlePatternTool : EditorWindow
     private const int HALFPANEL_WIDTH = 100;
     private const int SELDOT_SIZE = 8;
     private const int DEFDOT_SIZE = 4;
+    private const int MIDDOT_SIZE = 10;
 
-
-    private const float VIEWSCALE_MIN = .5f;
-    private const float VIEWSCALE_MAX = 4f;
-    private const float WHEELSCALE = .02f;
+    private const float WHEEL_MIN = .5f;
+    private const float WHEEL_MAX = 4f;
+    private const float WHEEL_INC = -.02f;
 
     private const float TAP_DIST = .01f; // in normalize space
 
     private readonly Vector2[] QUAD = new Vector2[] { -Vector2.one, new Vector2(1, -1), Vector2.one, new Vector2(-1, 1) };
+    private readonly Vector2 MIDDOTSIZE = Vector2.one * MIDDOT_SIZE;
+    private readonly Vector2 MIDDOTHALF = Vector2.one * MIDDOT_SIZE / 2f;
 
     private Texture image;
     private ImagePattern pattern;
     private ImagePattern newPattern;
 
-    [Range(VIEWSCALE_MIN, VIEWSCALE_MAX)] private float scale = 1f;
+    [Range(WHEEL_MIN, WHEEL_MAX)] private float scale = 1f;
 
     // private SerializedProperty nodesProp;
 
@@ -98,7 +100,7 @@ public class CastlePatternTool : EditorWindow
         GUILayout.EndHorizontal();
 
         image = (Texture)EditorGUILayout.ObjectField(image, typeof(Texture), false);
-        scale = EditorGUILayout.Slider(scale, VIEWSCALE_MIN, VIEWSCALE_MAX);
+        scale = EditorGUILayout.Slider(scale, WHEEL_MIN, WHEEL_MAX);
 
         GUILayout.Space(10);
         if (GUILayout.Button("Save Pattern"))
@@ -184,8 +186,8 @@ public class CastlePatternTool : EditorWindow
                     break;
 
                 case EventType.ScrollWheel:
-                    scale += e.delta.y * WHEELSCALE;
-                    scale = Mathf.Clamp(scale, VIEWSCALE_MIN, VIEWSCALE_MAX);
+                    scale += e.delta.y * WHEEL_INC;
+                    scale = Mathf.Clamp(scale, WHEEL_MIN, WHEEL_MAX);
                     Repaint();
                     break;
             }
@@ -199,14 +201,33 @@ public class CastlePatternTool : EditorWindow
             // Draw by GL
             DrawLines();
 
+            // Draw All knot points
             foreach (var vert in dict[selGroupID])
                 DrawVert(Vector2.Scale(vert, wh), defColor, DEFDOT_SIZE);
 
+            // Draw active point
             if (isDragVert)
             {
                 dict[selGroupID][selVertID] = new Vector2(e.mousePosition.x / w, e.mousePosition.y / h);
                 DrawVert(e.mousePosition, selColor, SELDOT_SIZE);
                 Repaint();
+            }
+            else 
+            {
+                // Draw midpoints buttons to add new Verts
+                Vector2 midPos;
+                var verts = dict[selGroupID];
+                for (int i = 0; i < verts.Count; i++)
+                {
+                    midPos = (verts[i] + verts[NextInd(i, verts.Count)]) / 2f;
+                    midPos = imgSpace.inverse.MultiplyPoint3x4(midPos);
+
+                    if (GUI.Button(new Rect(midPos - MIDDOTHALF, MIDDOTSIZE), GUIContent.none))
+                    {
+                        verts.Insert(NextInd(i, verts.Count), imgSpace.MultiplyPoint3x4(midPos));
+                    }
+                }
+                
             }
 
             
@@ -219,12 +240,12 @@ public class CastlePatternTool : EditorWindow
         //     Repaint();
     }
 
+    private int NextInd(int ind, int count) => ind == count - 1 ? 0 : ind + 1;
+   
+
     private void DrawLines()
     {
         Mat.SetPass(0);
-        
-        // GL.PushMatrix();
-        // GL.LoadOrtho();
         
         GL.Begin(GL.LINES);
 
@@ -238,10 +259,10 @@ public class CastlePatternTool : EditorWindow
 
             GL.Color(item.Key == selGroupID ? selColor : defColor);
 
-            for (int i = 1; i < item.Value.Count; i++)
+            for (int i = 0; i < item.Value.Count; i++)
             {
-                p0 = item.Value[i - 1];
-                p1 = item.Value[i];
+                p0 = item.Value[i];
+                p1 = item.Value[i == item.Value.Count - 1 ? 0 : i + 1];
                 
                 GL.Vertex(new Vector3(p0.x * w, p0.y * h, 0));
                 GL.Vertex(new Vector3(p1.x * w, p1.y * h, 0));
@@ -249,8 +270,6 @@ public class CastlePatternTool : EditorWindow
         }
 
         GL.End();
-
-        // GL.PopMatrix();
     }
 
     private void DrawVert(Vector2 pos, Color32 col, float size)
@@ -284,6 +303,21 @@ public class CastlePatternTool : EditorWindow
             else
             {
                 dict.Add(id, new List<Vector2>() { pos });
+            }
+        }
+
+        // Set minimum verts to 3 - make an equilateral triangle
+        foreach (var item in dict)
+        {
+            if (item.Value.Count == 2)
+            {
+                Vector2 p0 = imgSpace.inverse.MultiplyPoint3x4(item.Value[0]);
+                Vector2 p1 = imgSpace.inverse.MultiplyPoint3x4(item.Value[1]);
+                var newVert = p1 - p0;
+                newVert = new Vector2(-newVert.y, newVert.x) * .87f + (p1 + p0) / 2f;
+                newVert = imgSpace.MultiplyPoint3x4(newVert);
+                newVert.Set(Mathf.Clamp01(newVert.x), Mathf.Clamp01(newVert.y));
+                item.Value.Add(newVert);
             }
         }
     }
