@@ -57,9 +57,9 @@ public class SessionProcessor : MonoBehaviour,
         {
             var activeSkinName = ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin;
             _gameProcessor.Scene.SetSkin(activeSkinName);
-            var activeHatName = ApplicationController.Instance.SaveController.SaveSettings.ActiveHat;
-            _gameProcessor.Scene.SetHat(activeHatName);
-
+            var userInactiveHatsFilter = ApplicationController.Instance.SaveController.SaveSettings.UserInactiveHatsFilter;
+            _gameProcessor.Scene.UserInactiveHatsFilter = userInactiveHatsFilter;
+            
             UIGameScreen gameScreen = null;
             UIStartPanel startPanel = null;
             

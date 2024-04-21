@@ -2,6 +2,6 @@
 {
     public interface IHatChangeable
     {
-        public void ChangeHat(Hat hat);
+        public void ChangeUserInactiveHatsFilter();
     }
 }

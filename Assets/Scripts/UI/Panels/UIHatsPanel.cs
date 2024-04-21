@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Atom;
 using Save;
 using Skins;
 using UnityEngine;
@@ -17,7 +18,12 @@ namespace Core
         [SerializeField] private UIHatsPanel_HatItem _itemPrefab;
         [SerializeField] private Button _buyBtn;
         [SerializeField] private Text _buyBtnPriceLabel;
-        [SerializeField] private Text _alreadyHaveLabel;
+        [SerializeField] private Button _equipBtn;
+        [SerializeField] private Text _equipBtnLabel;
+        [SerializeField] private GuidEx _equipTextKey;
+        [SerializeField] private GuidEx _unequipTextKey;
+
+      //  [SerializeField] private Text _alreadyHaveLabel;
         [SerializeField] private UIGameScreen_Coins _coins;
         
         private Model _model;
@@ -28,6 +34,7 @@ namespace Core
         {
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
             _buyBtn.onClick.AddListener(BuyBtn_OnClick);
+            _equipBtn.onClick.AddListener(EquipBtn_OnClick);
             _coins.OnClick += Coins_OnClick;
         }
 
@@ -58,6 +65,14 @@ namespace Core
                     Application.exitCancellationToken);
             }
         }
+
+        private void EquipBtn_OnClick()
+        {
+            _selectedItem.SetUserInactiveFilter(!_selectedItem.UserInactiveFilter);
+            
+            var equipBtnTextKey = _selectedItem.UserInactiveFilter ? _equipTextKey : _unequipTextKey;
+            _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
+        }
         
         public override void SetData(UIScreenData undefinedData)
         {
@@ -69,9 +84,10 @@ namespace Core
             
             _model.SetData(
                 _data.Hats, 
-                _data.SelectedHat, 
+                _data.UserInactiveHatsFilter, 
                 _data.HatsChanger, 
                 ApplicationController.Instance.SaveController.SaveProgress);
+            _model.Select(_data.Selected);
             
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
             OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
@@ -129,12 +145,14 @@ namespace Core
             {
                 _buyBtn.gameObject.SetActive(true);
                 _buyBtnPriceLabel.text = _selectedItem.Cost.ToString();
-                _alreadyHaveLabel.gameObject.SetActive(false);
+                _equipBtn.gameObject.SetActive(false);
             }
             else
             {
                 _buyBtn.gameObject.SetActive(false);
-                _alreadyHaveLabel.gameObject.SetActive(true);
+                _equipBtn.gameObject.SetActive(true);
+                var equipBtnTextKey = _selectedItem.UserInactiveFilter ? _equipTextKey : _unequipTextKey;
+                _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
             }
         }
 
@@ -150,26 +168,39 @@ namespace Core
             private SaveProgress _saveProgress;
             
             public void SetData(
-                IEnumerable<Hat> hats,
-                Hat selectedHat, 
+                IReadOnlyList<Hat> hats,
+                int[] userInactiveFilter, 
                 IHatsChanger changer,
                 SaveProgress saveProgress)
             {
                 _saveProgress = saveProgress;
                 _changer = changer;
+
+                for (var hatI = 0; hatI < hats.Count; hatI++)
+                {
+                    var hat = hats[hatI];
+                    var item = new UIHatsPanel_HatItem.Model(hat, this)
+                        .SetUserInactiveFilter(Array.FindIndex(userInactiveFilter, i => i == hatI) >= 0);
+                    item.OnUserInactiveFilterStateChanged += Item_OnUserInactiveFilterStateChanged;
+                    _items.Add(item);
+                }
                 
-                _items.AddRange(hats
-                    .Select(i => new UIHatsPanel_HatItem.Model(i, this)));
                 _onItemsUpdated?.Invoke(_items);
-
-                var initialSelected = _items.Find(i => i.Hat == selectedHat);
-                if (initialSelected == null)
-                    initialSelected = _items.FirstOrDefault();
-
-                if (initialSelected != null)
-                    TrySelect(initialSelected);
             }
 
+            private void Item_OnUserInactiveFilterStateChanged()
+            {
+                var inactiveFilter = new List<int>();
+                for (var itemI = 0; itemI < _items.Count; itemI++)
+                {
+                    var item = _items[itemI];
+                    if (item.UserInactiveFilter)
+                        inactiveFilter.Add(itemI);
+                }
+
+                _changer.SetUserInactiveHatsFilter(inactiveFilter.ToArray());
+            }
+            
             public Model OnItemsUpdated(Action<IEnumerable<UIHatsPanel_HatItem.Model>> onItemsUpdated)
             {
                 _onItemsUpdated = onItemsUpdated;
@@ -199,6 +230,12 @@ namespace Core
                 
                 return false;
             }
+
+            public void Select(Hat hat)
+            {
+                var item = _items.Find(i => i.Hat == hat);
+                TrySelect(item);
+            }
             
             internal void TrySelect(UIHatsPanel_HatItem.Model newSelected)
             {
@@ -206,9 +243,6 @@ namespace Core
                 
                 foreach (var item in _items)
                     item.SetSelectedState(item == _selected);
-
-                if (_selected.Available)
-                    _changer.SetHat(_selected.Id);
                 
                 _onBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
             }
@@ -218,8 +252,9 @@ namespace Core
     public class UIHatsPanelData : UIScreenData
     {
         public GameProcessor GameProcessor;
-        public Hat SelectedHat;
-        public IEnumerable<Hat> Hats;
+        public Hat Selected;
+        public int[] UserInactiveHatsFilter;
+        public IReadOnlyList<Hat> Hats;
         public IHatsChanger HatsChanger;
     }
 }

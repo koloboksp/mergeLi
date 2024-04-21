@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -95,14 +96,14 @@ namespace Save
             }
         }
 
-        public string ActiveHat
+        public int[] UserInactiveHatsFilter
         {
-            get => _settings.ActiveHat;
+            get => _settings.UserInactiveHatsFilter;
             set
             {
-                if (value != _settings.ActiveHat)
+                if (value != _settings.UserInactiveHatsFilter)
                 {
-                    _settings.ActiveHat = value;
+                    _settings.UserInactiveHatsFilter = value;
                     _controller.Save(_settings, _fileName);
                 }
             }
@@ -110,12 +111,12 @@ namespace Save
 
         public string ActiveSkin
         {
-            get => _settings.ActiveHat;
+            get => _settings.ActiveSkin;
             set
             {
-                if (value != _settings.ActiveHat)
+                if (value != _settings.ActiveSkin)
                 {
-                    _settings.ActiveHat = value;
+                    _settings.ActiveSkin = value;
                     _controller.Save(_settings, _fileName);
                 }
             }
