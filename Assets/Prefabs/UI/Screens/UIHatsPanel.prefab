@@ -41,9 +41,9 @@ RectTransform:
   m_Father: {fileID: 3010950264212807763}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 337.51614, y: -112.66575}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 675.0323, y: 225.3315}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &59753350257534606
@@ -585,15 +585,15 @@ MonoBehaviour:
   _equipBtn: {fileID: 2486326454854509028}
   _equipBtnLabel: {fileID: 2833184902270673423}
   _equipTextKey:
-    m03: 0
-    m47: 0
-    m8B: 0
-    mCF: 0
+    m03: 2351319794
+    m47: 1680951027
+    m8B: 2822989957
+    mCF: 1103223218
   _unequipTextKey:
-    m03: 0
-    m47: 0
-    m8B: 0
-    mCF: 0
+    m03: 4000722830
+    m47: 1037585105
+    m8B: 2634073280
+    mCF: 1799195604
   _coins: {fileID: 3458700396903534684}
 --- !u!225 &1917009544345206503
 CanvasGroup:
