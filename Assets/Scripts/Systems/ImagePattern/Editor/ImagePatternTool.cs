@@ -1,0 +1,434 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+
+public class ImagePatternTool : EditorWindow
+{
+    private const int LEFTPANEL_WIDTH = 200;
+    private const int HALFPANEL_WIDTH = 100;
+    private const int SELDOT_SIZE = 8;
+    private const int DEFDOT_SIZE = 4;
+
+    private const float WHEEL_MIN = .5f;
+    private const float WHEEL_MAX = 4f;
+    private const float WHEEL_INC = -.02f;
+
+    private const float TAP_DIST = .01f; // in normalize space
+
+    private readonly Vector2[] QUAD = new Vector2[] { -Vector2.one, new Vector2(1, -1), Vector2.one, new Vector2(-1, 1) };
+    private readonly Vector2 MIDDOT_SIZE = Vector2.one * 10f;
+    private readonly Vector2 MIDDOT_HALF = Vector2.one * 5f;
+    private readonly Vector2 MASS_SIZE = new(30f, 20f);
+
+    private Texture image;
+    private ImagePattern pattern;
+    private ImagePattern newPattern;
+
+    [Range(WHEEL_MIN, WHEEL_MAX)] private float scale = 1f;
+
+    private Vector2 scrollImage;
+    private int w, h;
+    private Vector2 oneToPix; // front weight height
+    private Vector2 pixToOne; // back weight height
+
+    private List<List<Vector2>> verts;
+    private Vector2[] mass; // centers of mass for each shell in screen pixels
+
+    private Color32 selColor = Color.green;
+    private Color32 defColor = Color.gray;
+
+    private bool isDragVert;
+    private bool isPanoramic;
+    private Vector2 panPos0;
+
+    private int sid; // selected ShellID
+    private int vid; // selected VertexID in selected ShellID
+
+    private Material mat;
+    private Material Mat
+    {
+        get
+        {
+            if (mat == null)
+                mat = new Material(Shader.Find("Unlit/VertColor"));
+            return mat;
+        }
+    }
+
+    [MenuItem("TechArt/Castle Pattern Tool")] 
+    static void Init()
+    {
+        var window = (ImagePatternTool)EditorWindow.GetWindow(typeof(ImagePatternTool));
+        window.Show();
+    }
+
+    private void OnGUI()
+    {
+        // Left Tools panel
+        GUILayout.BeginVertical(GUILayout.Width(LEFTPANEL_WIDTH));
+
+        GUILayout.BeginHorizontal();
+        newPattern = (ImagePattern)EditorGUILayout.ObjectField(pattern, typeof(ImagePattern), false);
+
+        if (newPattern == null)
+        {
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+            return;
+        }
+
+        if (GUILayout.Button("R", GUILayout.Width(20)))
+            pattern = null;
+
+        if (newPattern != pattern)
+        {
+            pattern = newPattern;
+            image = pattern.image;
+            LoadPattern();
+        }
+
+        GUILayout.EndHorizontal();
+
+        image = (Texture)EditorGUILayout.ObjectField(image, typeof(Texture), false);
+        scale = EditorGUILayout.Slider(scale, WHEEL_MIN, WHEEL_MAX);
+
+        GUILayout.Space(10);
+        if (GUILayout.Button("Save Pattern"))
+            SavePattern();
+
+        GUILayout.Space(10);
+        GUILayout.Label("Colors", "BoldLabel");
+        GUILayout.BeginHorizontal();
+        defColor = EditorGUILayout.ColorField(defColor);
+        selColor = EditorGUILayout.ColorField(selColor);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(10);
+        GUILayout.Label("Shells", "BoldLabel");
+
+        GUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("Add"))
+            AddShell();
+        if (GUILayout.Button("\u2191"))
+            MoveShell(true);
+        if (GUILayout.Button("\u2193"))
+            MoveShell(false);
+        GUILayout.Label(" ");
+        if (GUILayout.Button("X"))
+            DelShell();
+
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(10);
+
+        for (int i = 0; i < verts.Count; i++)
+        {
+            if (GUILayout.Toggle(sid == i, i.ToString(), "Button"))
+                sid = i;
+        }
+
+        GUILayout.EndVertical();
+
+        // Drawing space
+
+        GUILayout.BeginArea(new Rect(LEFTPANEL_WIDTH, 0, position.width - LEFTPANEL_WIDTH, position.height));
+        if (image != null)
+        {
+            UpdateScale();
+
+            scrollImage = GUILayout.BeginScrollView(scrollImage);
+
+            // Draw image
+            GUILayout.Box(GUIContent.none, GUILayout.Width(w), GUILayout.Height(h));
+            GUI.DrawTexture(GUILayoutUtility.GetLastRect(), image, ScaleMode.StretchToFill);
+
+            var e = Event.current;
+
+            switch (e.type)
+            {
+                case EventType.MouseDown:
+                    
+                    if (isDragVert || isPanoramic)
+                        break;
+                    
+                    bool isVert = false;
+
+                    if (verts.Count > 0)
+                    {
+                        // Tap on Vertex to Select It
+                        Vector2 mPos = Vector2.Scale(e.mousePosition, pixToOne);
+                        for (int i = 0; i < verts[sid].Count; i++)
+                        {
+                            var delta = mPos - verts[sid][i];
+                            if (delta.magnitude < TAP_DIST)
+                            {
+                                vid = i;
+
+                                if (e.button == 0)
+                                {
+                                    isDragVert = true;
+                                }
+                                else if (e.button == 1)
+                                {
+                                    DelVert();
+                                }
+
+                                isVert = true;
+                                Repaint();
+                                break;
+                            }
+                        }
+                    }
+
+                    if (e.button == 1 && !isVert)
+                    {
+                        panPos0 = scrollImage - e.mousePosition;
+                        isPanoramic = true;
+                    }
+
+                    break;
+
+                case EventType.MouseUp:
+                    isDragVert = false;
+                    isPanoramic = false;
+                    break;
+
+                case EventType.ScrollWheel:
+                    scale += e.delta.y * WHEEL_INC;
+                    scale = Mathf.Clamp(scale, WHEEL_MIN, WHEEL_MAX);
+                    UpdateScale();
+                    UpdateMass(true);
+                    Repaint();
+                    break;
+            }
+
+            if (isPanoramic)
+            {
+                scrollImage = panPos0 - e.mousePosition;
+                Repaint();
+            }
+
+            // Draw Elements to Work with Verts
+            if (verts.Count > 0)
+            {
+                DrawLines();
+
+                // Draw all points for active shell
+                for (int i = 0; i < verts[sid].Count; i++)
+                    DrawVert(Vector2.Scale(verts[sid][i], oneToPix), defColor, DEFDOT_SIZE);
+
+                // Draw active point
+                DrawVert(Vector2.Scale(verts[sid][vid], oneToPix), selColor, SELDOT_SIZE);
+
+                // Draw mass in center of every shell
+                for (int i = 0; i < mass.Length; i++)
+                    if (GUI.Button(new Rect(mass[i], MASS_SIZE), i.ToString()))
+                        sid = i;
+
+                if (isDragVert)
+                {
+                    // Move Selected verts
+                    verts[sid][vid] = Vector2.Scale(e.mousePosition, pixToOne);
+                    UpdateMass();
+                    Repaint();
+                }
+                else
+                {
+                    // Show mid point to insert new vert
+                    Vector2 midOnePos;
+                    Vector2 midPixPos;
+                    int next;
+
+                    for (int i = 0; i < verts[sid].Count; i++)
+                    {
+                        next = (i + 1) % verts[sid].Count;
+                        midOnePos = (verts[sid][i] + verts[sid][next]) / 2f;
+                        midPixPos = Vector2.Scale(midOnePos, oneToPix);
+
+                        if (GUI.Button(new Rect(midPixPos - MIDDOT_HALF, MIDDOT_SIZE), GUIContent.none))
+                            verts[sid].Insert(next, midOnePos);
+                    }
+                }
+            }
+            
+            GUILayout.EndScrollView();
+        }
+        GUILayout.EndArea();
+    }
+
+
+    private void DrawLines()
+    {
+        Mat.SetPass(0);
+        
+        GL.Begin(GL.LINES);
+
+        for (int i = 0; i < verts.Count; i++)
+        {
+            GL.Color(sid == i ? selColor : defColor);
+
+            for (int j = 0; j < verts[i].Count; j++)
+            {
+                GL.Vertex(Vector2.Scale(verts[i][j], oneToPix));
+                GL.Vertex(Vector2.Scale(verts[i][(j + 1) % verts[i].Count], oneToPix));
+            }
+        }
+
+        GL.End();
+    }
+
+    private void DrawVert(Vector2 pos, Color32 col, float size)
+    {
+        Mat.SetPass(0);
+        
+        GL.Begin(GL.QUADS);
+        GL.Color(col);
+
+        for (int i = 0; i < QUAD.Length; i++)
+            GL.Vertex(pos + QUAD[i] * size);
+
+        GL.End();
+    }
+
+    private void LoadPattern()
+    {
+        if (pattern == null)
+            return;
+
+        image = pattern.image != null ? pattern.image : Texture2D.whiteTexture;
+
+        verts = new List<List<Vector2>>();
+        int copyStart, copyEnd, copyCount;
+        Vector2[] newBit;
+
+        for (int i = 0; i < pattern.bits.Count; i++)
+        {
+            copyStart = pattern.bits[i];
+            copyEnd = i == pattern.bits.Count - 1 ? pattern.verts.Count : pattern.bits[i + 1];
+            copyCount = copyEnd - copyStart;
+
+            newBit = new Vector2[copyCount];
+            pattern.verts.CopyTo(copyStart, newBit, 0, copyCount);
+            verts.Add(new List<Vector2>(newBit));
+        }
+
+        sid = 0;
+        vid = 0;
+
+        UpdateScale();
+        UpdateMass(true);
+    }
+
+    private void UpdateMass(bool fullUpdate = false)
+    {
+        if (mass == null || mass.Length != verts.Count)
+        {
+            mass = new Vector2[verts.Count];
+            fullUpdate = true;
+        }
+
+        Vector2Int range = fullUpdate ? new Vector2Int(0, verts.Count) : new Vector2Int(sid, sid + 1);
+        
+        for (int i = range.x; i < range.y; i++)
+        {
+            mass[i] = Vector2.zero;
+            for (int j = 0; j < verts[i].Count; j++)
+                mass[i] += verts[i][j];
+            mass[i] /= verts[i].Count;
+            mass[i] = Vector2.Scale(mass[i], oneToPix);
+        }
+    }
+
+    private void UpdateScale()
+    {
+        w = (int)(image.width * scale);
+        h = (int)(image.height * scale);
+        oneToPix.Set(w, h);
+        pixToOne.Set(1f / w, 1f / h);
+    }
+
+    private void SavePattern()
+    {
+        if (pattern == null)
+            return;
+
+        pattern.image = image;
+        pattern.bits = new List<int>();
+        pattern.verts = new List<Vector2>();
+
+        int index = 0;
+        for (int i = 0; i < verts.Count; i++)
+        {
+            pattern.bits.Add(index);
+            pattern.verts.AddRange(verts[i]);
+            index += verts[i].Count;
+        }
+
+        EditorUtility.SetDirty(pattern);
+        var path = AssetDatabase.GetAssetPath(pattern);
+        var guid = AssetDatabase.GUIDFromAssetPath(path);
+        AssetDatabase.SaveAssetIfDirty(guid);
+        AssetDatabase.Refresh();
+    }
+
+    private void AddShell()
+    {
+        verts.Add(new List<Vector2>() {
+            new Vector2(.4f, .4f),
+            new Vector2(.4f, .6f),
+            new Vector2(.6f, .6f),
+            new Vector2(.6f, .4f)
+        });
+
+        sid = verts.Count - 1;
+        vid = 0;
+
+        UpdateMass();
+        Repaint();
+    }
+
+    private void MoveShell(bool moveUp)
+    {
+        // MoveUp is Move To Zero
+        
+        if (moveUp && sid == 0 || !moveUp && sid == verts.Count - 1)
+            return;
+
+        int step = moveUp ? -1 : 1;
+        var buf = verts[sid + step];
+        verts[sid + step] = verts[sid];
+        verts[sid] = buf;
+        sid += step;
+
+        UpdateMass(true);
+        Repaint();
+    }
+
+    private void DelShell()
+    {
+        if (verts.Count == 0)
+            return;
+        
+        if (!EditorUtility.DisplayDialog("Remove shell", "Attention!\nYou can't return this action", "Yes. Remove This Shell"))
+            return;
+
+        verts.RemoveAt(sid);
+
+        sid = Mathf.Clamp(sid, 0, verts.Count - 1);
+        vid = 0;
+
+        UpdateMass(true);
+        Repaint();
+    }
+
+    private void DelVert()
+    {
+        if (verts[sid].Count < 5)
+            return;
+
+        verts[sid].RemoveAt(vid);
+        vid %= verts[sid].Count;
+    }
+}

@@ -1,4 +1,4 @@
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,5 +7,6 @@ using UnityEngine;
 public class ImagePattern : ScriptableObject
 {
     public Texture image;
-    public List<Vector3> verts; // xy: pos, z: polygon id
+    public List<int> bits; // index where new bit starts 
+    public List<Vector2> verts;
 }
