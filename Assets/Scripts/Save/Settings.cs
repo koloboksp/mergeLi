@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine.Serialization;
 
 namespace Save
 {
@@ -12,7 +13,8 @@ namespace Save
         public bool SoundEnable = true;
         public float MusicVolume;
         public bool MusicEnable;
-    
-        public string ActiveHat;
+
+        public string ActiveSkin;
+        public int[] UserInactiveHatsFilter;
     }
 }

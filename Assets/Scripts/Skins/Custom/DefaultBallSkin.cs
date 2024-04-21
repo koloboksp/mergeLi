@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Core;
 using Core.Effects;
 using UnityEngine;
@@ -61,7 +62,6 @@ namespace Skins.Custom
             set
             {
                 ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle);
-              //  _hatAnchor.gameObject.SetActive(value);
                 _faceAnchor.gameObject.SetActive(value);
                 
                 if (value)
@@ -138,7 +138,7 @@ namespace Skins.Custom
             _face.ShowLocal(BallState.PathNotFound);
         }
 
-        public void SetHat1(HatView hatView)
+        private void ChangeHat(HatView hatView)
         {
             if (_hatView != null)
             {
@@ -172,25 +172,34 @@ namespace Skins.Custom
             _hatAnchor.gameObject.SetActive(activeState);
         }
 
-        public override void SetHat(int hat, int oldHat, bool force)
+        public override void SetHat(int hatI, int oldHatI, bool force)
         {
-            
+            Hat hat = null;
             if (_view.Ball.Hat != 0)
             {
-                for (var hatI = 0; hatI < _view.Ball.Field.Scene.HatsLibrary.Hats.Count; hatI++)
+                if (_view.Ball.Field.Scene.IsHatActive(hatI))
                 {
-                    _hatAnchor.gameObject.SetActive(true);
-                    var hatL = _view.Ball.Field.Scene.HatsLibrary.Hats[hatI];
-                    if (_view.Ball.Hat == hatI && hatL.Available)
-                    {
-                        SetHat1(hatL.View);
-                    }
+                    var hats = _view.Ball.Field.Scene.HatsLibrary.Hats;
+                    if (hatI < hats.Count)
+                        hat = hats[hatI];
                 }
+            }
+
+            if (hat != null)
+            {
+                _hatAnchor.gameObject.SetActive(true);
+                ChangeHat(hat.View);
             }
             else
             {
-                SetHat1(null);
+                _hatAnchor.gameObject.SetActive(false);
+                ChangeHat(null);
             }
+        }
+
+        public override void ChangeUserInactiveHatsFilter()
+        {
+            SetHat(_view.Ball.Hat, _view.Ball.Hat, true);
         }
 
         private IEnumerator HideFaceWithDelayCoroutine(float delay)

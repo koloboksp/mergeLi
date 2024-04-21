@@ -14,6 +14,13 @@ namespace Core
         [SerializeField] private Text _name;
         [SerializeField] private Image _lockIcon;
         [SerializeField] private GameObject _selectionFrame;
+        
+        [SerializeField] private GameObject _userInactiveFilterPanel;
+        [SerializeField] private Button _userInactiveFilterButton;
+        [SerializeField] private Image _userInactiveFilterIcon;
+        [SerializeField] private Sprite _userInactiveFilterIconSelected;
+        [SerializeField] private Sprite _userInactiveFilterIconNotSelected;
+
         [SerializeField] private UIHatsPanel_HatItem_FakeField _fakeField;
         [SerializeField] private UIHatsPanel_HatItem_FakeScene _fakeScene;
 
@@ -22,7 +29,9 @@ namespace Core
         
         private void Awake()
         {
+            
             _button.onClick.AddListener(OnClick);
+            _userInactiveFilterButton.onClick.AddListener(UserInactiveFilterButton_OnClick);
         }
         
         public void SetModel(Model model, GameProcessor gameProcessor)
@@ -30,17 +39,19 @@ namespace Core
             _gameProcessor = gameProcessor;
 
             _model = model;
-            _model
-                .OnSelectionChanged(OnSelectionChanged)
-                .OnAvailableChanged(OnAvailableChanged);
-            
+            _model.OnSelectedStateChanged += OnSelectionChanged;
+            _model.OnAvailableStateChanged += OnAvailableChanged;
+            _model.OnUserInactiveFilterStateChanged += OnUserActiveStateChanged;
+
             _name.text = ApplicationController.Instance.LocalizationController.GetText(_model.NameKey);
+            OnSelectionChanged();
+            SetUserActiveIcon();
             SetLockIcon();
             
             _fakeScene.GameProcessor = gameProcessor;
             _fakeScene.HatsLibrary = gameProcessor.Scene.HatsLibrary;
             _fakeScene.ActiveSkin = gameProcessor.Scene.ActiveSkin;
-            _fakeScene.ActiveHat = model.Hat;
+            _fakeScene.UserInactiveHatsFilter = null;
 
             var indexOf = gameProcessor.Scene.HatsLibrary.Hats.ToList().IndexOf(model.Hat);
 
@@ -50,16 +61,33 @@ namespace Core
         private void OnAvailableChanged()
         {
             SetLockIcon();
+            SetUserActiveIcon();
         }
-
+        
+        private void OnUserActiveStateChanged()
+        {
+            SetUserActiveIcon();
+        }   
+        
         private void SetLockIcon()
         {
             _lockIcon.gameObject.SetActive(!_model.Available);
         }
 
+        private void SetUserActiveIcon()
+        {
+            _userInactiveFilterPanel.SetActive(_model.Available);
+            _userInactiveFilterIcon.sprite = _model.UserInactiveFilter ? _userInactiveFilterIconNotSelected : _userInactiveFilterIconSelected;
+        }
+        
         private void OnClick()
         {
             _model.SelectMe();
+        }
+
+        private void UserInactiveFilterButton_OnClick()
+        {
+            _model.SetUserInactiveFilter(!_model.UserInactiveFilter);
         }
         
         private void OnSelectionChanged()
@@ -69,13 +97,15 @@ namespace Core
         
         public class Model
         {
-            private Action _onSelectedStateChanged;
-            private Action _onAvailableStateChanged;
+            public event Action OnSelectedStateChanged;
+            public event Action OnAvailableStateChanged;
+            public event Action OnUserInactiveFilterStateChanged;
 
             private readonly Hat _hat;
             private readonly UIHatsPanel.Model _owner;
             private bool _selected;
-            
+            private bool _userInactiveFilter;
+
             public Model(Hat hat, UIHatsPanel.Model owner)
             {
                 _hat = hat;
@@ -88,39 +118,36 @@ namespace Core
             public bool Available => _hat.Available;
             public int Cost => _hat.Cost;
             public GuidEx NameKey => Hat.NameKey;
+            public bool UserInactiveFilter => _userInactiveFilter;
 
             public void SelectMe()
             {
                 _owner.TrySelect(this);
             }
             
-            public Model OnSelectionChanged(Action onChanged)
+            public Model SetUserInactiveFilter(bool state)
             {
-                _onSelectedStateChanged = onChanged;
-                _onSelectedStateChanged?.Invoke();
+                _userInactiveFilter = state;
+                OnUserInactiveFilterStateChanged?.Invoke();
                 return this;
             }
             
-            public Model OnAvailableChanged(Action onChanged)
-            {
-                _onAvailableStateChanged = onChanged;
-                return this;
-            }
-
             internal void SetSelectedState(bool newState)
             {
                 if (_selected != newState)
                 {
                     _selected = newState;
-                    _onSelectedStateChanged?.Invoke();
+                    OnSelectedStateChanged?.Invoke();
                 }
             }
             
             public async Task Buy()
             {
                 await Hat.Buy();
-                _onAvailableStateChanged?.Invoke();
+                OnAvailableStateChanged?.Invoke();
             }
+
+            
         }
     }
 }

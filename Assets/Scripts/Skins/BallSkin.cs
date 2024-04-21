@@ -12,9 +12,9 @@ namespace Skins
         public abstract Color MainColor { set; }
         public abstract float Transparency { set; }
         public abstract void PathNotFount();
-       // public abstract void SetHat(HatView hatView);
         public abstract void Remove(bool force);
         public abstract void ShowHat(bool activeState);
-        public abstract void SetHat(int hat, int oldHat, bool force);
+        public abstract void SetHat(int hatI, int oldHatI, bool force);
+        public abstract void ChangeUserInactiveHatsFilter();
     }
 }

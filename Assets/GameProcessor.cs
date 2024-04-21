@@ -74,8 +74,7 @@ public enum StepTag
 
 public class GameProcessor : MonoBehaviour, 
     IRules,
-    ISkinChanger,
-    IHatsChanger
+    ISkinChanger
 {
     public static readonly List<StepTag> NewStepStepTags = new()
     {
@@ -564,12 +563,4 @@ public class GameProcessor : MonoBehaviour,
         ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin = skinName;
         _scene.SetSkin(skinName);
     }
-
-    public void SetHat(string hatName)
-    {
-        ApplicationController.Instance.SaveController.SaveSettings.ActiveHat = hatName;
-        _scene.SetHat(hatName);
-    }
-    
-    
 }

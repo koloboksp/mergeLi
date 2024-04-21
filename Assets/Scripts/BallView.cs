@@ -64,12 +64,12 @@ namespace Core
             Ball_TransparencyChanged();
         }
         
-        public void ChangeHat(Hat hat)
+        public void ChangeUserInactiveHatsFilter()
         {
-            //if (_ballSkin != null)
-            //{
-            //    _ballSkin.SetHat(hat.View);
-            //}
+            if (_ballSkin != null)
+            {
+                _ballSkin.ChangeUserInactiveHatsFilter();
+            }
         }
         
         private void Ball_OnSelectedChanged()

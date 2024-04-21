@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Core;
 using Atom;
 using UI.Panels;
@@ -92,9 +93,10 @@ namespace Core
         {
             var data = new UIHatsPanelData();
             data.GameProcessor = _data.GameProcessor;
-            data.SelectedHat = _data.GameProcessor.Scene.ActiveHat;
-            data.Hats = _data.GameProcessor.Hats;
-            data.HatsChanger = _data.GameProcessor;
+            data.Selected = _data.GameProcessor.Scene.HatsLibrary.Hats[0];
+            data.UserInactiveHatsFilter = _data.GameProcessor.Scene.UserInactiveHatsFilter;
+            data.Hats = _data.GameProcessor.Scene.HatsLibrary.Hats;
+            data.HatsChanger = _data.GameProcessor.Scene;
             
             _ = ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIHatsPanel>(
                 data,
