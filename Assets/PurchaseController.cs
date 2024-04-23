@@ -228,7 +228,20 @@ public class PurchaseController : IDetailedStoreListener
             return String.Empty;
         }
 
-        var product = _store.products.WithID(productId);
-        return product.metadata.localizedPriceString;
+        if (_store.products != null)
+        {
+            var product = _store.products.WithID(productId);
+            if (product != null)
+            {
+                if (product.metadata != null)
+                    return product.metadata.localizedPriceString;
+
+                return "--";
+            }
+
+            return "--";
+        }
+
+        return "--";
     }
 }

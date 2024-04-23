@@ -90,7 +90,8 @@ namespace Core
             _model.Select(_data.Selected);
             
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
-            OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
+            _coins.MakeSingle();
+            _coins.Set(_data.GameProcessor.CurrencyAmount);
         }
 
         protected override void InnerHide()
@@ -98,6 +99,14 @@ namespace Core
             base.InnerHide();
             
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency -= SaveController_OnConsumeCurrency;
+        }
+
+        protected override void InnerActivate()
+        {
+            base.InnerActivate();
+            
+            _coins.MakeSingle();
+            _coins.Set(_data.GameProcessor.CurrencyAmount);
         }
 
         private void SaveController_OnConsumeCurrency(int amount)

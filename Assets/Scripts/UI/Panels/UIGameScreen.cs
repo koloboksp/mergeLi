@@ -49,8 +49,9 @@ namespace Core
             OnLowEmptySpaceChanged(false);
             
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
-            OnConsumeCurrency(-_data.GameProcessor.CurrencyAmount, true);
-       
+            _coins.MakeSingle();
+            _coins.Set(_data.GameProcessor.CurrencyAmount);
+            
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
             CastleSelector_OnCastleChanged(_data.GameProcessor.CastleSelector.ActiveCastle);
             Castle_OnPointsChanged(0);
@@ -67,7 +68,9 @@ namespace Core
         protected override void InnerActivate()
         {
             base.InnerActivate();
-
+            
+            _coins.MakeSingle();
+            _coins.Set(_data.GameProcessor.CurrencyAmount);
             _anyGiftIndicator.Set(_data.GameProcessor.GiftsMarket);
             _data.GameProcessor.PauseGameProcess(false);
         }

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +18,14 @@ namespace Core
             _item = model.Item as ShopPanelMarketItem;
             
             _currencyCount.text = Model.Item.CurrencyAmount.ToString();
-            _cost.text = ApplicationController.Instance.PurchaseController.GetLocalizedPriceString(_item.ProductId);
+            try
+            {
+                _cost.text = ApplicationController.Instance.PurchaseController.GetLocalizedPriceString(_item.ProductId);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
         
         protected override async void OnClick()
