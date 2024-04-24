@@ -34,6 +34,7 @@ public class ImagePatternTool : EditorWindow
 
     private List<List<Vector2>> verts;
     private Vector2[] mass; // centers of mass for each shell in screen pixels
+    private int[] tris;
 
     private Color32 selColor = Color.green;
     private Color32 defColor = Color.gray;
@@ -42,7 +43,24 @@ public class ImagePatternTool : EditorWindow
     private bool isPanoramic;
     private Vector2 panPos0;
 
-    private int sid; // selected ShellID
+    private int sid;
+    private int Sid // selected ShellID
+    {
+        get
+        { 
+            return sid; 
+        }
+
+        set
+        {
+            if (value != sid)
+            {
+                sid = value;
+                UpdateTris();
+            }
+        }
+    }
+
     private int vid; // selected VertexID in selected ShellID
 
     private Material mat;
@@ -84,7 +102,6 @@ public class ImagePatternTool : EditorWindow
         if (newPattern != pattern)
         {
             pattern = newPattern;
-            image = pattern.image;
             LoadPattern();
         }
 
@@ -125,8 +142,8 @@ public class ImagePatternTool : EditorWindow
 
         for (int i = 0; i < verts.Count; i++)
         {
-            if (GUILayout.Toggle(sid == i, i.ToString(), "Button"))
-                sid = i;
+            if (GUILayout.Toggle(Sid == i, i.ToString(), "Button"))
+                Sid = i;
         }
 
         GUILayout.EndVertical();
@@ -159,9 +176,9 @@ public class ImagePatternTool : EditorWindow
                     {
                         // Tap on Vertex to Select It
                         Vector2 mPos = Vector2.Scale(e.mousePosition, pixToOne);
-                        for (int i = 0; i < verts[sid].Count; i++)
+                        for (int i = 0; i < verts[Sid].Count; i++)
                         {
-                            var delta = mPos - verts[sid][i];
+                            var delta = mPos - verts[Sid][i];
                             if (delta.magnitude < TAP_DIST)
                             {
                                 vid = i;
@@ -200,6 +217,7 @@ public class ImagePatternTool : EditorWindow
                     scale = Mathf.Clamp(scale, WHEEL_MIN, WHEEL_MAX);
                     UpdateScale();
                     UpdateMass(true);
+                    UpdateTris();
                     Repaint();
                     break;
             }
@@ -214,23 +232,26 @@ public class ImagePatternTool : EditorWindow
             if (verts.Count > 0)
             {
                 DrawLines();
+                DrawTris();
 
                 // Draw all points for active shell
-                for (int i = 0; i < verts[sid].Count; i++)
-                    DrawVert(Vector2.Scale(verts[sid][i], oneToPix), defColor, DEFDOT_SIZE);
+                for (int i = 0; i < verts[Sid].Count; i++)
+                    DrawVert(Vector2.Scale(verts[Sid][i], oneToPix), defColor, DEFDOT_SIZE);
 
                 // Draw active point
-                DrawVert(Vector2.Scale(verts[sid][vid], oneToPix), selColor, SELDOT_SIZE);
+                DrawVert(Vector2.Scale(verts[Sid][vid], oneToPix), selColor, SELDOT_SIZE);
 
                 // Draw mass in center of every shell
                 for (int i = 0; i < mass.Length; i++)
                     if (GUI.Button(new Rect(mass[i], MASS_SIZE), i.ToString()))
-                        sid = i;
+                        Sid = i;
 
                 if (isDragVert)
                 {
                     // Move Selected verts
-                    verts[sid][vid] = Vector2.Scale(e.mousePosition, pixToOne);
+                    verts[Sid][vid] = Vector2.Scale(e.mousePosition, pixToOne);
+
+                    UpdateTris();
                     UpdateMass();
                     Repaint();
                 }
@@ -241,16 +262,18 @@ public class ImagePatternTool : EditorWindow
                     Vector2 midPixPos;
                     int next;
 
-                    for (int i = 0; i < verts[sid].Count; i++)
+                    for (int i = 0; i < verts[Sid].Count; i++)
                     {
-                        next = (i + 1) % verts[sid].Count;
-                        midOnePos = (verts[sid][i] + verts[sid][next]) / 2f;
+                        next = (i + 1) % verts[Sid].Count;
+                        midOnePos = (verts[Sid][i] + verts[Sid][next]) / 2f;
                         midPixPos = Vector2.Scale(midOnePos, oneToPix);
 
                         if (GUI.Button(new Rect(midPixPos - MIDDOT_HALF, MIDDOT_SIZE), GUIContent.none))
-                            verts[sid].Insert(next, midOnePos);
+                            verts[Sid].Insert(next, midOnePos);
                     }
                 }
+
+                
             }
             
             GUILayout.EndScrollView();
@@ -262,20 +285,32 @@ public class ImagePatternTool : EditorWindow
     private void DrawLines()
     {
         Mat.SetPass(0);
-        
-        GL.Begin(GL.LINES);
 
         for (int i = 0; i < verts.Count; i++)
         {
-            GL.Color(sid == i ? selColor : defColor);
+            GL.Begin(GL.LINE_STRIP);
+            GL.Color(Sid == i ? selColor : defColor);
 
             for (int j = 0; j < verts[i].Count; j++)
-            {
                 GL.Vertex(Vector2.Scale(verts[i][j], oneToPix));
-                GL.Vertex(Vector2.Scale(verts[i][(j + 1) % verts[i].Count], oneToPix));
-            }
-        }
 
+            GL.Vertex(Vector2.Scale(verts[i][0], oneToPix));
+            GL.End();
+        }
+    }
+
+    private void DrawTris()
+    {
+        Mat.SetPass(0);
+
+        Color col = selColor;
+        col.a /= 4f;
+
+        GL.Begin(GL.TRIANGLES);
+        GL.Color(col);
+        
+        for (int i = 0; i < tris.Length; i++)
+            GL.Vertex(Vector2.Scale(verts[Sid][tris[i]], oneToPix));
         GL.End();
     }
 
@@ -299,27 +334,17 @@ public class ImagePatternTool : EditorWindow
 
         image = pattern.image != null ? pattern.image : Texture2D.whiteTexture;
 
-        verts = new List<List<Vector2>>();
-        int copyStart, copyEnd, copyCount;
-        Vector2[] newBit;
+        verts = ImagePatternSolver.LoadPattern(pattern);
 
-        for (int i = 0; i < pattern.bits.Count; i++)
-        {
-            copyStart = pattern.bits[i];
-            copyEnd = i == pattern.bits.Count - 1 ? pattern.verts.Count : pattern.bits[i + 1];
-            copyCount = copyEnd - copyStart;
-
-            newBit = new Vector2[copyCount];
-            pattern.verts.CopyTo(copyStart, newBit, 0, copyCount);
-            verts.Add(new List<Vector2>(newBit));
-        }
-
-        sid = 0;
+        Sid = 0;
         vid = 0;
 
         UpdateScale();
         UpdateMass(true);
+        UpdateTris();
     }
+
+    private void UpdateTris() => tris = ImagePatternSolver.PolyToTris(verts[Sid].ToArray());
 
     private void UpdateMass(bool fullUpdate = false)
     {
@@ -329,7 +354,7 @@ public class ImagePatternTool : EditorWindow
             fullUpdate = true;
         }
 
-        Vector2Int range = fullUpdate ? new Vector2Int(0, verts.Count) : new Vector2Int(sid, sid + 1);
+        Vector2Int range = fullUpdate ? new Vector2Int(0, verts.Count) : new Vector2Int(Sid, Sid + 1);
         
         for (int i = range.x; i < range.y; i++)
         {
@@ -382,7 +407,7 @@ public class ImagePatternTool : EditorWindow
             new Vector2(.6f, .4f)
         });
 
-        sid = verts.Count - 1;
+        Sid = verts.Count - 1;
         vid = 0;
 
         UpdateMass();
@@ -393,14 +418,14 @@ public class ImagePatternTool : EditorWindow
     {
         // MoveUp is Move To Zero
         
-        if (moveUp && sid == 0 || !moveUp && sid == verts.Count - 1)
+        if (moveUp && Sid == 0 || !moveUp && Sid == verts.Count - 1)
             return;
 
         int step = moveUp ? -1 : 1;
-        var buf = verts[sid + step];
-        verts[sid + step] = verts[sid];
-        verts[sid] = buf;
-        sid += step;
+        var buf = verts[Sid + step];
+        verts[Sid + step] = verts[Sid];
+        verts[Sid] = buf;
+        Sid += step;
 
         UpdateMass(true);
         Repaint();
@@ -414,9 +439,9 @@ public class ImagePatternTool : EditorWindow
         if (!EditorUtility.DisplayDialog("Remove shell", "Attention!\nYou can't return this action", "Yes. Remove This Shell"))
             return;
 
-        verts.RemoveAt(sid);
+        verts.RemoveAt(Sid);
 
-        sid = Mathf.Clamp(sid, 0, verts.Count - 1);
+        Sid = Mathf.Clamp(Sid, 0, verts.Count - 1);
         vid = 0;
 
         UpdateMass(true);
@@ -425,10 +450,10 @@ public class ImagePatternTool : EditorWindow
 
     private void DelVert()
     {
-        if (verts[sid].Count < 5)
+        if (verts[Sid].Count < 5)
             return;
 
-        verts[sid].RemoveAt(vid);
-        vid %= verts[sid].Count;
+        verts[Sid].RemoveAt(vid);
+        vid %= verts[Sid].Count;
     }
 }

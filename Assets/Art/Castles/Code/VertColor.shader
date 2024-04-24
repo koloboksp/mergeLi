@@ -11,6 +11,8 @@ Shader "Unlit/VertColor"
 
         Pass
         {
+            Blend SrcAlpha OneMinusSrcAlpha
+            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag

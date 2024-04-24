@@ -28,7 +28,7 @@ public class CastleViewer : MonoBehaviour
     [SerializeField] private Image image;
     private Material mat;
 
-    [SerializeField] private CastleSettings castleSettings;
+    [SerializeField] private CastleViewerPreset castleSettings;
     [SerializeField] private int stageCount;
     [SerializeField] private RectTransform _root;
 

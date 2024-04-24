@@ -9,7 +9,7 @@ namespace Core.Goals
         [SerializeField] private Castle _model;
         [SerializeField] private RectTransform _root;
         
-        [SerializeField] private CastleSettings castleSettings;
+        [SerializeField] private CastleViewerPreset castleSettings;
         
         private List<(int, Task)> _operations = new List<(int, Task)>();
             
