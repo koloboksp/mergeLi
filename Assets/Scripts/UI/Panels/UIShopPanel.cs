@@ -17,6 +17,7 @@ namespace Core
     public class UIShopPanel : UIPanel
     {
         [SerializeField] private Button _closeBtn;
+        [SerializeField] private UIGameScreen_Coins _coins;
         [SerializeField] private ScrollRect _purchasesContainer;
         [SerializeField] private UIShopPanel_Item _marketItemPrefab;
         [SerializeField] private UIShopPanel_Item _adsItemPrefab;
@@ -26,7 +27,7 @@ namespace Core
         private UIShopPanelData _data;
         
         private readonly List<UIShopPanel_Item> _items = new();
-        private readonly List<(UIOverCastleCompletePanel i, Transform parent, bool activeSelf)> _overUIElements = new();
+       // private readonly List<(UIOverCastleCompletePanel i, Transform parent, bool activeSelf)> _overUIElements = new();
         
         private void Awake()
         {
@@ -47,33 +48,46 @@ namespace Core
                 .OnLockInput(OnLockInput);
             
             _model.SetData(_data.Items);
+            
+            ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
+            _coins.MakeSingle();
+            _coins.Set(_data.GameProcessor.CurrencyAmount);
+            
         }
 
        
+        
         protected override void InnerActivate()
         {
             base.InnerActivate();
            
-            var overUIElements = FindObjectsOfType<UIOverCastleCompletePanel>(true)
-                .Select(i => (i, i.transform.parent, i.gameObject.activeSelf))
-                .ToList();
-            foreach (var overUIElementTuple in overUIElements)
-            {
-                if (_overUIElements.FindIndex(i=> i.i == overUIElementTuple.i) < 0)
-                {
-                    overUIElementTuple.i.transform.SetParent(transform, true);
-                    overUIElementTuple.i.gameObject.SetActive(overUIElementTuple.activeSelf);
-                    _overUIElements.Add(overUIElementTuple);
-                }
-            }
+            _coins.MakeSingle();
+            _coins.Set(_data.GameProcessor.CurrencyAmount);
+           // var overUIElements = FindObjectsOfType<UIOverCastleCompletePanel>(true)
+           //     .Select(i => (i, i.transform.parent, i.gameObject.activeSelf))
+           //     .ToList();
+           // 
+           // foreach (var overUIElementTuple in overUIElements)
+           // {
+           //     if (_overUIElements.FindIndex(i=> i.i == overUIElementTuple.i) < 0)
+           //     {
+           //         overUIElementTuple.i.transform.SetParent(transform, true);
+           //         overUIElementTuple.i.gameObject.SetActive(overUIElementTuple.activeSelf);
+           //         _overUIElements.Add(overUIElementTuple);
+           //     }
+           // }
         }
 
         protected override void InnerHide()
         {
-            foreach (var overUIElementTuple in _overUIElements)
-                overUIElementTuple.i.transform.SetParent(overUIElementTuple.parent, true);
-
+            ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency -= SaveController_OnConsumeCurrency;
+            
             base.InnerHide();
+        }
+        
+        private void SaveController_OnConsumeCurrency(int amount)
+        {
+            _coins.Add(-amount, false);
         }
 
         private void OnLockInput(bool state)

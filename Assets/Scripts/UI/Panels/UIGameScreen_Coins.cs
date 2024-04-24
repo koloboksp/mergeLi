@@ -37,7 +37,7 @@ namespace Core
                 _cancellationTokenSource.Dispose();
             }
         }
-        
+
         private void ClickableArea_OnClick()
         {
             OnClick?.Invoke();
@@ -86,6 +86,18 @@ namespace Core
         {
             _amount = amount;
             _amountLabel.text = _amount.ToString();
+        }
+
+        public void MakeSingle()
+        {
+            gameObject.SetActive(true);
+
+            var others = FindObjectsOfType<UIGameScreen_Coins>();
+            foreach (var other in others)
+            {
+                if (other != this)
+                    other.gameObject.SetActive(false);
+            }
         }
     }
 }

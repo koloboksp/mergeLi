@@ -36,15 +36,6 @@ namespace Core
                 _speaker.SetActive(false);
                 _data.GameProcessor.MusicPlayer.Stop();
                 _data.GameProcessor.SoundsPlayer.PlayExclusive(_completeClip);
-                
-                var overUIElements = FindObjectsOfType<UIOverCastleCompletePanel>(true)
-                    .Select(i => (i, i.transform.parent, i.gameObject.activeSelf))
-                    .ToList();
-                foreach (var overUIElementTuple in overUIElements)
-                {
-                    overUIElementTuple.i.transform.SetParent(transform, true);
-                    overUIElementTuple.i.gameObject.SetActive(overUIElementTuple.activeSelf);
-                }
 
                 var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
                 var castleOriginalParent = activeCastle.transform.parent;
@@ -112,10 +103,7 @@ namespace Core
                 activeCastle.transform.SetParent(castleOriginalParent);
 
                 _data.GameProcessor.ClearUndoSteps();
-
-                foreach (var overUIElementTuple in overUIElements)
-                    overUIElementTuple.i.transform.SetParent(overUIElementTuple.parent, true);
-
+                
                 ApplicationController.Instance.UIPanelController.PopScreen(this);
                 _data.GameProcessor.SoundsPlayer.StopPlayExclusive();
                 _data.GameProcessor.MusicPlayer.PlayNext();
