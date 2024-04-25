@@ -63,7 +63,9 @@ public class CastleSelector : MonoBehaviour
         }
         
         var castlePrefab = _library.GetCastle(id);
- 
+        if (castlePrefab == null)
+            castlePrefab = _library.Castles[0];
+        
         _castleInstance = Instantiate(castlePrefab, _castleRoot);
         _castleInstance.gameObject.name = castlePrefab.Id;
         _castleInstance.View.Root.anchorMin = Vector2.zero;

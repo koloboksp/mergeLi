@@ -3737,6 +3737,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1827850039376051570, guid: 3af3cd46db8501144aeef1dbc694c337,
         type: 3}
+      propertyPath: nowScore
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1827850039376051570, guid: 3af3cd46db8501144aeef1dbc694c337,
+        type: 3}
       propertyPath: shDrawBit
       value: 
       objectReference: {fileID: 4800000, guid: c23b36591bc57c74b889552653d3d92a, type: 3}

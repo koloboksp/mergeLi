@@ -1,6 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Core;
+using Core.Effects;
+using Core.Steps.CustomOperations;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,20 +20,25 @@ public class CastleViewer2 : MonoBehaviour
 
     [SerializeField] private int maxScore = 1000;
     [SerializeField] private int nowScore = 0;
-     
+    [SerializeField] private RectTransform _root;
+
     private CastleBit[] bits;
 
+    public RectTransform Root => _root;
+    
     // Debug
     private readonly int[] testScore = new int[] { 100, 500, 1000, -100, -500, -1000 };
 
     private void Awake()
     {
+        _destroyTokenSource = new CancellationTokenSource();
+        
         MakeCastleBits();
         CalcPrices();
 
         image.enabled = false;
 
-        AddScore(0);
+        //AddScore(0);
     }
 
     private void MakeCastleBits()
@@ -130,7 +140,10 @@ public class CastleViewer2 : MonoBehaviour
             var img = newObj.AddComponent<Image>();
             img.material = matBit;
 
-            bits[i] = new CastleBit(rTrans, rTex, matBit);
+            var castleBit = newObj.AddComponent<CastleBit>();
+            castleBit.Init(rTrans, rTex, matBit);
+            
+            bits[i] = castleBit;
         }
     }
 
@@ -154,11 +167,11 @@ public class CastleViewer2 : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
-    {
-        for (int i = 0; i < bits.Length; i++)
-            bits[i].Destroy();
-    }
+    //private void OnDestroy()
+    //{
+    //    for (int i = 0; i < bits.Length; i++)
+    //        bits[i].Destroy();
+    //}
 
     public async void AddScore(int coins)
     {
@@ -191,5 +204,192 @@ public class CastleViewer2 : MonoBehaviour
                 AddScore(testScore[i]);
 
         GUI.EndGroup();
+    }
+    
+    public event Action<bool, float> OnPartCompleteStart;
+    public event Action<bool, float, int, int, int> OnPartProgressStart;
+    public event Action<bool, float, int> OnPartBornStart;
+
+    internal void CallOnPartProgressStart(bool instant, float duration, int oldPoints, int newPoints, int maxPoints)
+    {
+        OnPartProgressStart?.Invoke(instant, duration, oldPoints, newPoints, maxPoints);
+    }
+    internal void CallOnPartBornStart(bool instant, float duration, int maxPoints)
+    {
+        OnPartBornStart?.Invoke(instant, duration, maxPoints);
+    }
+    internal void CallOnPartCompleteStart(bool instant, float duration)
+    {
+        OnPartCompleteStart?.Invoke(instant, duration);
+    }
+    
+    [SerializeField] private CastlePartCompleteEffect _partCompleteEffect;
+    
+    private readonly List<CastleViewer2.Operation> _operations = new ();
+    private Task _operationsExecutor;
+    private CancellationTokenSource _destroyTokenSource;
+    
+    private void OnDestroy()
+    {
+        _destroyTokenSource.Cancel();
+        _destroyTokenSource.Dispose();
+        
+        for (int i = 0; i < bits.Length; i++)
+            bits[i].Destroy();
+    }
+
+    public void SetStage(int stage)
+    {
+        foreach (var castleBit in bits)
+        {
+            castleBit.SetScore1(0);
+        }
+    }
+    
+    public void ShowPartBorn(int partIndex, int maxPoints, bool instant)
+    {
+        var operation = new CastleBit.ShowBornProgressOperation(partIndex, 0, 1, maxPoints, this, bits[partIndex]);
+        if (instant)
+            operation.ExecuteInstant();
+        else
+            AddOperation(operation);
+    }
+    
+    public void ShowPartDeath(int partIndex, int maxPoints, bool instant)
+    {
+        var operation = new CastleBit.ShowBornProgressOperation(partIndex, 1, 0, maxPoints, this, bits[partIndex]);
+        if (instant)
+            operation.ExecuteInstant();
+        else
+            AddOperation(operation);
+    }
+    
+    public void ShowPartProgress(int partIndex, int oldPoints, int newPoints, int maxPoints, bool instant)
+    {
+        var operation = new CastleBit.ShowPartProgressOperation(partIndex, oldPoints, newPoints, maxPoints, this, bits[partIndex]);
+        if (instant)
+            operation.ExecuteInstant();
+        else
+        {
+            AddOperation(operation);
+        }
+    }
+    
+    public void ShowPartComplete(int partIndex, bool instant)
+    {
+        var operation = new CastleBit.ShowPartCompleteOperation(partIndex, this, _partCompleteEffect, bits[partIndex]);
+        if (instant)
+            operation.ExecuteInstant();
+        else
+            AddOperation(operation);
+    }
+    
+    private void AddOperation(CastleViewer2.Operation operation)
+    {
+        _operations.Add(operation);
+
+        if (_operationsExecutor == null)
+            _operationsExecutor = WaitForOperationsSafe(_destroyTokenSource.Token, Application.exitCancellationToken);
+    }
+    
+    private async Task WaitForOperationsSafe(CancellationToken destroyToken, CancellationToken exitToken)
+    {
+        try
+        {
+            while (_operations.Count > 0)
+            {
+                destroyToken.ThrowIfCancellationRequested();
+                exitToken.ThrowIfCancellationRequested();
+                
+                var operation = _operations[0];
+
+                await operation.ExecuteAsync(destroyToken, exitToken);
+
+                _operations.RemoveAt(0);
+            }
+        }
+        catch (OperationCanceledException e)
+        {
+            Debug.Log(e);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+        finally
+        {
+            _operationsExecutor = null;
+        }
+    }
+    
+    public class Operation
+    {
+        private readonly int _partIndex;
+        private readonly CastleViewer2 _target; 
+        private readonly CastleBit _bit; 
+
+        public int PartIndex => _partIndex;
+        public CastleViewer2 Target => _target;
+        public CastleBit Bit => _bit;
+
+        protected Operation(int partIndex, CastleViewer2 target, CastleBit bit)
+        {
+            _partIndex = partIndex;
+            _bit = bit;
+            _target = target;
+        }
+
+        public virtual async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken) { }
+        
+        public virtual void ExecuteInstant() { }
+        
+        // protected async Task ChangeValueOperationAsync(
+        //     AnimationCurve curve, 
+        //     float duration,
+        //     int prop,
+        //     float v0,
+        //     float v1,
+        //     CancellationToken destroyToken,
+        //     CancellationToken exitToken)
+        // {
+        //     float timer = duration;
+        //     float scale = v1 - v0;
+        //
+        //     while (timer > 0)
+        //     {
+        //         destroyToken.ThrowIfCancellationRequested();
+        //         exitToken.ThrowIfCancellationRequested();
+        //     
+        //         timer -= Time.deltaTime;
+        //         if (timer < 0)
+        //             timer = 0;
+        //
+        //         _target.mat.SetFloat(prop, v0 + curve.Evaluate(1f - timer / duration) * scale);
+        //         // rend.SetPropertyBlock(mpb);
+        //
+        //         await Task.Yield();
+        //     }
+        // }
+        
+      
+        
+       // protected void ChangeValueOperationInstant(AnimationCurve curve, float dur, int prop, float v0, float v1)
+       // {
+       //     _target.mat.SetFloat(prop, v1);
+       // }
+        
+        protected async Task PlayEffect(
+            CastlePartCompleteEffect completeEffect,
+            Transform target,
+            CancellationToken destroyToken,
+            CancellationToken exitToken)
+        {
+            var findObjectOfType = FindObjectOfType<UIFxLayer>();
+            var effect = Instantiate(completeEffect, findObjectOfType.transform);
+            effect.transform.position = target.position;
+            effect.Run();
+            
+            await AsyncExtensions.WaitForSecondsAsync(effect.Duration, destroyToken, exitToken);
+        }
     }
 }

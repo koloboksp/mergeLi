@@ -40,8 +40,12 @@ public class CastlePart : MonoBehaviour
     public bool Unlocked => _unlocked;
     public int Points => _points;
     public bool Selected => _selected;
-    public int Index => _index;
-    
+    public int Index
+    {
+        get => _index;
+        set => _index = value;
+    }
+
     public void Select(bool state)
     {
         if (_selected != state)

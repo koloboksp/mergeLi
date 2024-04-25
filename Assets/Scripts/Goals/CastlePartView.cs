@@ -4,8 +4,10 @@ public class CastlePartView : MonoBehaviour
 {
     [SerializeField] private CastlePart _model;
     
-    private void Awake()
+    public void SetData(CastlePart part)
     {
+        _model = part;
+        
         _model.OnCostChanged += OnCostChanged;
         OnCostChanged();
         
@@ -26,9 +28,9 @@ public class CastlePartView : MonoBehaviour
         if (oldUnlocked != _model.Unlocked)
         {
             if(_model.Unlocked)
-                _model.Owner.View.ShowPartBorn(_model.Index, instant);
+                _model.Owner.View.ShowPartBorn(_model.Index, _model.Cost, instant);
             else
-                _model.Owner.View.ShowPartDeath(_model.Index, instant);
+                _model.Owner.View.ShowPartDeath(_model.Index, _model.Cost, instant);
         }
     }
     

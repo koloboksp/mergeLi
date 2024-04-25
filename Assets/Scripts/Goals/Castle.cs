@@ -20,7 +20,8 @@ namespace Core.Goals
         public event Action<int> OnPointsAdd;
         public event Action<int> OnPointsRefund;
      
-        [SerializeField] private CastleViewer _view;
+      //  [SerializeField] private CastleViewer _view;
+        [SerializeField] private CastleViewer2 _view;
         [SerializeField] private int _coinsAfterComplete;
         [SerializeField] private GuidEx _nameKey;
         [SerializeField] private RectTransform _root;
@@ -37,7 +38,7 @@ namespace Core.Goals
         public RectTransform Root => _root;
 
         public bool Completed => _points >= GetCost();
-        public CastleViewer View => _view;
+        public CastleViewer2 View => _view;
         public IEnumerable<CastlePart> Parts => _parts;
         public int CoinsAfterComplete => _coinsAfterComplete;
         public GuidEx NameKey => _nameKey;
@@ -88,6 +89,19 @@ namespace Core.Goals
         public void SetData(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;
+
+            var componentsInChildren = gameObject.GetComponentsInChildren<CastleBit>();
+            for (var index = 0; index < componentsInChildren.Length; index++)
+            {
+                var castleBit = componentsInChildren[index];
+                var addComponent = castleBit.gameObject.AddComponent<CastlePart>();
+                addComponent.Owner = this;
+                addComponent.Cost = 20;
+                addComponent.Index = index;
+                
+                var addComponent1 = castleBit.gameObject.AddComponent<CastlePartView>();
+                addComponent1.SetData(addComponent);
+            }
 
             gameObject.GetComponentsInChildren(_parts);
             _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
