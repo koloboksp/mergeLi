@@ -134,6 +134,7 @@ public class CastleViewer2 : MonoBehaviour
             Graphics.Blit(rTexBlur, rTex, matBlur);
             RenderTexture.ReleaseTemporary(rTexBlur);
 
+
             // Make an object with this texture holder
             var newObj = new GameObject("Bit_" + i);
             var trans = newObj.transform;
@@ -162,6 +163,9 @@ public class CastleViewer2 : MonoBehaviour
             
             bits[i] = castleBit;
         }
+
+        
+
     }
 
     private void CalcPrices()
