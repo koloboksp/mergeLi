@@ -15,6 +15,12 @@ Shader "Unlit/CastleBit"
         _Glow("Glow", Range(0, 1)) = 0
         _Scale("Scale", Range(0, 1)) = 0
         _Border("Border", Range(0, 1)) = 1
+
+        [Space(10)]
+        [NoScaleOffset] _CloudRamp("Cloud Ramp", 2D) = "gray"{}
+        [NoScaleOffset] _CloudMap("Cloud", 2D) = "gray"{}
+        _CloudSize("Cloud Size", float) = 1
+        _CloudSpeed("Cloud Speed", float) = 0
     }
 
     SubShader
@@ -45,6 +51,7 @@ Shader "Unlit/CastleBit"
             {
                 float4 vertex : SV_POSITION;
                 float4 uv : TEXCOORD0;
+                float4 uvCloud : TEXCOORD1;
             };
 
             sampler2D _MainTex;
@@ -62,6 +69,12 @@ Shader "Unlit/CastleBit"
             fixed _Scale;
             fixed _Border;
 
+            // Cloud Background
+            sampler2D _CloudMap;
+            sampler2D _CloudRamp;
+            float _CloudSize;
+            float _CloudSpeed;
+
             v2f vert(appdata v)
             {
                 v2f o;
@@ -76,6 +89,9 @@ Shader "Unlit/CastleBit"
                 o.uv.xy = TRANSFORM_TEX(v.uv, _MainTex);
                 o.uv.zw = v.uv; // for mask
 
+                o.uvCloud.xy = wPos.xy / _CloudSize + _CloudSpeed * _Time.x * float2(1, .33);
+                o.uvCloud.zw = wPos.xy / _CloudSize / 2.37 + _CloudSpeed * _Time.x / 1.73 * float2(-1, .25);
+
                 return o;
             }
 
@@ -83,7 +99,6 @@ Shader "Unlit/CastleBit"
             {
                 fixed4 col = tex2D(_MainTex, i.uv.xy);
                 fixed gray = (col.r + col.g + col.b) / 6;
-
                 col.rgb = lerp(col.rgb, gray, _Gray);
                 
                 // Glow
@@ -93,7 +108,7 @@ Shader "Unlit/CastleBit"
                 col.rgb += glow * .75;
 
                 fixed mask = tex2D(_Mask, i.uv.zw).r;
-                col.a *= smoothstep(.2, .4, mask) * _Alpha;
+                col.a *= smoothstep(.2, .4, mask); // *_Alpha;
 
                 fixed borderMask = (1 - mask) * 2 * _Border;
                 fixed levelMask = step(i.uv.w, _Level);
@@ -105,6 +120,12 @@ Shader "Unlit/CastleBit"
                 fixed commonMask = saturate(borderMask + levelMask + ringMask.x);
                 col.rgb = lerp(col.rgb, _Color.rgb, commonMask * _Color.a);
 
+                fixed cloud = lerp(tex2D(_CloudMap, i.uvCloud.xy).r, tex2D(_CloudMap, i.uvCloud.zw).r, .75);
+                fixed4 cloudColor = tex2D(_CloudRamp, cloud);
+                cloudColor.a = smoothstep(.5, 1, mask + mask * cloud);
+
+                col = lerp(cloudColor, col, _Alpha);
+                
                 return col;
             }
             ENDCG

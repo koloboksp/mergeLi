@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!28 &2800000
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CastleCloudRamp
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 2
+  m_Width: 128
+  m_Height: 1
+  m_CompleteImageSize: 512
+  m_MipsStripped: 0
+  m_TextureFormat: 4
+  m_MipCount: 1
+  m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_LightmapFormat: 0
+  m_ColorSpace: 0
+  m_PlatformBlob: 
+  image data: 512
+  _typelessdata: 3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a129aff3a149bff3a179dff3b1a9fff3b1ca0ff3c1fa2ff3c21a4ff3c24a6ff3d27a7ff3d29a9ff3d2cabff3e2eacff3e31aeff3f34b0ff3f36b1ff3f39b3ff403bb5ff403eb6ff4141b8ff4143baff4146bcff4248bdff424bbfff424ec1ff4350c2ff4353c4ff4455c6ff4458c7ff445bc9ff455dcbff4560cdff4562ceff4665d0ff4667d2ff476ad3ff476dd5ff476fd7ff4872d8ff4874daff4977dcff497addff497cdfff4a7fe1ff4a81e3ff4a84e4ff4b87e6ff4b89e8ff4c8ce9ff4c8eebff4c91edff4d94eeff4d96f0ff4d99f2ff4e9bf4ff4e9ef5ff4fa1f7ff4fa3f9ff4fa6faff50a8fcff52abfdff56adfdff5aaffdff5eb1fdff61b3fdff65b5fdff69b7fdff6db9fdff71bbfdff75bdfdff79bffdff7dc1fdff81c3fdff85c5fdff89c8fdff8dcafdff91ccfdff95cefdff99d0fcff9dd2fcffa1d4fcffa5d6fcffa9d8fcffaddafcffb1dcfcffb5defcffb9e0fcffbde2fcffc0e4fcffc4e6fcffc8e8fcffcceafcffd0edfcffd4effcffd8f1fcffdcf3fcffe0f5fcffe4f7fcffe8f9fcffecfbfcfff0fdfcff
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 

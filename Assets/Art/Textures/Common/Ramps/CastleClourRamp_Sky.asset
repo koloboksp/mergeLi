@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!28 &2800000
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CastleClourRamp_Sky
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 2
+  m_Width: 128
+  m_Height: 1
+  m_CompleteImageSize: 512
+  m_MipsStripped: 0
+  m_TextureFormat: 4
+  m_MipCount: 1
+  m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 0
+    m_WrapV: 0
+    m_WrapW: 0
+  m_LightmapFormat: 0
+  m_ColorSpace: 0
+  m_PlatformBlob: 
+  image data: 512
+  _typelessdata: 0c93e9ff0f94e9ff1396e9ff1697e9ff1a99e9ff1d9aeaff209ceaff249deaff279feaff2ba0eaff2ea2eaff31a3eaff35a5eaff38a6ebff3ca7ebff3fa9ebff42aaebff46acebff49adebff4dafebff50b0ebff53b2ebff57b3ecff5ab5ecff5db6ecff61b8ecff64b9ecff68baecff6bbcecff6ebdecff72bfedff75c0edff79c2edff7cc3edff7fc5edff83c6edff86c8edff8ac9edff8dcbeeff90cceeff94cdeeff97cfeeff9bd0eeff9dd1edff9ed2edffa0d3ecffa2d3ebffa3d4ebffa5d5eaffa7d6e9ffa9d6e9ffaad7e8ffacd8e7ffaed8e7ffafd9e6ffb1dae5ffb3dbe5ffb5dbe4ffb6dce3ffb8dde3ffbadde2ffbbdee1ffbddfe0ffbfe0e0ffc1e0dfffc2e1deffc4e2deffc6e2ddffc7e3dcffc9e4dcffcbe5dbffcde5daffcee6daffd0e7d9ffd2e7d8ffd3e8d8ffd5e9d7ffd7ead6ffd9ead6ffdaebd5ffdcecd4ffdeedd3ffdfedd3ffe1eed2ffe3efd1ffe5efd1ffe6f0d0ffe8f1cfffeaf2cfffebf2ceffedf3cdffeff4cdfff1f4ccfff2f5cbfff4f6cbfff6f7cafff7f7c9fff9f8c9fffbf9c8fffbf9c8fffbf9c8fffbf9c8fffbf9c8fffbf9c8fffcf9c8fffcf9c8fffcf9c8fffcf9c7fffcf9c7fffcf9c7fffcf9c7fffdf9c7fffdf9c7fffdfac7fffdfac7fffdfac7fffdfac7fffdfac7fffefac7fffefac7fffefac7fffefac7fffefac7fffefac7fffefac6fffffac6fffffac6fffffac6ff
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
