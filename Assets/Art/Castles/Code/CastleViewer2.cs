@@ -11,6 +11,9 @@ using UnityEngine.UI;
 
 public class CastleViewer2 : MonoBehaviour
 {
+    private const float BACK_SCALE = .25f;
+    private const int BACK_BLUR_COUNT = 2;
+
     private const float MASK_SCALE = .5f; // Relative to main image
     private const int PIX_PADDING = 4;
 
@@ -23,6 +26,7 @@ public class CastleViewer2 : MonoBehaviour
     [SerializeField] private RectTransform _root;
 
     private CastleBit[] bits;
+    private RenderTexture rTexBack;
 
     public RectTransform Root => _root;
     
@@ -49,13 +53,25 @@ public class CastleViewer2 : MonoBehaviour
         var maskPixToBaseRect = new Vector2(
                1f / MASK_SCALE * baseRectTrans.sizeDelta.x / pattern.image.width,
                1f / MASK_SCALE * baseRectTrans.sizeDelta.y / pattern.image.height);
-
-        // castleBits = new List<RectTransform>();
-        // rTexs = new List<RenderTexture>();
         
         var matVertColor = new Material(preset.shVertColor);
         var matMultAlpha = new Material(preset.shMultAlpha);
         var matBlur = new Material(preset.shBlur);
+
+
+        // Make the blured texture for background effect
+        int bw = (int)(pattern.image.width * BACK_SCALE);
+        int bh = (int)(pattern.image.height * BACK_SCALE);
+        rTexBack = new RenderTexture(bw, bh, 0, RenderTextureFormat.ARGB32, 0);
+        var rTexBackTemp = RenderTexture.GetTemporary(bw, bh, 0, RenderTextureFormat.ARGB32);
+        Graphics.Blit(pattern.image, rTexBack);
+        for (int i = 0; i < BACK_BLUR_COUNT; i++)
+        {
+            Graphics.Blit(rTexBack, rTexBackTemp, matBlur);
+            Graphics.Blit(rTexBackTemp, rTexBack, matBlur);
+        }
+        RenderTexture.ReleaseTemporary(rTexBackTemp);
+
 
         int w = (int)(pattern.image.width * MASK_SCALE);
         int h = (int)(pattern.image.height * MASK_SCALE);
@@ -136,6 +152,7 @@ public class CastleViewer2 : MonoBehaviour
             matBit.SetVector("_MainTex_ST", new Vector4(scale.x, scale.y, offset.x, offset.y)); ;
             matBit.SetTexture("_Mask", rTex);
             matBit.SetVector("_Pivot", rTrans.position);
+            matBit.SetTexture("_Back", rTexBack);
 
             var img = newObj.AddComponent<Image>();
             img.material = matBit;
