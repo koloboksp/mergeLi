@@ -1,8 +1,11 @@
 
+using System.Threading;
 using System.Threading.Tasks;
+using Core;
+using Core.Effects;
 using UnityEngine;
 
-public class CastleBit
+public class CastleBit : MonoBehaviour
 {
     private const float BORN_TIME = .5f;
     private const float GROW_TIME = .5f;
@@ -17,7 +20,7 @@ public class CastleBit
     private static readonly int pScale = Shader.PropertyToID("_Scale");
     private static readonly int pBorder = Shader.PropertyToID("_Border");
 
-    private enum ShowMode { Born, Grow, FullBit, FullCastle }
+    public enum ShowMode { Born, Grow, FullBit, FullCastle }
 
     private RectTransform rect;
     private RenderTexture rTex;
@@ -37,7 +40,7 @@ public class CastleBit
     private float curProgress = -1f;
     private float newProgress = -2f;
 
-    public CastleBit(RectTransform rect, RenderTexture rTex, Material mat)
+    public void Init(RectTransform rect, RenderTexture rTex, Material mat)
     {
         this.rect = rect;
         this.rTex = rTex;
@@ -76,6 +79,15 @@ public class CastleBit
         curProgress = newProgress;
     }
 
+    public void SetScore1(float newValue)
+    {
+        newProgress = (newValue - priceMin) / price;
+
+        SetMaterialPhase(ShowMode.Grow, 0);
+
+        curProgress = newProgress;
+        
+    }
     public async Task PlayComplete(int delayIndex)
     {
         await Task.Delay(delayIndex * ONE_BIT_DELAY);
@@ -133,5 +145,142 @@ public class CastleBit
         mat.SetFloat(pGlow, glow);
         mat.SetFloat(pScale, scale);
         mat.SetFloat(pBorder, border);
+    }
+    
+    public class ShowBornProgressOperation : CastleViewer2.Operation
+    {
+        private readonly float _nStartValue; 
+        private readonly float _nEndValue;
+        private readonly int _maxPoints;
+        public ShowBornProgressOperation(int partIndex, float nStartValue, float nEndValue, int maxPoints, CastleViewer2 target, CastleBit bit) 
+            : base(partIndex, target, bit)
+        {
+            _nStartValue = nStartValue;
+            _nEndValue = nEndValue;
+            _maxPoints = maxPoints;
+        }
+
+        public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
+        {
+            var duration = BORN_TIME;
+            Target.CallOnPartBornStart(false, duration, _maxPoints);
+            
+            await Bit.ChangeValueOperationAsync(Bit, ShowMode.Born, duration, destroyToken, exitToken);
+        }
+        
+        public override void ExecuteInstant()
+        {
+            Target.CallOnPartBornStart(false, 0.0f, _maxPoints);
+            
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.Born, _nStartValue, _nEndValue);
+        }
+    }
+    
+    public class ShowPartProgressOperation : CastleViewer2.Operation
+    {
+        private readonly int _oldPoints; 
+        private readonly int _newPoints;
+        private int _maxPoints;
+        public ShowPartProgressOperation(int partIndex, int oldPoints, int newPoints, int maxPoints, CastleViewer2 target, CastleBit bit) 
+            : base(partIndex, target, bit)
+        {
+            _oldPoints = oldPoints;
+            _newPoints = newPoints;
+            _maxPoints = maxPoints;
+        }
+
+        public int MaxPoints
+        {
+            set
+            {
+                _maxPoints = value;
+            }
+        }
+        public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
+        {
+            var duration = GROW_TIME;
+            Target.CallOnPartProgressStart(false, duration, _oldPoints, _newPoints, _maxPoints);
+
+            Bit.newProgress = (float)_newPoints / _maxPoints;
+            Bit.curProgress = (float)_oldPoints / _maxPoints;
+            await Bit.ChangeValueOperationAsync(Bit, ShowMode.Grow, duration, destroyToken, exitToken);
+        }
+        
+        public override void ExecuteInstant()
+        {
+            Target.CallOnPartProgressStart(true, 0.0f, _oldPoints, _newPoints, _maxPoints);
+            
+            var nOldPoints = (float)_oldPoints / _maxPoints;
+            var nNewPoints = (float)_newPoints / _maxPoints;
+            Bit.newProgress = (float)_newPoints / _maxPoints;
+            Bit.curProgress = (float)_oldPoints / _maxPoints;
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.Grow, nOldPoints, nNewPoints);
+        }
+    }
+    
+    public class ShowPartCompleteOperation : CastleViewer2.Operation
+    {
+        private readonly CastlePartCompleteEffect _completeEffect;
+        
+        private DependencyHolder<SoundsPlayer> _soundPlayer;
+        public ShowPartCompleteOperation(
+            int partIndex, 
+            CastleViewer2 target, 
+            CastlePartCompleteEffect completeEffect, 
+            CastleBit bit) 
+            : base(partIndex, target, bit)
+        {
+           
+            _completeEffect = completeEffect;
+        }
+
+        public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
+        {
+            var duration = FULL_TIME;
+            Target.CallOnPartCompleteStart(false, duration);
+            
+            await PlayEffect(_completeEffect, Bit.Rect, destroyToken, exitToken);
+            await Bit.ChangeValueOperationAsync(Bit, ShowMode.FullBit, duration, destroyToken, exitToken);
+        }
+        
+        public override void ExecuteInstant()
+        {
+            Target.CallOnPartCompleteStart(false, 0.0f);
+            
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.FullBit, 1.0f, 1.0f);
+        }
+    }
+    
+    protected async Task ChangeValueOperationAsync(
+        CastleBit bit, 
+        ShowMode showMode,
+        float duration,
+        CancellationToken destroyToken,
+        CancellationToken exitToken)
+    {
+        float timer = duration;
+         
+        while (timer > 0)
+        {
+            destroyToken.ThrowIfCancellationRequested();
+            exitToken.ThrowIfCancellationRequested();
+            
+            timer -= Time.deltaTime;
+            if (timer < 0)
+                timer = 0;
+            
+            bit.SetMaterialPhase(showMode, 1.0f - Mathf.Clamp01(timer/duration));
+
+            await Task.Yield();
+        }
+    }
+        
+    protected void ChangeValueOperationInstant(
+        CastleBit bit, 
+        ShowMode showMode,
+        float oldValue,
+        float newValue)
+    {
+        bit.SetMaterialPhase(showMode, newValue);
     }
 }

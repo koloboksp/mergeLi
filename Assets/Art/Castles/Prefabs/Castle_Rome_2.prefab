@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2526198171899369689}
   - component: {fileID: 4994781830957615672}
   - component: {fileID: 5877136912717056432}
-  - component: {fileID: 6329298620269063813}
   - component: {fileID: 1827850039376051570}
   m_Layer: 5
   m_Name: Castle_Rome_2
@@ -78,53 +77,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6329298620269063813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4725816221193981815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a89da8c303be744db443cba62248458, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  image: {fileID: 5877136912717056432}
-  castleSettings: {fileID: 11400000, guid: 5a91144ec0ed2c0438a9c8fb05b7beb3, type: 2}
-  stageCount: 28
-  _root: {fileID: 0}
-  stagePoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  _partCompleteEffect: {fileID: 1354426967308176600, guid: 468404cb59fd05b42beb5ad5ed670e1f,
-    type: 3}
 --- !u!114 &1827850039376051570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,3 +94,6 @@ MonoBehaviour:
   preset: {fileID: 11400000, guid: 5a91144ec0ed2c0438a9c8fb05b7beb3, type: 2}
   maxScore: 10000
   nowScore: 0
+  _root: {fileID: 2526198171899369689}
+  _partCompleteEffect: {fileID: 1354426967308176600, guid: 468404cb59fd05b42beb5ad5ed670e1f,
+    type: 3}

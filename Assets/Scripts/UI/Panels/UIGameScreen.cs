@@ -145,8 +145,16 @@ namespace Core
             }
         }
 
-        private void CastleView_OnPartBornStart(bool instant, float duration)
+        private void CastleView_OnPartBornStart(bool instant, float duration, int maxPoints)
         {
+            if (instant)
+            {
+                _score.InstantSet(0, maxPoints);
+            }
+            else
+            {
+                _score.Set(duration, 0, 0, maxPoints);
+            }
         }
 
         private void CastleView_OnPartCompleteStart(bool instant, float duration)
