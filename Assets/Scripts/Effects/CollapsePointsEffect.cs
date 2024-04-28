@@ -16,6 +16,7 @@ namespace Core.Effects
         [SerializeField] private Text _points;
         [SerializeField] private float _duration = 0.5f;
         [SerializeField] private GameObject _coinPrefab;
+        [SerializeField] private CollapsePointsEffectText _pointsTextPrefab;
         [SerializeField] private AnimationCurve _movingSpeed;
         [SerializeField] private float _randomizeStartPosition = 0.1f;
         [SerializeField] private float _randomizeSideOffset = 0.1f;
@@ -40,25 +41,31 @@ namespace Core.Effects
 
             var splitPartPoints = new List<int>();
             for (var i = 0; i < partsCount; i++)
-                splitPartPoints.Add(partPoints);
+            {
+                splitPartPoints.Add(i == 0 ? points : 0);
+            }
+
             if (restCoinsValue > 0)
-                splitPartPoints.Add(restCoinsValue);
+                splitPartPoints.Add(0);
             
-            _ = StartFxAsync(points, splitPartPoints, receivers);
+           // _ = CreateFx(transform.position, points, splitPartPoints, receivers);
         }
 
-        private async Task StartFxAsync(
+        private List<Task> CreateFx(
+            Vector3 originPosition,
             int points,
-            IReadOnlyList<int> splitPartPoints, 
+            IReadOnlyList<int> splitPartPoints,
+            int splitOffset,
+            int splitCount,
             IReadOnlyList<IPointsEffectReceiver> receivers)
         {
-            var _fxTasks = new List<Task>();
+            var fxTasks = new List<Task>();
             var mainReceiver = receivers[0];
 
-            for (var partI = 0; partI < splitPartPoints.Count; partI++)
+            for (var partI = splitOffset; partI < splitCount; partI++)
             {
                 Vector3 randDirection = Random.insideUnitCircle;
-                var startPosition = transform.position + randDirection * _randomizeStartPosition;
+                var startPosition = originPosition + randDirection * _randomizeStartPosition;
                 var endPosition = mainReceiver.Anchor.position;
                 var vecToReceiver = endPosition - startPosition;
                 var distanceToReceiver = vecToReceiver.magnitude;
@@ -67,22 +74,16 @@ namespace Core.Effects
                                Vector3.Cross(dirToReceiver, Vector3.forward) *
                                Random.Range(-distanceToReceiver * _randomizeSideOffset, distanceToReceiver * _randomizeSideOffset);
 
-                _fxTasks.Add(StartCoinFxAsync(
+                fxTasks.Add(StartCoinFxAsync(
                     splitPartPoints[partI],
-                    Random.Range(0.0f, _randomizeDelay),
+                    partI == 0 ? 0.0f : Random.Range(0.0f, _randomizeDelay),
                     startPosition, midPoint, endPosition,
                     _duration,
                     receivers,
                     Application.exitCancellationToken));
             }
 
-            foreach (var receiver in receivers)
-                receiver.ReceiveStart(points);
-            await Task.WhenAll(_fxTasks);
-            foreach (var receiver in receivers)
-                receiver.ReceiveFinished();
-            
-            Destroy(gameObject);
+            return fxTasks;
         }
         
         private async Task StartCoinFxAsync(
@@ -136,6 +137,56 @@ namespace Core.Effects
             {
                 Debug.LogException(e);
             }
+        }
+
+        public void Run(List<(int points, Vector3 position, int ballsCount)> pointsGroups)
+        {
+            var receivers = SceneManager.GetActiveScene().GetRootGameObjects()
+                .SelectMany(i => i.GetComponentsInChildren<IPointsEffectReceiver>())
+                .OrderBy(i => i.Priority)
+                .ToList();
+
+            var fxTasks = new List<Task>();
+            
+            var pointsSum = pointsGroups.Sum(i => i.points);
+            var ballsCountSum = pointsGroups.Sum(i => i.ballsCount);
+            var partPoints = pointsSum / ballsCountSum;
+            
+            var splitPartPoints = new List<int>();
+            for (var i = 0; i < ballsCountSum; i++)
+                splitPartPoints.Add(i == 0 ? pointsSum : 0);
+            
+            var restCoinsValue = pointsSum - partPoints * ballsCountSum;
+            if (restCoinsValue > 0)
+                splitPartPoints.Add(0);
+
+            int splitOffset = 0;
+            for (var index = 0; index < pointsGroups.Count; index++)
+            {
+                var pointsGroup = pointsGroups[index];
+                var pointsText = Instantiate(_pointsTextPrefab, transform, false);
+                pointsText.Text = pointsGroup.points.ToString();
+                pointsText.gameObject.transform.position = pointsGroup.position;
+
+                fxTasks.AddRange(CreateFx(pointsGroup.position, pointsGroup.points, splitPartPoints, splitOffset, pointsGroup.ballsCount, receivers));
+                splitOffset += pointsGroup.ballsCount;
+            }
+
+
+            _ = PlayFxAsync(fxTasks, pointsSum, receivers);
+        }
+
+        private async Task PlayFxAsync(List<Task> fxTasks, int pointsSum, List<IPointsEffectReceiver> receivers)
+        {
+            foreach (var receiver in receivers)
+                receiver.ReceiveStart(pointsSum);
+
+            await Task.WhenAll(fxTasks);
+
+            foreach (var receiver in receivers)
+                receiver.ReceiveFinished();
+            
+            Destroy(gameObject);
         }
     }
 }

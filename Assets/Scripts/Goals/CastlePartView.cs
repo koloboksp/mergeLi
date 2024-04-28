@@ -15,7 +15,8 @@ public class CastlePartView : MonoBehaviour
         OnUnlockedStateChanged(_model.Unlocked, true);
 
         _model.OnPointsChanged += OnPointsChanged;
-        OnPointsChanged(_model.Points, true);
+        if (_model.Points > 0)
+            OnPointsChanged(_model.Points, true);
     }
     
     private void OnCostChanged()

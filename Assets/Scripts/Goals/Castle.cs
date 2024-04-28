@@ -262,7 +262,7 @@ namespace Core.Goals
                 part.SetPoints(0, true);
             }
 
-            _view.SetStage(0);
+            _view.ResetProgress();
         }
 
         public void ShowAsCompleted()

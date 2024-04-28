@@ -259,17 +259,15 @@ public class CastleViewer2 : MonoBehaviour
             bits[i].Destroy();
     }
 
-    public void SetStage(int stage)
+    public void ResetProgress()
     {
         foreach (var castleBit in bits)
-        {
-            castleBit.SetScore1(0);
-        }
+            castleBit.ResetProgress();
     }
     
     public void ShowPartBorn(int partIndex, int maxPoints, bool instant)
     {
-        var operation = new CastleBit.ShowBornProgressOperation(partIndex, 0, 1, maxPoints, this, bits[partIndex]);
+        var operation = new CastleBit.ShowBornProgressOperation(partIndex, maxPoints, this, bits[partIndex]);
         if (instant)
             operation.ExecuteInstant();
         else
@@ -278,7 +276,7 @@ public class CastleViewer2 : MonoBehaviour
     
     public void ShowPartDeath(int partIndex, int maxPoints, bool instant)
     {
-        var operation = new CastleBit.ShowBornProgressOperation(partIndex, 1, 0, maxPoints, this, bits[partIndex]);
+        var operation = new CastleBit.ShowDeathProgressOperation(partIndex, maxPoints, this, bits[partIndex]);
         if (instant)
             operation.ExecuteInstant();
         else

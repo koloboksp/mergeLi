@@ -20,7 +20,7 @@ public class CastleBit : MonoBehaviour
     private static readonly int pScale = Shader.PropertyToID("_Scale");
     private static readonly int pBorder = Shader.PropertyToID("_Border");
 
-    public enum ShowMode { Born, Grow, FullBit, FullCastle }
+    public enum ShowMode { Born, Death, Grow, FullBit, FullCastle }
 
     private RectTransform rect;
     private RenderTexture rTex;
@@ -79,14 +79,9 @@ public class CastleBit : MonoBehaviour
         curProgress = newProgress;
     }
 
-    public void SetScore1(float newValue)
+    public void ResetProgress()
     {
-        newProgress = (newValue - priceMin) / price;
-
-        SetMaterialPhase(ShowMode.Grow, 0);
-
-        curProgress = newProgress;
-        
+        SetMaterialPhase(ShowMode.Born, 0);
     }
     public async Task PlayComplete(int delayIndex)
     {
@@ -119,7 +114,11 @@ public class CastleBit : MonoBehaviour
             case ShowMode.Born:
                 SetMaterialProps(softPhase, 0, 0, 1f, 0, 1f - softPhase, 1f);
                 break;
-
+            
+            case ShowMode.Death:
+                SetMaterialProps(1f - softPhase, 0, 0, 1f, 0, 1f - softPhase , 1f);
+                break;
+            
             case ShowMode.Grow:
                 SetMaterialProps(1f, Mathf.Lerp(curProgress, newProgress, softPhase), phase, 1f, 0f, 0, 1f);
                 break;
@@ -149,14 +148,10 @@ public class CastleBit : MonoBehaviour
     
     public class ShowBornProgressOperation : CastleViewer2.Operation
     {
-        private readonly float _nStartValue; 
-        private readonly float _nEndValue;
         private readonly int _maxPoints;
-        public ShowBornProgressOperation(int partIndex, float nStartValue, float nEndValue, int maxPoints, CastleViewer2 target, CastleBit bit) 
+        public ShowBornProgressOperation(int partIndex, int maxPoints, CastleViewer2 target, CastleBit bit) 
             : base(partIndex, target, bit)
         {
-            _nStartValue = nStartValue;
-            _nEndValue = nEndValue;
             _maxPoints = maxPoints;
         }
 
@@ -172,7 +167,32 @@ public class CastleBit : MonoBehaviour
         {
             Target.CallOnPartBornStart(false, 0.0f, _maxPoints);
             
-            Bit.ChangeValueOperationInstant(Bit, ShowMode.Born, _nStartValue, _nEndValue);
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.Born, 0, 1);
+        }
+    }
+    
+    public class ShowDeathProgressOperation : CastleViewer2.Operation
+    {
+        private readonly int _maxPoints;
+        public ShowDeathProgressOperation(int partIndex, int maxPoints, CastleViewer2 target, CastleBit bit) 
+            : base(partIndex, target, bit)
+        {
+            _maxPoints = maxPoints;
+        }
+
+        public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
+        {
+            var duration = BORN_TIME;
+            Target.CallOnPartBornStart(false, duration, _maxPoints);
+            
+            await Bit.ChangeValueOperationAsync(Bit, ShowMode.Death, duration, destroyToken, exitToken);
+        }
+        
+        public override void ExecuteInstant()
+        {
+            Target.CallOnPartBornStart(false, 0.0f, _maxPoints);
+            
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.Death, 0, 1);
         }
     }
     
@@ -180,7 +200,7 @@ public class CastleBit : MonoBehaviour
     {
         private readonly int _oldPoints; 
         private readonly int _newPoints;
-        private int _maxPoints;
+        private readonly int _maxPoints;
         public ShowPartProgressOperation(int partIndex, int oldPoints, int newPoints, int maxPoints, CastleViewer2 target, CastleBit bit) 
             : base(partIndex, target, bit)
         {
@@ -188,14 +208,7 @@ public class CastleBit : MonoBehaviour
             _newPoints = newPoints;
             _maxPoints = maxPoints;
         }
-
-        public int MaxPoints
-        {
-            set
-            {
-                _maxPoints = value;
-            }
-        }
+        
         public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
         {
             var duration = GROW_TIME;

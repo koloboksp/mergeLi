@@ -81,7 +81,8 @@ namespace Core.Steps.CustomOperations
             Owner.SetData(data);
 
             var collapseLineWithResultPoints = _pointsCalculator.GetPoints(_collapseLines);
-            
+
+            var pointsGroups = new List<(int points, Vector3 position, int ballsCount)>();
             var sumPoints = 0;
             foreach (var collapseLine in collapseLineWithResultPoints)
             {
@@ -97,16 +98,22 @@ namespace Core.Steps.CustomOperations
                         sumGroupPoints += tuple.Points;
                     }
 
-                    var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
-                    var collapsePointsEffect = Object.Instantiate(_collapsePointsEffectPrefab, 
-                        _field.View.Root.TransformPoint(centerPosition), Quaternion.identity, 
-                        _field.View.Root);
-                    collapsePointsEffect.transform.SetParent(findObjectOfType.transform);
+                    pointsGroups.Add((sumGroupPoints, _field.View.Root.TransformPoint(centerPosition), valueTuples.Count));
+                    
                     sumPoints += sumGroupPoints;
-                    collapsePointsEffect.Run(sumGroupPoints, valueTuples.Count);
                 }
             }
 
+            if (pointsGroups.Count > 0)
+            {
+                var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
+                var collapsePointsEffect = Object.Instantiate(_collapsePointsEffectPrefab, 
+                    _field.View.Root.TransformPoint(pointsGroups[0].position), Quaternion.identity, 
+                    _field.View.Root);
+                collapsePointsEffect.transform.SetParent(findObjectOfType.transform);
+                collapsePointsEffect.Run(pointsGroups);
+            }
+            
             var removeBallTasks = new List<Task>();
             foreach (var ballPair in _ballsToRemove)
                 removeBallTasks.Add(RemoveBallWithDelay(ballPair.ball, ballPair.distance / maxDistanceToCheckingPosition, cancellationToken));
