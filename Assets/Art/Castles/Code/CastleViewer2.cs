@@ -246,7 +246,7 @@ public class CastleViewer2 : MonoBehaviour
     
     [SerializeField] private CastlePartCompleteEffect _partCompleteEffect;
     
-    private readonly List<CastleViewer2.Operation> _operations = new ();
+    private readonly List<Operation> _operations = new ();
     private Task _operationsExecutor;
     private CancellationTokenSource _destroyTokenSource;
     
@@ -303,7 +303,7 @@ public class CastleViewer2 : MonoBehaviour
             AddOperation(operation);
     }
     
-    private void AddOperation(CastleViewer2.Operation operation)
+    private void AddOperation(Operation operation)
     {
         _operations.Add(operation);
 
@@ -361,41 +361,6 @@ public class CastleViewer2 : MonoBehaviour
         public virtual async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken) { }
         
         public virtual void ExecuteInstant() { }
-        
-        // protected async Task ChangeValueOperationAsync(
-        //     AnimationCurve curve, 
-        //     float duration,
-        //     int prop,
-        //     float v0,
-        //     float v1,
-        //     CancellationToken destroyToken,
-        //     CancellationToken exitToken)
-        // {
-        //     float timer = duration;
-        //     float scale = v1 - v0;
-        //
-        //     while (timer > 0)
-        //     {
-        //         destroyToken.ThrowIfCancellationRequested();
-        //         exitToken.ThrowIfCancellationRequested();
-        //     
-        //         timer -= Time.deltaTime;
-        //         if (timer < 0)
-        //             timer = 0;
-        //
-        //         _target.mat.SetFloat(prop, v0 + curve.Evaluate(1f - timer / duration) * scale);
-        //         // rend.SetPropertyBlock(mpb);
-        //
-        //         await Task.Yield();
-        //     }
-        // }
-        
-      
-        
-       // protected void ChangeValueOperationInstant(AnimationCurve curve, float dur, int prop, float v0, float v1)
-       // {
-       //     _target.mat.SetFloat(prop, v1);
-       // }
         
         protected async Task PlayEffect(
             CastlePartCompleteEffect completeEffect,

@@ -56,7 +56,7 @@ public class CastlePart : MonoBehaviour
     }
 
     public void ChangeUnlockState(bool unlocked, bool instant)
-    {
+    { 
         if (_unlocked != unlocked)
         {
             var oldUnlocked = _unlocked;

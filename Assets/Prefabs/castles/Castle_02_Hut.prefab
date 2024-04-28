@@ -51,7 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce26ccafb6794d3196b23089e4e0f49d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _view: {fileID: 7511617912879365689}
+  _view: {fileID: 5612089755605335051}
+  initalCostOfPart: 20
+  risingCostOfPart: 20
   _coinsAfterComplete: 200
   _nameKey:
     m03: 575006680
@@ -59,7 +61,7 @@ MonoBehaviour:
     m8B: 3220381813
     mCF: 1639819191
   _root: {fileID: 7047264570851907106}
-  _coinsEffectReceiver: {fileID: 7362073124006868371}
+  _pointsReceiver: {fileID: 7362073124006868371}
 --- !u!114 &7362073124006868371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,16 +232,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e90d0197603a6dd4baf20a06121ceb5e, type: 3}
---- !u!114 &7511617912879365689 stripped
+--- !u!114 &5612089755605335051 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3872328642510413083, guid: e90d0197603a6dd4baf20a06121ceb5e,
+  m_CorrespondingSourceObject: {fileID: 1180439213065314089, guid: e90d0197603a6dd4baf20a06121ceb5e,
     type: 3}
   m_PrefabInstance: {fileID: 6738483264874734370}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a89da8c303be744db443cba62248458, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d059af685b2dea4b82bf829b9304d61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &7719751528949281786 stripped

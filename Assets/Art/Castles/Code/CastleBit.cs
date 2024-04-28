@@ -81,7 +81,7 @@ public class CastleBit : MonoBehaviour
 
     public void ResetProgress()
     {
-        SetMaterialPhase(ShowMode.Born, 0);
+        SetMaterialPhase(ShowMode.Death, 1);
     }
     public async Task PlayComplete(int delayIndex)
     {
@@ -116,7 +116,7 @@ public class CastleBit : MonoBehaviour
                 break;
             
             case ShowMode.Death:
-                SetMaterialProps(1f - softPhase, 0, 0, 1f, 0, 1f - softPhase , 1f);
+                SetMaterialProps(1f - softPhase, 0, 0, 1f, 0, 0 , 1f);
                 break;
             
             case ShowMode.Grow:
@@ -167,7 +167,7 @@ public class CastleBit : MonoBehaviour
         {
             Target.CallOnPartBornStart(false, 0.0f, _maxPoints);
             
-            Bit.ChangeValueOperationInstant(Bit, ShowMode.Born, 0, 1);
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.Born, 1);
         }
     }
     
@@ -192,7 +192,7 @@ public class CastleBit : MonoBehaviour
         {
             Target.CallOnPartBornStart(false, 0.0f, _maxPoints);
             
-            Bit.ChangeValueOperationInstant(Bit, ShowMode.Death, 0, 1);
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.Death, 1);
         }
     }
     
@@ -225,9 +225,9 @@ public class CastleBit : MonoBehaviour
             
             var nOldPoints = (float)_oldPoints / _maxPoints;
             var nNewPoints = (float)_newPoints / _maxPoints;
-            Bit.newProgress = (float)_newPoints / _maxPoints;
-            Bit.curProgress = (float)_oldPoints / _maxPoints;
-            Bit.ChangeValueOperationInstant(Bit, ShowMode.Grow, nOldPoints, nNewPoints);
+            Bit.newProgress = nNewPoints;
+            Bit.curProgress = nOldPoints;
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.Grow, 1.0f);
         }
     }
     
@@ -260,7 +260,7 @@ public class CastleBit : MonoBehaviour
         {
             Target.CallOnPartCompleteStart(false, 0.0f);
             
-            Bit.ChangeValueOperationInstant(Bit, ShowMode.FullBit, 1.0f, 1.0f);
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.FullBit, 1.0f);
         }
     }
     
@@ -291,9 +291,8 @@ public class CastleBit : MonoBehaviour
     protected void ChangeValueOperationInstant(
         CastleBit bit, 
         ShowMode showMode,
-        float oldValue,
-        float newValue)
+        float value)
     {
-        bit.SetMaterialPhase(showMode, newValue);
+        bit.SetMaterialPhase(showMode, value);
     }
 }

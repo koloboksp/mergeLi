@@ -20,12 +20,14 @@ namespace Core.Goals
         public event Action<int> OnPointsAdd;
         public event Action<int> OnPointsRefund;
      
-      //  [SerializeField] private CastleViewer _view;
         [SerializeField] private CastleViewer2 _view;
+        [SerializeField] private int initalCostOfPart;
+        [SerializeField] private int risingCostOfPart = 100;
+
         [SerializeField] private int _coinsAfterComplete;
         [SerializeField] private GuidEx _nameKey;
         [SerializeField] private RectTransform _root;
-        [FormerlySerializedAs("_coinsEffectReceiver")] [SerializeField] private CoinsEffectReceiver _pointsReceiver;
+        [SerializeField] private CoinsEffectReceiver _pointsReceiver;
 
         private GameProcessor _gameProcessor;
         private readonly List<CastlePart> _parts = new();
@@ -42,12 +44,7 @@ namespace Core.Goals
         public IEnumerable<CastlePart> Parts => _parts;
         public int CoinsAfterComplete => _coinsAfterComplete;
         public GuidEx NameKey => _nameKey;
-
-        public CastlePart GetSelectedCastlePart()
-        {
-            return _selectedPart;
-        }
-
+        
         public int GetCost()
         {
             return _parts.Sum(i => i.Cost);
@@ -96,9 +93,9 @@ namespace Core.Goals
                 var castleBit = componentsInChildren[index];
                 var addComponent = castleBit.gameObject.AddComponent<CastlePart>();
                 addComponent.Owner = this;
-                addComponent.Cost = 20;
                 addComponent.Index = index;
-                
+                addComponent.Cost = initalCostOfPart + risingCostOfPart * index;
+               
                 var addComponent1 = castleBit.gameObject.AddComponent<CastlePartView>();
                 addComponent1.SetData(addComponent);
             }
@@ -258,8 +255,8 @@ namespace Core.Goals
         {
             foreach (var part in _parts)
             {
-                part.ChangeUnlockState(false, true);
                 part.SetPoints(0, true);
+                part.ChangeUnlockState(false, true);
             }
 
             _view.ResetProgress();
