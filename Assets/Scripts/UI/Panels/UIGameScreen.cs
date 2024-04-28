@@ -49,9 +49,7 @@ namespace Core
             OnLowEmptySpaceChanged(false);
             
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
-            _coins.MakeSingle();
-            _coins.Set(_data.GameProcessor.CurrencyAmount);
-            
+           
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
             CastleSelector_OnCastleChanged(_data.GameProcessor.CastleSelector.ActiveCastle);
             Castle_OnPointsChanged(0);
@@ -186,12 +184,7 @@ namespace Core
         
         private void SaveController_OnConsumeCurrency(int amount)
         {
-            OnConsumeCurrency(amount, false);
-        }
-
-        private void OnConsumeCurrency(int amount, bool force)
-        {
-            _coins.Add(-amount, force);
+            _coins.Add(-amount, false);
         }
 
         private void ShowPauseBtn_OnClick()

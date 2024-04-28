@@ -16,17 +16,33 @@ namespace Core
         [SerializeField] private AnimationClip _completeClipPart2;
         [SerializeField] private GameObject _fireworks;
         [SerializeField] private UIBubbleDialog _speaker;
+        [SerializeField] private UIGameScreen_Coins _coins;
         
         [SerializeField] private Button _tapButton;
         [SerializeField] private AudioClip _completeClip;
 
         private UICastleCompletePanelData _data;
-        
+
+        protected override void InnerActivate()
+        {
+            base.InnerActivate();
+            _coins.MakeSingle();
+            _coins.Set(_data.GameProcessor.CurrencyAmount);
+        }
+
         public override void SetData(UIScreenData undefinedData)
         {
             _data = undefinedData as UICastleCompletePanelData;
-            
+            ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
+
             _ = PlayAsyncSafe(Application.exitCancellationToken);
+        }
+
+        protected override void InnerHide()
+        {
+            ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency -= SaveController_OnConsumeCurrency;
+
+            base.InnerHide();
         }
 
         private async Task PlayAsyncSafe(CancellationToken exitToken)
@@ -112,6 +128,11 @@ namespace Core
             {
                 Debug.LogException(e);
             }
+        }
+        
+        private void SaveController_OnConsumeCurrency(int amount)
+        {
+            _coins.Add(-amount, false);
         }
     }
     
