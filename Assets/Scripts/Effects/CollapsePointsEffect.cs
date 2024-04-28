@@ -25,35 +25,63 @@ namespace Core.Effects
 
         private DependencyHolder<SoundsPlayer> _soundsPlayer;
         
-        public float Duration => _duration;
-
-        public void Run(int points, int partsCount)
+        public void Run(IReadOnlyList<(int points, int ballsCount, Vector3 position)> pointsGroups)
         {
-            _points.text = points.ToString();
-            
             var receivers = SceneManager.GetActiveScene().GetRootGameObjects()
                 .SelectMany(i => i.GetComponentsInChildren<IPointsEffectReceiver>())
                 .OrderBy(i => i.Priority)
                 .ToList();
-
-            var partPoints = points / partsCount;
-            var restCoinsValue = points - partPoints * partsCount;
-
-            var splitPartPoints = new List<int>();
-            for (var i = 0; i < partsCount; i++)
+            
+            var splitPartPoints = SplitPointsByCoins(pointsGroups);
+            
+            var fxTasks = new List<Task>();
+            var splitOffset = 0;
+            for (var index = 0; index < pointsGroups.Count; index++)
             {
-                splitPartPoints.Add(i == 0 ? points : 0);
+                var pointsGroup = pointsGroups[index];
+                var pointsText = Instantiate(_pointsTextPrefab, transform, false);
+                pointsText.Text = pointsGroup.points.ToString();
+                pointsText.gameObject.transform.position = pointsGroup.position;
+                
+                fxTasks.AddRange(CreateFx(pointsGroup.position, splitPartPoints, splitOffset, pointsGroup.ballsCount, receivers));
+                splitOffset += pointsGroup.ballsCount;
             }
+            
+            var pointsSum = pointsGroups.Sum(i => i.points);
+            _ = PlayFxAsync(fxTasks, pointsSum, receivers);
+        }
 
+        private async Task PlayFxAsync(List<Task> fxTasks, int pointsSum, List<IPointsEffectReceiver> receivers)
+        {
+            foreach (var receiver in receivers)
+                receiver.ReceiveStart(pointsSum);
+
+            await Task.WhenAll(fxTasks);
+
+            foreach (var receiver in receivers)
+                receiver.ReceiveFinished();
+            
+            Destroy(gameObject);
+        }
+        
+        private static List<int> SplitPointsByCoins(IReadOnlyList<(int points, int ballsCount, Vector3 position)> pointsGroups)
+        {
+            var pointsSum = pointsGroups.Sum(i => i.points);
+            var ballsCountSum = pointsGroups.Sum(i => i.ballsCount);
+            var partPoints = pointsSum / ballsCountSum;
+            
+            var splitPartPoints = new List<int>();
+            for (var i = 0; i < ballsCountSum; i++)
+                splitPartPoints.Add(i == 0 ? pointsSum : 0);
+            
+            var restCoinsValue = pointsSum - partPoints * ballsCountSum;
             if (restCoinsValue > 0)
                 splitPartPoints.Add(0);
-            
-           // _ = CreateFx(transform.position, points, splitPartPoints, receivers);
+            return splitPartPoints;
         }
 
         private List<Task> CreateFx(
             Vector3 originPosition,
-            int points,
             IReadOnlyList<int> splitPartPoints,
             int splitOffset,
             int splitCount,
@@ -74,7 +102,7 @@ namespace Core.Effects
                                Vector3.Cross(dirToReceiver, Vector3.forward) *
                                Random.Range(-distanceToReceiver * _randomizeSideOffset, distanceToReceiver * _randomizeSideOffset);
 
-                fxTasks.Add(StartCoinFxAsync(
+                fxTasks.Add(PlayCoinFxAsync(
                     splitPartPoints[partI],
                     partI == 0 ? 0.0f : Random.Range(0.0f, _randomizeDelay),
                     startPosition, midPoint, endPosition,
@@ -86,7 +114,7 @@ namespace Core.Effects
             return fxTasks;
         }
         
-        private async Task StartCoinFxAsync(
+        private async Task PlayCoinFxAsync(
             int points,
             float delay,
             Vector3 startPosition,
@@ -126,67 +154,21 @@ namespace Core.Effects
 
                     await Task.Yield();
                 }
-            
+
                 foreach (var receiver in receivers)
                     receiver.Receive(points);
                 _soundsPlayer.Value.Play(_gotClip);
 
                 Destroy(coin.gameObject);
             }
+            catch (OperationCanceledException e)
+            {
+                
+            }
             catch (Exception e)
             {
                 Debug.LogException(e);
             }
-        }
-
-        public void Run(List<(int points, Vector3 position, int ballsCount)> pointsGroups)
-        {
-            var receivers = SceneManager.GetActiveScene().GetRootGameObjects()
-                .SelectMany(i => i.GetComponentsInChildren<IPointsEffectReceiver>())
-                .OrderBy(i => i.Priority)
-                .ToList();
-
-            var fxTasks = new List<Task>();
-            
-            var pointsSum = pointsGroups.Sum(i => i.points);
-            var ballsCountSum = pointsGroups.Sum(i => i.ballsCount);
-            var partPoints = pointsSum / ballsCountSum;
-            
-            var splitPartPoints = new List<int>();
-            for (var i = 0; i < ballsCountSum; i++)
-                splitPartPoints.Add(i == 0 ? pointsSum : 0);
-            
-            var restCoinsValue = pointsSum - partPoints * ballsCountSum;
-            if (restCoinsValue > 0)
-                splitPartPoints.Add(0);
-
-            int splitOffset = 0;
-            for (var index = 0; index < pointsGroups.Count; index++)
-            {
-                var pointsGroup = pointsGroups[index];
-                var pointsText = Instantiate(_pointsTextPrefab, transform, false);
-                pointsText.Text = pointsGroup.points.ToString();
-                pointsText.gameObject.transform.position = pointsGroup.position;
-
-                fxTasks.AddRange(CreateFx(pointsGroup.position, pointsGroup.points, splitPartPoints, splitOffset, pointsGroup.ballsCount, receivers));
-                splitOffset += pointsGroup.ballsCount;
-            }
-
-
-            _ = PlayFxAsync(fxTasks, pointsSum, receivers);
-        }
-
-        private async Task PlayFxAsync(List<Task> fxTasks, int pointsSum, List<IPointsEffectReceiver> receivers)
-        {
-            foreach (var receiver in receivers)
-                receiver.ReceiveStart(pointsSum);
-
-            await Task.WhenAll(fxTasks);
-
-            foreach (var receiver in receivers)
-                receiver.ReceiveFinished();
-            
-            Destroy(gameObject);
         }
     }
 }

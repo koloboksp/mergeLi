@@ -82,23 +82,25 @@ namespace Core.Steps.CustomOperations
 
             var collapseLineWithResultPoints = _pointsCalculator.GetPoints(_collapseLines);
 
-            var pointsGroups = new List<(int points, Vector3 position, int ballsCount)>();
+            var pointsGroups = new List<(int points, int ballsCount, Vector3 position)>();
+            
             var sumPoints = 0;
             foreach (var collapseLine in collapseLineWithResultPoints)
             {
                 var groupsByPoints = collapseLine.GroupBy(i => i.Points);
                 foreach (var groupByPoints in groupsByPoints)
                 {
-                    var valueTuples = groupByPoints.ToList();
+                    var ballsInGroup = groupByPoints.Count();
+                    
                     var centerPosition = Vector3.zero;
                     var sumGroupPoints = 0;
-                    foreach (var tuple in valueTuples)
+                    foreach (var ballDesc in groupByPoints)
                     {
-                        centerPosition += _field.GetPositionFromGrid(tuple.GridPosition) / valueTuples.Count;
-                        sumGroupPoints += tuple.Points;
+                        centerPosition += _field.GetPositionFromGrid(ballDesc.GridPosition) / ballsInGroup;
+                        sumGroupPoints += ballDesc.Points;
                     }
 
-                    pointsGroups.Add((sumGroupPoints, _field.View.Root.TransformPoint(centerPosition), valueTuples.Count));
+                    pointsGroups.Add((sumGroupPoints, ballsInGroup, _field.View.Root.TransformPoint(centerPosition)));
                     
                     sumPoints += sumGroupPoints;
                 }
