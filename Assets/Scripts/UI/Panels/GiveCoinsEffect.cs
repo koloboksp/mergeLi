@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace Core
@@ -19,14 +21,18 @@ namespace Core
         [SerializeField] private AudioClip _gotClip;
 
         private Transform _from;
-        private UIGameScreen_Coins _to;
+       
         private DependencyHolder<SoundsPlayer> _soundPlayer;
         
         public async Task Show(int currencyAmount, Transform from, CancellationToken exitToken)
         {
             _from = from;
-            _to = GameObject.FindObjectOfType<UIGameScreen_Coins>();
-
+            
+            var receivers = SceneManager.GetActiveScene().GetRootGameObjects()
+                .SelectMany(i => i.GetComponentsInChildren<ICoinsReceiver>())
+                .Where(i => i.IsActive)
+                .ToList();
+            
             var coinsValue = 5;
             var coinsNum = currencyAmount / coinsValue;
             var restCoinsValue = currencyAmount - coinsValue * coinsNum;
@@ -37,17 +43,16 @@ namespace Core
             if(restCoinsValue > 0)
                 splitCoins.Add(restCoinsValue);
             
-            await Run(splitCoins, exitToken);
+            await Run(splitCoins, receivers, exitToken);
         }
         
-        private async Task Run(List<int> splitCoins, CancellationToken exitToken)
+        private async Task Run(List<int> splitCoins, IReadOnlyList<ICoinsReceiver> receivers, CancellationToken exitToken)
         {
-            
             var list = new List<Task>();
             for (int i = 0; i < splitCoins.Count; i++)
             {
                 var startPosition = _from.position + Random.insideUnitSphere * _randomizeStartPosition;
-                var endPosition = _to.transform.position;
+                var endPosition = receivers[0].Anchor.position;
                 var vecToReceiver = endPosition - startPosition;
                 var distanceToReceiver = vecToReceiver.magnitude;
                 var dirToReceiver = vecToReceiver.normalized;
@@ -55,7 +60,7 @@ namespace Core
                                Vector3.Cross(dirToReceiver, Vector3.forward) *
                                Random.Range(-distanceToReceiver * _randomizeSideOffset, distanceToReceiver * _randomizeSideOffset);
 
-                list.Add(StartFx(splitCoins[i], Random.Range(0.0f, _randomizeDelay), startPosition, midPoint, endPosition, _duration, exitToken));
+                list.Add(StartFx(splitCoins[i], Random.Range(0.0f, _randomizeDelay), startPosition, midPoint, endPosition, _duration, receivers, exitToken));
             }
             await Task.WhenAll(list);
         }
@@ -67,6 +72,7 @@ namespace Core
             Vector3 middlePosition,
             Vector3 endPosition,
             float time,
+            IReadOnlyList<ICoinsReceiver> receivers,
             CancellationToken exitToken)
         {
            
@@ -102,8 +108,10 @@ namespace Core
                 timer += Time.deltaTime;
                 await Task.Yield();
             }
+
+            foreach (var receiver in receivers)
+                receiver.Receive(coinValue);
             
-            _to.Add(coinValue, false);
             _soundPlayer.Value.Play(_gotClip);            
             DestroyCreated();
 

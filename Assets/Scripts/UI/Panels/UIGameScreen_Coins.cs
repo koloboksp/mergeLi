@@ -6,16 +6,12 @@ using UnityEngine.UI;
 
 namespace Core
 {
-    public interface ICoinsReceiver
-    {
-        
-    }
-    
     public class UIGameScreen_Coins : MonoBehaviour, ICoinsReceiver
     {
         public event Action OnClick;
 
         [SerializeField] private RectTransform _root;
+        [SerializeField] private Transform _anchor;
         [SerializeField] private Button _clickableArea;
         [SerializeField] private Text _amountLabel;
 
@@ -23,7 +19,10 @@ namespace Core
 
         private int _amount = 0;
         private CancellationTokenSource _cancellationTokenSource;
-        
+
+        public Transform Anchor => _anchor;
+        public bool IsActive => gameObject.activeInHierarchy;
+       
         private void Awake()
         {
             _clickableArea.onClick.AddListener(ClickableArea_OnClick);
@@ -98,6 +97,11 @@ namespace Core
                 if (other != this)
                     other.gameObject.SetActive(false);
             }
+        }
+        
+        public void Receive(int amount)
+        {
+            Add(amount, false);
         }
     }
 }

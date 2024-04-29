@@ -27,7 +27,7 @@ namespace Core.Goals
         [SerializeField] private int _coinsAfterComplete;
         [SerializeField] private GuidEx _nameKey;
         [SerializeField] private RectTransform _root;
-        [SerializeField] private CoinsEffectReceiver _pointsReceiver;
+        [SerializeField] private PointsEffectReceiver _pointsReceiver;
 
         private GameProcessor _gameProcessor;
         private readonly List<CastlePart> _parts = new();
