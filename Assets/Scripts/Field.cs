@@ -57,6 +57,11 @@ public class Field : MonoBehaviour, IField
         _cellSize = new Vector3(View.RootSize.x / Size.x, View.RootSize.x / Size.y, 0);;
     }
 
+    public void SetData()
+    {
+        _view.SetData();
+    }
+    
     public Vector3 ScreenPointToWorld(Vector3 screenPosition)
     {
         if (_view.Canvas.renderMode == RenderMode.ScreenSpaceOverlay)
@@ -235,6 +240,11 @@ public class Field : MonoBehaviour, IField
         }
 
         return result;
+    }
+
+    public void UpdateSiblingIndex(Vector3 gridPosition, Transform target)
+    {
+        _view.UpdateSiblingIndex(gridPosition, target);
     }
 
     public Vector3 GetPositionFromGrid(Vector3 gridPosition)

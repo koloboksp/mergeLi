@@ -75,11 +75,6 @@ namespace Core
         private void Ball_OnSelectedChanged()
         {
             _ballSkin.Selected = _ball.Selected;
-            
-            if (_ball.Selected)
-            {
-                _root.transform.SetAsLastSibling();
-            }
         }
 
         private void Ball_OnPointsChanged(int oldPoints, bool force)
@@ -89,21 +84,12 @@ namespace Core
             if (foundAssociation != null)
                 _mainColor = foundAssociation.Color;
             _ballSkin.MainColor = _mainColor;
-            
-            _root.transform.SetAsLastSibling();
         }
         
         private void Ball_OnHatChanged(int oldHat, bool force)
         {
             _ballSkin.SetHat(_ball.Hat, oldHat, force);
-            //var foundAssociation = _colorsAssociations.Find(i => i.Points == _ball.Points);
-            //if (foundAssociation != null)
-            //    _mainColor = foundAssociation.Color;
-            //_ballSkin.MainColor = _mainColor;
-            //
-            //_root.transform.SetAsLastSibling();
         }
-        
         
         private void Ball_TransparencyChanged()
         {

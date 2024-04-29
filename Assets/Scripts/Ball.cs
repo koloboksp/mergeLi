@@ -94,11 +94,18 @@ namespace Core
         private async Task InnerMerge(IEnumerable<IFieldMergeable> others, CancellationToken cancellationToken)
         {
             var newPoints = _points;
+            var newHat = _hat;
             foreach (var other in others)
+            {
                 if (other is IBall otherBall)
+                {
                     newPoints += otherBall.Points;
-                
+                    newHat = Mathf.Max(newHat, otherBall.Hat);
+                }
+            }
+
             UpdatePoints(newPoints, false);
+            UpdateHat(newHat, false);
             
             foreach (var other in others)
                 _field.DestroyBall(other as Ball);
@@ -158,10 +165,16 @@ namespace Core
             UpdateGridPosition(startPosition);
         }
 
-        void UpdateGridPosition(Vector3 gridPosition)
+        private void UpdateGridPosition(Vector3 gridPosition)
         {
+            var oldGridPosition = _gridPosition;
             _gridPosition = gridPosition;
             transform.localPosition = _field.GetPositionFromGrid(_gridPosition);
+           
+            var oldGridPositionInt = _field.TransformToIntPosition(oldGridPosition);
+            var gridPositionInt = _field.TransformToIntPosition(_gridPosition);
+            if (oldGridPositionInt != gridPositionInt)
+                _field.UpdateSiblingIndex(_gridPosition, transform);
         }
 
         public async Task StartMove(Vector3Int endPosition, CancellationToken cancellationToken)
@@ -198,6 +211,14 @@ namespace Core
         public void Select(bool state)
         {
             _selected = state;
+            if (_selected)
+            {
+                transform.SetAsLastSibling();
+            }
+            else
+            {
+                _field.UpdateSiblingIndex(_gridPosition, transform);
+            }
             OnSelectedChanged?.Invoke();
         }
 

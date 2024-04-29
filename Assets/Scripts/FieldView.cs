@@ -14,6 +14,8 @@ public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointe
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private RectTransform _root;
 
+    private RectTransform[] _rowDepthSeparators;
+    
     private bool _stepExecuted = false;
     public Canvas Canvas => _canvas;
     public Transform Root => _root;
@@ -24,12 +26,21 @@ public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointe
         _canvasGroup.interactable = !lockState;
     }
 
-    private void Awake()
+    public void SetData()
     {
         _model.Scene.GameProcessor.OnBeforeStepStarted += GameProcessor_OnBeforeStepStarted;
         _model.Scene.GameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
+        
+        _rowDepthSeparators = new RectTransform[_model.Size.y];
+        
+        for (var rowIndex = 0; rowIndex < _model.Size.y; rowIndex++)
+        {
+            var depthSeparator = new GameObject($"rowSeparator_{_model.Size.y - rowIndex - 1}", typeof(RectTransform));
+            depthSeparator.transform.SetParent(_root);
+            _rowDepthSeparators[rowIndex] = depthSeparator.transform as RectTransform;
+        }
     }
-
+    
     private void GameProcessor_OnBeforeStepStarted(Step step, StepExecutionType executionType)
     {
         _stepExecuted = true;
@@ -61,5 +72,12 @@ public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointe
     public void OnPointerUp(PointerEventData eventData)
     {
        
+    }
+
+    public void UpdateSiblingIndex(Vector3 gridPosition, Transform target)
+    {
+        var rowDepthIndex = Mathf.FloorToInt(_model.Size.y - gridPosition.y - 1);
+        var depthSeparatorSiblingIndex = _rowDepthSeparators[rowDepthIndex].GetSiblingIndex();
+        target.SetSiblingIndex(depthSeparatorSiblingIndex + 1);
     }
 }

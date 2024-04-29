@@ -249,6 +249,7 @@ public class GameProcessor : MonoBehaviour,
             _hats.Add(hat);
         }
         
+        _field.SetData();
         _field.OnPointerDown += Field_OnPointerDown;
         _stepMachine.OnBeforeStepStarted += StepMachine_OnBeforeStepStarted;
         _stepMachine.OnStepCompleted += StepMachine_OnStepCompleted;

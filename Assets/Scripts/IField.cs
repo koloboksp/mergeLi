@@ -38,6 +38,7 @@ public interface IField
     void Clear();
     Ball PureCreateBall(Vector3Int gridPosition, int points, int hat);
     public List<BallDesc> AddBalls(IEnumerable<BallDesc> newBallsData);
+    void UpdateSiblingIndex(Vector3 gridPosition, Transform target);
 }
 
 public interface IFieldView

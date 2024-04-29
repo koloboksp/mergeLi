@@ -135,5 +135,10 @@ namespace Core
         {
             throw new System.NotImplementedException();
         }
+
+        public void UpdateSiblingIndex(Vector3 gridPosition, Transform target)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
