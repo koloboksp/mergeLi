@@ -52,7 +52,10 @@ namespace Core
            
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
             CastleSelector_OnCastleChanged(_data.GameProcessor.CastleSelector.ActiveCastle);
-            Castle_OnPointsChanged(0);
+            _coins.Set(_data.GameProcessor.CastleSelector.ActiveCastle.GetPoints());
+            var score = _data.GameProcessor.SessionProcessor.GetScore();
+            var bestScore = ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore;
+            _score.SetSession(0.1f, score, score, bestScore, true);
             
             foreach (var buff in _data.GameProcessor.Buffs)
             {
@@ -164,7 +167,7 @@ namespace Core
             var score = _data.GameProcessor.SessionProcessor.GetScore();
             var bestScore = ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore;
 
-            _score.SetSession(0.1f, score, score, bestScore);
+            _score.SetSession(0.1f, score, score, bestScore, false);
         }
 
         private void OnBeforeStepStarted(Step sender, StepExecutionType executionType)

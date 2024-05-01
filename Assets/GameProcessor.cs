@@ -127,6 +127,7 @@ public class GameProcessor : MonoBehaviour,
     [SerializeField] private int _generatedBallsCountAfterMerge = 2;
     [SerializeField] private int _generatedBallsCountAfterMove = 3;
     [SerializeField] private int _generatedBallsCountOnStart = 5;
+    [SerializeField] private int _maxBallPoints = 512;
     [SerializeField] private int[] _generatedBallsPointsRange;
 
     [SerializeField] private RectTransform _uiScreensRoot;
@@ -289,7 +290,7 @@ public class GameProcessor : MonoBehaviour,
                 }
                 else
                 {
-                    if (_selectedBall.Points == ball.Points)
+                    if (_selectedBall.Points == ball.Points && _selectedBall.Points < _maxBallPoints)
                     {
                         _otherSelectedBall = ball;
                         var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);

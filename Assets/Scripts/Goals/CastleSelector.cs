@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class CastleSelector : MonoBehaviour
 {
-    public event Action<Castle> OnCastleCompleted;
     public event Action<Castle> OnCastleChanged;
     
     [SerializeField] private GameProcessor _gameProcessor;
@@ -18,23 +17,9 @@ public class CastleSelector : MonoBehaviour
     [SerializeField] private Material _selectionMaterial;
 
     private Castle _castleInstance;
-    private List<string> _completedInSessionCastles = new List<string>();
-    
+   
     public CastleLibrary Library => _library;
     public Castle ActiveCastle => _castleInstance;
-    
-    private void CastleInstance_OnCompleted(Castle castle)
-    {
-        try
-        {
-            _completedInSessionCastles.Add(castle.Id);
-            OnCastleCompleted?.Invoke(castle);
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-        }
-    }
 
     public int GetEarnedPoints()
     {
@@ -57,7 +42,6 @@ public class CastleSelector : MonoBehaviour
     {
         if (_castleInstance != null)
         {
-            _castleInstance.OnCompleted -= CastleInstance_OnCompleted;
             Destroy(_castleInstance.gameObject);
             _castleInstance = null;
         }
@@ -76,8 +60,6 @@ public class CastleSelector : MonoBehaviour
         
         _castleInstance.SetData(_gameProcessor);
         
-        _castleInstance.OnCompleted += CastleInstance_OnCompleted;
-       
         OnCastleChanged?.Invoke(null);
     }
 

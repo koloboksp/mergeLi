@@ -110,8 +110,6 @@ namespace Core
                 activeCastle.transform.position = castlePosition;
                 activeCastle.transform.localScale = Vector3.one;
                 activeCastle.SetPoints(restCastlePoints, true);
-
-                
                 
                 if (_data.AfterSelectNextCastle != null)
                 {
