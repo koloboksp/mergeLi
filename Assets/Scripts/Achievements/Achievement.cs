@@ -21,7 +21,7 @@ namespace Achievements
 
         protected void Unlock()
         {
-            _ = ApplicationController.Instance.ISocialService.UnlockAchievement(Id, Application.exitCancellationToken);
+            _ = ApplicationController.Instance.ISocialService.UnlockAchievementAsync(Id, Application.exitCancellationToken);
         }
     }
 }

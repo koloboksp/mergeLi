@@ -53,39 +53,45 @@ namespace Core
 
         public async Task<bool> ShowAchievementsUIAsync(CancellationToken cancellationToken)
         {
-            var uiShowing = true;
-            PlayGamesPlatform.Instance.ShowAchievementsUI((status) => { uiShowing = false; });
+            var completionSource = new TaskCompletionSource<bool>();
+            var cancellationTokenRegistration = cancellationToken.Register(() => completionSource.TrySetCanceled(cancellationToken));
 
-            while (uiShowing)
+            PlayGamesPlatform.Instance.ShowAchievementsUI((status) => { completionSource.TrySetResult(true); });
+
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                await Task.Yield();
+                return await completionSource.Task;
             }
-
-            return true;
+            finally
+            {
+                cancellationTokenRegistration.Dispose();
+            }
         }
 
         public async Task<bool> ShowLeaderboardUIAsync(CancellationToken cancellationToken)
         {
-            var uiShowing = true;
-            PlayGamesPlatform.Instance.ShowLeaderboardUI(null, (status) => { uiShowing = false; });
+            var completionSource = new TaskCompletionSource<bool>();
+            var cancellationTokenRegistration = cancellationToken.Register(() => completionSource.TrySetCanceled(cancellationToken));
 
-            while (uiShowing)
+            PlayGamesPlatform.Instance.ShowLeaderboardUI(null, (status) => { completionSource.TrySetResult(true); });
+
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                await Task.Yield();
+                return await completionSource.Task;
             }
-
-            return true;
+            finally
+            {
+                cancellationTokenRegistration.Dispose();
+            }
         }
 
-        public async Task<bool> UnlockAchievement(string id, CancellationToken cancellationToken)
+        public async Task<bool> UnlockAchievementAsync(string id, CancellationToken cancellationToken)
         {
             Debug.Log($"<color=#99ff99>Try to unlock achievement '{id}'.</color>");
 
-            var uiShowing = true;
+            var completionSource = new TaskCompletionSource<bool>();
+            var cancellationTokenRegistration = cancellationToken.Register(() => completionSource.TrySetCanceled(cancellationToken));
+
             PlayGamesPlatform.Instance.UnlockAchievement(null, (status) =>
             {
                 if (status)
@@ -93,17 +99,42 @@ namespace Core
                 else
                     Debug.Log($"<color=#99ff99>Unlock achievement '{id}' failed.</color>");
 
-                uiShowing = false;
+                completionSource.TrySetResult(status);
             });
 
-            while (uiShowing)
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                await Task.Yield();
+                return await completionSource.Task;
             }
+            finally
+            {
+                cancellationTokenRegistration.Dispose();
+            }
+        }
+        
+        public async Task<bool> SetScoreForLeaderBoard(string leaderBoard, long value, CancellationToken cancellationToken)
+        {
+            var completionSource = new TaskCompletionSource<bool>();
+            var cancellationTokenRegistration = cancellationToken.Register(() => completionSource.TrySetCanceled(cancellationToken));
 
-            return true;
+            PlayGamesPlatform.Instance.ReportScore(value, leaderBoard, status =>
+            {
+                if (status)
+                    Debug.Log($"Score: {value} was success set for the leaderboard.");
+                else
+                    Debug.Log(new Exception("Score is not set for the leaderboard."));
+
+                completionSource.SetResult(status);
+            });
+
+            try
+            {
+                return await completionSource.Task;
+            }
+            finally
+            {
+                cancellationTokenRegistration.Dispose();
+            }
         }
     }
 }

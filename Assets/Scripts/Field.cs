@@ -257,9 +257,9 @@ public class Field : MonoBehaviour, IField
         return Vector3.Scale(gridPosition + Vector3.one * 0.5f, _cellSize);
     }
     
-    public Vector3Int TransformToIntPosition(Vector3 position)
+    public Vector3Int TransformToIntPosition(Vector3 gridPosition)
     {
-        return  new Vector3Int(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y), 0);
+        return new Vector3Int(Mathf.FloorToInt(gridPosition.x), Mathf.FloorToInt(gridPosition.y), 0);
     }
     
     public Vector3 GetGridPositionFromWorld(Vector3 position)

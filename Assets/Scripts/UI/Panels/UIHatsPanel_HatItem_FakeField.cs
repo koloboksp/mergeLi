@@ -94,7 +94,7 @@ namespace Core
 
         public Vector3Int TransformToIntPosition(Vector3 gridPosition)
         {
-            throw new System.NotImplementedException();
+            return new Vector3Int(Mathf.FloorToInt(gridPosition.x), Mathf.FloorToInt(gridPosition.y), 0);
         }
 
         public List<Vector2Int> GetPath(Vector3Int from, Vector3Int to)
