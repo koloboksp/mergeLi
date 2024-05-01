@@ -566,7 +566,7 @@ MonoBehaviour:
   _generatedBallsCountAfterMerge: 2
   _generatedBallsCountAfterMove: 3
   _generatedBallsCountOnStart: 70
-  _generatedBallsPointsRange: 0000000001000000020000000400000004000000040000000400000004000000
+  _generatedBallsPointsRange: 2000000020000000200000002000000040000000400000004000000040000000
   _uiScreensRoot: {fileID: 1881252459}
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,
     type: 3}
@@ -3878,7 +3878,7 @@ PrefabInstance:
     - target: {fileID: 5957255816287073239, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
       propertyPath: m_Volume
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7335857329322477467, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}

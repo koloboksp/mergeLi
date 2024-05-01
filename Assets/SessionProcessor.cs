@@ -69,9 +69,6 @@ public class SessionProcessor : MonoBehaviour,
             if (_enableTutorial && _gameProcessor.TutorialController.CanStartTutorial(_forceTutorial))
             {
                 await _gameProcessor.TutorialController.TryStartTutorial(_forceTutorial, exitToken);
-                
-                //_gameProcessor.CastleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
-                //_gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
             }
             else
             {
@@ -227,9 +224,6 @@ public class SessionProcessor : MonoBehaviour,
     
     private void PrepareSession()
     {
-        //_gameProcessor.CastleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
-        //_gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
-        
         if (HasPreviousSessionGame)
         {
             var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
@@ -287,21 +281,20 @@ public class SessionProcessor : MonoBehaviour,
             CheckLowEmptySpace();
 
             if (CheckCastleCompetedState())
-                await ProcessCastleCompleting();
-            
-            while (!_userStepFinished)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-                restartToken.ThrowIfCancellationRequested();
-                loseToken.ThrowIfCancellationRequested();
-
-                await Task.Yield();
+                await ProcessCastleCompleting();
             }
-            
-           // CheckLowEmptySpace();
-           // 
-           // if (CheckCastleCompetedState())
-           //     await ProcessCastleCompleting();
+            else
+            {
+                while (!_userStepFinished)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    restartToken.ThrowIfCancellationRequested();
+                    loseToken.ThrowIfCancellationRequested();
+
+                    await Task.Yield();
+                }
+            }
         }
     }
 
