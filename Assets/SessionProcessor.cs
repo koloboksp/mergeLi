@@ -244,7 +244,7 @@ public class SessionProcessor : MonoBehaviour,
         }
         else
         {
-            _gameProcessor.CastleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
+            _gameProcessor.CastleSelector.SelectActiveCastle(GetFirstUncompletedCastleName());
         
             ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
             _gameProcessor.Field.Clear();
@@ -295,12 +295,21 @@ public class SessionProcessor : MonoBehaviour,
         ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
 
         _completedCastles.Add(new CompletedCastleDesc(castle.Id, castle.GetPoints()));
+
+        var dialogKeyOnBuildStarting = GuidEx.Empty;
+        var nextCastle = GetFirstUncompletedCastle();
         
-        _ = ProcessCastleCompleteAsync(GuidEx.Empty, false, null, null, null, Application.exitCancellationToken);
+        if (nextCastle != null)
+        {
+            dialogKeyOnBuildStarting = nextCastle.TextOnBuildStartingKey;
+        }
+        
+        _ = ProcessCastleCompleteAsync(castle.TextAfterBuildEndingKey, dialogKeyOnBuildStarting, false, null, null, null, Application.exitCancellationToken);
     }
     
     public async Task ProcessCastleCompleteAsync(
-        GuidEx dialogTextKey,
+        GuidEx dialogKeyAfterBuildEnding,
+        GuidEx dialogKeyOnBuildStarting,
         bool manualGiveCoins,
         Func<Task> beforeGiveCoins, 
         Func<Task> beforeSelectNextCastle,
@@ -314,7 +323,8 @@ public class SessionProcessor : MonoBehaviour,
             new UICastleCompletePanelData()
             {
                 GameProcessor = _gameProcessor, 
-                DialogTextKey = dialogTextKey,
+                DialogAfterBuildEndingKey = dialogKeyAfterBuildEnding,
+                DialogOnBuildStartingKey = dialogKeyOnBuildStarting,
                 ManualGiveCoins = manualGiveCoins,
                 BeforeGiveCoins = beforeGiveCoins,
                 BeforeSelectNextCastle = beforeSelectNextCastle,
@@ -345,18 +355,24 @@ public class SessionProcessor : MonoBehaviour,
         return _gameProcessor.Buffs;
     }
 
-    public string GetFirstUncompletedCastle()
+    public string GetFirstUncompletedCastleName()
+    {
+        var firstUncompletedCastle = GetFirstUncompletedCastle();
+        return firstUncompletedCastle.Id;
+    }
+    
+    public Castle GetFirstUncompletedCastle()
     {
         var firstUncompletedCastle = _gameProcessor.CastleSelector.Library.Castles.FirstOrDefault(i => !ApplicationController.Instance.SaveController.SaveProgress.IsCastleCompleted(i.Id));
         if (firstUncompletedCastle == null)
             firstUncompletedCastle = _gameProcessor.CastleSelector.Library.Castles.Last();
 
-        return firstUncompletedCastle.Id;
+        return firstUncompletedCastle;
     }
 
     public void SelectNextCastle()
     {
-        _gameProcessor.CastleSelector.SelectActiveCastle(GetFirstUncompletedCastle());
+        _gameProcessor.CastleSelector.SelectActiveCastle(GetFirstUncompletedCastleName());
     }
     
     public ICommonAnalytics GetCommonAnalyticsAnalytics()
