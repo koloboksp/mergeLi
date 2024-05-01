@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c4e9f6104d459241a3b2e10f35c308b, type: 3}
-  m_Name: Castle_Marshmallow_C
+  m_Name: Castle_Marsh_C
   m_EditorClassIdentifier: 
   image: {fileID: 2800000, guid: fe35d6c892b23204fa14023e1922ed04, type: 3}
   bits: 00000000210000002f0000003e0000004f000000640000007e000000a7000000b4000000bf000000

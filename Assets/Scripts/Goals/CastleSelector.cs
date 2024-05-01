@@ -52,11 +52,11 @@ public class CastleSelector : MonoBehaviour
         
         _castleInstance = Instantiate(castlePrefab, _castleRoot);
         _castleInstance.gameObject.name = castlePrefab.Id;
-        _castleInstance.View.Root.anchorMin = Vector2.zero;
-        _castleInstance.View.Root.anchorMax = Vector2.one;
-        _castleInstance.View.Root.offsetMin = Vector2.zero;
-        _castleInstance.View.Root.offsetMax = Vector2.zero;
-        _castleInstance.View.Root.localScale = Vector3.one;
+        // _castleInstance.View.Root.anchorMin = Vector2.zero;
+        // _castleInstance.View.Root.anchorMax = Vector2.one;
+        // _castleInstance.View.Root.offsetMin = Vector2.zero;
+        // _castleInstance.View.Root.offsetMax = Vector2.zero;
+        // _castleInstance.View.Root.localScale = Vector3.one;
         
         _castleInstance.SetData(_gameProcessor);
         

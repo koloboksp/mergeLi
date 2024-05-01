@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6803883800014487363}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 633.8291, y: 1497.2037, z: -8.067021}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -46,8 +46,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _castles:
   - {fileID: 1054850265026345781, guid: 2c5bf51886e65404fa6b6a6f50b4ce8c, type: 3}
-  - {fileID: 7047264570851907105, guid: 87c22f75a9f2fe746aab28575e6b735d, type: 3}
-  - {fileID: 8508746258051257583, guid: 95eeb7a3b4b34594b8c22c4c1c1fa4c8, type: 3}
-  - {fileID: 8508746258051257583, guid: 532f0233e78f5144f9cd7afa6d364079, type: 3}
-  - {fileID: 8508746258051257583, guid: c38948e43e64d494d9c6c9db29855be6, type: 3}
-  - {fileID: 8508746258051257583, guid: 153b5ccf22fb4c940a17aadab8f2f8a9, type: 3}
+  - {fileID: 1054850265026345781, guid: 7cee64bba6e6757429cd1e643d43e05c, type: 3}
+  - {fileID: 1054850265026345781, guid: e637faaed2e1fe54d99bf76546865a9d, type: 3}
+  - {fileID: 1054850265026345781, guid: 0209136f47c79ab4ca3c2e8d22c85d3c, type: 3}
+  - {fileID: 1054850265026345781, guid: 75b1d813c55cfb04199aebb3a059ba31, type: 3}
+  - {fileID: 1054850265026345781, guid: 5235956cf8fd0864da66da8c9bcbe0f8, type: 3}
+  - {fileID: 1054850265026345781, guid: 8a161faebaf6a7041bbc0c92d1b457ab, type: 3}
+  - {fileID: 1054850265026345781, guid: 1e2528b2628f4cf4b80f39146a577234, type: 3}
+  - {fileID: 1054850265026345781, guid: fabd6d31491c32040bdb1c5ba53cac3b, type: 3}
+  - {fileID: 1054850265026345781, guid: 5b2ba56fe949318498b227aa439795dc, type: 3}
+  - {fileID: 1054850265026345781, guid: be35a59ada258094eacc96b04bbb32c3, type: 3}
+  - {fileID: 1054850265026345781, guid: f1339e6338a5f8e4b8a6c3cb4b286050, type: 3}
