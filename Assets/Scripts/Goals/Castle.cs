@@ -79,7 +79,7 @@ namespace Core.Goals
                     return part.Points;
             }
 
-            return 0;
+            return GetCost();
         }
 
 

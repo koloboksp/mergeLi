@@ -31,6 +31,7 @@ public class SessionProcessor : MonoBehaviour,
     public event Action<int> OnScoreChanged;
     public event Action<bool> OnLowEmptySpaceChanged;
     public event Action<bool> OnFreeSpaceIsOverChanged; 
+    public event Action<Castle> OnCastleCompleted;
     
     [SerializeField] private bool _enableTutorial;
     [SerializeField] private bool _forceTutorial;
@@ -69,8 +70,8 @@ public class SessionProcessor : MonoBehaviour,
             {
                 await _gameProcessor.TutorialController.TryStartTutorial(_forceTutorial, exitToken);
                 
-                _gameProcessor.CastleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
-                _gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
+                //_gameProcessor.CastleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
+                //_gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
             }
             else
             {
@@ -226,8 +227,8 @@ public class SessionProcessor : MonoBehaviour,
     
     private void PrepareSession()
     {
-        _gameProcessor.CastleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
-        _gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
+        //_gameProcessor.CastleSelector.OnCastleCompleted -= CastleSelector_OnCastleCompleted;
+        //_gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
         
         if (HasPreviousSessionGame)
         {
@@ -283,6 +284,11 @@ public class SessionProcessor : MonoBehaviour,
             _userStepFinished = false;
             _notAllBallsGenerated = false;
 
+            CheckLowEmptySpace();
+
+            if (CheckCastleCompetedState())
+                await ProcessCastleCompleting();
+            
             while (!_userStepFinished)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -291,13 +297,33 @@ public class SessionProcessor : MonoBehaviour,
 
                 await Task.Yield();
             }
-
-            CheckLowEmptySpace();
+            
+           // CheckLowEmptySpace();
+           // 
+           // if (CheckCastleCompetedState())
+           //     await ProcessCastleCompleting();
         }
     }
-    
-    private async void CastleSelector_OnCastleCompleted(Castle castle)
+
+    private bool CheckCastleCompetedState()
     {
+        var activeCastle = _gameProcessor.CastleSelector.ActiveCastle;
+        return activeCastle.Completed;
+    }
+    
+    private async Task ProcessCastleCompleting()
+    {
+        var castle = _gameProcessor.CastleSelector.ActiveCastle;
+        
+        try
+        {
+            OnCastleCompleted?.Invoke(castle);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+       
         ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
 
         _completedCastles.Add(new CompletedCastleDesc(castle.Id, castle.GetPoints()));
@@ -310,7 +336,8 @@ public class SessionProcessor : MonoBehaviour,
             dialogKeyOnBuildStarting = nextCastle.TextOnBuildStartingKey;
         }
         
-        _ = ProcessCastleCompleteAsync(castle.TextAfterBuildEndingKey, dialogKeyOnBuildStarting, false, null, null, null, Application.exitCancellationToken);
+        await ProcessCastleCompleteAsync(castle.TextAfterBuildEndingKey, dialogKeyOnBuildStarting, false, null, null, null, Application.exitCancellationToken);
+        ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
     }
     
     public async Task ProcessCastleCompleteAsync(

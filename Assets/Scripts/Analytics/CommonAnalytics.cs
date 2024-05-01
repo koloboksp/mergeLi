@@ -50,10 +50,11 @@ namespace Analytics
             _gameProcessor.OnStepCompleted += GameProcessor_OnStepCompleted;
             _gameProcessor.SessionProcessor.OnRestart += SessionProcessor_OnRestart;
             _gameProcessor.SessionProcessor.OnLose += SessionProcessor_OnLose;
+            _gameProcessor.SessionProcessor.OnCastleCompleted += CastleSelector_OnCastleCompleted;
             _gameProcessor.AdsViewer.OnShowAds += AdsViewer_OnShowAds;
             _gameProcessor.GiftsMarket.OnCollect += GiftsMarket_OnCollect;
             _gameProcessor.Market.OnBought += Market_OnBought;
-            _gameProcessor.CastleSelector.OnCastleCompleted += CastleSelector_OnCastleCompleted;
+            
         }
 
         private void SessionProcessor_OnRestart()

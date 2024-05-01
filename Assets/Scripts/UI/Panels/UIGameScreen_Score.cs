@@ -37,9 +37,13 @@ namespace Core
         public void SetSession(float duration, 
             int sessionOldPoints,
             int sessionNewPoints, 
-            int previousSessionPoints)
+            int previousSessionPoints,
+            bool instant)
         {
-            _sessionScore.Set(duration, sessionOldPoints, sessionNewPoints, previousSessionPoints);
+            if (instant)
+                _sessionScore.InstantSet(sessionNewPoints, previousSessionPoints);
+            else
+                _sessionScore.Set(duration, sessionOldPoints, sessionNewPoints, previousSessionPoints);
         }
         
         public int Priority => _effectPriority;
