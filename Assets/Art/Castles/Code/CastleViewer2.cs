@@ -216,17 +216,17 @@ public class CastleViewer2 : MonoBehaviour
     }
 
     // For Debug
-    private void OnGUI()
-    {
-        GUI.BeginGroup(new Rect(20, 20, 200, 500));
-
-        for (int i = 0; i < testScore.Length; i++)
-            if (GUILayout.Button("Add " + testScore[i]))
-                AddScore(testScore[i]);
-
-        GUI.EndGroup();
-    }
-    
+    // private void OnGUI()
+    // {
+    //     GUI.BeginGroup(new Rect(20, 20, 200, 500));
+    //
+    //     for (int i = 0; i < testScore.Length; i++)
+    //         if (GUILayout.Button("Add " + testScore[i]))
+    //             AddScore(testScore[i]);
+    //
+    //     GUI.EndGroup();
+    // }
+    //
     public event Action<bool, float> OnPartCompleteStart;
     public event Action<bool, float, int, int, int> OnPartProgressStart;
     public event Action<bool, float, int> OnPartBornStart;

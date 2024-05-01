@@ -29,6 +29,9 @@ namespace Core.Goals
         [SerializeField] private RectTransform _root;
         [SerializeField] private PointsEffectReceiver _pointsReceiver;
 
+        [SerializeField] private GuidEx _textOnBuildStartingKey;
+        [FormerlySerializedAs("_textOnBuildEndingKey")] [SerializeField] private GuidEx _textAfterBuildEndingKey;
+
         private GameProcessor _gameProcessor;
         private readonly List<CastlePart> _parts = new();
         private bool _completed;
@@ -44,7 +47,9 @@ namespace Core.Goals
         public IEnumerable<CastlePart> Parts => _parts;
         public int CoinsAfterComplete => _coinsAfterComplete;
         public GuidEx NameKey => _nameKey;
-        
+        public GuidEx TextOnBuildStartingKey => _textOnBuildStartingKey;
+        public GuidEx TextAfterBuildEndingKey => _textAfterBuildEndingKey;
+
         public int GetCost()
         {
             return _parts.Sum(i => i.Cost);

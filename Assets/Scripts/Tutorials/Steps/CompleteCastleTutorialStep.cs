@@ -18,6 +18,7 @@ namespace Core.Tutorials
             Tutorial.Controller.GameProcessor.CastleSelector.ForceCompleteCastle();
             await Tutorial.Controller.GameProcessor.SessionProcessor.ProcessCastleCompleteAsync(
                 GuidEx.Empty,
+                GuidEx.Empty,
                 true,
                 StepsBeforeGetCoins,
                 BeforeSelectNextCastle,

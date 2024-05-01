@@ -11,7 +11,7 @@ namespace Save
         IField GetField();
         IEnumerable<IBuff> GetBuffs();
         
-        string GetFirstUncompletedCastle();
+        string GetFirstUncompletedCastleName();
 
         ICommonAnalytics GetCommonAnalyticsAnalytics();
     }

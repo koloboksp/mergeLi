@@ -21,6 +21,9 @@ namespace Core
         [SerializeField] private Button _tapButton;
         [SerializeField] private AudioClip _completeClip;
 
+        [SerializeField] private float _delayBeforeShowDialog = 2.0f;
+        [SerializeField] private float _delayBeforeGiveCoins = 2.0f;
+       
         private UICastleCompletePanelData _data;
 
         protected override void InnerActivate()
@@ -62,11 +65,11 @@ namespace Core
                 _fireworks.SetActive(true);
 
                 await AsyncExtensions.WaitForSecondsAsync(_completeClipPart1.length, exitToken);
+                await AsyncExtensions.WaitForSecondsAsync(_delayBeforeShowDialog, exitToken);
+                
                 if (_data.BeforeGiveCoins != null)
                     await _data.BeforeGiveCoins();
-
                 
-
                 if (_data.ManualGiveCoins)
                 {
                     
@@ -75,11 +78,17 @@ namespace Core
                 {
                     _speaker.SetActive(true);
                 
-                    if (_data.DialogTextKey != GuidEx.Empty)
+                    if (_data.DialogAfterBuildEndingKey != GuidEx.Empty)
                     {
-                        await _speaker.ShowTextAsync(_data.DialogTextKey, exitToken);
+                        await _speaker.ShowTextAsync(_data.DialogAfterBuildEndingKey, exitToken);
                     }
-                    
+                    else
+                    {
+                        _speaker.SetDialogActive(false);
+                    }
+
+                    await AsyncExtensions.WaitForSecondsAsync(_delayBeforeGiveCoins, exitToken);
+
                     await _data.GameProcessor.GiveCoinsEffect.Show(
                         activeCastle.CoinsAfterComplete,
                         _speaker.IconRoot.transform,
@@ -95,22 +104,35 @@ namespace Core
                     await _data.BeforeSelectNextCastle();
                 var castlePosition = activeCastle.transform.position;
                 _data.GameProcessor.SessionProcessor.SelectNextCastle();
-
+                
                 activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
                 activeCastle.transform.SetParent(_castleAnimationRoot, true);
                 activeCastle.transform.position = castlePosition;
                 activeCastle.transform.localScale = Vector3.one;
                 activeCastle.SetPoints(restCastlePoints, true);
 
+                
+                
                 if (_data.AfterSelectNextCastle != null)
                 {
                     await _data.AfterSelectNextCastle();
                 }
                 else
                 {
+                    if (_data.DialogOnBuildStartingKey != GuidEx.Empty)
+                    {
+                        await _speaker.ShowTextAsync(_data.DialogOnBuildStartingKey, exitToken);
+                    }
+                    else
+                    {
+                        _speaker.SetDialogActive(false);
+                    }
+                    
                     await Task.WhenAny(
                         AsyncExtensions.WaitForSecondsAsync(10.0f, exitToken),
                         AsyncHelpers.WaitForClick(_tapButton, exitToken));
+                    
+                    _speaker.SetActive(false);
                 }
 
                 _animation.Play(_completeClipPart2.name);
@@ -139,7 +161,8 @@ namespace Core
     public class UICastleCompletePanelData : UIScreenData
     {
         public GameProcessor GameProcessor { get; set; }
-        public GuidEx DialogTextKey { get; set; }
+        public GuidEx DialogAfterBuildEndingKey { get; set; }
+        public GuidEx DialogOnBuildStartingKey { get; set; }
         public bool ManualGiveCoins { get; set; }
 
         public Func<Task> BeforeGiveCoins;
