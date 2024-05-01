@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c4e9f6104d459241a3b2e10f35c308b, type: 3}
-  m_Name: Castle_Tent_Big
+  m_Name: Castle_Tent_B
   m_EditorClassIdentifier: 
   image: {fileID: 2800000, guid: 9d621bca5bf52074bb5ca77721be39b4, type: 3}
   bits: 000000000c00000018000000220000002c0000003700000042000000

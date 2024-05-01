@@ -55,6 +55,7 @@ public class ImagePatternTool : EditorWindow
         {
             if (value != sid)
             {
+                vid = 0;
                 sid = value;
                 UpdateTris();
             }
@@ -182,7 +183,7 @@ public class ImagePatternTool : EditorWindow
                             if (delta.magnitude < TAP_DIST)
                             {
                                 vid = i;
-
+                                
                                 if (e.button == 0)
                                 {
                                     isDragVert = true;
