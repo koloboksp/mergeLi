@@ -198,6 +198,11 @@ namespace Core
         public int GetColorIndex()
         {
             var colorIndex = Mathf.RoundToInt(Mathf.Log(_points, 2));
+            if (colorIndex < 0)
+                colorIndex = 0;
+            else
+                colorIndex += 1;
+            
             return colorIndex;
         }
         
