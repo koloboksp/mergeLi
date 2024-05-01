@@ -11,7 +11,7 @@ public class BlurBackImage : MonoBehaviour
 
     private readonly string matName = "matBlurBack";
     private readonly string rtName = "rtBlurBack";
-    private readonly string shaderName = "Hidden/DropBlurBlit";
+    private readonly string shaderName = "Calc/Blur";
     private readonly string layerName = "UIPopup";
 
     private static RenderTexture s_rt;
