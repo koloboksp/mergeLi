@@ -164,8 +164,9 @@ public class CastleViewer2 : MonoBehaviour
             bits[i] = castleBit;
         }
 
-        
-
+        // Set Reversed bits order
+        foreach (var bit in bits)
+            bit.Rect.SetAsFirstSibling();
     }
 
     private void CalcPrices()
