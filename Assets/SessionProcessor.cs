@@ -16,6 +16,8 @@ using Random = UnityEngine.Random;
 public class SessionProcessor : MonoBehaviour, 
     ISessionProgressHolder
 {
+    public const string BEST_SESSION_SCORE_LEADERBOARD = "BestSessionScore";
+    
     public static readonly List<StepTag> NonSaveTags = new()
     {
         { StepTag.Select },
@@ -174,14 +176,18 @@ public class SessionProcessor : MonoBehaviour,
 
                         await failPanel.ShowAsync(exitToken);
                         
+                       
                         // Turn on environment music
                         _gameProcessor.MusicPlayer.PlayNext();
                         _gameProcessor.SoundsPlayer.StopPlayExclusive();
-
+                        
                         ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(GetScore());
                         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
                         _completedCastles.Clear();
+
                         
+                        _ = ApplicationController.Instance.ISocialService.SetScoreForLeaderBoard(BEST_SESSION_SCORE_LEADERBOARD, ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore, Application.exitCancellationToken);
+
                         _gameProcessor.MusicPlayer.PlayNext();
                         
                         startPanel = await _panelController.Value.PushScreenAsync<UIStartPanel>(

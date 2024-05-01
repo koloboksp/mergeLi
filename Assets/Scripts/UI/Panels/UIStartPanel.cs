@@ -194,6 +194,7 @@ namespace Core
                 ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
             }
             
+            await ApplicationController.Instance.ISocialService.SetScoreForLeaderBoard(SessionProcessor.BEST_SESSION_SCORE_LEADERBOARD, ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore, Application.exitCancellationToken);
             await ApplicationController.Instance.ISocialService.ShowLeaderboardUIAsync(Application.exitCancellationToken);
         }
 
