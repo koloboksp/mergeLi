@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Assets.Scripts.Core.Storage;
 using UnityEngine;
 
 namespace Save
@@ -12,6 +13,8 @@ namespace Save
         const string PlayerDataFileName = "playerData";
         const string PlayerLastSessionDataFileName = "playerLastSessionData";
 
+        private BaseStorage _storage;
+        
         private SessionProgress _lastSessionProgress = null;
 
         private readonly SaveSettings _saveSettings;
@@ -29,8 +32,9 @@ namespace Save
             _saveLastSessionProgress = new SaveSessionProgress(this, PlayerLastSessionDataFileName);
         }
 
-        public async Task InitializeAsync(CancellationToken cancellationToken)
+        public async Task InitializeAsync(BaseStorage storage, CancellationToken cancellationToken)
         {
+            _storage = storage;
             try
             {
                 await _saveSettings.InitializeAsync(cancellationToken);
@@ -63,7 +67,7 @@ namespace Save
             {
                 var sData = JsonUtility.ToJson(data);
                 var fullPath = Path.Combine(Application.persistentDataPath, fileName);
-                File.WriteAllText(fullPath, sData);
+                _storage.Save(fullPath, sData);
             }
             catch (Exception e)
             {
@@ -80,7 +84,7 @@ namespace Save
             {
                 var sData = JsonUtility.ToJson(data);
                 var fullPath = Path.Combine(Application.persistentDataPath, fileName);
-                await File.WriteAllTextAsync(fullPath, sData);
+                await _storage.SaveAsync(fullPath, sData);
             }
             catch (Exception e)
             {
@@ -109,8 +113,8 @@ namespace Save
             try
             {
                 var fullPath = Path.Combine(Application.persistentDataPath, fileName);
-                var loadedFile = await File.ReadAllTextAsync(fullPath, cancellationToken);
-                return JsonUtility.FromJson<T>(loadedFile);
+                string loadedData = _storage.Load(fullPath);
+                return JsonUtility.FromJson<T>(loadedData);
             }
             catch (Exception e)
             {

@@ -126,6 +126,16 @@ namespace Assets.Scripts.Core.Storage
         {
             Conversion.ByteArrayToFile(path, Packing(data));
         }
+        
+        public void Save(string path, string data)
+        {
+            Conversion.ByteArrayToFile(path, Packing(data));
+        }
+        
+        public async Task SaveAsync(string path, string data)
+        {
+            await Conversion.ByteArrayToFileAsync(path, Packing(data));
+        }
         //-----------------------------------------------------------------------------------------
         private byte[] Packing(Var userData)
         { 

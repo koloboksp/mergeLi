@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 
 namespace Atom
 {
@@ -115,6 +116,19 @@ namespace Atom
                 throw new Exception($"Error writing to file: {path}.", ex);
             }
         }
+        
+        public static async Task ByteArrayToFileAsync(string path, byte[] data)
+        {
+            try
+            {
+                await File.WriteAllBytesAsync(path, data);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error writing to file: {path}.", ex);
+            }
+        }
+        
         //-----------------------------------------------------------------------------------------
         public static byte[] ByteArrayToZipByteArray(byte[] value)
         {

@@ -1492,7 +1492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enableTutorial: 1
-  _forceTutorial: 1
+  _forceTutorial: 0
   _failClip: {fileID: 8300000, guid: a68bc4a328f7dfc4cb2b50afa30b1328, type: 3}
 --- !u!1 &623220713
 GameObject:

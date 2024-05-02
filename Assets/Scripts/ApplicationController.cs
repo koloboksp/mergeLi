@@ -53,21 +53,21 @@ namespace Core
             _instance._initialization = new TaskCompletionSource<bool>();
 
             var baseStorage = new BaseStorage();
-            _ = baseStorage.InitializeAsync();
+            await baseStorage.InitializeAsync();
             
             _instance._version = new(Application.version);
             
             _instance._saveController = new SaveController();
-            await _instance._saveController.InitializeAsync(CancellationToken.None);
+            await _instance._saveController.InitializeAsync(baseStorage, Application.exitCancellationToken);
             
             _instance._localizationController = new LocalizationController();
-            await _instance._localizationController.InitializeAsync(_instance._saveController.SaveSettings, CancellationToken.None);
+            await _instance._localizationController.InitializeAsync(_instance._saveController.SaveSettings, Application.exitCancellationToken);
             if (!_instance._localizationController.ActiveLanguageDetected)
             {
                 _instance._localizationController.ActiveLanguage = Application.systemLanguage;
             }
             _instance._soundController = new SoundController(_instance._saveController.SaveSettings);
-            await _instance._soundController.InitializeAsync(CancellationToken.None);
+            await _instance._soundController.InitializeAsync(Application.exitCancellationToken);
 
             var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/RequiredPrefabs/purchaseLibrary.prefab");
             var purchaseLibraryObject = await handle.Task;
@@ -86,7 +86,7 @@ namespace Core
             _instance._socialService = new GooglePlayGames();
 //#endif
             if(_instance._socialService.IsAutoAuthenticationAvailable())
-                _ = _instance._socialService.AuthenticateAsync(CancellationToken.None);
+                _ = _instance._socialService.AuthenticateAsync(Application.exitCancellationToken);
             
             _instance._uiPanelController = new UIPanelController();
             DependenciesController.Instance.Set(_instance._uiPanelController);
