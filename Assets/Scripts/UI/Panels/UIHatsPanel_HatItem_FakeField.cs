@@ -109,6 +109,7 @@ namespace Core
 
         public IScene Scene => _scene;
         public IReadOnlyList<BallDesc> NextBallsData { get; }
+        public bool IsFullFilled { get; }
         public bool IsEmpty { get; }
 
         public Vector3 ScreenPointToWorld(Vector3 position)

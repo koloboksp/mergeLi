@@ -126,6 +126,9 @@ public class SessionProcessor : MonoBehaviour,
                         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
                         _completedCastles.Clear();
 
+                        foreach (var buff in _gameProcessor.Buffs)
+                            buff.SetRestCooldown(0);
+                        
                         _gameProcessor.MusicPlayer.PlayNext();
                         
                         PrepareSession();
@@ -183,6 +186,8 @@ public class SessionProcessor : MonoBehaviour,
                         ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
                         _completedCastles.Clear();
 
+                        foreach (var buff in _gameProcessor.Buffs)
+                            buff.SetRestCooldown(0);
                         
                         _ = ApplicationController.Instance.ISocialService.SetScoreForLeaderBoard(BEST_SESSION_SCORE_LEADERBOARD, ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore, Application.exitCancellationToken);
 
@@ -270,7 +275,7 @@ public class SessionProcessor : MonoBehaviour,
             restartToken.ThrowIfCancellationRequested();
             loseToken.ThrowIfCancellationRequested();
 
-            if (!_gameProcessor.Field.IsEmpty && _notAllBallsGenerated)
+            if (!_gameProcessor.Field.IsFullFilled && _notAllBallsGenerated)
             {
                 _loseTokenSource.Cancel();
             }
@@ -279,7 +284,7 @@ public class SessionProcessor : MonoBehaviour,
             _notAllBallsGenerated = false;
 
             CheckLowEmptySpace();
-
+            
             if (CheckCastleCompetedState())
             {
                 await ProcessCastleCompleting();
@@ -288,6 +293,8 @@ public class SessionProcessor : MonoBehaviour,
             {
                 while (!_userStepFinished)
                 {
+                    CheckAndProcessFieldEmpty();
+
                     cancellationToken.ThrowIfCancellationRequested();
                     restartToken.ThrowIfCancellationRequested();
                     loseToken.ThrowIfCancellationRequested();
@@ -415,6 +422,19 @@ public class SessionProcessor : MonoBehaviour,
 
         OnLowEmptySpaceChanged?.Invoke(lowSpace);
         OnFreeSpaceIsOverChanged?.Invoke(freeSpaceIsOver);
+    }
+    
+    private void CheckAndProcessFieldEmpty()
+    {
+        if (_gameProcessor.Field.IsEmpty)
+        {
+            _gameProcessor.Field.GenerateBalls(
+                _gameProcessor.GeneratedBallsCountOnStart, 
+                _gameProcessor.GeneratedBallsPointsRange, 
+                _gameProcessor.Scene.ActiveHats);
+            
+            _gameProcessor.ClearUndoSteps();
+        }
     }
     
     public bool HasPreviousSessionGame
