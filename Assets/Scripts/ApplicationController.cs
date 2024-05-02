@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Assets.Scripts.Core.Localization;
+using Assets.Scripts.Core.Storage;
 using Core.Steps.CustomOperations;
 using Save;
 using Unity.Services.Core;
@@ -51,6 +52,9 @@ namespace Core
             _instance = new ApplicationController();
             _instance._initialization = new TaskCompletionSource<bool>();
 
+            var baseStorage = new BaseStorage();
+            _ = baseStorage.InitializeAsync();
+            
             _instance._version = new(Application.version);
             
             _instance._saveController = new SaveController();

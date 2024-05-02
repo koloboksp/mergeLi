@@ -52,8 +52,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _view: {fileID: 5883836190366923952}
-  initalCostOfPart: 20
-  risingCostOfPart: 0
+  initalCostOfPart: 3000
+  risingCostOfPart: 450
   _coinsAfterComplete: 100
   _nameKey:
     m03: 470254033

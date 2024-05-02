@@ -43,7 +43,8 @@ public class Field : MonoBehaviour, IField
     
     private readonly List<BallDesc> _nextBallsData = new();
 
-    public bool IsEmpty => _balls.Count < _size.x * _size.y;
+    public bool IsFullFilled => _balls.Count < _size.x * _size.y;
+    public bool IsEmpty => _balls.Count == 0;
     public Vector2Int Size => _size;
     
     public IScene Scene => _scene;

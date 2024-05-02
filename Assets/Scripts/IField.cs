@@ -32,6 +32,7 @@ public interface IField
     void DestroyBall(Ball ball);
     IScene Scene { get; }
     IReadOnlyList<BallDesc> NextBallsData { get; }
+    bool IsFullFilled { get; }
     bool IsEmpty { get; }
     Vector3 ScreenPointToWorld(Vector3 position);
     Vector3Int GetPointGridIntPosition(Vector3 position);

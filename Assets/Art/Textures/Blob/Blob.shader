@@ -116,7 +116,7 @@ Shader "Unlit/Blob"
                 col.rgb = col.rgb * 1.2 - .2;
 
                 #ifdef UNITY_UI_CLIP_RECT
-                half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);
+                half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(i.mask.xy)) * i.mask.zw);
                 col.a *= m.x * m.y;
                 col.a *= m.x * m.y;
                 #endif
