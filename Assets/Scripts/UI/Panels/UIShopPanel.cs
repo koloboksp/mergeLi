@@ -204,7 +204,8 @@ namespace Core
                     .Init(i.name, i.CurrencyAmount, gameProcessor.AdsViewer)));
             items.AddRange(gameProcessor.PurchasesLibrary.Items
                 .Select(i => new ShopPanelMarketItem()
-                    .Init(i.name, i.ProductId, i.CurrencyAmount, gameProcessor.Market)));
+                    .Init(i.name, i.ProductId, i.CurrencyAmount, gameProcessor.Market)
+                    .SetIcon(i.Icon)));
             items.AddRange(gameProcessor.GiftsMarket.Gifts
                 .Select(i => new ShopPanelGiftItem()
                     .Init(i.Id, i)));
@@ -224,6 +225,7 @@ namespace Core
     {
         string Name { get; }
         int CurrencyAmount { get; }
+        IShopPanelItem SetIcon(Sprite icon);
     }
 
     public class ShopPanelMarketItem : IShopPanelItem
@@ -233,12 +235,15 @@ namespace Core
         private string _productId;
         private string _backgroundName;
         private int _currencyAmount;
-        
+        private Sprite _icon;
+
         private IMarket _market;
         
         public string Name => _name;
         public int CurrencyAmount => _currencyAmount;
+        
         public string ProductId => _productId;
+        public Sprite Icon => _icon;
 
         public IMarket Market => _market;
         
@@ -249,6 +254,12 @@ namespace Core
             _currencyAmount = currencyAmount;
             _market = market;
                
+            return this;
+        }
+        
+        public IShopPanelItem SetIcon(Sprite icon)
+        {
+            _icon = icon;
             return this;
         }
     }
@@ -262,6 +273,11 @@ namespace Core
 
         public string Name => _name;
         public int CurrencyAmount => _currencyAmount;
+        public IShopPanelItem SetIcon(Sprite icon)
+        {
+            throw new NotImplementedException();
+        }
+
         public IAdsViewer AdsViewer => _adsViewer;
 
         public IShopPanelItem Init(string name, int currencyAmount, IAdsViewer adsViewer)
@@ -282,6 +298,11 @@ namespace Core
         private GiftModel _gift;
         
         public int CurrencyAmount => _gift.CurrencyAmount;
+        public IShopPanelItem SetIcon(Sprite icon)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Name => _name;
         public GiftModel Gift => _gift;
         

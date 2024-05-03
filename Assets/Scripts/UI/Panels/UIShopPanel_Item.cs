@@ -16,7 +16,8 @@ namespace Core
         [SerializeField] private CanvasGroup _group;
         [SerializeField] private Button _button;
         [SerializeField] private AssetImage _offerIcon;
-        
+        [SerializeField] private Image _icon;
+
         private UIShopPanel_ItemModel _model;
 
         public UIShopPanel_ItemModel Model => _model;
@@ -42,6 +43,11 @@ namespace Core
             
         }
 
+        protected void SetIcon(Sprite icon)
+        {
+            _icon.sprite = icon;
+        }
+        
         public bool Interactable
         {
             get => _group.interactable;

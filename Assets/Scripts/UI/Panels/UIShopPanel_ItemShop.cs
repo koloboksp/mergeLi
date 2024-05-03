@@ -17,6 +17,7 @@ namespace Core
             base.SetModel(model);
             _item = model.Item as ShopPanelMarketItem;
             
+            SetIcon(_item.Icon);
             _currencyCount.text = Model.Item.CurrencyAmount.ToString();
             try
             {
