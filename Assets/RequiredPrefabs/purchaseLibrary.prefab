@@ -98,7 +98,7 @@ MonoBehaviour:
   _productId: com.wib.livefactory.bigCoinsPack
   _currencyAmount: 50
   _backgroundName: bigPackPurchase
-  _icon: {fileID: 21300000, guid: f8984ae63172ad94da7859953df6bd22, type: 3}
+  _icon: {fileID: 21300000, guid: 9475d93ace4886c46959cdf03225f282, type: 3}
 --- !u!1 &5162631168228188004
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,7 +146,7 @@ MonoBehaviour:
   _productId: com.wib.livefactory.mediumCoinsPack
   _currencyAmount: 20
   _backgroundName: mediumPackPurchase
-  _icon: {fileID: 21300000, guid: ffd2b9d4ee82d6941a49ce818d70a298, type: 3}
+  _icon: {fileID: 21300000, guid: 2d1b56ddf6e342141a296ecd2a6c5c5a, type: 3}
 --- !u!1 &5162631168431247279
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,4 +194,4 @@ MonoBehaviour:
   _productId: com.wib.livefactory.smallCoinsPack
   _currencyAmount: 10
   _backgroundName: smallPackPurchase
-  _icon: {fileID: 21300000, guid: 8080000a5d265f849b201ba213f27758, type: 3}
+  _icon: {fileID: 21300000, guid: 0b78beb84de2813479d6b725417c3dcd, type: 3}
