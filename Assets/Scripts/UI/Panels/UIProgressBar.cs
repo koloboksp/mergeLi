@@ -31,10 +31,10 @@ namespace Core
         
         public void InstantSet(int value, int maxValue)
         {   
-            _value = value;
-            _fValue = _value;
-            _desiredValue = value;
             _maxValue = maxValue;
+            _value = Mathf.Clamp(value, 0, _maxValue);
+            _fValue = _value;
+            _desiredValue = _value;
             
             UpdateDesiredValueBar();
             UpdateValueBar();
@@ -47,11 +47,11 @@ namespace Core
             _timer = 0.0f;
             _time = duration;
 
-            _value = oldValue;
+            _maxValue = maxValue;
+            _value = Mathf.Clamp(oldValue, 0, _maxValue);
             _fValue = _value;
             _startValue = _value;
-            _desiredValue = newValue;
-            _maxValue = maxValue;
+            _desiredValue = Mathf.Clamp(newValue, 0, _maxValue);
             
             UpdateDesiredValueBar();
             

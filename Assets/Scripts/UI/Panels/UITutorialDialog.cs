@@ -19,10 +19,10 @@ namespace Core
 
         public UIBubbleDialog Speaker => _speaker;
         
-        public async Task ShowAsync(GuidEx textKey, CancellationToken cancellationToken)
+        public async Task ShowAsync(GuidEx textKey, bool tapRequired, CancellationToken cancellationToken)
         {
             gameObject.SetActive(true);
-            await _speaker.ShowTextAsync(textKey, cancellationToken);
+            await _speaker.ShowTextAsync(textKey, tapRequired, cancellationToken);
         }
         
         public void Move(DialogPosition dialogPosition)
@@ -33,8 +33,6 @@ namespace Core
                 _root.transform.position = _centerAnchor.transform.position;
             if (dialogPosition == DialogPosition.Top)
                 _root.transform.position = _topAnchor.transform.position;
-
-           // _root.anchoredPosition = _areaRoot.InverseTransformPoint(new Vector2(0, rect.position.y) + new Vector2(0, 0));
         }
         
         public void Hide()

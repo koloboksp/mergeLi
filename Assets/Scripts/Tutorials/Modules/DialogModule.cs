@@ -11,15 +11,15 @@ namespace Core.Tutorials
     {
         [FormerlySerializedAs("_textKeysTemp")] [SerializeField] private GuidEx[] _textKeysT;
         [SerializeField] private DialogPosition _position = DialogPosition.Bottom;
-        
+        [SerializeField] private bool _tapRequired = true;
+
         public override async Task OnExecuteAsync(TutorialStep step, CancellationToken cancellationToken)
         {
             step.Tutorial.Controller.Dialog.Move(_position);
 
             foreach (var textKey in _textKeysT)
             {
-                await step.Tutorial.Controller.Dialog.ShowAsync(textKey, cancellationToken);
-                await AsyncExtensions.WaitForSecondsAsync(1.0f, cancellationToken);
+                await step.Tutorial.Controller.Dialog.ShowAsync(textKey, _tapRequired, cancellationToken);
             }
         }
 

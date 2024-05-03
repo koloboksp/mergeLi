@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 1744393476548389585}
   - component: {fileID: 3978624296693702445}
   - component: {fileID: 7604813385342565625}
-  - component: {fileID: 6954008695023706842}
+  - component: {fileID: 1831107890344783963}
   m_Layer: 5
   m_Name: tapArea
   m_TagString: Untagged
@@ -154,7 +154,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6954008695023706842
+--- !u!114 &1831107890344783963
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -163,7 +163,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1776720073662619900}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 578c10221a904f90844814afce9e32e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -173,13 +173,13 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -263,8 +263,10 @@ MonoBehaviour:
   _fireworks: {fileID: 7113342272658343842}
   _speaker: {fileID: 1728031255354519943}
   _coins: {fileID: 400660669832977287}
-  _tapButton: {fileID: 6954008695023706842}
+  _tapButton: {fileID: 1831107890344783963}
   _completeClip: {fileID: 8300000, guid: eca5fb0522b873748a1c455564bd6af1, type: 3}
+  _delayBeforeShowDialog: 2
+  _delayBeforeGiveCoins: 2
 --- !u!111 &7045932823999599021
 Animation:
   m_ObjectHideFlags: 0
@@ -989,6 +991,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5728344091295413858, guid: 7d8cfa57621208d44bc94e624f76aec8,
+        type: 3}
+      propertyPath: _nextBtn
+      value: 
+      objectReference: {fileID: 1831107890344783963}
     - target: {fileID: 6824313126232912391, guid: 7d8cfa57621208d44bc94e624f76aec8,
         type: 3}
       propertyPath: m_Name

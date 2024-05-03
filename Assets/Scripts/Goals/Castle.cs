@@ -87,6 +87,11 @@ namespace Core.Goals
         {
             return _points;
         }
+        
+        public int GetClampedPoints()
+        {
+            return Mathf.Clamp(_points, 0 , GetCost());
+        }
 
         public void SetData(GameProcessor gameProcessor)
         {

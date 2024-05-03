@@ -127,7 +127,7 @@ namespace Core
 
                 // Show a motivating phrase
                 var kingDialogKey = _kingDialogKeys[Random.Range(0, _kingDialogKeys.Length)];
-                await _kingDialog.ShowTextAsync(kingDialogKey, inputTokenSource.Token);
+                await _kingDialog.ShowTextAsync(kingDialogKey, false, inputTokenSource.Token);
                 // Wait for user reads motivational phrase
                 await AsyncExtensions.WaitForSecondsAsync(1.5f, inputTokenSource.Token, Application.exitCancellationToken);
 

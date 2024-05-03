@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Atom;
+using UI.Common;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +19,7 @@ namespace Core
         [SerializeField] private UIBubbleDialog _speaker;
         [SerializeField] private UIGameScreen_Coins _coins;
         
-        [SerializeField] private Button _tapButton;
+        [SerializeField] private UIExtendedButton _tapButton;
         [SerializeField] private AudioClip _completeClip;
 
         [SerializeField] private float _delayBeforeShowDialog = 2.0f;
@@ -80,13 +81,10 @@ namespace Core
                 
                     if (_data.DialogAfterBuildEndingKey != GuidEx.Empty)
                     {
-                        await _speaker.ShowTextAsync(_data.DialogAfterBuildEndingKey, exitToken);
+                        await _speaker.ShowTextAsync(_data.DialogAfterBuildEndingKey, true, exitToken);
                     }
-                    else
-                    {
-                        _speaker.SetDialogActive(false);
-                    }
-
+                    _speaker.SetDialogActive(false);
+                    
                     await AsyncExtensions.WaitForSecondsAsync(_delayBeforeGiveCoins, exitToken);
 
                     await _data.GameProcessor.GiveCoinsEffect.Show(
@@ -119,18 +117,16 @@ namespace Core
                 {
                     if (_data.DialogOnBuildStartingKey != GuidEx.Empty)
                     {
-                        await _speaker.ShowTextAsync(_data.DialogOnBuildStartingKey, exitToken);
+                        await _speaker.ShowTextAsync(_data.DialogOnBuildStartingKey, true, exitToken);
+                        _speaker.SetActive(false);
                     }
                     else
                     {
-                        _speaker.SetDialogActive(false);
+                        await Task.WhenAny(
+                            AsyncExtensions.WaitForSecondsAsync(10.0f, exitToken),
+                            AsyncHelpers.WaitForClick(_tapButton, exitToken));
+
                     }
-                    
-                    await Task.WhenAny(
-                        AsyncExtensions.WaitForSecondsAsync(10.0f, exitToken),
-                        AsyncHelpers.WaitForClick(_tapButton, exitToken));
-                    
-                    _speaker.SetActive(false);
                 }
 
                 _animation.Play(_completeClipPart2.name);

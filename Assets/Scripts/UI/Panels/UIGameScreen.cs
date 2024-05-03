@@ -49,10 +49,11 @@ namespace Core
             OnLowEmptySpaceChanged(false);
             
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
-           
+            _coins.Set(_data.GameProcessor.CurrencyAmount);
+            
             _data.GameProcessor.CastleSelector.OnCastleChanged += CastleSelector_OnCastleChanged;
             CastleSelector_OnCastleChanged(_data.GameProcessor.CastleSelector.ActiveCastle);
-            _coins.Set(_data.GameProcessor.CastleSelector.ActiveCastle.GetPoints());
+            
             var score = _data.GameProcessor.SessionProcessor.GetScore();
             var bestScore = ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore;
             _score.SetSession(0.1f, score, score, bestScore, true);

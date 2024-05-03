@@ -114,6 +114,7 @@ MonoBehaviour:
     m8B: 3139937455
     mCF: 2693000571
   _position: 0
+  _tapRequired: 1
 --- !u!1 &355250499402738423
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,6 +228,7 @@ MonoBehaviour:
     m8B: 2918721420
     mCF: 4170663814
   _position: 0
+  _tapRequired: 0
 --- !u!1 &607084713333380470
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,6 +313,7 @@ MonoBehaviour:
     m8B: 3193569807
     mCF: 20821702
   _position: 0
+  _tapRequired: 1
 --- !u!1 &619790315132504555
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,45 +671,65 @@ MonoBehaviour:
   _balls:
   - GridPosition: {x: 0, y: 7, z: 0}
     Points: 1
+    Hat: 0
   - GridPosition: {x: 2, y: 2, z: 0}
     Points: 1
+    Hat: 0
   - GridPosition: {x: 3, y: 3, z: 0}
     Points: 1
+    Hat: 0
   - GridPosition: {x: 4, y: 4, z: 0}
     Points: 1
+    Hat: 0
   - GridPosition: {x: 5, y: 5, z: 0}
     Points: 1
+    Hat: 0
   - GridPosition: {x: 8, y: 3, z: 0}
     Points: 2
+    Hat: 0
   - GridPosition: {x: 8, y: 4, z: 0}
     Points: 4
+    Hat: 0
   - GridPosition: {x: 8, y: 5, z: 0}
     Points: 2
+    Hat: 0
   - GridPosition: {x: 8, y: 6, z: 0}
     Points: 4
+    Hat: 0
   - GridPosition: {x: 8, y: 7, z: 0}
     Points: 4
+    Hat: 0
   - GridPosition: {x: 5, y: 3, z: 0}
     Points: 2
+    Hat: 0
   - GridPosition: {x: 0, y: 2, z: 0}
     Points: 2
+    Hat: 0
   - GridPosition: {x: 7, y: 8, z: 0}
     Points: 16
+    Hat: 0
   - GridPosition: {x: 1, y: 8, z: 0}
     Points: 8
+    Hat: 0
   - GridPosition: {x: 3, y: 8, z: 0}
     Points: 8
+    Hat: 0
   - GridPosition: {x: 4, y: 8, z: 0}
     Points: 8
+    Hat: 0
   - GridPosition: {x: 5, y: 8, z: 0}
     Points: 8
+    Hat: 0
   - GridPosition: {x: 8, y: 8, z: 0}
     Points: 8
+    Hat: 0
   _nextBalls:
   - GridPosition: {x: 2, y: 5, z: 0}
     Points: 16
+    Hat: 0
   - GridPosition: {x: 3, y: 7, z: 0}
     Points: 32
+    Hat: 0
   _field: {fileID: 0}
 --- !u!1 &1462571049711330005
 GameObject:
@@ -1214,6 +1237,7 @@ MonoBehaviour:
     m8B: 2757475435
     mCF: 2291319532
   _position: 0
+  _tapRequired: 1
 --- !u!1 &2366988613661925327
 GameObject:
   m_ObjectHideFlags: 0
@@ -1280,6 +1304,7 @@ MonoBehaviour:
     m8B: 2564338368
     mCF: 3776481999
   _position: 0
+  _tapRequired: 0
 --- !u!1 &2395671025469399948
 GameObject:
   m_ObjectHideFlags: 0
@@ -1396,6 +1421,7 @@ MonoBehaviour:
     m8B: 2338529423
     mCF: 1943272065
   _position: 0
+  _tapRequired: 1
 --- !u!1 &2604666182460501485
 GameObject:
   m_ObjectHideFlags: 0
@@ -1466,6 +1492,7 @@ MonoBehaviour:
     m8B: 2989417317
     mCF: 1867764188
   _position: 0
+  _tapRequired: 1
 --- !u!1 &2783772694681663940
 GameObject:
   m_ObjectHideFlags: 0
@@ -1776,11 +1803,8 @@ MonoBehaviour:
     m47: 4251666846
     m8B: 2890527903
     mCF: 2155153696
-  - m03: 2604723377
-    m47: 1260667282
-    m8B: 2983216236
-    mCF: 763639620
   _position: 0
+  _tapRequired: 1
 --- !u!1 &3682061063746355742
 GameObject:
   m_ObjectHideFlags: 0
@@ -1851,6 +1875,7 @@ MonoBehaviour:
     m8B: 2610035416
     mCF: 952253745
   _position: 0
+  _tapRequired: 1
 --- !u!1 &3690881294131113025
 GameObject:
   m_ObjectHideFlags: 0
@@ -1921,6 +1946,7 @@ MonoBehaviour:
     m8B: 2926171037
     mCF: 3780919947
   _position: 0
+  _tapRequired: 1
 --- !u!1 &3729957058961553979
 GameObject:
   m_ObjectHideFlags: 0
@@ -2065,52 +2091,6 @@ MonoBehaviour:
   _analyticsEventName: thirdBallMerged
   _from: {x: 0, y: 2, z: 0}
   _to: {x: 8, y: 3, z: 0}
---- !u!1 &3801261832784101681
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5213498201507123084}
-  - component: {fileID: 693771825144533374}
-  m_Layer: 0
-  m_Name: showAsCompletedCastle
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5213498201507123084
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3801261832784101681}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 252723805375165013}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &693771825144533374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3801261832784101681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0d914a177aa4c63acd1a95d8537a9ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tutorial: {fileID: 7747690254940513010}
-  _analyticsEventName: 
 --- !u!1 &3849770431561012687
 GameObject:
   m_ObjectHideFlags: 0
@@ -2177,6 +2157,7 @@ MonoBehaviour:
     m8B: 2375851651
     mCF: 1689361597
   _position: 0
+  _tapRequired: 1
 --- !u!1 &3873212204892877371
 GameObject:
   m_ObjectHideFlags: 0
@@ -2274,13 +2255,13 @@ Transform:
   - {fileID: 6619785209155377268}
   - {fileID: 7230830744600836182}
   - {fileID: 2635341874550401373}
-  - {fileID: 5213498201507123084}
   - {fileID: 5913469158906466185}
   - {fileID: 4079740019685753793}
   - {fileID: 4149957814144111494}
   - {fileID: 7642710016604278421}
   - {fileID: 9153586482064794296}
   - {fileID: 613860507279329831}
+  - {fileID: 3053925730113655204}
   - {fileID: 5526871980745996160}
   - {fileID: 2688748631320801971}
   m_Father: {fileID: 8691295248254765105}
@@ -2308,13 +2289,13 @@ MonoBehaviour:
   _stepsBeforeSelectNextCastle:
   - {fileID: 2508836097776239719}
   _stepsAfterSelectNextCastle:
-  - {fileID: 693771825144533374}
   - {fileID: 2900673439312220656}
   - {fileID: 606965055542604895}
   - {fileID: 796129621514659062}
   - {fileID: 3187857837359173583}
   - {fileID: 796129621514659062}
   - {fileID: 5473138154065280149}
+  - {fileID: 2457923361975228500}
   - {fileID: 6030790847913058371}
   - {fileID: 5638399200131256149}
 --- !u!1 &4272853730831059993
@@ -2386,11 +2367,75 @@ MonoBehaviour:
     m47: 133185847
     m8B: 2636871630
     mCF: 1226418682
-  - m03: 2942189088
-    m47: 2175944038
-    m8B: 3024224551
-    mCF: 4282560580
   _position: 0
+  _tapRequired: 1
+--- !u!1 &4341160012278828974
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3053925730113655204}
+  - component: {fileID: 2457923361975228500}
+  - component: {fileID: 5487337035466736484}
+  m_Layer: 0
+  m_Name: afterNewCastleDialog3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3053925730113655204
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4341160012278828974}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 252723805375165013}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2457923361975228500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4341160012278828974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eabd12c9423941948b9e758000cd6aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tutorial: {fileID: 7747690254940513010}
+  _analyticsEventName: 
+  _waitForClick: 0
+--- !u!114 &5487337035466736484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4341160012278828974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc97df0fe8a425198fe6bdab0efde34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textKeysT:
+  - m03: 398657673
+    m47: 972243844
+    m8B: 2926424654
+    mCF: 1134072643
+  _position: 0
+  _tapRequired: 0
 --- !u!1 &4420866535176903747
 GameObject:
   m_ObjectHideFlags: 0
@@ -2471,6 +2516,7 @@ MonoBehaviour:
     m8B: 2887333395
     mCF: 3126396253
   _position: 0
+  _tapRequired: 0
 --- !u!1 &4485184685154008206
 GameObject:
   m_ObjectHideFlags: 0
@@ -2676,6 +2722,7 @@ MonoBehaviour:
     m8B: 3112970006
     mCF: 336595628
   _position: 0
+  _tapRequired: 1
 --- !u!1 &4636933057199955637
 GameObject:
   m_ObjectHideFlags: 0
@@ -2805,6 +2852,7 @@ MonoBehaviour:
     m8B: 2477412711
     mCF: 3343910781
   _position: 1
+  _tapRequired: 1
 --- !u!1 &5087417285450584636
 GameObject:
   m_ObjectHideFlags: 0
@@ -3530,11 +3578,8 @@ MonoBehaviour:
     m47: 3202895593
     m8B: 2766429602
     mCF: 1761140799
-  - m03: 398657673
-    m47: 972243844
-    m8B: 2926424654
-    mCF: 1134072643
   _position: 0
+  _tapRequired: 1
 --- !u!1 &6154053979672773617
 GameObject:
   m_ObjectHideFlags: 0
@@ -3601,6 +3646,7 @@ MonoBehaviour:
     m8B: 2437695002
     mCF: 2883193838
   _position: 1
+  _tapRequired: 1
 --- !u!1 &6372968701637075878
 GameObject:
   m_ObjectHideFlags: 0
@@ -3987,6 +4033,7 @@ MonoBehaviour:
     m8B: 3195250843
     mCF: 2207046815
   _position: 1
+  _tapRequired: 1
 --- !u!1 &7012528324606082510
 GameObject:
   m_ObjectHideFlags: 0
@@ -4116,6 +4163,7 @@ MonoBehaviour:
     m8B: 2389363556
     mCF: 3259409408
   _position: 1
+  _tapRequired: 1
 --- !u!1 &7107481280512485100
 GameObject:
   m_ObjectHideFlags: 0
@@ -4472,6 +4520,7 @@ GameObject:
   - component: {fileID: 8755473553549049978}
   - component: {fileID: 1937757204633571774}
   - component: {fileID: 3760086395957450581}
+  - component: {fileID: 6380169449647234088}
   m_Layer: 0
   m_Name: focusOnEmptyCell
   m_TagString: Untagged
@@ -4547,6 +4596,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f5faaee283c48dfac91cbcfbe385d8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6380169449647234088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7295323744564984177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc97df0fe8a425198fe6bdab0efde34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textKeysT:
+  - m03: 2942189088
+    m47: 2175944038
+    m8B: 3024224551
+    mCF: 4282560580
+  _position: 0
+  _tapRequired: 0
 --- !u!1 &7301843179821694727
 GameObject:
   m_ObjectHideFlags: 0
@@ -4673,6 +4741,7 @@ MonoBehaviour:
     m8B: 2536889255
     mCF: 3647690033
   _position: 0
+  _tapRequired: 0
 --- !u!1 &7472768150421751863
 GameObject:
   m_ObjectHideFlags: 0
@@ -4747,6 +4816,7 @@ MonoBehaviour:
     m8B: 3115015704
     mCF: 1592163417
   _position: 0
+  _tapRequired: 1
 --- !u!1 &7504475244191429034
 GameObject:
   m_ObjectHideFlags: 0
@@ -4827,6 +4897,7 @@ MonoBehaviour:
     m8B: 3211208366
     mCF: 1338774825
   _position: 0
+  _tapRequired: 0
 --- !u!1 &7562464223374183711
 GameObject:
   m_ObjectHideFlags: 0
@@ -5079,6 +5150,7 @@ MonoBehaviour:
     m8B: 2903506940
     mCF: 3628502197
   _position: 1
+  _tapRequired: 1
 --- !u!1 &8147635850775522924
 GameObject:
   m_ObjectHideFlags: 0
@@ -5192,6 +5264,7 @@ MonoBehaviour:
     m8B: 2616668545
     mCF: 1907587080
   _position: 0
+  _tapRequired: 1
 --- !u!1 &8257033777395152592
 GameObject:
   m_ObjectHideFlags: 0
@@ -5327,7 +5400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d6c659217e94f9ab2c373e0f0a0dbd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fingerOrientation: 0
+  _fingerOrientation: 1
 --- !u!114 &5473883170293207796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5420,6 +5493,7 @@ MonoBehaviour:
     m8B: 2328846702
     mCF: 1074602127
   _position: 0
+  _tapRequired: 0
 --- !u!1 &8960160709785239006
 GameObject:
   m_ObjectHideFlags: 0
@@ -5595,6 +5669,7 @@ GameObject:
   - component: {fileID: 5664130957852480322}
   - component: {fileID: 4427146290985829177}
   - component: {fileID: 6718031142684826858}
+  - component: {fileID: 5227034927533961396}
   m_Layer: 0
   m_Name: showFinger
   m_TagString: Untagged
@@ -5657,3 +5732,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f5faaee283c48dfac91cbcfbe385d8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5227034927533961396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9088736444392150702}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc97df0fe8a425198fe6bdab0efde34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textKeysT:
+  - m03: 2604723377
+    m47: 1260667282
+    m8B: 2983216236
+    mCF: 763639620
+  _position: 0
+  _tapRequired: 0
