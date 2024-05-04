@@ -105,8 +105,9 @@ namespace Core.Steps.CustomOperations
                     sumPoints += sumGroupPoints;
                 }
             }
+            _pointsAdded = sumPoints;
 
-            if (pointsGroups.Count > 0)
+            if (pointsGroups.Count > 0 && _pointsAdded > 0)
             {
                 var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
                 var collapsePointsEffect = Object.Instantiate(_collapsePointsEffectPrefab, 
@@ -122,7 +123,6 @@ namespace Core.Steps.CustomOperations
             
             await Task.WhenAll(removeBallTasks);
             
-            _pointsAdded = sumPoints;
             
             return null;
         }
