@@ -27,21 +27,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f8984ae63172ad94da7859953df6bd22
-    m_Address: bigPackPurchase
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ffd2b9d4ee82d6941a49ce818d70a298
-    m_Address: mediumPackPurchase
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8080000a5d265f849b201ba213f27758
-    m_Address: smallPackPurchase
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7c19363d289b68743be90d3d47f7c5d9
     m_Address: adsPackPurchase
     m_ReadOnly: 0
