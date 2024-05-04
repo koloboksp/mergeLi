@@ -97,20 +97,24 @@ namespace Core.Goals
         {
             _gameProcessor = gameProcessor;
 
-            var componentsInChildren = gameObject.GetComponentsInChildren<CastleBit>();
-            for (var index = 0; index < componentsInChildren.Length; index++)
+            _parts.Clear();
+            
+            var castleBits = gameObject.GetComponentsInChildren<CastleBit>();
+            castleBits = castleBits.Reverse().ToArray();
+            for (var castleBitI = 0; castleBitI < castleBits.Length; castleBitI++)
             {
-                var castleBit = componentsInChildren[index];
-                var addComponent = castleBit.gameObject.AddComponent<CastlePart>();
-                addComponent.Owner = this;
-                addComponent.Index = index;
-                addComponent.Cost = initalCostOfPart + risingCostOfPart * index;
+                var castleBit = castleBits[castleBitI];
+                var castlePart = castleBit.gameObject.AddComponent<CastlePart>();
+                castlePart.Owner = this;
+                castlePart.Index = castleBitI;
+                castlePart.Cost = initalCostOfPart + risingCostOfPart * castleBitI;
                
-                var addComponent1 = castleBit.gameObject.AddComponent<CastlePartView>();
-                addComponent1.SetData(addComponent);
+                var castlePartView = castleBit.gameObject.AddComponent<CastlePartView>();
+                castlePartView.SetData(castlePart);
+                
+                _parts.Add(castlePart);
             }
 
-            gameObject.GetComponentsInChildren(_parts);
             _parts.Sort((r, l) => r.Cost.CompareTo(l.Cost));
 
             _points = 0;
