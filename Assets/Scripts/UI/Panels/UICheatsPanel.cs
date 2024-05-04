@@ -1,6 +1,7 @@
 ﻿#if DEBUG
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -14,6 +15,7 @@ namespace UI.Panels
         [SerializeField] private ScrollRect _container;
         [SerializeField] private UICheatsPanel_BoolItem _boolItemPrefab;
         [SerializeField] private UICheatsPanel_IntItem _intItemPrefab;
+        [SerializeField] private UICheatsPanel_DropdownItem _dropdownItemPrefab;
         [SerializeField] private UICheatsPanel_Group _groupPrefab;
 
         private Model _model;
@@ -36,6 +38,7 @@ namespace UI.Panels
 
             var common = new List<ValueHolder>();
             valueHolders.Add(("common", common));
+            common.Add(new RuleSettingsDropdownHolder("rules", data.GameProcessor));
             common.Add(new CoinsIntHolder("coins"));
             common.Add(new BestScoreIntHolder("bestSessionScore"));
             foreach (var tutorial in data.GameProcessor.TutorialController.AvailableTutorials)
@@ -66,7 +69,8 @@ namespace UI.Panels
             _groupPrefab.gameObject.SetActive(false);
             _boolItemPrefab.gameObject.SetActive(false);
             _intItemPrefab.gameObject.SetActive(false);
-            
+            _dropdownItemPrefab.gameObject.SetActive(false);
+
             foreach (var group in groups)
             {
                 var groupView = Instantiate(_groupPrefab, _container.content);
@@ -86,6 +90,13 @@ namespace UI.Panels
                         var itemView = Instantiate(_intItemPrefab, groupView.Content);
                         itemView.gameObject.SetActive(true);
                         itemView.SetModel(item as IntHolder);
+                    }
+
+                    if (item is DropdownHolder)
+                    {
+                        var itemView = Instantiate(_dropdownItemPrefab, groupView.Content);
+                        itemView.gameObject.SetActive(true);
+                        itemView.SetModel(item as DropdownHolder);
                     }
                 }
                 
@@ -243,5 +254,50 @@ namespace UI.Panels
             ApplicationController.Instance.SaveController.SaveProgress.DebugChangeHatBought(Id, value);
         }
     }
+
+    public abstract class DropdownHolder : ValueHolder
+    {
+        public DropdownHolder(string id) : base(id)
+        {
+            
+        }
+
+        public abstract IReadOnlyList<string> Items { get; }
+        public abstract int SelectedIndex { get; set; } 
+    }
+
+    public class RuleSettingsDropdownHolder : DropdownHolder
+    {
+        private GameProcessor _gameProcessor;
+        
+        public RuleSettingsDropdownHolder(string id, GameProcessor gameProcessor) : base(id)
+        {
+            _gameProcessor = gameProcessor;
+        }
+        
+        public override IReadOnlyList<string> Items
+        {
+            get
+            {
+                return _gameProcessor.GameRulesSettings
+                    .Select(i => i.gameObject.name)
+                    .ToList();
+            }
+        }
+
+        public override int SelectedIndex
+        {
+            get
+            {
+                return _gameProcessor.ActiveGameRulesSettingsIndex;
+            }
+            set
+            {
+                _gameProcessor.ActiveGameRulesSettingsIndex = value;
+            }
+        }
+    }
+    
+    
 }
 #endif

@@ -6,22 +6,22 @@ namespace Core.Steps.CustomOperations
 {
     public class PointsCalculator : IPointsCalculator
     {
-        private readonly IRules _rules;
-        public PointsCalculator(IRules rules)
+        private readonly GameRulesSettings _rulesSettings;
+        public PointsCalculator(GameRulesSettings rulesSettingsSettings)
         {
-            _rules = rules;
+            _rulesSettings = rulesSettingsSettings;
         }
         
         public List<List<BallDesc>> GetPoints(List<List<BallDesc>> ballsInLines)
         {
             var resultBallsInLinesPoints = new List<List<BallDesc>>();
             for (var lineI = 0; lineI < ballsInLines.Count; lineI++)
-                resultBallsInLinesPoints.Add(GetLinePoints(ballsInLines[lineI], lineI, _rules.MinimalBallsInLine));
+                resultBallsInLinesPoints.Add(GetLinePoints(ballsInLines[lineI], lineI, _rulesSettings.MinimalBallsInLine));
 
             return resultBallsInLinesPoints;
         }
         
-        List<BallDesc> GetLinePoints(List<BallDesc> ballsInLine, int lineIndex, int minimalBallsInLine)
+        private List<BallDesc> GetLinePoints(List<BallDesc> ballsInLine, int lineIndex, int minimalBallsInLine)
         {
             var resultBallsInLinePoints = new List<BallDesc>();
             for (var index = 0; index < ballsInLine.Count; index++)

@@ -23,7 +23,7 @@ using UnityEngine.UI;
 
 public interface IRules
 {
-    int MinimalBallsInLine { get; }
+    GameRulesSettings RulesSettings { get; }
 }
 
 public interface IPointsChangeListener
@@ -71,9 +71,7 @@ public enum StepTag
 }
 
 
-
 public class GameProcessor : MonoBehaviour, 
-    IRules,
     ISkinChanger
 {
     public static readonly List<StepTag> NewStepStepTags = new()
@@ -122,13 +120,9 @@ public class GameProcessor : MonoBehaviour,
     [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
     [SerializeField] private NoPathEffect _noPathEffectPrefab;
     [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
-
-    [SerializeField] private int _minimalBallsInLine = 5;
-    [SerializeField] private int _generatedBallsCountAfterMerge = 2;
-    [SerializeField] private int _generatedBallsCountAfterMove = 3;
-    [SerializeField] private int _generatedBallsCountOnStart = 5;
-    [SerializeField] private int _maxBallPoints = 512;
-    [SerializeField] private int[] _generatedBallsPointsRange;
+    
+    [FormerlySerializedAs("_rulesSettings")] [SerializeField] private GameRulesSettings[] _gameRulesSettings;
+    [SerializeField] private int _activeRulesSettings;
 
     [SerializeField] private RectTransform _uiScreensRoot;
    
@@ -179,20 +173,15 @@ public class GameProcessor : MonoBehaviour,
     public MusicPlayer MusicPlayer => _musicPlayer;
     public SoundsPlayer SoundsPlayer => _soundsPlayer;
     public IReadOnlyList<Hat> Hats => _hats;
-
-    public int GeneratedBallsCountAfterMerge => _generatedBallsCountAfterMerge;
-    public int GeneratedBallsCountAfterMove => _generatedBallsCountAfterMove ;
-    public int GeneratedBallsCountOnStart => _generatedBallsCountOnStart;
-    public int[] GeneratedBallsPointsRange => _generatedBallsPointsRange;
-
-    public int MinimalBallsInLine => _minimalBallsInLine;
+    
+    public GameRulesSettings ActiveGameRulesSettings => _gameRulesSettings[_activeRulesSettings];
     public List<Buff> Buffs => _buffs;
     public int CurrencyAmount => ApplicationController.Instance.SaveController.SaveProgress.GetAvailableCoins();
-
+    
     
     private void Awake()
     {
-        _pointsCalculator = new PointsCalculator(this);
+        _pointsCalculator = new PointsCalculator(ActiveGameRulesSettings);
         
         _market.OnBought += Market_OnBought;
         _giftsMarket.OnCollect += GiftsMarket_OnCollect;
@@ -290,7 +279,7 @@ public class GameProcessor : MonoBehaviour,
                 }
                 else
                 {
-                    if (_selectedBall.Points == ball.Points && _selectedBall.Points < _maxBallPoints)
+                    if (_selectedBall.Points == ball.Points && _selectedBall.Points < ActiveGameRulesSettings.MaxBallPoints)
                     {
                         _otherSelectedBall = ball;
                         var path = _field.GetPath(_selectedBall.IntGridPosition, pointerGridPosition);
@@ -352,8 +341,12 @@ public class GameProcessor : MonoBehaviour,
                 null,
                 new List<Operation>()
                 {
-                    new GenerateOperation(_generatedBallsCountAfterMerge,
-                        _generatedBallsCountAfterMove, _generatedBallsPointsRange, _scene.ActiveHats, _field),
+                    new GenerateOperation(
+                        ActiveGameRulesSettings.GeneratedBallsCountAfterMerge,
+                        ActiveGameRulesSettings.GeneratedBallsCountAfterMove, 
+                        ActiveGameRulesSettings.GeneratedBallsPointsRange,
+                        _scene.ActiveHats,
+                        _field),
                     new CollapseOperation(_collapsePointsEffectPrefab,
                         _field, _pointsCalculator)
                 })));
@@ -373,8 +366,12 @@ public class GameProcessor : MonoBehaviour,
                 null,
                 new List<Operation>()
                 {
-                    new GenerateOperation(_generatedBallsCountAfterMove, _generatedBallsCountAfterMove,
-                        _generatedBallsPointsRange, _scene.ActiveHats, _field),
+                    new GenerateOperation(
+                        ActiveGameRulesSettings.GeneratedBallsCountAfterMove,
+                        ActiveGameRulesSettings.GeneratedBallsCountAfterMove,
+                        ActiveGameRulesSettings.GeneratedBallsPointsRange,
+                        _scene.ActiveHats,
+                        _field),
                     new CollapseOperation(_collapsePointsEffectPrefab, _field,
                         _pointsCalculator)
                 })));
@@ -565,4 +562,18 @@ public class GameProcessor : MonoBehaviour,
         ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin = skinName;
         _scene.SetSkin(skinName);
     }
+
+    public int ActiveGameRulesSettingsIndex
+    {
+        get
+        {
+            return _activeRulesSettings;
+        }
+        set
+        {
+            _activeRulesSettings = value;
+        }
+    }
+    
+    public GameRulesSettings[] GameRulesSettings => _gameRulesSettings;
 }

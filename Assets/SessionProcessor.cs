@@ -255,8 +255,8 @@ public class SessionProcessor : MonoBehaviour,
             ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
             _gameProcessor.Field.Clear();
             _gameProcessor.Field.GenerateBalls(
-                _gameProcessor.GeneratedBallsCountOnStart, 
-                _gameProcessor.GeneratedBallsPointsRange, 
+                _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountOnStart, 
+                _gameProcessor.ActiveGameRulesSettings.GeneratedBallsPointsRange, 
                 _gameProcessor.Scene.ActiveHats);
             _gameProcessor.CastleSelector.ActiveCastle.ResetPoints(true);
         }
@@ -265,8 +265,8 @@ public class SessionProcessor : MonoBehaviour,
     private async Task ProcessSessionAsync(CancellationToken restartToken, CancellationToken loseToken, CancellationToken cancellationToken)
     {
         _gameProcessor.Field.GenerateNextBallPositions(
-            _gameProcessor.GeneratedBallsCountAfterMove, 
-            _gameProcessor.GeneratedBallsPointsRange,
+            _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountAfterMove, 
+            _gameProcessor.ActiveGameRulesSettings.GeneratedBallsPointsRange,
             _gameProcessor.Scene.ActiveHats);
 
         while (true)
@@ -416,7 +416,9 @@ public class SessionProcessor : MonoBehaviour,
     private void CheckLowEmptySpace()
     {
         var emptyCellsCount = _gameProcessor.Field.CalculateEmptySpacesCount();
-        var threshold = Mathf.Max(_gameProcessor.GeneratedBallsCountAfterMerge, _gameProcessor.GeneratedBallsCountAfterMove);
+        var threshold = Mathf.Max(
+            _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountAfterMerge,
+            _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountAfterMove);
         var lowSpace = emptyCellsCount <= threshold;
         var freeSpaceIsOver = emptyCellsCount <= 0;
 
@@ -429,8 +431,8 @@ public class SessionProcessor : MonoBehaviour,
         if (_gameProcessor.Field.IsEmpty)
         {
             _gameProcessor.Field.GenerateBalls(
-                _gameProcessor.GeneratedBallsCountOnStart, 
-                _gameProcessor.GeneratedBallsPointsRange, 
+                _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountOnStart, 
+                _gameProcessor.ActiveGameRulesSettings.GeneratedBallsPointsRange, 
                 _gameProcessor.Scene.ActiveHats);
             
             _gameProcessor.ClearUndoSteps();
