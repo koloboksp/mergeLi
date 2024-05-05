@@ -293,6 +293,30 @@ MonoBehaviour:
   _onUpgradeClip: {fileID: 8300000, guid: e470d417613c99b4ba5ff23c9eb6c3aa, type: 3}
   _onDowngradeClip: {fileID: 8300000, guid: 5f538d31a71b63d4bbe705ec9137db68, type: 3}
   _onPathNotFoundClip: {fileID: 8300000, guid: 6ab7aed1a2be4934a93d0b44c15afb70, type: 3}
+  _blobShapeIcon: {fileID: 4679713789189145075}
+  _blobShapeAssociations:
+  - _points: 0
+    _shape: {fileID: -196826782, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 1
+    _shape: {fileID: 180084035, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 2
+    _shape: {fileID: -1330792159, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 4
+    _shape: {fileID: -811293457, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 8
+    _shape: {fileID: 1034422036, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 16
+    _shape: {fileID: 886896726, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 32
+    _shape: {fileID: 1252038021, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 64
+    _shape: {fileID: -381853699, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 128
+    _shape: {fileID: -1000691953, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 256
+    _shape: {fileID: -196826782, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+  - _points: 512
+    _shape: {fileID: -196826782, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
   _facePrefab: {fileID: 1143749767009140062, guid: 9ac5a2a7477c9f34797ce9f32de83a53,
     type: 3}
   _destroyEffectPrefab: {fileID: 5600580805448456366, guid: 14a662a9344a3274c9fabd6bac889aa0,

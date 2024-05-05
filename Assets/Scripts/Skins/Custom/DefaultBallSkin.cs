@@ -11,6 +11,16 @@ using Object = UnityEngine.Object;
 
 namespace Skins.Custom
 {
+    [Serializable]
+    public class ShapeToPointsAssociation
+    {
+        [SerializeField] private int _points;
+        [SerializeField] private Sprite _shape;
+
+        public int Points => _points;
+        public Sprite Shape => _shape;
+    }
+    
     public class DefaultBallSkin : BallSkin
     {
         [Flags]
@@ -38,6 +48,8 @@ namespace Skins.Custom
         [SerializeField] private AudioClip _onDowngradeClip;
         [SerializeField] private AudioClip _onPathNotFoundClip;
 
+        [SerializeField] private Image _blobShapeIcon;
+        [SerializeField] private List<ShapeToPointsAssociation> _blobShapeAssociations;
         [SerializeField] private BlobFace _facePrefab;
         [SerializeField] private DestroyBallEffect _destroyEffectPrefab;
 
@@ -53,8 +65,6 @@ namespace Skins.Custom
         {
             _view = view;
             _face = Instantiate(_facePrefab, _faceAnchor);
-            
-           
         }
 
         public override bool Selected
@@ -98,7 +108,8 @@ namespace Skins.Custom
         public override void SetPoints(int points, int oldPoints, bool force)
         {
             _valueLabel.text = points.ToString();
-
+            SetShape(points);
+            
             if (force)
                 return;
             
@@ -117,6 +128,13 @@ namespace Skins.Custom
 
             if (ballState == BallState.Downgrade)
                 _soundsPlayer.Value.Play(_onDowngradeClip);
+        }
+
+        private void SetShape(int points)
+        {
+            var foundAssociation = _blobShapeAssociations.Find(i => i.Points == points);
+            if (foundAssociation != null)
+                _blobShapeIcon.sprite = foundAssociation.Shape;
         }
 
         public override Color MainColor
