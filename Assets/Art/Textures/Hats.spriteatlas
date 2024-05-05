@@ -50,24 +50,57 @@ SpriteAtlas:
     isAtlasV2: 0
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
+    - 230d4d3044a99a64880e3c01d7da2c5f: 21300000
+    - be2195948d96351468a5c15ca339f734: 21300000
+    - d8ed30177d1e91e4b81345f5b9805985: 21300000
     - 129dd0b8eefc4b641ac70e14b8286efa: 21300000
     - 6cfdfe0a335ace34791777318dcc03ce: 21300000
+    - 13e791baab5fd3445861473d1ea7d0af: 21300000
     - 19e91c5bdf9443948b074a3267fb0246: 21300000
+    - 1f48a09b5580cc741a4f722578110cd9: 21300000
+    - 6429f5fb7f6997144a1391fac4bbfe8e: 21300000
+    - 7f05400c94dba3746a234fadee8d1aa0: 21300000
     - a8b8e1dcdd71e3242bf3510d611d601d: 21300000
     - 8e0cb98de1320d24b8deb72300a1dd87: 21300000
+    - f0b62ffd68550e04f89cebfa405b73f2: 21300000
+    - 6d653e0e2c279b444a5e0a61af14ce91: 21300000
+    - 947c8e1f7a6c2ff4092c0cfd96c8068c: 21300000
+    - f8d645efe22675a47bad8c3179a2ac2b: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 230d4d3044a99a64880e3c01d7da2c5f, type: 3}
+  - {fileID: 21300000, guid: be2195948d96351468a5c15ca339f734, type: 3}
+  - {fileID: 21300000, guid: d8ed30177d1e91e4b81345f5b9805985, type: 3}
   - {fileID: 21300000, guid: 129dd0b8eefc4b641ac70e14b8286efa, type: 3}
   - {fileID: 21300000, guid: 6cfdfe0a335ace34791777318dcc03ce, type: 3}
+  - {fileID: 21300000, guid: 13e791baab5fd3445861473d1ea7d0af, type: 3}
   - {fileID: 21300000, guid: 19e91c5bdf9443948b074a3267fb0246, type: 3}
+  - {fileID: 21300000, guid: 1f48a09b5580cc741a4f722578110cd9, type: 3}
+  - {fileID: 21300000, guid: 6429f5fb7f6997144a1391fac4bbfe8e, type: 3}
+  - {fileID: 21300000, guid: 7f05400c94dba3746a234fadee8d1aa0, type: 3}
   - {fileID: 21300000, guid: a8b8e1dcdd71e3242bf3510d611d601d, type: 3}
   - {fileID: 21300000, guid: 8e0cb98de1320d24b8deb72300a1dd87, type: 3}
+  - {fileID: 21300000, guid: f0b62ffd68550e04f89cebfa405b73f2, type: 3}
+  - {fileID: 21300000, guid: 6d653e0e2c279b444a5e0a61af14ce91, type: 3}
+  - {fileID: 21300000, guid: 947c8e1f7a6c2ff4092c0cfd96c8068c, type: 3}
+  - {fileID: 21300000, guid: f8d645efe22675a47bad8c3179a2ac2b, type: 3}
   m_PackedSpriteNamesToIndex:
+  - hat_tent_A
+  - hat_stone_D
+  - hat_stone_B
   - hat_magic
   - hat_viking
+  - hat_stone_E
   - hat_leprecon
+  - hat_tent_B
+  - hat_tent_D
+  - hat_stone_A
   - hat_sherif
   - hat_amanita
+  - hat_tent_0
+  - hat_pirat_A
+  - hat_stone_C
+  - hat_tent_C
   m_RenderDataMap: {}
   m_Tag: Hats
   m_IsVariant: 0
