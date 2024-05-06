@@ -6,6 +6,7 @@ using Core;
 using Core.Effects;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
@@ -48,8 +49,8 @@ namespace Skins.Custom
         [SerializeField] private AudioClip _onDowngradeClip;
         [SerializeField] private AudioClip _onPathNotFoundClip;
 
-        [SerializeField] private Image _blobShapeIcon;
-        [SerializeField] private List<ShapeToPointsAssociation> _blobShapeAssociations;
+        [SerializeField] private Image _shapeIcon;
+        [SerializeField] private List<ShapeToPointsAssociation> _shapeAssociations;
         [SerializeField] private BlobFace _facePrefab;
         [SerializeField] private DestroyBallEffect _destroyEffectPrefab;
 
@@ -132,9 +133,9 @@ namespace Skins.Custom
 
         private void SetShape(int points)
         {
-            var foundAssociation = _blobShapeAssociations.Find(i => i.Points == points);
+            var foundAssociation = _shapeAssociations.Find(i => i.Points == points);
             if (foundAssociation != null)
-                _blobShapeIcon.sprite = foundAssociation.Shape;
+                _shapeIcon.sprite = foundAssociation.Shape;
         }
 
         public override Color MainColor
