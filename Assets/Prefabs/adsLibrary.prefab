@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3059801140201288788}
   - component: {fileID: 8084029974235284101}
   m_Layer: 0
-  m_Name: rewarded10
+  m_Name: rewarded40
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87315790c5d447d4bbbe7bc971eb1285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currencyAmount: 10
+  _currencyAmount: 40
 --- !u!1 &5813352547305253782
 GameObject:
   m_ObjectHideFlags: 0
@@ -76,7 +76,7 @@ Transform:
   m_Children:
   - {fileID: 3059801140201288788}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3263078032568648822
 MonoBehaviour:

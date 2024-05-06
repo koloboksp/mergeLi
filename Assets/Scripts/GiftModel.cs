@@ -76,6 +76,8 @@ namespace Core
         
         public long GetRestTimeForCollect(long currentTicks)
         {
+            var fromDays = TimeSpan.FromDays(1);
+            var fromDaysTicks = fromDays.Ticks;
             var giftLastCollectedTimestamp = _saveProgress.GetGiftLastCollectedTimestamp(_id);
             if (giftLastCollectedTimestamp != -1)
             {

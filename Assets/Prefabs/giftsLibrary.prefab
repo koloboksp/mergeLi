@@ -91,5 +91,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 712c38561ad44b3e9a92c6dbb4d831b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currencyAmount: 30
-  _collectInterval: 150000000
+  _currencyAmount: 80
+  _collectInterval: 864000000000

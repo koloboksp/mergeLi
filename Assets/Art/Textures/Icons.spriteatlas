@@ -50,17 +50,20 @@ SpriteAtlas:
     isAtlasV2: 0
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
+    - 9351dc122052d084a9a9494ca072e74a: 21300000
     - 14895ff264de08f4c8bd73a877fd35d6: 21300000
     - 0b78beb84de2813479d6b725417c3dcd: 21300000
     - 9475d93ace4886c46959cdf03225f282: 21300000
     - 2d1b56ddf6e342141a296ecd2a6c5c5a: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 9351dc122052d084a9a9494ca072e74a, type: 3}
   - {fileID: 21300000, guid: 14895ff264de08f4c8bd73a877fd35d6, type: 3}
   - {fileID: 21300000, guid: 0b78beb84de2813479d6b725417c3dcd, type: 3}
   - {fileID: 21300000, guid: 9475d93ace4886c46959cdf03225f282, type: 3}
   - {fileID: 21300000, guid: 2d1b56ddf6e342141a296ecd2a6c5c5a, type: 3}
   m_PackedSpriteNamesToIndex:
+  - coinBag_4
   - coinBag_3
   - coinBag_0
   - coinBag_2
