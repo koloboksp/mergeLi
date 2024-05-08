@@ -47,7 +47,7 @@ namespace Core.Steps.CustomOperations
     
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
-            List<Vector3Int> checkingPositions = new List<Vector3Int>();
+            var checkingPositions = new List<Vector3Int>();
         
             if (_positionSource == PositionSource.Fixed)
                 checkingPositions.Add(_position);
@@ -59,7 +59,7 @@ namespace Core.Steps.CustomOperations
             var maxDistanceToCheckingPosition = float.MinValue;
             foreach (var checkingPosition in checkingPositions)
             {
-                List<List<Ball>> collapseLines = _field.CheckCollapse(checkingPosition);
+                var collapseLines = _field.CheckCollapse(checkingPosition);
                 foreach (var collapseLine in collapseLines)
                 {
                     _collapseLines.Add(new List<BallDesc>());
@@ -82,38 +82,30 @@ namespace Core.Steps.CustomOperations
 
             var collapseLineWithResultPoints = _pointsCalculator.GetPoints(_collapseLines);
 
-            var pointsGroups = new List<(int points, int ballsCount, Vector3 position)>();
+            var pointsGroups = new List<(List<(BallDesc ball, PointsDesc points)> ballPairs, Vector3 centerPosition)>();
             
             var sumPoints = 0;
             foreach (var collapseLine in collapseLineWithResultPoints)
             {
-                var groupsByPoints = collapseLine.GroupBy(i => i.Points);
-                foreach (var groupByPoints in groupsByPoints)
+                var centerPosition = Vector3.zero;
+                foreach (var ballPair in collapseLine)
                 {
-                    var ballsInGroup = groupByPoints.Count();
-                    
-                    var centerPosition = Vector3.zero;
-                    var sumGroupPoints = 0;
-                    foreach (var ballDesc in groupByPoints)
-                    {
-                        centerPosition += _field.GetPositionFromGrid(ballDesc.GridPosition) / ballsInGroup;
-                        sumGroupPoints += ballDesc.Points;
-                    }
-
-                    pointsGroups.Add((sumGroupPoints, ballsInGroup, _field.View.Root.TransformPoint(centerPosition)));
-                    
-                    sumPoints += sumGroupPoints;
+                    centerPosition += _field.GetPositionFromGrid(ballPair.ball.GridPosition) / collapseLine.Count;
+                    sumPoints += ballPair.points.Sum();
                 }
+               
+                pointsGroups.Add((collapseLine, centerPosition));
             }
             _pointsAdded = sumPoints;
 
             if (pointsGroups.Count > 0 && _pointsAdded > 0)
             {
                 var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
-                var collapsePointsEffect = Object.Instantiate(_collapsePointsEffectPrefab, 
-                    _field.View.Root.TransformPoint(pointsGroups[0].position), Quaternion.identity, 
-                    _field.View.Root);
-                collapsePointsEffect.transform.SetParent(findObjectOfType.transform);
+                var collapsePointsEffect = Object.Instantiate(
+                    _collapsePointsEffectPrefab, 
+                    _field.View.Root.TransformPoint(pointsGroups[0].centerPosition), 
+                    Quaternion.identity, 
+                    findObjectOfType.transform);
                 collapsePointsEffect.Run(pointsGroups);
             }
             

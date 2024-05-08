@@ -5,7 +5,7 @@ namespace Core.Steps.CustomOperations
 {
     public interface IPointsCalculator
     {
-        List<List<BallDesc>> GetPoints(List<List<BallDesc>> ballsInLines);
+        List<List<(BallDesc ball, PointsDesc points)>> GetPoints(List<List<BallDesc>> ballsInLines);
 
     }
 }

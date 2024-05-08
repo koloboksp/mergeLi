@@ -33,8 +33,8 @@ namespace Core
                 .Where(i => i.IsActive)
                 .ToList();
             
-            var coinsValue = 5;
-            var coinsNum = currencyAmount / coinsValue;
+            var coinsNum = (int)Mathf.Max(1, Mathf.Log(currencyAmount));
+            var coinsValue = currencyAmount / coinsNum;
             var restCoinsValue = currencyAmount - coinsValue * coinsNum;
 
             var splitCoins = new List<int>();

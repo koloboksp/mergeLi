@@ -12,28 +12,32 @@ namespace Core.Steps.CustomOperations
             _rulesSettings = rulesSettingsSettings;
         }
         
-        public List<List<BallDesc>> GetPoints(List<List<BallDesc>> ballsInLines)
+        public List<List<(BallDesc ball, PointsDesc points)>> GetPoints(List<List<BallDesc>> ballsInLines)
         {
-            var resultBallsInLinesPoints = new List<List<BallDesc>>();
+            var resultBallsInLinesPoints = new List<List<(BallDesc ball, PointsDesc points)>>();
             for (var lineI = 0; lineI < ballsInLines.Count; lineI++)
                 resultBallsInLinesPoints.Add(GetLinePoints(ballsInLines[lineI], lineI, _rulesSettings.MinimalBallsInLine));
 
             return resultBallsInLinesPoints;
         }
         
-        private List<BallDesc> GetLinePoints(List<BallDesc> ballsInLine, int lineIndex, int minimalBallsInLine)
+        private List<(BallDesc ball, PointsDesc points)> GetLinePoints(List<BallDesc> ballsInLine, int lineIndex, int minimalBallsInLine)
         {
-            var resultBallsInLinePoints = new List<BallDesc>();
+            var resultBallsInLinePoints = new List<(BallDesc ball, PointsDesc points)>();
             for (var index = 0; index < ballsInLine.Count; index++)
             {
                 var ballInLine = ballsInLine[index];
-                var overPointsCoef = 1;
-                if (index >= minimalBallsInLine)
-                    overPointsCoef = (index - minimalBallsInLine + 1) + 1;
                 
+                var extraPoints = 0;
+                if (index >= minimalBallsInLine)
+                    extraPoints += ballInLine.Points * (index + 1 - minimalBallsInLine);
+                if (lineIndex > 0)
+                    extraPoints += ballInLine.Points * lineIndex;
+                
+                var extraHatPoints = ballInLine.Hat;
                 resultBallsInLinePoints.Add(
-                    new BallDesc(ballInLine.GridPosition, ballInLine.Points * overPointsCoef * (lineIndex + 1), 0));
-            }
+                    (ballInLine, new PointsDesc(ballInLine.Points, extraPoints, extraHatPoints)));
+            }   
 
             return resultBallsInLinePoints;
         }
