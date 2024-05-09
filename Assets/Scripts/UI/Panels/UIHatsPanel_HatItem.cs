@@ -12,6 +12,7 @@ namespace Core
     {
         [SerializeField] private Button _button;
         [SerializeField] private Text _name;
+        [SerializeField] private Text _extraPoints;
         [SerializeField] private Image _lockIcon;
         [SerializeField] private GameObject _selectionFrame;
         
@@ -29,7 +30,6 @@ namespace Core
         
         private void Awake()
         {
-            
             _button.onClick.AddListener(OnClick);
             _userInactiveFilterButton.onClick.AddListener(UserInactiveFilterButton_OnClick);
         }
@@ -47,6 +47,8 @@ namespace Core
             OnSelectionChanged();
             SetUserActiveIcon();
             SetLockIcon();
+            SetExtraPoints();
+            
             
             _fakeScene.GameProcessor = gameProcessor;
             _fakeScene.HatsLibrary = gameProcessor.Scene.HatsLibrary;
@@ -54,6 +56,11 @@ namespace Core
             _fakeScene.UserInactiveHatsFilter = null;
             
             _fakeField.CreateBall(Vector3Int.zero, 2, model.Hat.Id);
+        }
+
+        private void SetExtraPoints()
+        {
+            _extraPoints.text = $"+{_model.ExtraPoints}";
         }
 
         private void OnAvailableChanged()
@@ -115,6 +122,7 @@ namespace Core
             public string Id => _hat.Id;
             public bool Available => _hat.Available;
             public int Cost => _hat.Cost;
+            public int ExtraPoints => _hat.ExtraPoints;
             public GuidEx NameKey => Hat.NameKey;
             public bool UserInactiveFilter => _userInactiveFilter;
 
@@ -122,12 +130,27 @@ namespace Core
             {
                 _owner.TrySelect(this);
             }
-            
-            public Model SetUserInactiveFilter(bool state)
+
+            public void SetData(bool userInactiveFilter)
             {
-                _userInactiveFilter = state;
-                OnUserInactiveFilterStateChanged?.Invoke(this);
-                return this;
+                _userInactiveFilter = userInactiveFilter;
+            }
+            
+            public void SetUserInactiveFilter(bool state)
+            {
+                if (!state)
+                {
+                    if (_owner.BalanceActivateHats())
+                    {
+                        _userInactiveFilter = false;
+                        OnUserInactiveFilterStateChanged?.Invoke(this);
+                    }
+                }
+                else
+                {
+                    _userInactiveFilter = true;
+                    OnUserInactiveFilterStateChanged?.Invoke(this);
+                }
             }
             
             internal void SetSelectedState(bool newState)

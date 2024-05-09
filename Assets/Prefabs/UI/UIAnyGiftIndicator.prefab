@@ -272,7 +272,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Text not found(9569bd6adc24492a97949ebfa90c1d79)
+  m_Text: Take!
 --- !u!114 &6338179249586222584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,12 +335,12 @@ Animation:
   m_GameObject: {fileID: 2422874343294665781}
   m_Enabled: 1
   serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
+  m_Animation: {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
   m_Animations:
-  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
   - {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
+  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
 --- !u!1 &3099041357251291469

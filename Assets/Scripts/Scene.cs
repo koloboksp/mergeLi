@@ -116,6 +116,11 @@ public class Scene : MonoBehaviour, IScene, IHatsChanger
         
         _gameProcessor.PointsCalculator.UpdateHatsExtraPoints(hatsExtraPoints);
     }
+
+    public string[] GetUserInactiveHatsFilter()
+    {
+        return ApplicationController.Instance.SaveController.SaveSettings.UserInactiveHatsFilter;
+    }
 }
 
 public interface ISkinChanger
@@ -127,4 +132,5 @@ public interface IHatsChanger
 {
   //  public void SetHat(string hatName);
     public void SetUserInactiveHatsFilter(string[] userInactiveHatsFilter);
+    public string[] GetUserInactiveHatsFilter();
 }

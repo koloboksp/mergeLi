@@ -14,6 +14,7 @@ namespace Core
     public class UIHatsPanel : UIPanel
     {
         [SerializeField] private Button _closeBtn;
+        [SerializeField] private Text _equipAllLabel;
         [SerializeField] private ScrollRect _container;
         [SerializeField] private UIHatsPanel_HatItem _itemPrefab;
         [SerializeField] private Button _buyBtn;
@@ -22,8 +23,6 @@ namespace Core
         [SerializeField] private Text _equipBtnLabel;
         [SerializeField] private GuidEx _equipTextKey;
         [SerializeField] private GuidEx _unequipTextKey;
-
-      //  [SerializeField] private Text _alreadyHaveLabel;
         [SerializeField] private UIGameScreen_Coins _coins;
         
         private Model _model;
@@ -52,6 +51,7 @@ namespace Core
                 {
                     
                 }
+                SetEquipAllLabel();
             }
             else
             {
@@ -72,8 +72,17 @@ namespace Core
             
             var equipBtnTextKey = _selectedItem.UserInactiveFilter ? _equipTextKey : _unequipTextKey;
             _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
+            
+            SetEquipAllLabel();
         }
-        
+
+        private void SetEquipAllLabel()
+        {
+            var maxActiveHats = _data.GameProcessor.ActiveGameRulesSettings.MaxActiveHats;
+            var count = _data.Hats.Count(hat => hat.Available && _data.UserInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null);
+           
+        }
+
         public override void SetData(UIScreenData undefinedData)
         {
             _data = undefinedData as UIHatsPanelData;
@@ -82,13 +91,18 @@ namespace Core
             _model.OnItemsUpdated += OnItemsUpdated;
             _model.OnBoughtButtonActiveChanged += OnBoughtButtonActiveChanged;
             _model.OnEquipStateChanged += EquipStateChanged;
+            _model.OnEquipRestrictionsChanged += EquipRestrictionsChanged;
             
             _model.SetData(
                 _data.Hats, 
                 _data.UserInactiveHatsFilter, 
                 _data.HatsChanger, 
+                _data.GameProcessor.ActiveGameRulesSettings,
                 ApplicationController.Instance.SaveController.SaveProgress);
             _model.Select(_data.Selected);
+
+            EquipRestrictionsChanged(_model.ActiveHatsCount, _model.MaxActiveHats);
+            SetEquipAllLabel();
             
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
             _coins.MakeSingle();
@@ -170,6 +184,11 @@ namespace Core
             SetEquipLabel();
         }
         
+        private void EquipRestrictionsChanged(int count, int maxActiveHats)
+        {
+            _equipAllLabel.text = $"{count}/{maxActiveHats}";
+        }
+        
         private void SetEquipLabel()
         {
             var equipBtnTextKey = _selectedItem.UserInactiveFilter ? _equipTextKey : _unequipTextKey;
@@ -181,28 +200,45 @@ namespace Core
             public Action<IEnumerable<UIHatsPanel_HatItem.Model>> OnItemsUpdated;
             public Action<bool, UIHatsPanel_HatItem.Model> OnBoughtButtonActiveChanged;
             public Action<UIHatsPanel_HatItem.Model> OnEquipStateChanged;
+            public Action<int, int> OnEquipRestrictionsChanged;
 
             private readonly List<UIHatsPanel_HatItem.Model> _items = new();
             private UIHatsPanel_HatItem.Model _selected;
             
             private IHatsChanger _changer;
+            private GameRulesSettings _rulesSettings;
             private SaveProgress _saveProgress;
+            
+            public int MaxActiveHats => _rulesSettings.MaxActiveHats;
+
+            public int ActiveHatsCount
+            {
+                get
+                {
+                    var userInactiveHatsFilter = _changer.GetUserInactiveHatsFilter();
+
+                    return _items
+                        .Count(hat => hat.Available && userInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null);
+                }
+            }
             
             public void SetData(
                 IReadOnlyList<Hat> hats,
                 string[] userInactiveFilter, 
                 IHatsChanger changer,
+                GameRulesSettings rulesSettings,
                 SaveProgress saveProgress)
             {
                 _saveProgress = saveProgress;
+                _rulesSettings = rulesSettings;
                 _changer = changer;
 
                 for (var hatI = 0; hatI < hats.Count; hatI++)
                 {
                     var hat = hats[hatI];
-                    var item = new UIHatsPanel_HatItem.Model(hat, this)
-                        .SetUserInactiveFilter(Array.FindIndex(userInactiveFilter, i => i == hat.Id) >= 0);
+                    var item = new UIHatsPanel_HatItem.Model(hat, this);
                     item.OnUserInactiveFilterStateChanged += Item_OnUserInactiveFilterStateChanged;
+                    item.SetData(Array.FindIndex(userInactiveFilter, i => i == hat.Id) >= 0);
                     _items.Add(item);
                 }
                 
@@ -221,8 +257,13 @@ namespace Core
 
                 _changer.SetUserInactiveHatsFilter(inactiveFilter.ToArray());
                 OnEquipStateChanged?.Invoke(sender);
+                UpdateEquipRestrictions();
             }
             
+            private void UpdateEquipRestrictions()
+            {
+                OnEquipRestrictionsChanged?.Invoke(ActiveHatsCount, MaxActiveHats);
+            }
             public bool CanBuySelectedItem()
             {
                 return _selected.Cost < _saveProgress.GetAvailableCoins();
@@ -234,6 +275,8 @@ namespace Core
                 {
                     await _selected.Buy();
                     OnBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
+                    BalanceActivateHats();
+                    UpdateEquipRestrictions();
                     
                     return true;
                 }
@@ -255,6 +298,24 @@ namespace Core
                     item.SetSelectedState(item == _selected);
                 
                 OnBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
+            }
+
+            internal bool BalanceActivateHats()
+            {
+                if (ActiveHatsCount >= MaxActiveHats)
+                {
+                    var userInactiveHatsFilter = _changer.GetUserInactiveHatsFilter();
+                    var hatWithMinimumExtraPoints = _items
+                        .OrderBy(i => i.ExtraPoints)
+                        .FirstOrDefault(hat => hat.Available && userInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null);
+
+                    if (hatWithMinimumExtraPoints != null)
+                    {
+                        hatWithMinimumExtraPoints.SetUserInactiveFilter(true);
+                    }
+                }
+
+                return true;
             }
         }
     }
