@@ -13,7 +13,7 @@ namespace Core
         public event Action OnMovingStateChanged;
         public event Action OnTransparencyChanged;
         public event Action<int, bool> OnPointsChanged;
-        public event Action<int, bool> OnHatChanged;
+        public event Action<string, bool> OnHatChanged;
         public event Action OnPathNotFound;
 
         public static event Action<Ball, bool> OnMovingStateChangedGlobal;
@@ -23,7 +23,7 @@ namespace Core
         [SerializeField] private BallView _view;
     
         private int _points = 1;
-        private int _hat = 0;
+        private string _hatName;
         private bool _selected;
         private bool _moving;
         private float _moveSpeed = 15.0f;
@@ -31,7 +31,7 @@ namespace Core
         
         public BallView View => _view;
         public int Points => _points;
-        public int Hat => _hat;
+        public string HatName => _hatName;
 
         public bool Selected => _selected;
         public bool Moving => _moving;
@@ -94,18 +94,19 @@ namespace Core
         private async Task InnerMerge(IEnumerable<IFieldMergeable> others, CancellationToken cancellationToken)
         {
             var newPoints = _points;
-            var newHat = _hat;
+            var newHatName = _hatName;
             foreach (var other in others)
             {
                 if (other is IBall otherBall)
                 {
                     newPoints += otherBall.Points;
-                    newHat = Mathf.Max(newHat, otherBall.Hat);
+                    if (string.IsNullOrEmpty(newHatName) && !string.IsNullOrEmpty(otherBall.HatName))
+                        newHatName = otherBall.HatName;
                 }
             }
 
             UpdatePoints(newPoints, false);
-            UpdateHat(newHat, false);
+            UpdateHat(newHatName, false);
             
             foreach (var other in others)
                 _field.DestroyBall(other as Ball);
@@ -156,7 +157,7 @@ namespace Core
             UpdatePoints(newPoints, false);
         }
 
-        public void SetData(IField field, Vector3 startPosition, int points, int hat)
+        public void SetData(IField field, Vector3 startPosition, int points, string hat)
         {
             _field = field;
             UpdatePoints(points, true);
@@ -234,10 +235,10 @@ namespace Core
             OnPointsChanged?.Invoke(oldPoints, force);
         }
 
-        private void UpdateHat(int newHat, bool force)
+        private void UpdateHat(string newHat, bool force)
         {
-            var oldHat = _hat;
-            _hat = newHat;
+            var oldHat = _hatName;
+            _hatName = newHat;
             OnHatChanged?.Invoke(oldHat, force);
         }
 

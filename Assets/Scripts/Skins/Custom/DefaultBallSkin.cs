@@ -191,16 +191,14 @@ namespace Skins.Custom
             _hatAnchor.gameObject.SetActive(activeState);
         }
 
-        public override void SetHat(int hatI, int oldHatI, bool force)
+        public override void SetHat(string hatName, string oldHat, bool force)
         {
             Hat hat = null;
-            if (_view.Ball.Hat != 0)
+            if (!string.IsNullOrEmpty(_view.Ball.HatName))
             {
-                if (_view.Ball.Field.Scene.IsHatActive(hatI))
+                if (_view.Ball.Field.Scene.IsHatActive(hatName))
                 {
-                    var hats = _view.Ball.Field.Scene.HatsLibrary.Hats;
-                    if (hatI < hats.Count)
-                        hat = hats[hatI];
+                    hat = _view.Ball.Field.Scene.HatsLibrary.Hats.FirstOrDefault(i => i.Id == hatName);
                 }
             }
 
@@ -218,7 +216,7 @@ namespace Skins.Custom
 
         public override void ChangeUserInactiveHatsFilter()
         {
-            SetHat(_view.Ball.Hat, _view.Ball.Hat, true);
+            SetHat(_view.Ball.HatName, _view.Ball.HatName, true);
         }
 
         private IEnumerator HideFaceWithDelayCoroutine(float delay)

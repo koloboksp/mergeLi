@@ -52,10 +52,8 @@ namespace Core
             _fakeScene.HatsLibrary = gameProcessor.Scene.HatsLibrary;
             _fakeScene.ActiveSkin = gameProcessor.Scene.ActiveSkin;
             _fakeScene.UserInactiveHatsFilter = null;
-
-            var indexOf = gameProcessor.Scene.HatsLibrary.Hats.ToList().IndexOf(model.Hat);
-
-            _fakeField.CreateBall(Vector3Int.zero, 2, indexOf);
+            
+            _fakeField.CreateBall(Vector3Int.zero, 2, model.Hat.Id);
         }
 
         private void OnAvailableChanged()
@@ -64,7 +62,7 @@ namespace Core
             SetUserActiveIcon();
         }
         
-        private void OnUserActiveStateChanged()
+        private void OnUserActiveStateChanged(Model model)
         {
             SetUserActiveIcon();
         }   
@@ -99,7 +97,7 @@ namespace Core
         {
             public event Action OnSelectedStateChanged;
             public event Action OnAvailableStateChanged;
-            public event Action OnUserInactiveFilterStateChanged;
+            public event Action<Model> OnUserInactiveFilterStateChanged;
 
             private readonly Hat _hat;
             private readonly UIHatsPanel.Model _owner;
@@ -128,7 +126,7 @@ namespace Core
             public Model SetUserInactiveFilter(bool state)
             {
                 _userInactiveFilter = state;
-                OnUserInactiveFilterStateChanged?.Invoke();
+                OnUserInactiveFilterStateChanged?.Invoke(this);
                 return this;
             }
             

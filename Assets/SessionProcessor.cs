@@ -237,7 +237,7 @@ public class SessionProcessor : MonoBehaviour,
             _gameProcessor.CastleSelector.SelectActiveCastle(lastSessionProgress.ActiveCastle.Id);
             _gameProcessor.CastleSelector.ActiveCastle.SetPoints(lastSessionProgress.ActiveCastle.Points, true);
         
-            var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => new BallDesc(i.GridPosition, i.Points, i.Hat));
+            var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => new BallDesc(i.GridPosition, i.Points, i.HatHame));
             _gameProcessor.Field.AddBalls(ballsProgressData);
 
             foreach (var buffProgress in lastSessionProgress.Buffs)

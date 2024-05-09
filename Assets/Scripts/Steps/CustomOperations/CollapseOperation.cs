@@ -65,7 +65,7 @@ namespace Core.Steps.CustomOperations
                     _collapseLines.Add(new List<BallDesc>());
                     foreach (var ball in collapseLine)
                     {
-                        _collapseLines[^1].Add(new BallDesc(ball.IntGridPosition, ball.Points, ball.Hat));
+                        _collapseLines[^1].Add(new BallDesc(ball.IntGridPosition, ball.Points, ball.HatName));
                         maxDistanceToCheckingPosition = Mathf.Max(maxDistanceToCheckingPosition, (ball.IntGridPosition - checkingPosition).magnitude);
                     }
                 }
@@ -85,16 +85,18 @@ namespace Core.Steps.CustomOperations
             var pointsGroups = new List<(List<(BallDesc ball, PointsDesc points)> ballPairs, Vector3 centerPosition)>();
             
             var sumPoints = 0;
+            var groupCenterPosition = Vector3.zero;
             foreach (var collapseLine in collapseLineWithResultPoints)
             {
-                var centerPosition = Vector3.zero;
+                var lineCenterPosition = Vector3.zero;
                 foreach (var ballPair in collapseLine)
                 {
-                    centerPosition += _field.GetPositionFromGrid(ballPair.ball.GridPosition) / collapseLine.Count;
+                    lineCenterPosition += _field.GetPositionFromGrid(ballPair.ball.GridPosition) / collapseLine.Count;
                     sumPoints += ballPair.points.Sum();
                 }
-               
-                pointsGroups.Add((collapseLine, centerPosition));
+
+                groupCenterPosition += lineCenterPosition / collapseLineWithResultPoints.Count;
+                pointsGroups.Add((collapseLine, lineCenterPosition));
             }
             _pointsAdded = sumPoints;
 
@@ -103,7 +105,7 @@ namespace Core.Steps.CustomOperations
                 var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
                 var collapsePointsEffect = Object.Instantiate(
                     _collapsePointsEffectPrefab, 
-                    _field.View.Root.TransformPoint(pointsGroups[0].centerPosition), 
+                    _field.View.Root.TransformPoint(groupCenterPosition), 
                     Quaternion.identity, 
                     findObjectOfType.transform);
                 collapsePointsEffect.Run(pointsGroups);
@@ -114,7 +116,6 @@ namespace Core.Steps.CustomOperations
                 removeBallTasks.Add(RemoveBallWithDelay(ballPair.ball, ballPair.distance / maxDistanceToCheckingPosition, cancellationToken));
             
             await Task.WhenAll(removeBallTasks);
-            
             
             return null;
         }

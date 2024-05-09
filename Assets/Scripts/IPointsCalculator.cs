@@ -7,5 +7,6 @@ namespace Core.Steps.CustomOperations
     {
         List<List<(BallDesc ball, PointsDesc points)>> GetPoints(List<List<BallDesc>> ballsInLines);
 
+        void UpdateHatsExtraPoints(IEnumerable<(string hatName, int points)> hatsExtraPoints);
     }
 }

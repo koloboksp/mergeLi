@@ -14,7 +14,6 @@ namespace Core.Effects
     public class CollapsePointsEffect : MonoBehaviour
     {
         [SerializeField] private PointsEffect _pointsEffect;
-       // [SerializeField] private Text _points;
         [SerializeField] private float _duration = 0.5f;
         [SerializeField] private CollapsePointsEffectText _pointsText;
         [SerializeField] private AudioClip _gotClip;

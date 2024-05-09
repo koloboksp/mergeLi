@@ -12,12 +12,12 @@ namespace Core.Steps.CustomOperations
         private readonly int _amount;
         private readonly int _maxAmount;
         private readonly int[] _availableValues;
-        private readonly int[] _availableHats;
+        private readonly string[] _availableHats;
         private readonly IField _field;
 
         private readonly List<BallDesc> _generatedItems = new();
         
-        public GenerateOperation(int amount, int maxAmount, int[] availableValues, int[] availableHats, IField field)
+        public GenerateOperation(int amount, int maxAmount, int[] availableValues, string[] availableHats, IField field)
         {
             _amount = amount;
             _maxAmount = maxAmount;

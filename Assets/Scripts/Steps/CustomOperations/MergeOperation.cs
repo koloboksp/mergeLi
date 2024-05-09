@@ -28,7 +28,7 @@ namespace Core.Steps.CustomOperations
             var otherMergeables = meargeables.GetRange(1, meargeables.Count - 1);
 
             foreach (var ball in meargeables)
-                _mergedBalls.Add(new BallDesc(ball.IntGridPosition, ball.Points, ball.Hat));
+                _mergedBalls.Add(new BallDesc(ball.IntGridPosition, ball.Points, ball.HatName));
                 
             Owner.SetData(new MergeOperationData()
             {

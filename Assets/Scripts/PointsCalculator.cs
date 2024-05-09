@@ -7,9 +7,17 @@ namespace Core.Steps.CustomOperations
     public class PointsCalculator : IPointsCalculator
     {
         private readonly GameRulesSettings _rulesSettings;
+        private readonly List<(string hatName, int points)> _hatExtraPoints = new();
+        
         public PointsCalculator(GameRulesSettings rulesSettingsSettings)
         {
             _rulesSettings = rulesSettingsSettings;
+        }
+
+        public void UpdateHatsExtraPoints(IEnumerable<(string hatName, int points)> hatsExtraPoints)
+        {
+            _hatExtraPoints.Clear();
+            _hatExtraPoints.AddRange(hatsExtraPoints);
         }
         
         public List<List<(BallDesc ball, PointsDesc points)>> GetPoints(List<List<BallDesc>> ballsInLines)
@@ -33,10 +41,10 @@ namespace Core.Steps.CustomOperations
                     extraPoints += ballInLine.Points * (index + 1 - minimalBallsInLine);
                 if (lineIndex > 0)
                     extraPoints += ballInLine.Points * lineIndex;
-                
-                var extraHatPoints = ballInLine.Hat;
-                resultBallsInLinePoints.Add(
-                    (ballInLine, new PointsDesc(ballInLine.Points, extraPoints, extraHatPoints)));
+
+                var foundHatI = _hatExtraPoints.FindIndex(i => i.hatName == ballInLine.HatName);
+                var extraHatPoints = foundHatI >= 0 ? _hatExtraPoints[foundHatI].points : 0;
+                resultBallsInLinePoints.Add((ballInLine, new PointsDesc(ballInLine.Points, extraPoints, extraHatPoints)));
             }   
 
             return resultBallsInLinePoints;

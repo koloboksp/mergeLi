@@ -19,7 +19,7 @@ namespace Core.Steps.CustomOperations
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             foreach (var ballData in _ballsToAdd)
-                _field.CreateBall(ballData.GridPosition, ballData.Points, ballData.Hat);
+                _field.CreateBall(ballData.GridPosition, ballData.Points, ballData.HatName);
 
             return null;
         }

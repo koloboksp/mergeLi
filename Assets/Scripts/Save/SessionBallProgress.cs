@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Save
 {
@@ -8,6 +9,6 @@ namespace Save
     {
         public Vector3Int GridPosition;
         public int Points;
-        public int Hat;
+        public string HatHame;
     }
 }

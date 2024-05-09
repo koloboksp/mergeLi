@@ -8,10 +8,10 @@ namespace Core
         public GameProcessor GameProcessor { get; set; }
         public SkinContainer ActiveSkin { get; set; }
         public HatsLibrary HatsLibrary { get; set; }
-        public int[] ActiveHats { get; }
+        public string[] ActiveHats { get; }
         
-        public int[] UserInactiveHatsFilter { get; set; }
-        public bool IsHatActive(int hatI)
+        public string[] UserInactiveHatsFilter { get; set; }
+        public bool IsHatActive(string hatName)
         {
             return true;
         }

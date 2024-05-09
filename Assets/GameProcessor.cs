@@ -177,7 +177,8 @@ public class GameProcessor : MonoBehaviour,
     public GameRulesSettings ActiveGameRulesSettings => _gameRulesSettings[_activeRulesSettings];
     public List<Buff> Buffs => _buffs;
     public int CurrencyAmount => ApplicationController.Instance.SaveController.SaveProgress.GetAvailableCoins();
-    
+
+    public IPointsCalculator PointsCalculator => _pointsCalculator;
     
     private void Awake()
     {

@@ -41,7 +41,7 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
             var ball = _gameProcessor.Scene.Field.PureCreateBall(
                 nextBallData.GridPosition, 
                 nextBallData.Points,
-                nextBallData.Hat);
+                nextBallData.HatName);
             _balls.Add(ball);
 
             if (index == 0)

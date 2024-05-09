@@ -117,12 +117,12 @@ public class Field : MonoBehaviour, IField
         return CalculatePath(from, to);
     }
 
-    public List<BallDesc> GenerateBalls(int num, int[] availableValues, int[] availableHats)
+    public List<BallDesc> GenerateBalls(int num, int[] availableValues, string[] availableHats)
     {
         return AddBalls(num, availableValues, availableHats);
     }
 
-    public Vector3Int CreateBall(Vector3Int position, int points, int hat)
+    public Vector3Int CreateBall(Vector3Int position, int points, string hat)
     {
         var newBall = PureCreateBall(position, points, hat);
         _balls.Add(newBall);
@@ -130,7 +130,7 @@ public class Field : MonoBehaviour, IField
         return position;
     }
     
-    public Ball PureCreateBall(Vector3Int position, int points, int hat)
+    public Ball PureCreateBall(Vector3Int position, int points, string hat)
     {
         var newBall = Instantiate(_ballPrefab, _view.Root);
         newBall.SetData(this, position, points, hat);
@@ -141,24 +141,24 @@ public class Field : MonoBehaviour, IField
         return newBall;
     }
     
-    public void GenerateNextBallPositions(int count, int[] availableValues, int[] availableHats)
+    public void GenerateNextBallPositions(int count, int[] availableValues, string[] availableHats)
     {
         var freeIndexes = new List<Vector3Int>();
-        var usedHats = new List<int>();
+        var usedHats = new List<string>();
         for (var x = 0; x < _size.x; x++)
         for (var y = 0; y < _size.y; y++)
             freeIndexes.Add(new Vector3Int(x, y, 0));
         foreach (var ball in _balls)
         {
             freeIndexes.Remove(ball.IntGridPosition);
-            if (ball.Hat != 0)
-                usedHats.Add(ball.Hat);
+            if (!string.IsNullOrEmpty(ball.HatName))
+                usedHats.Add(ball.HatName);
         }
 
         foreach (var nextBall in _nextBallsData)
             freeIndexes.Remove(nextBall.GridPosition);
 
-        var hatsToAdd = new List<int>();
+        var hatsToAdd = new List<string>();
         foreach (var activeHat in availableHats)
         {
             if (usedHats.Contains(activeHat))
@@ -179,7 +179,7 @@ public class Field : MonoBehaviour, IField
             var freeIndex = freeIndexes[randomElementIndex];
             freeIndexes.RemoveAt(randomElementIndex);
 
-            var hat = 0;
+            string hat = null;
             if (hatsToAdd.Count > 0)
             {
                 hat = hatsToAdd[0];
@@ -202,7 +202,7 @@ public class Field : MonoBehaviour, IField
         return _cellSize;
     }
 
-    public List<BallDesc> AddBalls(int amount, int[] availableValues, int[] availableHats)
+    public List<BallDesc> AddBalls(int amount, int[] availableValues, string[] availableHats)
     {
         foreach (var ball in _balls)
             _nextBallsData.RemoveAll(i => i.GridPosition == ball.IntGridPosition);
@@ -221,12 +221,12 @@ public class Field : MonoBehaviour, IField
         
         var newBallsData = new List<BallDesc>();
         foreach (var ballData in _nextBallsData)
-            newBallsData.Add(new BallDesc(ballData.GridPosition, ballData.Points, ballData.Hat));
+            newBallsData.Add(new BallDesc(ballData.GridPosition, ballData.Points, ballData.HatName));
         
         _nextBallsData.Clear();
 
         foreach (var ballData in newBallsData)
-            CreateBall(ballData.GridPosition, ballData.Points, ballData.Hat);
+            CreateBall(ballData.GridPosition, ballData.Points, ballData.HatName);
         
         return newBallsData;
     }
@@ -236,8 +236,8 @@ public class Field : MonoBehaviour, IField
         var result = new List<BallDesc>();
         foreach (var ballData in newBallsData)
         {
-            var gridPosition = CreateBall(ballData.GridPosition, ballData.Points, ballData.Hat);
-            result.Add(new BallDesc(gridPosition, ballData.Points, ballData.Hat));
+            var gridPosition = CreateBall(ballData.GridPosition, ballData.Points, ballData.HatName);
+            result.Add(new BallDesc(gridPosition, ballData.Points, ballData.HatName));
         }
 
         return result;

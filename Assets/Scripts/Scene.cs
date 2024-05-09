@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core;
 using Core.Steps.CustomOperations;
 using Skins;
@@ -10,9 +11,9 @@ public interface IScene
     SkinContainer ActiveSkin { get; }
     GameProcessor GameProcessor { get; }
     HatsLibrary HatsLibrary { get; }
-    int[] ActiveHats { get; }
-    public int[] UserInactiveHatsFilter { set; }
-    public bool IsHatActive(int hatI);
+    string[] ActiveHats { get; }
+    public string[] UserInactiveHatsFilter { set; }
+    public bool IsHatActive(string hatName);
 }
 
 public class Scene : MonoBehaviour, IScene, IHatsChanger
@@ -23,9 +24,8 @@ public class Scene : MonoBehaviour, IScene, IHatsChanger
     [SerializeField] private Field _field;
     [SerializeField] private Transform _sceneRoot;
 
-    private readonly List<int> _userInactiveHatsFilter = new List<int>();
+    private readonly List<string> _userInactiveHatsFilter = new();
     private SkinContainer _activeSkin;
-    private Hat _activeHat;
     
     public GameProcessor GameProcessor => _gameProcessor;
     public IField Field => _field;
@@ -35,7 +35,7 @@ public class Scene : MonoBehaviour, IScene, IHatsChanger
     public SkinContainer ActiveSkin => _activeSkin;
     public HatsLibrary HatsLibrary => _hatsLibrary;
 
-    public int[] UserInactiveHatsFilter
+    public string[] UserInactiveHatsFilter
     {
         get => _userInactiveHatsFilter.ToArray();
         set
@@ -57,42 +57,48 @@ public class Scene : MonoBehaviour, IScene, IHatsChanger
             skinChangeable.ChangeSkin(_activeSkin);
     }
     
-    public int[] ActiveHats
+    public string[] ActiveHats
     {
         get
         {
             var availableHats = _hatsLibrary.Hats;
             
-            var activeHatIndexes = new List<int>();
+            var activeHatIndexes = new List<string>();
             for (var hatI = 0; hatI < availableHats.Count; hatI++)
             {
-                if (!availableHats[hatI].Available)
+                var hat = availableHats[hatI];
+                if (!hat.Available)
                     continue;
-                if (_userInactiveHatsFilter != null && _userInactiveHatsFilter.Contains(hatI))
+                if (_userInactiveHatsFilter != null && _userInactiveHatsFilter.Contains(hat.Id))
                     continue;
                 
-                activeHatIndexes.Add(hatI);
+                activeHatIndexes.Add(hat.Id);
             }
 
             return activeHatIndexes.ToArray();
         }
     }
 
-    public bool IsHatActive(int hatI)
+    public bool IsHatActive(string hatName)
     {
-        var availableHats = _hatsLibrary.Hats;
-
-        if (hatI >= availableHats.Count)
+        Hat foundHat = null;
+        foreach (var hat in _hatsLibrary.Hats)
+        {
+            if (hat.Id == hatName)
+                foundHat = hat;
+        }
+        
+        if (foundHat == null) 
             return false;
-        if (!availableHats[hatI].Available)
+        if (!foundHat.Available)
             return false;
-        if (_userInactiveHatsFilter != null && _userInactiveHatsFilter.Contains(hatI))
+        if (_userInactiveHatsFilter != null && _userInactiveHatsFilter.Contains(foundHat.Id))
             return false;
 
         return true;
     }
 
-    public void SetUserInactiveHatsFilter(int[] userInactiveHatsFilter)
+    public void SetUserInactiveHatsFilter(string[] userInactiveHatsFilter)
     {
         _userInactiveHatsFilter.Clear();
         if (userInactiveHatsFilter != null)
@@ -103,6 +109,12 @@ public class Scene : MonoBehaviour, IScene, IHatsChanger
         var hatChangeables = _field.gameObject.GetComponentsInChildren<IHatChangeable>();
         foreach (var hatChangeable in hatChangeables)
             hatChangeable.ChangeUserInactiveHatsFilter();
+
+        var hatsExtraPoints = _hatsLibrary.Hats
+            .Where(hat => _userInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null)
+            .Select(hat => (hat.Id, hat.ExtraPoints));
+        
+        _gameProcessor.PointsCalculator.UpdateHatsExtraPoints(hatsExtraPoints);
     }
 }
 
@@ -114,5 +126,5 @@ public interface ISkinChanger
 public interface IHatsChanger
 {
   //  public void SetHat(string hatName);
-    public void SetUserInactiveHatsFilter(int[] userInactiveHatsFilter);
+    public void SetUserInactiveHatsFilter(string[] userInactiveHatsFilter);
 }

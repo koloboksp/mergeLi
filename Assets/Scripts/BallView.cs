@@ -59,7 +59,7 @@ namespace Core
             _ballSkin.SetData(this);
             
             Ball_OnPointsChanged(_ball.Points, true);
-            Ball_OnHatChanged(_ball.Hat, true);
+            Ball_OnHatChanged(_ball.HatName, true);
             Ball_OnSelectedChanged();
             Ball_TransparencyChanged();
         }
@@ -86,9 +86,9 @@ namespace Core
             _ballSkin.MainColor = _mainColor;
         }
         
-        private void Ball_OnHatChanged(int oldHat, bool force)
+        private void Ball_OnHatChanged(string oldHatName, bool force)
         {
-            _ballSkin.SetHat(_ball.Hat, oldHat, force);
+            _ballSkin.SetHat(_ball.HatName, oldHatName, force);
         }
         
         private void Ball_TransparencyChanged()

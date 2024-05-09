@@ -15,6 +15,6 @@ namespace Save
         public bool MusicEnable;
 
         public string ActiveSkin;
-        public int[] UserInactiveHatsFilter;
+        public string[] UserInactiveHatsFilter;
     }
 }

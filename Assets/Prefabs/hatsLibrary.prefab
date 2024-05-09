@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 30
   _hatView: {fileID: 1193866018883370369}
   _nameKey:
@@ -417,6 +418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 40
   _hatView: {fileID: 5049814846422710833}
   _nameKey:
@@ -726,6 +728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 40
   _hatView: {fileID: 1605373915369103106}
   _nameKey:
@@ -855,6 +858,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 50
   _hatView: {fileID: 4363696877612381099}
   _nameKey:
@@ -1029,6 +1033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 40
   _hatView: {fileID: 1177246496940669110}
   _nameKey:
@@ -1203,6 +1208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 30
   _hatView: {fileID: 1125517952438103446}
   _nameKey:
@@ -1256,6 +1262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 30
   _hatView: {fileID: 4378588590619398512}
   _nameKey:
@@ -1430,6 +1437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 30
   _hatView: {fileID: 4486564716680309102}
   _nameKey:
@@ -1477,50 +1485,6 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4301249826311995079}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0729c26cb0044062980a86329e95715e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &4668581763080990538
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6556517477291443957}
-  - component: {fileID: 5534983334662596011}
-  m_Layer: 0
-  m_Name: view
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6556517477291443957
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4668581763080990538}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6286026247144027412}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5534983334662596011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4668581763080990538}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0729c26cb0044062980a86329e95715e, type: 3}
@@ -1648,6 +1612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 50
   _hatView: {fileID: 5895934812818831964}
   _nameKey:
@@ -1746,6 +1711,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 30
   _hatView: {fileID: 5206318266294149188}
   _nameKey:
@@ -1799,6 +1765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 30
   _hatView: {fileID: 6326808365231917887}
   _nameKey:
@@ -1836,7 +1803,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2295467614829165940}
-  - {fileID: 6286026247144027412}
   - {fileID: 2716210563569370377}
   - {fileID: 9182724263616532379}
   - {fileID: 8326398469037748160}
@@ -1874,7 +1840,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hats:
-  - {fileID: 3093008693980634496}
   - {fileID: 3827919841310870539}
   - {fileID: 3864894162797284804}
   - {fileID: 7442319109482754496}
@@ -1891,59 +1856,6 @@ MonoBehaviour:
   - {fileID: 1127513434659511749}
   - {fileID: 4178826340185989495}
   - {fileID: 7522660964887716857}
---- !u!1 &6286026247144027413
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6286026247144027412}
-  - component: {fileID: 3093008693980634496}
-  m_Layer: 0
-  m_Name: none
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6286026247144027412
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6286026247144027413}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6556517477291443957}
-  m_Father: {fileID: 5980159394057319608}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3093008693980634496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6286026247144027413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6376c1d7bb8d45c9aff044b2328f74b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isFree: 1
-  _cost: 0
-  _hatView: {fileID: 5534983334662596011}
-  _nameKey:
-    m03: 2215366714
-    m47: 2302296155
-    m8B: 2450322461
-    mCF: 2799230718
 --- !u!1 &6450211689486068491
 GameObject:
   m_ObjectHideFlags: 0
@@ -2232,6 +2144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 40
   _hatView: {fileID: 105675708796342364}
   _nameKey:
@@ -2406,6 +2319,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 40
   _hatView: {fileID: 7858261083044895429}
   _nameKey:
@@ -2580,6 +2494,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 50
   _hatView: {fileID: 8818113101109356345}
   _nameKey:
@@ -2830,6 +2745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 40
   _hatView: {fileID: 5680988867401997597}
   _nameKey:
@@ -2883,6 +2799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
+  _extraPoints: 1
   _cost: 50
   _hatView: {fileID: 5085898056264490832}
   _nameKey:

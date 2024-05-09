@@ -77,10 +77,11 @@ namespace Core
         public override void SetData(UIScreenData undefinedData)
         {
             _data = undefinedData as UIHatsPanelData;
-            
-            _model = new Model()
-                .OnItemsUpdated(OnItemsUpdated)
-                .OnBoughtButtonActiveChanged(OnBoughtButtonActiveChanged);
+
+            _model = new Model();
+            _model.OnItemsUpdated += OnItemsUpdated;
+            _model.OnBoughtButtonActiveChanged += OnBoughtButtonActiveChanged;
+            _model.OnEquipStateChanged += EquipStateChanged;
             
             _model.SetData(
                 _data.Hats, 
@@ -160,17 +161,28 @@ namespace Core
             {
                 _buyBtn.gameObject.SetActive(false);
                 _equipBtn.gameObject.SetActive(true);
-                var equipBtnTextKey = _selectedItem.UserInactiveFilter ? _equipTextKey : _unequipTextKey;
-                _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
+                SetEquipLabel();
             }
         }
-
+        
+        private void EquipStateChanged(UIHatsPanel_HatItem.Model sender)
+        {
+            SetEquipLabel();
+        }
+        
+        private void SetEquipLabel()
+        {
+            var equipBtnTextKey = _selectedItem.UserInactiveFilter ? _equipTextKey : _unequipTextKey;
+            _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
+        }
+        
         public class Model
         {
-            private Action<IEnumerable<UIHatsPanel_HatItem.Model>> _onItemsUpdated;
-            private Action<bool, UIHatsPanel_HatItem.Model> _onBoughtButtonActiveChanged;
+            public Action<IEnumerable<UIHatsPanel_HatItem.Model>> OnItemsUpdated;
+            public Action<bool, UIHatsPanel_HatItem.Model> OnBoughtButtonActiveChanged;
+            public Action<UIHatsPanel_HatItem.Model> OnEquipStateChanged;
 
-            private readonly List<UIHatsPanel_HatItem.Model> _items = new List<UIHatsPanel_HatItem.Model>();
+            private readonly List<UIHatsPanel_HatItem.Model> _items = new();
             private UIHatsPanel_HatItem.Model _selected;
             
             private IHatsChanger _changer;
@@ -178,7 +190,7 @@ namespace Core
             
             public void SetData(
                 IReadOnlyList<Hat> hats,
-                int[] userInactiveFilter, 
+                string[] userInactiveFilter, 
                 IHatsChanger changer,
                 SaveProgress saveProgress)
             {
@@ -189,39 +201,28 @@ namespace Core
                 {
                     var hat = hats[hatI];
                     var item = new UIHatsPanel_HatItem.Model(hat, this)
-                        .SetUserInactiveFilter(Array.FindIndex(userInactiveFilter, i => i == hatI) >= 0);
+                        .SetUserInactiveFilter(Array.FindIndex(userInactiveFilter, i => i == hat.Id) >= 0);
                     item.OnUserInactiveFilterStateChanged += Item_OnUserInactiveFilterStateChanged;
                     _items.Add(item);
                 }
                 
-                _onItemsUpdated?.Invoke(_items);
+                OnItemsUpdated?.Invoke(_items);
             }
 
-            private void Item_OnUserInactiveFilterStateChanged()
+            private void Item_OnUserInactiveFilterStateChanged(UIHatsPanel_HatItem.Model sender)
             {
-                var inactiveFilter = new List<int>();
+                var inactiveFilter = new List<string>();
                 for (var itemI = 0; itemI < _items.Count; itemI++)
                 {
                     var item = _items[itemI];
                     if (item.UserInactiveFilter)
-                        inactiveFilter.Add(itemI);
+                        inactiveFilter.Add(item.Hat.Id);
                 }
 
                 _changer.SetUserInactiveHatsFilter(inactiveFilter.ToArray());
+                OnEquipStateChanged?.Invoke(sender);
             }
             
-            public Model OnItemsUpdated(Action<IEnumerable<UIHatsPanel_HatItem.Model>> onItemsUpdated)
-            {
-                _onItemsUpdated = onItemsUpdated;
-                return this;
-            }
-            
-            public Model OnBoughtButtonActiveChanged(Action<bool, UIHatsPanel_HatItem.Model> onChanged)
-            {
-                _onBoughtButtonActiveChanged = onChanged;
-                return this;
-            }
-
             public bool CanBuySelectedItem()
             {
                 return _selected.Cost < _saveProgress.GetAvailableCoins();
@@ -232,7 +233,7 @@ namespace Core
                 if (_selected.Cost < _saveProgress.GetAvailableCoins())
                 {
                     await _selected.Buy();
-                    _onBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
+                    OnBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
                     
                     return true;
                 }
@@ -253,7 +254,7 @@ namespace Core
                 foreach (var item in _items)
                     item.SetSelectedState(item == _selected);
                 
-                _onBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
+                OnBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
             }
         }
     }
@@ -262,7 +263,7 @@ namespace Core
     {
         public GameProcessor GameProcessor;
         public Hat Selected;
-        public int[] UserInactiveHatsFilter;
+        public string[] UserInactiveHatsFilter;
         public IReadOnlyList<Hat> Hats;
         public IHatsChanger HatsChanger;
     }

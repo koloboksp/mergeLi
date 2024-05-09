@@ -23,12 +23,12 @@ namespace Core
             throw new System.NotImplementedException();
         }
 
-        public List<BallDesc> GenerateBalls(int count, int[] availableValues, int[] availableHats)
+        public List<BallDesc> GenerateBalls(int count, int[] availableValues, string[] availableHats)
         {
             throw new System.NotImplementedException();
         }
 
-        public Vector3Int CreateBall(Vector3Int position, int points, int hat)
+        public Vector3Int CreateBall(Vector3Int position, int points, string hat)
         {
             var ball = Instantiate(_ballPrefab, transform);
             ball.transform.localScale = Vector3.one;
@@ -56,7 +56,7 @@ namespace Core
         }
 
         public IFieldView View { get; }
-        public void GenerateNextBallPositions(int count, int[] availableValues, int[] availableHats)
+        public void GenerateNextBallPositions(int count, int[] availableValues, string[] availableHats)
         {
             throw new System.NotImplementedException();
         }
@@ -127,7 +127,7 @@ namespace Core
             throw new System.NotImplementedException();
         }
 
-        public Ball PureCreateBall(Vector3Int gridPosition, int points, int hat)
+        public Ball PureCreateBall(Vector3Int gridPosition, int points, string hat)
         {
             throw new System.NotImplementedException();
         }

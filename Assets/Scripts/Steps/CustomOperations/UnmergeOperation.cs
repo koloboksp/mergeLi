@@ -28,7 +28,7 @@ namespace Core.Steps.CustomOperations
                 for (var ballI = 0; ballI < _sourceBalls.Count; ballI++)
                 {
                     var sourceBall = _sourceBalls[ballI];
-                    _field.CreateBall(sourceBall.GridPosition, sourceBall.Points, sourceBall.Hat);
+                    _field.CreateBall(sourceBall.GridPosition, sourceBall.Points, sourceBall.HatName);
                 }
             }
             

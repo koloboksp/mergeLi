@@ -67,7 +67,7 @@ namespace Save
                 {
                     GridPosition = ball.IntGridPosition,
                     Points = ball.Points,
-                    Hat = ball.Hat,
+                    HatHame = ball.HatName,
                 };
                 _session.Field.Balls.Add(ballProgress);
             }

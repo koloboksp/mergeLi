@@ -35,17 +35,17 @@ public class BallDesc
 {
     public Vector3Int GridPosition;
     public int Points;
-    public int Hat;
+    public string HatName;
     
     public BallDesc()
     {
     }
 
-    public BallDesc(Vector3Int gridPosition, int points, int hat)
+    public BallDesc(Vector3Int gridPosition, int points, string hatName)
     {
         GridPosition = gridPosition;
         Points = points;
-        Hat = hat;
+        HatName = hatName;
     }
     
 }

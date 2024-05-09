@@ -29,9 +29,14 @@ namespace Assets.Scripts.Core
             UpdateText();
         }
 
-        void OnValidate()
+        async void OnValidate()
         {
-            UpdateText();
+            if (Application.isPlaying)
+                return;
+            if (Target == null)
+                return;
+            
+            Target.text = LocalizationController.GetTextInEditorMode(LocalizationController.DefaultLanguage, _id);
         }
 
         private void UpdateText()
@@ -39,13 +44,7 @@ namespace Assets.Scripts.Core
             if (Target == null)
                 return;
             
-            var text = string.Empty;
-            if (Application.isPlaying)
-                text = ApplicationController.Instance.LocalizationController.GetText(_id);
-            else
-                text = LocalizationController.GetTextInEditorMode(LocalizationController.DefaultLanguage, _id);
-
-            Target.text = text;
+            Target.text = ApplicationController.Instance.LocalizationController.GetText(_id);;
         }
 
         public GuidEx Id

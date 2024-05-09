@@ -96,7 +96,7 @@ namespace Save
             }
         }
 
-        public int[] UserInactiveHatsFilter
+        public string[] UserInactiveHatsFilter
         {
             get => _settings.UserInactiveHatsFilter;
             set

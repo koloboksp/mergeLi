@@ -14,7 +14,7 @@ namespace Skins
         public abstract void PathNotFount();
         public abstract void Remove(bool force);
         public abstract void ShowHat(bool activeState);
-        public abstract void SetHat(int hatI, int oldHatI, bool force);
+        public abstract void SetHat(string hatName, string oldHat, bool force);
         public abstract void ChangeUserInactiveHatsFilter();
     }
 }
