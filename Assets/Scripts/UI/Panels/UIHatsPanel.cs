@@ -68,9 +68,9 @@ namespace Core
 
         private void EquipBtn_OnClick()
         {
-            _selectedItem.SetUserInactiveFilter(!_selectedItem.UserInactiveFilter);
+            _selectedItem.SetUserInactiveFilter(!_selectedItem.UserInactive);
             
-            var equipBtnTextKey = _selectedItem.UserInactiveFilter ? _equipTextKey : _unequipTextKey;
+            var equipBtnTextKey = _selectedItem.UserInactive ? _equipTextKey : _unequipTextKey;
             _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
             
             SetEquipAllLabel();
@@ -79,7 +79,9 @@ namespace Core
         private void SetEquipAllLabel()
         {
             var maxActiveHats = _data.GameProcessor.ActiveGameRulesSettings.MaxActiveHats;
-            var count = _data.Hats.Count(hat => hat.Available && _data.UserInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null);
+            var count = _data.Hats.Count(hat => hat.Available 
+                                                && _data.UserInactiveHatsFilter != null 
+                                                && _data.UserInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null);
            
         }
 
@@ -191,7 +193,7 @@ namespace Core
         
         private void SetEquipLabel()
         {
-            var equipBtnTextKey = _selectedItem.UserInactiveFilter ? _equipTextKey : _unequipTextKey;
+            var equipBtnTextKey = _selectedItem.UserInactive ? _equipTextKey : _unequipTextKey;
             _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
         }
         
@@ -238,7 +240,12 @@ namespace Core
                     var hat = hats[hatI];
                     var item = new UIHatsPanel_HatItem.Model(hat, this);
                     item.OnUserInactiveFilterStateChanged += Item_OnUserInactiveFilterStateChanged;
-                    item.SetData(Array.FindIndex(userInactiveFilter, i => i == hat.Id) >= 0);
+
+                    var userInactive = false;
+                    if (userInactiveFilter != null)
+                        userInactive = Array.FindIndex(userInactiveFilter, i => i == hat.Id) >= 0;
+
+                    item.SetData(userInactive);
                     _items.Add(item);
                 }
                 
@@ -251,7 +258,7 @@ namespace Core
                 for (var itemI = 0; itemI < _items.Count; itemI++)
                 {
                     var item = _items[itemI];
-                    if (item.UserInactiveFilter)
+                    if (item.UserInactive)
                         inactiveFilter.Add(item.Hat.Id);
                 }
 

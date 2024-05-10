@@ -179,6 +179,7 @@ MonoBehaviour:
   _generatedBallsCountOnStart: 5
   _maxBallPoints: 512
   _generatedBallsPointsRange: 00000000010000000200000004000000080000001000000020000000
+  _maxActiveHats: 5
 --- !u!224 &37189758 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6493377613641388009, guid: d33d11ca88ec9454f991757ba8bdbeb8,
@@ -764,6 +765,7 @@ MonoBehaviour:
   _gameRulesSettings:
   - {fileID: 563858732}
   - {fileID: 23029532}
+  - {fileID: 1650489694}
   _activeRulesSettings: 0
   _uiScreensRoot: {fileID: 1881252459}
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,
@@ -1218,6 +1220,7 @@ MonoBehaviour:
   _generatedBallsCountOnStart: 5
   _maxBallPoints: 512
   _generatedBallsPointsRange: 00000000010000000200000004000000080000001000000020000000
+  _maxActiveHats: 5
 --- !u!224 &572637189 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1054850265026345782, guid: e637faaed2e1fe54d99bf76546865a9d,
@@ -3408,6 +3411,57 @@ MonoBehaviour:
   _randomizeDelay: 1
   _duration: 0.5
   _gotClip: {fileID: 8300000, guid: d3d0bce84b1494a409bd4c2de587aa61, type: 3}
+--- !u!1 &1650489692
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1650489693}
+  - component: {fileID: 1650489694}
+  m_Layer: 0
+  m_Name: cheat32_64
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1650489693
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650489692}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1959281468}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1650489694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650489692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _minimalBallsInLine: 5
+  _generatedBallsCountAfterMerge: 1
+  _generatedBallsCountAfterMove: 3
+  _generatedBallsCountOnStart: 5
+  _maxBallPoints: 512
+  _generatedBallsPointsRange: 2000000040000000
+  _maxActiveHats: 5
 --- !u!224 &1664368639 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1054850265026345782, guid: be35a59ada258094eacc96b04bbb32c3,
@@ -3949,6 +4003,7 @@ Transform:
   m_Children:
   - {fileID: 563858731}
   - {fileID: 23029531}
+  - {fileID: 1650489693}
   m_Father: {fileID: 391481346}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5292,7 +5347,7 @@ PrefabInstance:
     - target: {fileID: 5957255816287073239, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
       propertyPath: m_Volume
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7335857329322477467, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}

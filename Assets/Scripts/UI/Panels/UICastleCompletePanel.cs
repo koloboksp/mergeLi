@@ -84,6 +84,8 @@ namespace Core
                         await _speaker.ShowTextAsync(_data.DialogAfterBuildEndingKey, true, exitToken);
                     }
                     _speaker.SetDialogActive(false);
+
+                    await activeCastle.PlayBuildingComplete();
                     
                     await AsyncExtensions.WaitForSecondsAsync(_delayBeforeGiveCoins, exitToken);
 

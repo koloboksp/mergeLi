@@ -38,7 +38,9 @@ namespace Core.Goals
         private int _points;
         private int _animatedPoints;
         private CastlePart _selectedPart;
-        
+        private bool _inPointsReceiveState;
+        private TaskCompletionSource<bool> _pointsReceiveCompletedSource;
+
         public string Id => gameObject.name;
         public RectTransform Root => _root;
 
@@ -88,11 +90,6 @@ namespace Core.Goals
             return _points;
         }
         
-        public int GetClampedPoints()
-        {
-            return Mathf.Clamp(_points, 0 , GetCost());
-        }
-
         public void SetData(GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;
@@ -126,10 +123,12 @@ namespace Core.Goals
             _pointsReceiver.OnReceiveFinished += PointsReceiver_OnReceiveFinished;
             _pointsReceiver.OnRefund += PointsReceiver_OnRefund;
         }
-
+        
         private void PointsReceiver_OnReceiveStart(int amount)
         {
             _points += amount;
+
+            _inPointsReceiveState = true;
         }
 
         private void PointsReceiver_OnReceive(int partAmount)
@@ -150,6 +149,11 @@ namespace Core.Goals
                 if (_completed)
                     OnCompleted?.Invoke(this);
             }
+
+            _inPointsReceiveState = false;
+            
+            if (_pointsReceiveCompletedSource != null)
+                _pointsReceiveCompletedSource.TrySetResult(true);
         }
         
         void PointsReceiver_OnRefund(int refundPoints)
@@ -169,7 +173,6 @@ namespace Core.Goals
             
             return completed;
         }
-
         
         private void ApplyPointsToParts(Order order, bool instant)
         {
@@ -309,5 +312,37 @@ namespace Core.Goals
             Decrease,
         }
 
+        public async Task WaitForAnimationsComplete(CancellationToken exitToken)
+        {
+            await _view.WaitForAnimationsComplete(exitToken);
+        }
+        
+        public async Task WaitForCoinsReceiveEffectComplete(CancellationToken exitToken)
+        {
+            if (!_inPointsReceiveState)
+                return;
+            
+            var exitTokenCompletion = new TaskCompletionSource<bool>();
+            var exitTokenRegistration = exitToken.Register(() => exitTokenCompletion.TrySetCanceled(exitToken));
+        
+            try
+            {
+                if (_pointsReceiveCompletedSource == null)
+                    _pointsReceiveCompletedSource = new TaskCompletionSource<bool>();
+
+                await Task.WhenAny(_pointsReceiveCompletedSource.Task, exitTokenCompletion.Task);
+
+                _pointsReceiveCompletedSource = null;
+            }
+            finally
+            {
+                exitTokenRegistration.Dispose();
+            } 
+        }
+
+        public async Task PlayBuildingComplete()
+        {
+            await _view.PlayBuildingComplete();
+        }
     }
 }

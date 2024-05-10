@@ -82,7 +82,7 @@ namespace Core
         private void SetUserActiveIcon()
         {
             _userInactiveFilterPanel.SetActive(_model.Available);
-            _userInactiveFilterIcon.sprite = _model.UserInactiveFilter ? _userInactiveFilterIconNotSelected : _userInactiveFilterIconSelected;
+            _userInactiveFilterIcon.sprite = _model.UserInactive ? _userInactiveFilterIconNotSelected : _userInactiveFilterIconSelected;
         }
         
         private void OnClick()
@@ -92,7 +92,7 @@ namespace Core
 
         private void UserInactiveFilterButton_OnClick()
         {
-            _model.SetUserInactiveFilter(!_model.UserInactiveFilter);
+            _model.SetUserInactiveFilter(!_model.UserInactive);
         }
         
         private void OnSelectionChanged()
@@ -109,7 +109,7 @@ namespace Core
             private readonly Hat _hat;
             private readonly UIHatsPanel.Model _owner;
             private bool _selected;
-            private bool _userInactiveFilter;
+            private bool _userInactive;
 
             public Model(Hat hat, UIHatsPanel.Model owner)
             {
@@ -124,16 +124,16 @@ namespace Core
             public int Cost => _hat.Cost;
             public int ExtraPoints => _hat.ExtraPoints;
             public GuidEx NameKey => Hat.NameKey;
-            public bool UserInactiveFilter => _userInactiveFilter;
+            public bool UserInactive => _userInactive;
 
             public void SelectMe()
             {
                 _owner.TrySelect(this);
             }
 
-            public void SetData(bool userInactiveFilter)
+            public void SetData(bool userInactive)
             {
-                _userInactiveFilter = userInactiveFilter;
+                _userInactive = userInactive;
             }
             
             public void SetUserInactiveFilter(bool state)
@@ -142,13 +142,13 @@ namespace Core
                 {
                     if (_owner.BalanceActivateHats())
                     {
-                        _userInactiveFilter = false;
+                        _userInactive = false;
                         OnUserInactiveFilterStateChanged?.Invoke(this);
                     }
                 }
                 else
                 {
-                    _userInactiveFilter = true;
+                    _userInactive = true;
                     OnUserInactiveFilterStateChanged?.Invoke(this);
                 }
             }

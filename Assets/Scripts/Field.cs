@@ -186,7 +186,7 @@ public class Field : MonoBehaviour, IField
                 hatsToAdd.RemoveAt(0);
             }
             
-            _nextBallsData.Add(new BallDesc(freeIndex, availableValues[Random.Range(0, availableValues.Length - 1)], hat));
+            _nextBallsData.Add(new BallDesc(freeIndex, availableValues[Random.Range(0, availableValues.Length)], hat));
         }
     }
 

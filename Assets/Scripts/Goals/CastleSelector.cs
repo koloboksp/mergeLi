@@ -20,18 +20,6 @@ public class CastleSelector : MonoBehaviour
    
     public CastleLibrary Library => _library;
     public Castle ActiveCastle => _castleInstance;
-
-    public int GetEarnedPoints()
-    {
-        var earnedPoints = 0;
-        
-        if (ActiveCastle != null)
-        {
-            earnedPoints += ActiveCastle.GetPoints();
-        }
-
-        return earnedPoints;
-    }
     
     public void SetData()
     {

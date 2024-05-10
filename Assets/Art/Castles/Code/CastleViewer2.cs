@@ -215,7 +215,7 @@ public class CastleViewer2 : MonoBehaviour
             await Task.WhenAll(tasks);
         }
     }
-
+    
     // For Debug
     // private void OnGUI()
     // {
@@ -250,7 +250,8 @@ public class CastleViewer2 : MonoBehaviour
     private readonly List<Operation> _operations = new ();
     private Task _operationsExecutor;
     private CancellationTokenSource _destroyTokenSource;
-    
+    private TaskCompletionSource<bool> _animationsCompletedSource;
+
     private void OnDestroy()
     {
         _destroyTokenSource.Cancel();
@@ -326,6 +327,9 @@ public class CastleViewer2 : MonoBehaviour
                 await operation.ExecuteAsync(destroyToken, exitToken);
 
                 _operations.RemoveAt(0);
+
+                if (_operations.Count == 0 && _animationsCompletedSource != null)
+                    _animationsCompletedSource.TrySetResult(true);
             }
         }
         catch (OperationCanceledException e)
@@ -376,5 +380,38 @@ public class CastleViewer2 : MonoBehaviour
             
             await AsyncExtensions.WaitForSecondsAsync(effect.Duration, destroyToken, exitToken);
         }
+    }
+    
+    public async Task WaitForAnimationsComplete(CancellationToken exitToken)
+    {
+        if (_operations.Count == 0)
+            return;
+        
+        var exitTokenCompletion = new TaskCompletionSource<bool>();
+        var exitTokenRegistration = exitToken.Register(() => exitTokenCompletion.TrySetCanceled(exitToken));
+        
+        try
+        {
+            if (_animationsCompletedSource == null)
+                _animationsCompletedSource = new TaskCompletionSource<bool>();
+
+            await Task.WhenAny(_animationsCompletedSource.Task, exitTokenCompletion.Task);
+
+            _animationsCompletedSource = null;
+        }
+        finally
+        {
+            exitTokenRegistration.Dispose();
+        } 
+    }
+
+    public async Task PlayBuildingComplete()
+    {
+        var tasks = new List<Task>();
+
+        for (int i = 0; i < bits.Length; i++)
+            tasks.Add(bits[i].PlayComplete(i));
+
+        await Task.WhenAll(tasks);
     }
 }

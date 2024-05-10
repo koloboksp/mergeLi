@@ -12,7 +12,6 @@ public interface IScene
     GameProcessor GameProcessor { get; }
     HatsLibrary HatsLibrary { get; }
     string[] ActiveHats { get; }
-    public string[] UserInactiveHatsFilter { set; }
     public bool IsHatActive(string hatName);
 }
 
@@ -35,16 +34,25 @@ public class Scene : MonoBehaviour, IScene, IHatsChanger
     public SkinContainer ActiveSkin => _activeSkin;
     public HatsLibrary HatsLibrary => _hatsLibrary;
 
-    public string[] UserInactiveHatsFilter
+    public void SetData(string skinName, string[] userInactiveHatsFilter)
     {
-        get => _userInactiveHatsFilter.ToArray();
-        set
-        {
-            _userInactiveHatsFilter.Clear();
-            if (value != null)
-                _userInactiveHatsFilter.AddRange(value);
-        }
+        ChangeUserInactiveHatsFilter(userInactiveHatsFilter);
+        SetSkin(skinName);
     }
+    
+    //public string[] UserInactiveHatsFilter
+    //{
+    //    get => _userInactiveHatsFilter.ToArray();
+    //    set
+    //    {
+    //        _userInactiveHatsFilter.Clear();
+    //        if (value != null)
+    //            _userInactiveHatsFilter.AddRange(value);
+    //        
+    //        
+    //        _userInactiveHatsFilter
+    //    }
+    //}
 
     public void SetSkin(string skinName)
     {
@@ -78,7 +86,7 @@ public class Scene : MonoBehaviour, IScene, IHatsChanger
             return activeHatIndexes.ToArray();
         }
     }
-
+    
     public bool IsHatActive(string hatName)
     {
         Hat foundHat = null;
@@ -100,11 +108,16 @@ public class Scene : MonoBehaviour, IScene, IHatsChanger
 
     public void SetUserInactiveHatsFilter(string[] userInactiveHatsFilter)
     {
+        ChangeUserInactiveHatsFilter(userInactiveHatsFilter);
+
+        ApplicationController.Instance.SaveController.SaveSettings.UserInactiveHatsFilter = userInactiveHatsFilter;
+    }
+
+    private void ChangeUserInactiveHatsFilter(string[] userInactiveHatsFilter)
+    {
         _userInactiveHatsFilter.Clear();
         if (userInactiveHatsFilter != null)
             _userInactiveHatsFilter.AddRange(userInactiveHatsFilter);
-
-        ApplicationController.Instance.SaveController.SaveSettings.UserInactiveHatsFilter = userInactiveHatsFilter;
         
         var hatChangeables = _field.gameObject.GetComponentsInChildren<IHatChangeable>();
         foreach (var hatChangeable in hatChangeables)

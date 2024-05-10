@@ -59,9 +59,8 @@ public class SessionProcessor : MonoBehaviour,
         try
         {
             var activeSkinName = ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin;
-            _gameProcessor.Scene.SetSkin(activeSkinName);
             var userInactiveHatsFilter = ApplicationController.Instance.SaveController.SaveSettings.UserInactiveHatsFilter;
-            _gameProcessor.Scene.UserInactiveHatsFilter = userInactiveHatsFilter;
+            _gameProcessor.Scene.SetData(activeSkinName, userInactiveHatsFilter);
             
             UIGameScreen gameScreen = null;
             UIStartPanel startPanel = null;
@@ -107,7 +106,7 @@ public class SessionProcessor : MonoBehaviour,
                
                 try
                 {
-                    await ProcessSessionAsync(restartToken, loseToken, exitToken);
+                    await ProcessSessionAsync(gameScreen, restartToken, loseToken, exitToken);
                 }
                 catch (OperationCanceledException exception)
                 {
@@ -262,7 +261,7 @@ public class SessionProcessor : MonoBehaviour,
         }
     }
     
-    private async Task ProcessSessionAsync(CancellationToken restartToken, CancellationToken loseToken, CancellationToken cancellationToken)
+    private async Task ProcessSessionAsync(UIGameScreen gameScreen, CancellationToken restartToken, CancellationToken loseToken, CancellationToken cancellationToken)
     {
         _gameProcessor.Field.GenerateNextBallPositions(
             _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountAfterMove, 
@@ -287,7 +286,7 @@ public class SessionProcessor : MonoBehaviour,
             
             if (CheckCastleCompetedState())
             {
-                await ProcessCastleCompleting();
+                await ProcessCastleCompleting(gameScreen);
             }
             else
             {
@@ -311,7 +310,7 @@ public class SessionProcessor : MonoBehaviour,
         return activeCastle.Completed;
     }
     
-    private async Task ProcessCastleCompleting()
+    private async Task ProcessCastleCompleting(UIGameScreen gameScreen)
     {
         var castle = _gameProcessor.CastleSelector.ActiveCastle;
         
@@ -336,7 +335,17 @@ public class SessionProcessor : MonoBehaviour,
             dialogKeyOnBuildStarting = nextCastle.TextOnBuildStartingKey;
         }
         
+        gameScreen.LockInput(true);
+        _gameProcessor.Field.View.LockInput(true);
+
+        await castle.WaitForCoinsReceiveEffectComplete(Application.exitCancellationToken);
+        await castle.WaitForAnimationsComplete(Application.exitCancellationToken);
+        
         await ProcessCastleCompleteAsync(castle.TextAfterBuildEndingKey, dialogKeyOnBuildStarting, false, null, null, null, Application.exitCancellationToken);
+        
+        gameScreen.LockInput(false);
+        _gameProcessor.Field.View.LockInput(false);
+
         ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
     }
     

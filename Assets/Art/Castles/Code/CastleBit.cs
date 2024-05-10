@@ -146,6 +146,31 @@ public class CastleBit : MonoBehaviour
         mat.SetFloat(pBorder, border);
     }
     
+    public class ShowCompleteProgressOperation : CastleViewer2.Operation
+    {
+        private readonly int _maxPoints;
+        public ShowCompleteProgressOperation(int partIndex, int maxPoints, CastleViewer2 target, CastleBit bit) 
+            : base(partIndex, target, bit)
+        {
+            _maxPoints = maxPoints;
+        }
+
+        public override async Task ExecuteAsync(CancellationToken destroyToken, CancellationToken exitToken)
+        {
+            var duration = BORN_TIME;
+            Target.CallOnPartBornStart(false, duration, _maxPoints);
+            
+            await Bit.ChangeValueOperationAsync(Bit, ShowMode.Born, duration, destroyToken, exitToken);
+        }
+        
+        public override void ExecuteInstant()
+        {
+            Target.CallOnPartBornStart(false, 0.0f, _maxPoints);
+            
+            Bit.ChangeValueOperationInstant(Bit, ShowMode.Born, 1);
+        }
+    }
+    
     public class ShowBornProgressOperation : CastleViewer2.Operation
     {
         private readonly int _maxPoints;
