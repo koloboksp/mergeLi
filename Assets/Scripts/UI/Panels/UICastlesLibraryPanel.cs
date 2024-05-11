@@ -4,6 +4,7 @@ using System.Linq;
 using Core;
 using Core.Goals;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI.Panels
@@ -12,7 +13,9 @@ namespace UI.Panels
     {
         [SerializeField] private Button _closeBtn;
         [SerializeField] private ScrollRect _container;
+       
         [SerializeField] private UICastlesLibraryPanel_CastleLabel _castleLabelPrefab;
+        [SerializeField] private GameObject _castleSeparatorPrefab;
 
         private Model _model;
         private GameProcessor _gameProcessor;
@@ -32,77 +35,125 @@ namespace UI.Panels
             var data = undefinedData as UICastleLibraryPanelData;
             _gameProcessor = data.GameProcessor;
             
-            _model = new Model()
-                .OnItemsUpdated(OnItemsUpdated);
-            
+            _model = new Model();
+            _model.OnItemsUpdated += OnItemsUpdated;
+                
             _model.SetData(data.Castles, data.Selected);
+            OnItemsUpdated(_model.Castles);
         }
 
-        private void OnItemsUpdated(IEnumerable<Castle> itemsPrefabs)
+        private void OnItemsUpdated(IReadOnlyList<Castle> castlesPrefabs)
         {
             var oldViews = _container.content.GetComponents<Castle>();
             foreach (var oldView in oldViews)
                 Destroy(oldView.gameObject);
-
+            
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
+            
             _castleLabelPrefab.gameObject.SetActive(false);
+            _castleSeparatorPrefab.gameObject.SetActive(false);
+
+            RectTransform focusOnCastleContainer = null;
+
+            string lastActiveCastleName = null;
+            var lastActiveCastlePoints = 0;
             
-            var contentHeight = itemsPrefabs.Sum(i => i.Root.sizeDelta.y + _castleLabelPrefab.Root.sizeDelta.y);
-            _container.content.ForceUpdateRectTransforms();
-            _container.content.sizeDelta = new Vector2(_container.content.sizeDelta.x, contentHeight);
-            
-            foreach (var itemsPrefab in itemsPrefabs)
+            if (_gameProcessor.SessionProcessor.HasPreviousSessionGame)
             {
-                var castleLabel = Instantiate(_castleLabelPrefab, _container.content);
-                castleLabel.gameObject.SetActive(true);
-                castleLabel.NameKey = itemsPrefab.NameKey;
+                var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
                 
-                var castle = Instantiate(itemsPrefab, _container.content);
-                castle.gameObject.name = itemsPrefab.Id;
-                castle.SetData(_gameProcessor);
-                if (castle.Root.sizeDelta.x > _container.content.sizeDelta.x)
+                lastActiveCastleName = lastSessionProgress.ActiveCastle.Id;
+                lastActiveCastlePoints = lastSessionProgress.ActiveCastle.Points;
+            }
+            else
+            {
+                lastActiveCastleName = _gameProcessor.SessionProcessor.GetFirstUncompletedCastleName();
+                lastActiveCastlePoints = 0;
+            }
+            
+
+            for (var castleI = 0; castleI < castlesPrefabs.Count; castleI++)
+            {
+                var castlePrefab = castlesPrefabs[castleI];
+                
+                var scaleFactor = 1.0f;
+                if (castlePrefab.Root.sizeDelta.x > _container.content.sizeDelta.x)
                 {
-                    var scaleFactor = _container.content.sizeDelta.x / castle.Root.sizeDelta.x;
-                    castle.Root.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+                    scaleFactor = _container.content.sizeDelta.x / castlePrefab.Root.sizeDelta.x;
                 }
 
+                var castleContainer = new GameObject($"container_{castlePrefab.Id}", typeof(RectTransform));
+                var castleContainerTransform = castleContainer.GetComponent<RectTransform>();
+                castleContainerTransform.SetParent(_container.content);
+                castleContainerTransform.localScale = Vector3.one;
+                castleContainerTransform.pivot = new Vector2(0, 1);
+                castleContainerTransform.sizeDelta = castlePrefab.Root.sizeDelta * new Vector3(scaleFactor, scaleFactor, 1);
+
+                var castle = Instantiate(castlePrefab, castleContainerTransform);
+                castle.gameObject.name = castlePrefab.Id;
+                castle.SetData(_gameProcessor);
+                castle.Root.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+
+                var castlePoints = 0;
+                var castleCost = castle.GetCost();
+                
                 var saveProgress = ApplicationController.Instance.SaveController.SaveProgress;
                 if (saveProgress.IsCastleCompleted(castle.name))
                 {
                     castle.ShowAsCompleted();
+                    castlePoints = castleCost;
+                    focusOnCastleContainer = castleContainerTransform;
                 }
                 else
                 {
-                    var lastSessionProgress = ApplicationController.Instance.SaveController.SaveLastSessionProgress;
-                
-                    if (lastSessionProgress.IsValid() && castle.name == lastSessionProgress.ActiveCastle.Id)
-                        castle.SetPoints(lastSessionProgress.ActiveCastle.Points, true);
+                    if (lastActiveCastleName != null && castle.name == lastActiveCastleName)
+                    {
+                        castle.SetPoints(lastActiveCastlePoints, true);
+                        castlePoints = lastActiveCastlePoints;
+                        focusOnCastleContainer = castleContainerTransform;
+                    }
                     else
+                    {
+                        castlePoints = 0;
                         castle.ShowAsLocked();
+                    }
+                }
+
+                var castleLabel = Instantiate(_castleLabelPrefab, _container.content);
+                castleLabel.gameObject.SetActive(true);
+                castleLabel.SetData(castlePrefab.NameKey, castlePoints, castleCost);
+
+                if (castleI != castlesPrefabs.Count - 1)
+                {
+                    var castleSeparator = Instantiate(_castleSeparatorPrefab, _container.content);
+                    castleSeparator.gameObject.SetActive(true);
                 }
             }
+            
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
+            
+            if (focusOnCastleContainer != null)
+            {
+                var focusOnPosition = focusOnCastleContainer.anchoredPosition.y;
+                var focusOnNormalPosition = focusOnPosition / (_container.content.rect.height - _container.viewport.rect.height);
+                focusOnNormalPosition = 1.0f - Mathf.Clamp01(-focusOnNormalPosition);
+                _container.normalizedPosition = new Vector2(0, focusOnNormalPosition);
+            }
         }
-        
-        
-        
+      
         public class Model
         {
-            private Action<IEnumerable<Castle>> _onItemsUpdated;
+            public event Action<IReadOnlyList<Castle>> OnItemsUpdated;
             
-            private readonly List<Castle> _items = new ();
+            private readonly List<Castle> _castles = new ();
+
+            public IReadOnlyList<Castle> Castles => _castles;
             
             public void SetData(IEnumerable<Castle> castles, string selectedCastle)
             {
-                _items.AddRange(castles);
-                _onItemsUpdated?.Invoke(_items);
-
-                TrySelect(_items.Find(i => i.Id == selectedCastle));
-            }
-
-            public Model OnItemsUpdated(Action<IEnumerable<Castle>> onItemsUpdated)
-            {
-                _onItemsUpdated = onItemsUpdated;
-                _onItemsUpdated?.Invoke(_items);
-                return this;
+                _castles.AddRange(castles);
+              
+                TrySelect(_castles.Find(i => i.Id == selectedCastle));
             }
 
             internal void TrySelect(Castle newSelected)

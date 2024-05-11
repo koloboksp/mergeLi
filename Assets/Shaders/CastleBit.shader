@@ -67,10 +67,15 @@ Shader "Unlit/CastleBit"
             #pragma fragment frag
             #include "UnityCG.cginc"
 
+            #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
+            #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+            
             struct appdata
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct v2f
@@ -173,11 +178,16 @@ Shader "Unlit/CastleBit"
 
                 back.a *= mask;
                 col = lerp(back, col, _Alpha);
-#ifdef UNITY_UI_CLIP_RECT
-                half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(IN.mask.xy)) * IN.mask.zw);
+                
+                #ifdef UNITY_UI_CLIP_RECT
+                half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(i.mask.xy)) * i.mask.zw);
                 col.a *= m.x * m.y;
                 col.a *= m.x * m.y;
-#endif
+                #endif
+                
+                #ifdef UNITY_UI_ALPHACLIP
+                clip (col.a - 0.001);
+                #endif
                 
                 return col;
             }
