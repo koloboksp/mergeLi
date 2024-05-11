@@ -22,7 +22,8 @@ namespace Core
 
         private void Awake()
         {
-            _tapBtn.onClick.AddListener(TapBtn_OnClick);
+            if (_tapBtn != null)
+                _tapBtn.onClick.AddListener(TapBtn_OnClick);
         }
 
         private void TapBtn_OnClick()
@@ -42,29 +43,32 @@ namespace Core
             _speakEffect.Play(text);
             await _dialogText.ShowAsync(text, Application.exitCancellationToken, cancellationToken);
             await AsyncExtensions.WaitForSecondsAsync(1, cancellationToken);
-            
-            if (tapRequired)
-            {
-                _tapBtn.gameObject.SetActive(true);
-                
-                _clickToContinuePanel.gameObject.SetActive(true);
-                
-                _tapCompletionSource = new TaskCompletionSource<bool>();
-                var cancellationTokenRegistration = cancellationToken.Register(() => _tapCompletionSource.TrySetResult(false));
-                try
-                {
-                    await _tapCompletionSource.Task;
-                }
-                finally
-                {
-                    cancellationTokenRegistration.Dispose();
-                }
 
-                _clickToContinuePanel.gameObject.SetActive(false);
-            }
-            else
+            if (_tapBtn != null)
             {
-                _tapBtn.gameObject.SetActive(false);
+                if (tapRequired )
+                {
+                    _tapBtn.gameObject.SetActive(true);
+                
+                    _clickToContinuePanel.gameObject.SetActive(true);
+                
+                    _tapCompletionSource = new TaskCompletionSource<bool>();
+                    var cancellationTokenRegistration = cancellationToken.Register(() => _tapCompletionSource.TrySetResult(false));
+                    try
+                    {
+                        await _tapCompletionSource.Task;
+                    }
+                    finally
+                    {
+                        cancellationTokenRegistration.Dispose();
+                    }
+
+                    _clickToContinuePanel.gameObject.SetActive(false);
+                }
+                else
+                {
+                    _tapBtn.gameObject.SetActive(false);
+                }
             }
         }
 
@@ -80,6 +84,7 @@ namespace Core
         public void SetDialogActive(bool state)
         {
             _dialogText.gameObject.SetActive(state);
+            _clickToContinuePanel.gameObject.SetActive(state);
         }
     }
 }

@@ -489,7 +489,6 @@ MonoBehaviour:
     m47: 3650898356
     m8B: 2502276445
     mCF: 3351234408
-  _completeClip: {fileID: 8300000, guid: a68bc4a328f7dfc4cb2b50afa30b1328, type: 3}
   _animationSteps:
     serializedVersion: 2
     m_Curve:
@@ -1405,6 +1404,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5449675933634488661, guid: 7d8cfa57621208d44bc94e624f76aec8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6824313126232912391, guid: 7d8cfa57621208d44bc94e624f76aec8,
         type: 3}
       propertyPath: m_Name
@@ -1413,12 +1417,12 @@ PrefabInstance:
     - target: {fileID: 8009159892019773235, guid: 7d8cfa57621208d44bc94e624f76aec8,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -68
+      value: -321
       objectReference: {fileID: 0}
     - target: {fileID: 8009159892019773235, guid: 7d8cfa57621208d44bc94e624f76aec8,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 226
+      value: 292
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
