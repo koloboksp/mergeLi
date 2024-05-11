@@ -30,7 +30,7 @@ namespace Core
             }
             else
             {
-                _volumeModificators.Add((source, _volume));
+                _volumeModificators.Add((source, volume));
             }
             
             UpdateVolume();
