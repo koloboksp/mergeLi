@@ -109,6 +109,8 @@ namespace Core
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
             _coins.MakeSingle();
             _coins.Set(_data.GameProcessor.CurrencyAmount);
+            
+           
         }
 
         protected override void InnerHide()
@@ -150,9 +152,12 @@ namespace Core
         
         private void OnItemsUpdated(IEnumerable<UIHatsPanel_HatItem.Model> items)
         {
+            
             var oldViews = _container.content.GetComponents<UIHatsPanel_HatItem>();
             foreach (var oldView in oldViews)
                 Destroy(oldView.gameObject);
+
+            RectTransform focusOnHat = null;
 
             _itemPrefab.gameObject.SetActive(false);
             foreach (var item in items)
@@ -160,6 +165,21 @@ namespace Core
                 var itemView = Instantiate(_itemPrefab, _container.content);
                 itemView.gameObject.SetActive(true);
                 itemView.SetModel(item, _data.GameProcessor);
+
+                if (item.Available && !item.UserInactive)
+                {
+                    focusOnHat = itemView.Root;
+                }
+            }
+            
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
+            
+            if (focusOnHat != null)
+            {
+                var focusOnPosition = focusOnHat.anchoredPosition.y;
+                var focusOnNormalPosition = focusOnPosition / (_container.content.rect.height - _container.viewport.rect.height);
+                focusOnNormalPosition = 1.0f - Mathf.Clamp01(-focusOnNormalPosition);
+                _container.normalizedPosition = new Vector2(0, focusOnNormalPosition);
             }
         }
 

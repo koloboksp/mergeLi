@@ -10,6 +10,8 @@ namespace Core
 {
     public class UIHatsPanel_HatItem : MonoBehaviour
     {
+        [SerializeField] private RectTransform _root;
+        
         [SerializeField] private Button _button;
         [SerializeField] private Text _name;
         [SerializeField] private Text _extraPoints;
@@ -27,7 +29,8 @@ namespace Core
 
         private Model _model;
         private GameProcessor _gameProcessor;
-        
+        public RectTransform Root => _root;
+
         private void Awake()
         {
             _button.onClick.AddListener(OnClick);
