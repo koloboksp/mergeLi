@@ -95,7 +95,6 @@ namespace Core
                         exitToken);
                 
                     _data.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
-
                 }
                 
                 await AsyncExtensions.WaitForSecondsAsync(3.0f, exitToken);

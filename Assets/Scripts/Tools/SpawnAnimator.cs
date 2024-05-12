@@ -1,4 +1,5 @@
 
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -21,10 +22,10 @@ public class SpawnAnimator : MonoBehaviour
         dur = Mathf.Max(curvePos.keys[^1].time, curveScale.keys[^1].time, fullScale.keys[^1].time);
 
         for (int i = 0; i < transform.childCount; i++)
-            Spawn(transform.GetChild(i), i * itemsDelay + startDelay, instant);
+            Spawn(transform.GetChild(i), i * itemsDelay + startDelay, instant, Application.exitCancellationToken);
     }
     
-    private async void Spawn(Transform obj, float delay, bool instant)
+    private async void Spawn(Transform obj, float delay, bool instant, CancellationToken exitToken)
     {
         obj.gameObject.SetActive(false);
 
@@ -41,11 +42,14 @@ public class SpawnAnimator : MonoBehaviour
         else
         {
             await Task.Delay((int)(1000 * delay));
-
+            exitToken.ThrowIfCancellationRequested();
+            
             obj.gameObject.SetActive(true);
 
             while (time < dur)
             {
+                exitToken.ThrowIfCancellationRequested();
+
                 time += Time.deltaTime * speed;
 
                 obj.localPosition = pos0 + curvePos.Evaluate(time) * posFactor * Vector3.up;

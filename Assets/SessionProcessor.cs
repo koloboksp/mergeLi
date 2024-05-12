@@ -312,20 +312,20 @@ public class SessionProcessor : MonoBehaviour,
     
     private async Task ProcessCastleCompleting(UIGameScreen gameScreen)
     {
-        var castle = _gameProcessor.CastleSelector.ActiveCastle;
+        var activeCastle = _gameProcessor.CastleSelector.ActiveCastle;
         
         try
         {
-            OnCastleCompleted?.Invoke(castle);
+            OnCastleCompleted?.Invoke(activeCastle);
         }
         catch (Exception e)
         {
             Debug.LogError(e);
         }
        
-        ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(castle.Id);
+        ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(activeCastle.Id);
 
-        _completedCastles.Add(new CompletedCastleDesc(castle.Id, castle.GetPoints()));
+        _completedCastles.Add(new CompletedCastleDesc(activeCastle.Id, activeCastle.GetPoints()));
 
         var dialogKeyOnBuildStarting = GuidEx.Empty;
         var nextCastle = GetFirstUncompletedCastle();
@@ -338,10 +338,10 @@ public class SessionProcessor : MonoBehaviour,
         gameScreen.LockInput(true);
         _gameProcessor.Field.View.LockInput(true);
 
-        await castle.WaitForCoinsReceiveEffectComplete(Application.exitCancellationToken);
-        await castle.WaitForAnimationsComplete(Application.exitCancellationToken);
+        await activeCastle.WaitForCoinsReceiveEffectComplete(Application.exitCancellationToken);
+        await activeCastle.WaitForAnimationsComplete(Application.exitCancellationToken);
         
-        await ProcessCastleCompleteAsync(castle.TextAfterBuildEndingKey, dialogKeyOnBuildStarting, false, null, null, null, Application.exitCancellationToken);
+        await ProcessCastleCompleteAsync(activeCastle.TextAfterBuildEndingKey, dialogKeyOnBuildStarting, false, null, null, null, Application.exitCancellationToken);
         
         gameScreen.LockInput(false);
         _gameProcessor.Field.View.LockInput(false);

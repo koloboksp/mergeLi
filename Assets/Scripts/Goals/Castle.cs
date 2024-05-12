@@ -14,9 +14,6 @@ namespace Core.Goals
 {
     public class Castle : MonoBehaviour, ICastle
     {
-        public event Action<Castle> OnCompleted;
-        public event Action OnPartSelected;
-        
         public event Action<int> OnPointsAdd;
         public event Action<int> OnPointsRefund;
      
@@ -143,13 +140,7 @@ namespace Core.Goals
         {
             var oldCompletedState = _completed;
             _completed = UpdateCompleteState();
-
-            if (oldCompletedState != _completed)
-            {
-                if (_completed)
-                    OnCompleted?.Invoke(this);
-            }
-
+            
             _inPointsReceiveState = false;
             
             if (_pointsReceiveCompletedSource != null)
@@ -238,8 +229,6 @@ namespace Core.Goals
                     _selectedPart.Select(true);
                     _pointsReceiver.Anchor = _selectedPart.transform;
                 }
-                
-                OnPartSelected?.Invoke();
             }
         }
 
@@ -262,7 +251,10 @@ namespace Core.Goals
         public void ForceComplete()
         {
             var oldPointsValue = _points;
-            _points = GetCost();
+            var cost = GetCost();
+            if (_points < cost)
+                _points = cost;
+            
             _animatedPoints = oldPointsValue;
             _completed = UpdateCompleteState();
             ApplyPointsToParts(Order.Increase, false);

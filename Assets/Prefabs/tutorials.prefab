@@ -671,65 +671,95 @@ MonoBehaviour:
   _balls:
   - GridPosition: {x: 0, y: 7, z: 0}
     Points: 1
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 2, y: 2, z: 0}
     Points: 1
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 3, y: 3, z: 0}
     Points: 1
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 4, y: 4, z: 0}
     Points: 1
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 5, y: 5, z: 0}
     Points: 1
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 8, y: 3, z: 0}
     Points: 2
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 8, y: 4, z: 0}
     Points: 4
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 8, y: 5, z: 0}
     Points: 2
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 8, y: 6, z: 0}
     Points: 4
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 8, y: 7, z: 0}
     Points: 4
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 5, y: 3, z: 0}
     Points: 2
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 0, y: 2, z: 0}
     Points: 2
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 7, y: 8, z: 0}
     Points: 16
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 1, y: 8, z: 0}
     Points: 8
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 3, y: 8, z: 0}
     Points: 8
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 4, y: 8, z: 0}
     Points: 8
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 5, y: 8, z: 0}
     Points: 8
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 8, y: 8, z: 0}
     Points: 8
-    Hat: 0
+    HatName: 
+  - GridPosition: {x: 0, y: 4, z: 0}
+    Points: 0
+    HatName: 
+  - GridPosition: {x: 0, y: 8, z: 0}
+    Points: 4
+    HatName: 
+  - GridPosition: {x: 1, y: 0, z: 0}
+    Points: 32
+    HatName: 
+  - GridPosition: {x: 1, y: 5, z: 0}
+    Points: 32
+    HatName: 
+  - GridPosition: {x: 4, y: 0, z: 0}
+    Points: 16
+    HatName: 
+  - GridPosition: {x: 5, y: 0, z: 0}
+    Points: 16
+    HatName: 
+  - GridPosition: {x: 6, y: 0, z: 0}
+    Points: 16
+    HatName: 
+  - GridPosition: {x: 7, y: 0, z: 0}
+    Points: 8
+    HatName: 
+  - GridPosition: {x: 7, y: 1, z: 0}
+    Points: 4
+    HatName: 
+  - GridPosition: {x: 8, y: 0, z: 0}
+    Points: 16
+    HatName: 
   _nextBalls:
   - GridPosition: {x: 2, y: 5, z: 0}
     Points: 16
-    Hat: 0
+    HatName: 
   - GridPosition: {x: 3, y: 7, z: 0}
     Points: 32
-    Hat: 0
+    HatName: 
   _field: {fileID: 0}
 --- !u!1 &1462571049711330005
 GameObject:
@@ -1567,52 +1597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01bc1754bdd4494f9ba58020d089f710, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &2950966181968158458
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7642710016604278421}
-  - component: {fileID: 3187857837359173583}
-  m_Layer: 0
-  m_Name: destroyCastle
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7642710016604278421
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2950966181968158458}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 252723805375165013}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3187857837359173583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2950966181968158458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bce46ebc63d5432fa1d52adfd820fb6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tutorial: {fileID: 7747690254940513010}
-  _analyticsEventName: 
 --- !u!1 &3097406815008469366
 GameObject:
   m_ObjectHideFlags: 0
@@ -1978,7 +1962,7 @@ Transform:
   m_Children:
   - {fileID: 8691295248254765105}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2025090940685713392
 MonoBehaviour:
@@ -2252,13 +2236,13 @@ Transform:
   m_Children:
   - {fileID: 7964744763313262139}
   - {fileID: 9008560476959149771}
+  - {fileID: 2787946837924449309}
   - {fileID: 6619785209155377268}
   - {fileID: 7230830744600836182}
   - {fileID: 2635341874550401373}
   - {fileID: 5913469158906466185}
   - {fileID: 4079740019685753793}
   - {fileID: 4149957814144111494}
-  - {fileID: 7642710016604278421}
   - {fileID: 9153586482064794296}
   - {fileID: 613860507279329831}
   - {fileID: 3053925730113655204}
@@ -2284,6 +2268,7 @@ MonoBehaviour:
   _stepsBeforeGetCoins:
   - {fileID: 2285994177699040352}
   - {fileID: 3829633426042937365}
+  - {fileID: 8693937051121133281}
   - {fileID: 4291656267483695013}
   - {fileID: 267856909119710631}
   _stepsBeforeSelectNextCastle:
@@ -2292,7 +2277,6 @@ MonoBehaviour:
   - {fileID: 2900673439312220656}
   - {fileID: 606965055542604895}
   - {fileID: 796129621514659062}
-  - {fileID: 3187857837359173583}
   - {fileID: 796129621514659062}
   - {fileID: 5473138154065280149}
   - {fileID: 2457923361975228500}
@@ -4945,6 +4929,52 @@ MonoBehaviour:
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
   _wait: 1
+--- !u!1 &7842283815215941244
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2787946837924449309}
+  - component: {fileID: 8693937051121133281}
+  m_Layer: 0
+  m_Name: playCastleBuildingComplete
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2787946837924449309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7842283815215941244}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 252723805375165013}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8693937051121133281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7842283815215941244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dd28743d96b4c149227cecf1e32105b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tutorial: {fileID: 7747690254940513010}
+  _analyticsEventName: 
 --- !u!1 &7896606762468200478
 GameObject:
   m_ObjectHideFlags: 0
