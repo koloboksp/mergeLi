@@ -10,24 +10,23 @@ namespace Core.Effects
 {
     public class DestroyBallEffect : MonoBehaviour
     {
-        [SerializeField] List<DestroyBallEffectColorVariant> _colorVariants;
+        [SerializeField] private DestroyBallEffectColorVariant _defaultColorVariant;
         [SerializeField] private float _duration = 2.0f;
         [SerializeField] private AudioClip _clip;
 
         private DependencyHolder<SoundsPlayer> _soundsPlayer;
         
-        public void Run(int colorIndex)
+        public void Run(Color mainColor)
         {
-            var wrapColorIndex = colorIndex % _colorVariants.Count;
-            _ = StartEffectAsync(_colorVariants[wrapColorIndex], Application.exitCancellationToken);
+            _ = StartEffectAsync(mainColor, Application.exitCancellationToken);
         }
 
-        private async Task StartEffectAsync(DestroyBallEffectColorVariant variant, CancellationToken cancellationToken)
+        private async Task StartEffectAsync(Color mainColor, CancellationToken cancellationToken)
         {
             try
             {
-                var variantInstance = Instantiate(variant, transform);
-                variantInstance.Run();
+                var variantInstance = Instantiate(_defaultColorVariant, transform);
+                variantInstance.Run(mainColor);
                 _soundsPlayer.Value.Play(_clip);
                 
                 await AsyncExtensions.WaitForSecondsAsync(_duration, cancellationToken);

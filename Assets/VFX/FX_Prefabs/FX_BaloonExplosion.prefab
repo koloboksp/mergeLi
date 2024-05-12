@@ -9996,7 +9996,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.4528302, g: 0.18583126, b: 0.19572008, a: 1}
+      maxColor: {r: 0.41509432, g: 0.23691703, b: 0.24477784, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14670,11 +14670,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1999945842859427044}
+  - component: {fileID: 3253612662647844732}
   - component: {fileID: 1999945842859427045}
   - component: {fileID: 1999945842859427050}
-  - component: {fileID: 3253612662647844732}
   m_Layer: 0
-  m_Name: FX_BaloonExplosion_Red
+  m_Name: FX_BaloonExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14699,6 +14699,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -35.136, y: -40.424, z: 0}
+--- !u!114 &3253612662647844732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1999945842859427051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d96d35679de4a878a72654b24c536b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mainParticleSystem: {fileID: 1999945842859427045}
+  _frontParticleSystem1: {fileID: 1999945842859427045}
+  _frontParticleSystem2: {fileID: 1999945843267497278}
+  _backParticleSystem1: {fileID: 1999945842856091185}
+  _backParticleSystem2: {fileID: 1999945841352564026}
+  _colorDarkening: 0.2
 --- !u!198 &1999945842859427045
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -19554,19 +19572,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &3253612662647844732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1999945842859427051}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d96d35679de4a878a72654b24c536b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mainParticleSystem: {fileID: 1999945842859427045}
 --- !u!1 &1999945843267497277
 GameObject:
   m_ObjectHideFlags: 0

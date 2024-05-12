@@ -183,7 +183,7 @@ namespace Skins.Custom
                 Quaternion.identity, 
                 _view.Ball.Field.View.Root);
                 
-            destroyBallEffect.Run(_view.Ball.GetColorIndex());
+            destroyBallEffect.Run(_view.MainColor);
         }
 
         public override void ShowHat(bool activeState)
