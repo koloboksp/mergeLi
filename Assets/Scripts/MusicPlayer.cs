@@ -21,6 +21,8 @@ namespace Core
         private Task _playingTask;
         private List<int> _clipsOrder = new List<int>();
 
+        public SoundGroup Group => SoundGroup.Music;
+
         private void OnEnable()
         {
             SoundController.AddListener(this);
@@ -197,8 +199,7 @@ namespace Core
         }
 
 
-        public SoundGroup Group => SoundGroup.Music;
-
+        
         public void ChangeVolume(float volume)
         {
             if (volume > 0)
