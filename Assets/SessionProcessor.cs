@@ -68,6 +68,7 @@ public class SessionProcessor : MonoBehaviour,
             if (_enableTutorial && _gameProcessor.TutorialController.CanStartTutorial(_forceTutorial))
             {
                 await _gameProcessor.TutorialController.TryStartTutorial(_forceTutorial, exitToken);
+                gameScreen = ApplicationController.Instance.UIPanelController.GetPanel<UIGameScreen>();
             }
             else
             {
@@ -217,6 +218,7 @@ public class SessionProcessor : MonoBehaviour,
                 catch (Exception e)
                 {
                     Debug.LogException(e);
+                    await Task.Yield();
                 }
             }
         }

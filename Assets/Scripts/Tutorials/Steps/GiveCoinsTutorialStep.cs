@@ -13,6 +13,7 @@ namespace Core.Tutorials
                 activeCastle.CoinsAfterComplete, 
                 Tutorial.Controller.Dialog.Speaker.IconRoot.transform, 
                 cancellationToken);
+            Tutorial.Controller.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
             
             return true;
         }
