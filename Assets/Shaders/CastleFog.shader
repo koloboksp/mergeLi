@@ -127,8 +127,7 @@ Shader "Unlit/CastleFog"
 
                 float dotPhase = dot(back, phase);
                 col.rgb = dotPhase + _BackColor.rgb * _BackColor.a;
-                col.a = smoothstep(0, .3, dotPhase);
-
+                // col.a = smoothstep(0, .3, dotPhase);
 
                 #ifdef UNITY_UI_CLIP_RECT
                 half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(i.mask.xy)) * i.mask.zw);
@@ -136,6 +135,8 @@ Shader "Unlit/CastleFog"
                 col.a *= m.x * m.y;
                 #endif
                 
+                col.a = smoothstep(.05, .3, col.a * dotPhase);
+
                 #ifdef UNITY_UI_ALPHACLIP
                 clip (col.a - 0.001);
                 #endif
