@@ -17,6 +17,7 @@ namespace UI.Panels
         [SerializeField] private UICastlesLibraryPanel_CastleLabel _castleLabelPrefab;
         [SerializeField] private UICastlesLibraryPanel_HiddenCastle _hiddenCastlePrefab;
         [SerializeField] private GameObject _castleSeparatorPrefab;
+        [SerializeField] private GameObject _castleTerraIncognitoPrefab;
         [SerializeField] private int _hiddenCastlesCount = 3;
         
         private Model _model;
@@ -54,7 +55,8 @@ namespace UI.Panels
             
             _castleLabelPrefab.gameObject.SetActive(false);
             _castleSeparatorPrefab.gameObject.SetActive(false);
-
+            _castleTerraIncognitoPrefab.gameObject.SetActive(false);
+            
             RectTransform focusOnCastleContainer = null;
 
             string lastActiveCastleName = null;
@@ -170,6 +172,11 @@ namespace UI.Panels
                 {
                     var castleSeparator = Instantiate(_castleSeparatorPrefab, _container.content);
                     castleSeparator.gameObject.SetActive(true);
+                }
+                else
+                {
+                    var castleTerraIncognitoPrefab = Instantiate(_castleTerraIncognitoPrefab, _container.content);
+                    castleTerraIncognitoPrefab.gameObject.SetActive(true);
                 }
             }
             

@@ -190,6 +190,8 @@ MonoBehaviour:
   _root: {fileID: 4899882211508490771}
   _nameLoc: {fileID: 0}
   _points: {fileID: 0}
+  _hiddenCastleName: ????? ????
+  _hiddenCastleCost: ????
 --- !u!222 &3760144479259231079
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -288,6 +290,9 @@ MonoBehaviour:
   _hiddenCastlePrefab: {fileID: 7579393420354889902, guid: 38818efa5cd98684dac4b82f366ee5a5,
     type: 3}
   _castleSeparatorPrefab: {fileID: 1471509409778415612}
+  _castleTerraIncognitoPrefab: {fileID: 5864327132498700313, guid: 01ac1523ae9dfce45b42675d41357d35,
+    type: 3}
+  _hiddenCastlesCount: 3
 --- !u!114 &7528073949927588067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -967,3 +972,5 @@ MonoBehaviour:
   _root: {fileID: 2721911505858081947}
   _nameLoc: {fileID: 1858949373694127558}
   _points: {fileID: 7149482012873186873}
+  _hiddenCastleName: ????? ????
+  _hiddenCastleCost: ????
