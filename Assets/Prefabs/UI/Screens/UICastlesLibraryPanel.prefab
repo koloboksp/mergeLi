@@ -285,6 +285,8 @@ MonoBehaviour:
   _closeBtn: {fileID: 5957497022716546801}
   _container: {fileID: 2316871301394179850}
   _castleLabelPrefab: {fileID: 2665770548817414770}
+  _hiddenCastlePrefab: {fileID: 7579393420354889902, guid: 38818efa5cd98684dac4b82f366ee5a5,
+    type: 3}
   _castleSeparatorPrefab: {fileID: 1471509409778415612}
 --- !u!114 &7528073949927588067
 MonoBehaviour:
