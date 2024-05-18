@@ -57,6 +57,7 @@ namespace UI.Panels
             _castleSeparatorPrefab.gameObject.SetActive(false);
             _castleTerraIncognitoPrefab.gameObject.SetActive(false);
             
+            
             RectTransform focusOnCastleContainer = null;
 
             string lastActiveCastleName = null;
