@@ -153,11 +153,12 @@ namespace Core
         
         private void OnItemsUpdated(IEnumerable<UIHatsPanel_HatItem.Model> items)
         {
-            var oldViews = _container.content.GetComponents<UIHatsPanel_HatItem>();
-            foreach (var oldView in oldViews)
-                Destroy(oldView.gameObject);
+            var oldViewBlocks = _container.content.GetComponents<UIHatsPanel_HatBlockItem>();
+            foreach (var oldViewBlock in oldViewBlocks)
+                Destroy(oldViewBlock.gameObject);
 
             RectTransform focusOnHat = null;
+            RectTransform focusOnHatBlock = null;
 
             _itemPrefab.gameObject.SetActive(false);
             _blockPrefab.gameObject.SetActive(false);
@@ -180,9 +181,13 @@ namespace Core
 
                     if (item.Available && !item.UserInactive)
                     {
+                        focusOnHatBlock = blockView.Root;
                         focusOnHat = itemView.Root;
                     }    
                 }
+                
+                LayoutRebuilder.ForceRebuildLayoutImmediate(blockView.ContentRoot);
+                LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
             }
             
             // foreach (var item in items)
@@ -199,9 +204,9 @@ namespace Core
             
             LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
             
-            if (focusOnHat != null)
+            if (focusOnHatBlock != null)
             {
-                var focusOnPosition = focusOnHat.anchoredPosition.y;
+                var focusOnPosition = focusOnHatBlock.anchoredPosition.y + focusOnHatBlock.rect.height * 0.5f;
                 var focusOnNormalPosition = focusOnPosition / (_container.content.rect.height - _container.viewport.rect.height);
                 focusOnNormalPosition = 1.0f - Mathf.Clamp01(-focusOnNormalPosition);
                 _container.normalizedPosition = new Vector2(0, focusOnNormalPosition);
