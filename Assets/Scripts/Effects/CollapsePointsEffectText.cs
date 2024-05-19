@@ -5,34 +5,41 @@ namespace Core.Effects
 {
     public class CollapsePointsEffectText : MonoBehaviour
     {
-        [SerializeField] private Text _points;
-        [SerializeField] private GameObject _extraPointsPanel;
-        [SerializeField] private Text _extraPoints;
-        [SerializeField] private GameObject _extraHatPointsPanel;
-        [SerializeField] private Text _extraHatPoints;
+        [SerializeField] private Animation _animation;
         
+        [SerializeField] private Text _points;
+        [SerializeField] private AnimationClip _pointsClip;
+        
+        [SerializeField] private Text _extraPoints;
+        [SerializeField] private AnimationClip _extraPointsClip;
+
+        [SerializeField] private Text _extraHatPoints;
+        [SerializeField] private AnimationClip _extraHatPointsClip;
+        
+        [SerializeField] private AnimationClip _extraAndExtraHatPointsClip;
+
         public void SetPoint(PointsDesc points)
         {
             _points.text = points.Points.ToString();
-            
-            if (points.ExtraPoints > 0)
-            {
-                _extraPointsPanel.SetActive(true);
-                _extraPoints.text = points.ExtraPoints.ToString();
-            }
-            else
-            {
-                _extraPointsPanel.SetActive(false);
-            }
+            _extraPoints.text = points.ExtraPoints.ToString();
+            _extraHatPoints.text = points.HatPoints.ToString();
 
-            if (points.HatPoints > 0)
+          
+            if (points.HatPoints > 0 && points.ExtraPoints > 0)
             {
-                _extraHatPointsPanel.SetActive(true);
-                _extraHatPoints.text = points.HatPoints.ToString();
+                _animation.Play(_extraAndExtraHatPointsClip.name);
+            }
+            else if (points.HatPoints > 0)
+            {
+                _animation.Play(_extraHatPointsClip.name);
+            }
+            else if (points.ExtraPoints > 0)
+            {
+                _animation.Play(_extraPointsClip.name);
             }
             else
             {
-                _extraHatPointsPanel.SetActive(false);
+                _animation.Play(_pointsClip.name);
             }
         }
     }
