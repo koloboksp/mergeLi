@@ -35,13 +35,14 @@ namespace Core.Effects
                 foreach (var ballPair in pointsGroup.ballPairs)
                     sumPoints.Add(ballPair.points);
             
-            _pointsText.SetPoint(sumPoints);
+            _pointsText.gameObject.SetActive(false);
+            
             var starsCount = CalculateStarsCount(pointsGroups);
 
             _ = PlayFxAsync(
                 originPosition, 
                 destinationPosition, 
-                sumPoints.Sum(), 
+                sumPoints, 
                 starsCount,
                 receivers,
                 Application.exitCancellationToken);
@@ -69,26 +70,29 @@ namespace Core.Effects
         private async Task PlayFxAsync(
             Vector3 originPosition,
             Vector3 destinationPosition,
-            int points, 
+            PointsDesc points, 
             int starsCount, 
             List<IPointsEffectReceiver> receivers, 
             CancellationToken cancellationToken)
         {
             foreach (var receiver in receivers)
-                receiver.ReceiveStart(points);
+                receiver.ReceiveStart(points.Sum());
             
             _pointsEffect.Run(starsCount, destinationPosition);
             
             await AsyncExtensions.WaitForSecondsAsync(_duration, cancellationToken);
             
+            _pointsText.gameObject.SetActive(true);
+            _pointsText.SetPoint(points);
+            
             foreach (var receiver in receivers)
-                receiver.Receive(points);
+                receiver.Receive(points.Sum());
             _soundsPlayer.Value.Play(_gotClip);
             
             foreach (var receiver in receivers)
                 receiver.ReceiveFinished();
             
-            await AsyncExtensions.WaitForSecondsAsync(_duration, cancellationToken);
+            await AsyncExtensions.WaitForSecondsAsync(_duration * 4.0f, cancellationToken);
 
             Destroy(gameObject);
         }
