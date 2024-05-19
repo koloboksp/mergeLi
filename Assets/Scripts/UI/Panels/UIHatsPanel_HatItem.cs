@@ -5,6 +5,7 @@ using Atom;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Core
 {
@@ -13,14 +14,18 @@ namespace Core
         [SerializeField] private RectTransform _root;
         
         [SerializeField] private Button _button;
-        [SerializeField] private Text _name;
+       // [SerializeField] private Text _name;
         [SerializeField] private Text _extraPoints;
-        [SerializeField] private Image _lockIcon;
+       // [SerializeField] private Image _lockIcon;
         [SerializeField] private GameObject _selectionFrame;
-        
-        [SerializeField] private GameObject _userInactiveFilterPanel;
-        [SerializeField] private Button _userInactiveFilterButton;
-        [SerializeField] private Image _userInactiveFilterIcon;
+        [SerializeField] private GameObject _pricePanel;
+        [SerializeField] private Text _priceText;
+
+        [SerializeField] private Image _background;
+
+      //  [SerializeField] private GameObject _userInactiveFilterPanel;
+      //  [SerializeField] private Button _userInactiveFilterButton;
+      //  [SerializeField] private Image _userInactiveFilterIcon;
         [SerializeField] private Sprite _userInactiveFilterIconSelected;
         [SerializeField] private Sprite _userInactiveFilterIconNotSelected;
 
@@ -34,7 +39,7 @@ namespace Core
         private void Awake()
         {
             _button.onClick.AddListener(OnClick);
-            _userInactiveFilterButton.onClick.AddListener(UserInactiveFilterButton_OnClick);
+         //   _userInactiveFilterButton.onClick.AddListener(UserInactiveFilterButton_OnClick);
         }
         
         public void SetModel(Model model, GameProcessor gameProcessor)
@@ -46,19 +51,18 @@ namespace Core
             _model.OnAvailableStateChanged += OnAvailableChanged;
             _model.OnUserInactiveFilterStateChanged += OnUserActiveStateChanged;
 
-            _name.text = ApplicationController.Instance.LocalizationController.GetText(_model.NameKey);
+          //  _name.text = ApplicationController.Instance.LocalizationController.GetText(_model.NameKey);
             OnSelectionChanged();
             SetUserActiveIcon();
             SetLockIcon();
             SetExtraPoints();
-            
             
             _fakeScene.GameProcessor = gameProcessor;
             _fakeScene.HatsLibrary = gameProcessor.Scene.HatsLibrary;
             _fakeScene.ActiveSkin = gameProcessor.Scene.ActiveSkin;
             _fakeScene.UserInactiveHatsFilter = null;
             
-            _fakeField.CreateBall(Vector3Int.zero, 2, model.Hat.Id);
+            _fakeField.CreateBall(Vector3Int.zero, (int)Mathf.Pow(2, Random.Range(0, 9)), model.Hat.Id);
         }
 
         private void SetExtraPoints()
@@ -79,13 +83,18 @@ namespace Core
         
         private void SetLockIcon()
         {
-            _lockIcon.gameObject.SetActive(!_model.Available);
+            _pricePanel.gameObject.SetActive(!_model.Available);
+            _priceText.text = _model.Cost.ToString();
+           // _lockIcon.gameObject.SetActive(!_model.Available);
         }
 
         private void SetUserActiveIcon()
         {
-            _userInactiveFilterPanel.SetActive(_model.Available);
-            _userInactiveFilterIcon.sprite = _model.UserInactive ? _userInactiveFilterIconNotSelected : _userInactiveFilterIconSelected;
+            _background.sprite = _model.Available 
+                ? _model.UserInactive 
+                    ? _userInactiveFilterIconNotSelected 
+                    : _userInactiveFilterIconSelected
+                : _userInactiveFilterIconNotSelected;
         }
         
         private void OnClick()
