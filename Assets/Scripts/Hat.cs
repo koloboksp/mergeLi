@@ -8,6 +8,7 @@ using UnityEngine;
 public class Hat : MonoBehaviour
 {
     [SerializeField] private bool _isFree;
+    [SerializeField] private int _groupIndex = 0;
     [SerializeField] private int _extraPoints = 1;
     [SerializeField] private int _cost;
     [SerializeField] private HatView _hatView;
@@ -21,7 +22,8 @@ public class Hat : MonoBehaviour
     public HatView View => _hatView;
     public GuidEx NameKey => _nameKey;
     public int ExtraPoints => _extraPoints;
-    
+    public int GroupIndex => _groupIndex;
+
     public bool Available
     {
         get

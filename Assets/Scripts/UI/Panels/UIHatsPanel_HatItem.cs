@@ -63,8 +63,6 @@ namespace Core
             SetUserActiveIcon();
             SetLockIcon();
             SetExtraPoints();
-            
-            
         }
 
         private void SetExtraPoints()

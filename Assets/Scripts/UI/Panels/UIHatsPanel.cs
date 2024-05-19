@@ -17,6 +17,7 @@ namespace Core
         [SerializeField] private Text _equipAllLabel;
         [SerializeField] private ScrollRect _container;
         [SerializeField] private UIHatsPanel_HatItem _itemPrefab;
+        [SerializeField] private UIHatsPanel_HatBlockItem _blockPrefab;
         [SerializeField] private Button _buyBtn;
         [SerializeField] private Text _buyBtnPriceLabel;
         [SerializeField] private Button _equipBtn;
@@ -152,7 +153,6 @@ namespace Core
         
         private void OnItemsUpdated(IEnumerable<UIHatsPanel_HatItem.Model> items)
         {
-            
             var oldViews = _container.content.GetComponents<UIHatsPanel_HatItem>();
             foreach (var oldView in oldViews)
                 Destroy(oldView.gameObject);
@@ -160,17 +160,42 @@ namespace Core
             RectTransform focusOnHat = null;
 
             _itemPrefab.gameObject.SetActive(false);
-            foreach (var item in items)
-            {
-                var itemView = Instantiate(_itemPrefab, _container.content);
-                itemView.gameObject.SetActive(true);
-                itemView.SetModel(item, _data.GameProcessor);
+            _blockPrefab.gameObject.SetActive(false);
 
-                if (item.Available && !item.UserInactive)
+            var hatsByGroupIndex = items.GroupBy(i => i.Hat.GroupIndex);
+
+            foreach (var hatsGroup in hatsByGroupIndex)
+            {
+                var hatGroup = _data.GameProcessor.Scene.HatsLibrary.GetHatGroup(hatsGroup.Key);
+                
+                var blockView = Instantiate(_blockPrefab, _container.content);
+                blockView.gameObject.SetActive(true);
+                blockView.SetData(hatGroup.NameKey);
+                
+                foreach (var item in hatsGroup)
                 {
-                    focusOnHat = itemView.Root;
+                    var itemView = Instantiate(_itemPrefab, blockView.ContentRoot);
+                    itemView.gameObject.SetActive(true);
+                    itemView.SetModel(item, _data.GameProcessor);
+
+                    if (item.Available && !item.UserInactive)
+                    {
+                        focusOnHat = itemView.Root;
+                    }    
                 }
             }
+            
+            // foreach (var item in items)
+            // {
+            //     var itemView = Instantiate(_itemPrefab, _container.content);
+            //     itemView.gameObject.SetActive(true);
+            //     itemView.SetModel(item, _data.GameProcessor);
+            //
+            //     if (item.Available && !item.UserInactive)
+            //     {
+            //         focusOnHat = itemView.Root;
+            //     }
+            // }
             
             LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
             
