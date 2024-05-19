@@ -16,5 +16,7 @@ namespace Skins
         public abstract void ShowHat(bool activeState);
         public abstract void SetHat(string hatName, string oldHat, bool force);
         public abstract void ChangeUserInactiveHatsFilter();
+        public abstract void ShowPoints(bool activeState);
+        public abstract void ShowEyes(bool activeState);
     }
 }

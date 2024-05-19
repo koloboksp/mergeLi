@@ -51,18 +51,20 @@ namespace Core
             _model.OnAvailableStateChanged += OnAvailableChanged;
             _model.OnUserInactiveFilterStateChanged += OnUserActiveStateChanged;
 
-          //  _name.text = ApplicationController.Instance.LocalizationController.GetText(_model.NameKey);
+            _fakeScene.GameProcessor = gameProcessor;
+            _fakeScene.HatsLibrary = gameProcessor.Scene.HatsLibrary;
+            _fakeScene.ActiveSkin = gameProcessor.Scene.ActiveSkin;
+            _fakeScene.UserInactiveHatsFilter = null;
+            _fakeField.CreateBall(Vector3Int.zero, (int)Mathf.Pow(2, Random.Range(0, 9)), model.Hat.Id);
+            var balls = _fakeField.GetSomething<Ball>(Vector3Int.zero).ToList();
+            balls[0].View.ShowPoints(false);
+            
             OnSelectionChanged();
             SetUserActiveIcon();
             SetLockIcon();
             SetExtraPoints();
             
-            _fakeScene.GameProcessor = gameProcessor;
-            _fakeScene.HatsLibrary = gameProcessor.Scene.HatsLibrary;
-            _fakeScene.ActiveSkin = gameProcessor.Scene.ActiveSkin;
-            _fakeScene.UserInactiveHatsFilter = null;
             
-            _fakeField.CreateBall(Vector3Int.zero, (int)Mathf.Pow(2, Random.Range(0, 9)), model.Hat.Id);
         }
 
         private void SetExtraPoints()
@@ -90,11 +92,18 @@ namespace Core
 
         private void SetUserActiveIcon()
         {
+            
             _background.sprite = _model.Available 
                 ? _model.UserInactive 
                     ? _userInactiveFilterIconNotSelected 
                     : _userInactiveFilterIconSelected
                 : _userInactiveFilterIconNotSelected;
+
+           // if ()
+            {
+                var balls = _fakeField.GetSomething<Ball>(Vector3Int.zero).ToList();
+                balls[0].View.ShowEyes(_model.Available && !_model.UserInactive);
+            }
         }
         
         private void OnClick()

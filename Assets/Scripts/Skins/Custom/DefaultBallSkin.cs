@@ -219,6 +219,20 @@ namespace Skins.Custom
             SetHat(_view.Ball.HatName, _view.Ball.HatName, true);
         }
 
+        public override void ShowPoints(bool activeState)
+        {
+            _valueLabel.gameObject.SetActive(activeState);
+        }
+
+        public override void ShowEyes(bool activeState)
+        {
+            _faceAnchor.gameObject.SetActive(activeState);
+            if (activeState)
+            {
+                _face.ShowLocal(BallState.Select);
+            }
+        }
+
         private IEnumerator HideFaceWithDelayCoroutine(float delay)
         {
             yield return new WaitForSeconds(delay);

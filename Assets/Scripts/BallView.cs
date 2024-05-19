@@ -112,5 +112,15 @@ namespace Core
         {
             _ballSkin.ShowHat(activeState);
         }
+
+        public void ShowPoints(bool activeState)
+        {
+            _ballSkin.ShowPoints(activeState);
+        }
+
+        public void ShowEyes(bool activeState)
+        {
+            _ballSkin.ShowEyes(activeState);
+        }
     }
 }

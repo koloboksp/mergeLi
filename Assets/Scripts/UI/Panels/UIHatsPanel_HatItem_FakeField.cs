@@ -8,9 +8,11 @@ namespace Core
         [SerializeField] private UIHatsPanel_HatItem_FakeScene _scene;
         [SerializeField] private Ball _ballPrefab;
 
+        private Ball _ball;
+        
         public IEnumerable<T> GetSomething<T>(Vector3Int position) where T : class
         {
-            throw new System.NotImplementedException();
+            return new List<T>() { _ball as T };
         }
 
         public List<List<Ball>> CheckCollapse(Vector3Int checkingPosition)
@@ -41,6 +43,7 @@ namespace Core
                 subComponent.SetData();
 
             ball.View.ShowHat(true);
+            _ball = ball;
             
             return position;
         }
