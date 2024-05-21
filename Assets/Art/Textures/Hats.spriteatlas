@@ -50,87 +50,120 @@ SpriteAtlas:
     isAtlasV2: 0
     cachedData: {fileID: 0}
     packedSpriteRenderDataKeys:
+    - 230d4d3044a99a64880e3c01d7da2c5f: 21300000
     - 31aeeda0abd14fc4d8254adb7f7cdce8: 21300000
     - 20f50cb3d7e6dd149bf9c45431c45b77: 21300000
     - be2195948d96351468a5c15ca339f734: 21300000
     - bfd79994d3051454e95542f67eeeec6d: 21300000
     - 89c5a675389e3604aab521714e6722c8: 21300000
+    - a4df459604c1b9948b4352e4c2d68f25: 21300000
     - 77875d960eaa9dd46acedb76e3e763ee: 21300000
     - 59a7fdb66acc962459e0ac2884624968: 21300000
     - 1fbbbae6915648644a35a246bbcc1b22: 21300000
     - d8ed30177d1e91e4b81345f5b9805985: 21300000
+    - 2be80fb7f6ac6774cbe4b97d9635d45c: 21300000
     - 29d073384f350e1468ed4f49a643b438: 21300000
+    - 9248548877e80684c9c746c17f120264: 21300000
     - 8499c79892600004c8d90c2375056eb6: 21300000
     - 5f75f3a8d73cb20409c90063fa8c4103: 21300000
     - 8b9e84d92d3b1804fb1a74aae385b806: 21300000
     - 1099eed9bb58bcd4cb335e3c1c7210fa: 21300000
+    - bd1fa6e95aab2484c91649b961ba0d92: 21300000
     - aa45f9f9676dc864ebb2cadfc7705139: 21300000
     - 13e791baab5fd3445861473d1ea7d0af: 21300000
     - 1f48a09b5580cc741a4f722578110cd9: 21300000
     - 8f7d2aab6f0192541a769d6ce89561f1: 21300000
-    - 6429f5fb7f6997144a1391fac4bbfe8e: 21300000
+    - 90836bab29af5224daec35dc632b8ca7: 21300000
     - 7f05400c94dba3746a234fadee8d1aa0: 21300000
+    - d458d40c99f2a854ebcd6d17022e7de0: 21300000
+    - 41bc8c8c570b83741981e9fe3e39535a: 21300000
+    - f23225cc256be4249bc1250d840d18e1: 21300000
+    - 7801e0ad3118e9141a3a34e48b445a88: 21300000
     - 6d653e0e2c279b444a5e0a61af14ce91: 21300000
     - 8d246d3e6786ffb4689f243393a4ccc1: 21300000
     - 8d7edb7e2ae2d614eafc081de846b6a2: 21300000
+    - e17b898ef97c03a458af93bf5382f2ff: 21300000
+    - fddc0adecd910024c812c6a55894d36d: 21300000
     - 947c8e1f7a6c2ff4092c0cfd96c8068c: 21300000
     - 1b57e48fb8fc2394b9c9e51a2d97f44a: 21300000
     - f8d645efe22675a47bad8c3179a2ac2b: 21300000
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 230d4d3044a99a64880e3c01d7da2c5f, type: 3}
   - {fileID: 21300000, guid: 31aeeda0abd14fc4d8254adb7f7cdce8, type: 3}
   - {fileID: 21300000, guid: 20f50cb3d7e6dd149bf9c45431c45b77, type: 3}
   - {fileID: 21300000, guid: be2195948d96351468a5c15ca339f734, type: 3}
   - {fileID: 21300000, guid: bfd79994d3051454e95542f67eeeec6d, type: 3}
   - {fileID: 21300000, guid: 89c5a675389e3604aab521714e6722c8, type: 3}
+  - {fileID: 21300000, guid: a4df459604c1b9948b4352e4c2d68f25, type: 3}
   - {fileID: 21300000, guid: 77875d960eaa9dd46acedb76e3e763ee, type: 3}
   - {fileID: 21300000, guid: 59a7fdb66acc962459e0ac2884624968, type: 3}
   - {fileID: 21300000, guid: 1fbbbae6915648644a35a246bbcc1b22, type: 3}
   - {fileID: 21300000, guid: d8ed30177d1e91e4b81345f5b9805985, type: 3}
+  - {fileID: 21300000, guid: 2be80fb7f6ac6774cbe4b97d9635d45c, type: 3}
   - {fileID: 21300000, guid: 29d073384f350e1468ed4f49a643b438, type: 3}
+  - {fileID: 21300000, guid: 9248548877e80684c9c746c17f120264, type: 3}
   - {fileID: 21300000, guid: 8499c79892600004c8d90c2375056eb6, type: 3}
   - {fileID: 21300000, guid: 5f75f3a8d73cb20409c90063fa8c4103, type: 3}
   - {fileID: 21300000, guid: 8b9e84d92d3b1804fb1a74aae385b806, type: 3}
   - {fileID: 21300000, guid: 1099eed9bb58bcd4cb335e3c1c7210fa, type: 3}
+  - {fileID: 21300000, guid: bd1fa6e95aab2484c91649b961ba0d92, type: 3}
   - {fileID: 21300000, guid: aa45f9f9676dc864ebb2cadfc7705139, type: 3}
   - {fileID: 21300000, guid: 13e791baab5fd3445861473d1ea7d0af, type: 3}
   - {fileID: 21300000, guid: 1f48a09b5580cc741a4f722578110cd9, type: 3}
   - {fileID: 21300000, guid: 8f7d2aab6f0192541a769d6ce89561f1, type: 3}
-  - {fileID: 21300000, guid: 6429f5fb7f6997144a1391fac4bbfe8e, type: 3}
+  - {fileID: 21300000, guid: 90836bab29af5224daec35dc632b8ca7, type: 3}
   - {fileID: 21300000, guid: 7f05400c94dba3746a234fadee8d1aa0, type: 3}
+  - {fileID: 21300000, guid: d458d40c99f2a854ebcd6d17022e7de0, type: 3}
+  - {fileID: 21300000, guid: 41bc8c8c570b83741981e9fe3e39535a, type: 3}
+  - {fileID: 21300000, guid: f23225cc256be4249bc1250d840d18e1, type: 3}
+  - {fileID: 21300000, guid: 7801e0ad3118e9141a3a34e48b445a88, type: 3}
   - {fileID: 21300000, guid: 6d653e0e2c279b444a5e0a61af14ce91, type: 3}
   - {fileID: 21300000, guid: 8d246d3e6786ffb4689f243393a4ccc1, type: 3}
   - {fileID: 21300000, guid: 8d7edb7e2ae2d614eafc081de846b6a2, type: 3}
+  - {fileID: 21300000, guid: e17b898ef97c03a458af93bf5382f2ff, type: 3}
+  - {fileID: 21300000, guid: fddc0adecd910024c812c6a55894d36d, type: 3}
   - {fileID: 21300000, guid: 947c8e1f7a6c2ff4092c0cfd96c8068c, type: 3}
   - {fileID: 21300000, guid: 1b57e48fb8fc2394b9c9e51a2d97f44a, type: 3}
   - {fileID: 21300000, guid: f8d645efe22675a47bad8c3179a2ac2b, type: 3}
   m_PackedSpriteNamesToIndex:
+  - hat_tent_B
   - hat_marsh_A
   - hat_tent_A
   - hat_stone_D
-  - hat_Aztec_E
-  - hat_Aztec_B
+  - hat_aztec_E
+  - hat_aztec_B
+  - hat_wax_C
   - hat_mud_E
   - hat_mud_B
   - hat_mud_A
   - hat_stone_B
+  - hat_wax_D
   - hat_mud_C
+  - hat_stone_king
   - hat_marsh_B
   - hat_marsh_C
   - hat_marsh_E
-  - hat_Aztec_A
+  - hat_aztec_A
+  - hat_mud_king
   - hat_marsh_D
   - hat_stone_E
-  - hat_tent_B
-  - hat_Aztec_D
-  - hat_tent_D
+  - hat_tent_C
+  - hat_aztec_D
+  - hat_wax_king
   - hat_stone_A
+  - hat_wax_A
+  - hat_tent_king
+  - hat_marsh_king
+  - hat_aztec_king
   - hat_pirat_A
   - hat_mud_D
-  - hat_Aztec_C
+  - hat_aztec_C
+  - hat_wax_B
+  - hat_wax_E
   - hat_stone_C
   - hat_tent_E
-  - hat_tent_C
+  - hat_tent_D
   m_RenderDataMap: {}
   m_Tag: Hats
   m_IsVariant: 0
