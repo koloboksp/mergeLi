@@ -8,6 +8,7 @@ namespace Core
         [SerializeField] private UIHatsPanel_HatItem_FakeScene _scene;
         [SerializeField] private Ball _ballPrefab;
 
+        private Vector3 _ballPosition = Vector3.zero;
         private Ball _ball;
         
         public IEnumerable<T> GetSomething<T>(Vector3Int position) where T : class
@@ -32,25 +33,24 @@ namespace Core
 
         public Vector3Int CreateBall(Vector3Int position, int points, string hat)
         {
-            var ball = Instantiate(_ballPrefab, transform);
-            ball.transform.localScale = Vector3.one;
-            ball.transform.position = Vector3.zero;
-            ball.transform.rotation = Quaternion.identity;
+            _ball = Instantiate(_ballPrefab, transform);
+            _ball.transform.localScale = Vector3.one;
+            _ball.transform.position = _ballPosition;
+            _ball.transform.rotation = Quaternion.identity;
 
-            ball.SetData(this, Vector3.zero, points, hat);
-            var subComponents = ball.GetComponents<ISubComponent>();
+            _ball.SetData(this, _ballPosition, points, hat);
+            var subComponents = _ball.GetComponents<ISubComponent>();
             foreach (var subComponent in subComponents)
                 subComponent.SetData();
 
-            ball.View.ShowHat(true);
-            _ball = ball;
+            _ball.View.ShowHat(true);
             
             return position;
         }
 
         public Vector3 GetPositionFromGrid(Vector3 gridPosition)
         {
-            return Vector3.zero;
+            return _ballPosition;
         }
 
         public Vector3 GetPositionFromGrid(Vector3Int gridPosition)

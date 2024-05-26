@@ -80,8 +80,8 @@ namespace Core.Effects
             
             _pointsEffect.Run(starsCount, destinationPosition);
             
-            await AsyncExtensions.WaitForSecondsAsync(_duration, cancellationToken);
-            
+            await AsyncExtensions.WaitForSecondsAsync(_duration * 0.5f, cancellationToken);
+
             _pointsText.gameObject.SetActive(true);
             _pointsText.SetPoint(points);
             

@@ -42,7 +42,7 @@ namespace Core
         {
             ApplicationController.Instance.UIPanelController.PopScreen(this);
         }
-
+        
         private async void BuyBtn_OnClick()
         {
             if (_model.CanBuySelectedItem())
@@ -157,7 +157,6 @@ namespace Core
             foreach (var oldViewBlock in oldViewBlocks)
                 Destroy(oldViewBlock.gameObject);
 
-            RectTransform focusOnHat = null;
             RectTransform focusOnHatBlock = null;
 
             _itemPrefab.gameObject.SetActive(false);
@@ -182,25 +181,12 @@ namespace Core
                     if (item.Available && !item.UserInactive)
                     {
                         focusOnHatBlock = blockView.Root;
-                        focusOnHat = itemView.Root;
                     }    
                 }
                 
                 LayoutRebuilder.ForceRebuildLayoutImmediate(blockView.ContentRoot);
                 LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
             }
-            
-            // foreach (var item in items)
-            // {
-            //     var itemView = Instantiate(_itemPrefab, _container.content);
-            //     itemView.gameObject.SetActive(true);
-            //     itemView.SetModel(item, _data.GameProcessor);
-            //
-            //     if (item.Available && !item.UserInactive)
-            //     {
-            //         focusOnHat = itemView.Root;
-            //     }
-            // }
             
             LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
             
