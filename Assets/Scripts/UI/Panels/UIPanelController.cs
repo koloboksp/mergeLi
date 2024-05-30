@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -30,7 +31,11 @@ namespace Core
                 {
                     var screenObject = Object.Instantiate(result);
                     var screen = screenObject.GetComponent<TPanel>();
-                    screen.Root.SetParent(_screensRoot);
+                    var panelLayers = _screensRoot.GetComponentsInChildren<PanelLayer>();
+                    var layerName = screen.GetLayerName();
+                    var layer = panelLayers.FirstOrDefault(i => i.name == layerName);
+                    screen.Root.SetParent(layer.Root);
+                    
                     screen.Root.anchorMin = Vector2.zero;
                     screen.Root.anchorMax = Vector2.one;
                     screen.Root.offsetMin = Vector2.zero;
@@ -64,7 +69,11 @@ namespace Core
                 {
                     var screenObject = Object.Instantiate(result);
                     var screen = screenObject.GetComponent<TPanel>();
-                    screen.Root.SetParent(_screensRoot);
+                    var panelLayers = _screensRoot.GetComponentsInChildren<PanelLayer>();
+                    var layerName = screen.GetLayerName();
+                    var layer = panelLayers.FirstOrDefault(i => i.name == layerName);
+                    screen.Root.SetParent(layer.Root);
+                    
                     screen.Root.anchorMin = Vector2.zero;
                     screen.Root.anchorMax = Vector2.one;
                     screen.Root.offsetMin = Vector2.zero;

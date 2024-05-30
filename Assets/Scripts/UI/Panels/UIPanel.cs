@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -16,6 +17,11 @@ namespace Core
         private bool _active;
         
         public RectTransform Root => _root;
+
+        public virtual string GetLayerName()
+        {
+            return "defaultLayer";
+        }
         
         public virtual void SetData(UIScreenData undefinedData)
         {
