@@ -63,15 +63,15 @@ MonoBehaviour:
   _root: {fileID: 1054850265026345782}
   _pointsReceiver: {fileID: 8138234247583313656}
   _textOnBuildStartingKey:
-    m03: 268435456
-    m47: 0
-    m8B: 0
-    mCF: 0
+    m03: 17968726
+    m47: 2139047338
+    m8B: 2591781372
+    mCF: 921506634
   _textAfterBuildEndingKey:
-    m03: 536870912
-    m47: 0
-    m8B: 0
-    mCF: 0
+    m03: 3939636866
+    m47: 1097288516
+    m8B: 2695674226
+    mCF: 3871776176
 --- !u!114 &8138234247583313656
 MonoBehaviour:
   m_ObjectHideFlags: 0
