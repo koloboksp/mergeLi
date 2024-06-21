@@ -37,6 +37,7 @@ public class FieldView : MonoBehaviour, IFieldView, IPointerDownHandler, IPointe
         {
             var depthSeparator = new GameObject($"rowSeparator_{_model.Size.y - rowIndex - 1}", typeof(RectTransform));
             depthSeparator.transform.SetParent(_root);
+            depthSeparator.transform.localScale = Vector3.one;
             _rowDepthSeparators[rowIndex] = depthSeparator.transform as RectTransform;
         }
     }
