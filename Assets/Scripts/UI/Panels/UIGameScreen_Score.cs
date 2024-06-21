@@ -8,8 +8,6 @@ namespace Core
 {
     public class UIGameScreen_Score : MonoBehaviour, IPointsEffectReceiver
     {
-        [SerializeField] private Text _sessionScoreLabel;
-        [SerializeField] private Text _bestScoreLabel;
         [SerializeField] private UIProgressBar _partProgressBar;
         [SerializeField] private UIScore _sessionScore;
 
