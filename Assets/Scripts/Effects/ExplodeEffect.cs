@@ -18,6 +18,11 @@ namespace Core.Effects
             _ = StartEffectAsync(delay * _delayScaler, Application.exitCancellationToken);
         }
 
+        public async Task RunAsync(float delay, CancellationToken cancellationToken)
+        {
+            await StartEffectAsync(delay * _delayScaler, cancellationToken);
+        }
+        
         private async Task StartEffectAsync(float delay, CancellationToken cancellationToken)
         {
             await AsyncExtensions.WaitForSecondsAsync(delay, cancellationToken);

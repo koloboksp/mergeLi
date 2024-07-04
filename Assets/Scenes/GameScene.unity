@@ -1329,6 +1329,7 @@ MonoBehaviour:
   _explodeType: 1
   _explodeEffectPrefab: {fileID: 6253935196294891393, guid: d7b051f9c58eaa7419d8c77236a8be14,
     type: 3}
+  _destroyBallsDelay: 0.5
   _halfSize: 1
 --- !u!4 &433674897 stripped
 Transform:
@@ -1488,8 +1489,9 @@ MonoBehaviour:
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
   _explodeType: 3
-  _explodeEffectPrefab: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+  _explodeEffectPrefab: {fileID: 6253935196294891393, guid: bef5419df1844d340ba7699b96d36a2f,
     type: 3}
+  _destroyBallsDelay: 1.1
   _direction: 1
 --- !u!4 &548640613
 Transform:
@@ -1742,7 +1744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enableTutorial: 1
-  _forceTutorial: 1
+  _forceTutorial: 0
   _failClip: {fileID: 8300000, guid: a68bc4a328f7dfc4cb2b50afa30b1328, type: 3}
 --- !u!1 &623220713
 GameObject:
@@ -1929,8 +1931,9 @@ MonoBehaviour:
   _areaPrefab: {fileID: 3534805384544525092, guid: 7f4d37c1400156847bdda27c3f02c2eb,
     type: 3}
   _explodeType: 2
-  _explodeEffectPrefab: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
+  _explodeEffectPrefab: {fileID: 6253935196294891393, guid: cfcaa10425ed82244a5142d7c33c21d3,
     type: 3}
+  _destroyBallsDelay: 1.1
   _direction: 0
 --- !u!4 &694036923
 Transform:
@@ -3426,6 +3429,7 @@ MonoBehaviour:
   _explodeType: 0
   _explodeEffectPrefab: {fileID: 6253935196294891393, guid: 85abe08cbad1c2447842578027c8dd06,
     type: 3}
+  _destroyBallsDelay: 0.5
   _halfSize: 0
 --- !u!1 &1636435616
 GameObject:
@@ -5429,7 +5433,7 @@ PrefabInstance:
     - target: {fileID: 5957255816287073239, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
       propertyPath: m_Volume
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7335857329322477467, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
