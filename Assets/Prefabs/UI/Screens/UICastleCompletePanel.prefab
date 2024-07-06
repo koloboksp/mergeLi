@@ -30,7 +30,6 @@ RectTransform:
   m_Children:
   - {fileID: 1224536181420230465}
   m_Father: {fileID: 7104141350609223302}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -68,7 +67,6 @@ RectTransform:
   - {fileID: 9062382337551121395}
   - {fileID: 6119974589303598880}
   m_Father: {fileID: 1744393476548389585}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -109,7 +107,6 @@ RectTransform:
   - {fileID: 1346075018939306980}
   - {fileID: 87570574290966408}
   m_Father: {fileID: 7104141350609223302}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -235,7 +232,6 @@ RectTransform:
   - {fileID: 730976351829117951}
   - {fileID: 1744393476548389585}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -264,7 +260,7 @@ MonoBehaviour:
   _speaker: {fileID: 1728031255354519943}
   _coins: {fileID: 400660669832977287}
   _tapButton: {fileID: 1831107890344783963}
-  _completeClip: {fileID: 8300000, guid: eca5fb0522b873748a1c455564bd6af1, type: 3}
+  _completeClip: {fileID: 8300000, guid: dbc30df2ed5f1ad40b33cb974271b8ad, type: 3}
   _delayBeforeShowDialog: 2
   _delayBeforeGiveCoins: 2
 --- !u!111 &7045932823999599021
@@ -275,7 +271,7 @@ Animation:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2305112124653678651}
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Animation: {fileID: 7400000, guid: fbef9c0db1cb73a4e8f5a00725693a8d, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: fbef9c0db1cb73a4e8f5a00725693a8d, type: 2}
@@ -283,6 +279,7 @@ Animation:
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
+  m_UpdateMode: 0
   m_CullingType: 0
 --- !u!1 &2780435370362158052
 GameObject:
@@ -314,7 +311,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 167057263121754092}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -367,7 +363,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7104141350609223302}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -485,7 +480,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1744393476548389585}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -523,7 +517,6 @@ RectTransform:
   - {fileID: 6952250620442751769}
   - {fileID: 5844324703864122328}
   m_Father: {fileID: 7104141350609223302}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -991,6 +984,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5728344091295413858, guid: 7d8cfa57621208d44bc94e624f76aec8,
+        type: 3}
+      propertyPath: _tapBtn
+      value: 
+      objectReference: {fileID: 1831107890344783963}
     - target: {fileID: 5728344091295413858, guid: 7d8cfa57621208d44bc94e624f76aec8,
         type: 3}
       propertyPath: _nextBtn
