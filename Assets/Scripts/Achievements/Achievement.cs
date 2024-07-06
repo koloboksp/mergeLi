@@ -5,9 +5,11 @@ namespace Achievements
 {
     public class Achievement : MonoBehaviour
     {
+        [SerializeField] private string _id;
+        
         private GameProcessor _gameProcessor;
 
-        public string Id => gameObject.name;
+        public string Id => _id;
         public GameProcessor GameProcessor => _gameProcessor;
 
         protected virtual void InnerCheck()
