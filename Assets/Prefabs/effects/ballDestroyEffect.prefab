@@ -30,7 +30,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -52,4 +51,11 @@ MonoBehaviour:
   _defaultColorVariant: {fileID: 3253612662647844732, guid: ed683897499794988802b09b98107de3,
     type: 3}
   _duration: 2
-  _clip: {fileID: 8300000, guid: 90f54315116696745b3f82e91e9d2218, type: 3}
+  _clips:
+  - {fileID: 8300000, guid: f55e5c4ba34327442981fa0290a40467, type: 3}
+  - {fileID: 8300000, guid: 64d30a0cfca67d24da84df19cc9db184, type: 3}
+  - {fileID: 8300000, guid: b8abaf1bdab552443a9ef0abbe9aff87, type: 3}
+  - {fileID: 8300000, guid: 010b18be114341843ae67c396d04599b, type: 3}
+  - {fileID: 8300000, guid: efd184cef5d5a3f44abfbcc565dade57, type: 3}
+  - {fileID: 8300000, guid: 9de3eb5396cd2124aa24102ee2356c1c, type: 3}
+  - {fileID: 8300000, guid: ceb9c80f1a806b34894365ecba99bdeb, type: 3}

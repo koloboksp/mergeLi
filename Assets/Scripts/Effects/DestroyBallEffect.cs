@@ -12,7 +12,7 @@ namespace Core.Effects
     {
         [SerializeField] private DestroyBallEffectColorVariant _defaultColorVariant;
         [SerializeField] private float _duration = 2.0f;
-        [SerializeField] private AudioClip _clip;
+        [SerializeField] private AudioClip[] _clips;
 
         private DependencyHolder<SoundsPlayer> _soundsPlayer;
         
@@ -27,7 +27,7 @@ namespace Core.Effects
             {
                 var variantInstance = Instantiate(_defaultColorVariant, transform);
                 variantInstance.Run(mainColor);
-                _soundsPlayer.Value.Play(_clip);
+                _soundsPlayer.Value.Play(_clips[UnityEngine.Random.Range(0, _clips.Length)]);
                 
                 await AsyncExtensions.WaitForSecondsAsync(_duration, cancellationToken);
                 
