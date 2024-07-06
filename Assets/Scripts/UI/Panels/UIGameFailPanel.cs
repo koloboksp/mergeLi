@@ -25,6 +25,8 @@ namespace Core
         [SerializeField] private AnimationCurve _animationSteps;
         
         [SerializeField] private GameObject _sessionScorePanel;
+        [SerializeField] private Transform _sessionScoreLabelRoot;
+        [SerializeField] private Transform _sessionScoreIconRoot;
         [SerializeField] public Animation _scoreShowAnimation;
         [SerializeField] private Text _sessionScoreLabel;
         [SerializeField] private AudioClip _countdownClip;
@@ -85,8 +87,10 @@ namespace Core
                     _scoreShowAnimation.Play();
                     await AsyncExtensions.WaitForSecondsAsync(_scoreShowAnimation.clip.length, inputTokenSource.Token, Application.exitCancellationToken);
 
-                    var sessionScorePanelScaleEffect = new ScaleEffect(_sessionScorePanel.transform);
-                    _ = sessionScorePanelScaleEffect.Execute(inputTokenSource.Token, Application.exitCancellationToken);
+                    var sessionScoreLabelScaleEffect = new ScaleEffect(_sessionScoreLabelRoot);
+                    _ = sessionScoreLabelScaleEffect.Execute(inputTokenSource.Token, Application.exitCancellationToken);
+                    var sessionScoreIconScaleEffect = new ScaleEffect(_sessionScoreIconRoot);
+                    _ = sessionScoreIconScaleEffect.Execute(inputTokenSource.Token, Application.exitCancellationToken);
                     var sessionScoreCalculationEffect = new CalculationEffect(0, sessionScore, _animationSteps,
                         (step, count) =>
                         {
@@ -97,7 +101,9 @@ namespace Core
                             else
                                 _data.GameProcessor.SoundsPlayer.Play(_countdownCompleteClip);
 
-                            sessionScorePanelScaleEffect.SetMaxScale();
+                            sessionScoreLabelScaleEffect.SetMaxScale();
+                            sessionScoreIconScaleEffect.SetMaxScale();
+
                             _sessionScoreLabel.text = $"{value.ToString()}";
                         });
                     
