@@ -1745,7 +1745,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enableTutorial: 1
   _forceTutorial: 0
-  _failClip: {fileID: 8300000, guid: a68bc4a328f7dfc4cb2b50afa30b1328, type: 3}
+  _failClip: {fileID: 8300000, guid: 666fd8faa1cfd3046b080ff6df5a59a5, type: 3}
 --- !u!1 &623220713
 GameObject:
   m_ObjectHideFlags: 0
@@ -5433,7 +5433,7 @@ PrefabInstance:
     - target: {fileID: 5957255816287073239, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
       propertyPath: m_Volume
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7335857329322477467, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
