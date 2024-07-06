@@ -43,10 +43,10 @@ namespace Skins.Custom
         [SerializeField] private Transform _faceAnchor;
         [SerializeField] private CanvasGroup _canvasGroup;
 
-        [SerializeField] private AudioClip _onSelectClip;
+        [SerializeField] private AudioClip[] _onSelectClips;
         [SerializeField] private AudioClip _onMoveClip;
-        [SerializeField] private AudioClip _onUpgradeClip;
-        [SerializeField] private AudioClip _onDowngradeClip;
+        [SerializeField] private AudioClip[] _onUpgradeClips;
+        [SerializeField] private AudioClip[] _onDowngradeClips;
         [SerializeField] private AudioClip _onPathNotFoundClip;
 
         [SerializeField] private Image _shapeIcon;
@@ -79,7 +79,9 @@ namespace Skins.Custom
                 {
                     BreakHideFaceWithDelay();
                     _face.ShowLocal(BallState.Select);
-                    _soundsPlayer.Value.Play(_onSelectClip);
+                    
+                    if (_onSelectClips.Length > 0)
+                        _soundsPlayer.Value.Play(_onSelectClips[UnityEngine.Random.Range(0,_onSelectClips.Length)]);
                 }
             }
         }
@@ -120,7 +122,8 @@ namespace Skins.Custom
 
             if (ballState == BallState.Upgrade)
             {
-                _soundsPlayer.Value.Play(_onUpgradeClip);
+                if (_onUpgradeClips.Length > 0)
+                    _soundsPlayer.Value.Play(_onUpgradeClips[UnityEngine.Random.Range(0, _onUpgradeClips.Length)]);
                 
                 _faceAnchor.gameObject.SetActive(true);
                 _face.ShowLocal(BallState.Upgrade);
@@ -128,7 +131,10 @@ namespace Skins.Custom
             }
 
             if (ballState == BallState.Downgrade)
-                _soundsPlayer.Value.Play(_onDowngradeClip);
+            {
+                if(_onDowngradeClips.Length > 0)
+                    _soundsPlayer.Value.Play(_onDowngradeClips[UnityEngine.Random.Range(0, _onDowngradeClips.Length)]);
+            }
         }
 
         private void SetShape(int points)
