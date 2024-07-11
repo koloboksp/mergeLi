@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f10fb695654a30a75ea2257ac9472c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _productId: com.wib.livefactory.bigCoinsPack
+  _productId: com.wib.livefactory.bigcoinspack
   _currencyAmount: 12000
   _backgroundName: bigPackPurchase
   _icon: {fileID: 21300000, guid: 9475d93ace4886c46959cdf03225f282, type: 3}
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f10fb695654a30a75ea2257ac9472c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _productId: com.wib.livefactory.mediumCoinsPack
+  _productId: com.wib.livefactory.mediumcoinspack
   _currencyAmount: 1000
   _backgroundName: mediumPackPurchase
   _icon: {fileID: 21300000, guid: 0b78beb84de2813479d6b725417c3dcd, type: 3}
@@ -191,7 +191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89f10fb695654a30a75ea2257ac9472c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _productId: com.wib.livefactory.smallCoinsPack
+  _productId: com.wib.livefactory.smallcoinspack
   _currencyAmount: 400
   _backgroundName: smallPackPurchase
   _icon: {fileID: 21300000, guid: 14895ff264de08f4c8bd73a877fd35d6, type: 3}
