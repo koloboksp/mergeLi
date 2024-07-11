@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Atom;
 using Core.Goals;
 using Core.Steps;
 using Core.Steps.CustomOperations;
@@ -20,13 +21,13 @@ namespace Core
         [SerializeField] private UIGameScreen_Coins _coins;
         [SerializeField] private RectTransform _fieldContainer;
 
-        [FormerlySerializedAs("_showSettingsBtn")] [SerializeField]
-        private Button _showPauseBtn;
+        [SerializeField] private Button _showPauseBtn;
 
-        [SerializeField] private GameObject _lowSpaceWarning;
-        [FormerlySerializedAs("_anyGift")] [SerializeField] private UIAnyGiftIndicator _anyGiftIndicator;
+        [SerializeField] private UIBubbleDialog _noSpaceWarning;
+        [SerializeField] private GuidEx _noSpaceWarningTextKey;
+        [SerializeField] private UIAnyGiftIndicator _anyGiftIndicator;
 
-        private List<UIBuff> _uiBuffs = new();
+        private readonly List<UIBuff> _uiBuffs = new();
         private UIGameScreenData _data;
 
         public UIGameScreenData Data => _data;
@@ -51,6 +52,7 @@ namespace Core
             _data.GameProcessor.OnStepCompleted += OnStepCompleted;
             _data.GameProcessor.OnBeforeStepStarted += OnBeforeStepStarted;
             _data.GameProcessor.SessionProcessor.OnLowEmptySpaceChanged += OnLowEmptySpaceChanged;
+            _data.GameProcessor.SessionProcessor.OnFreeSpaceIsOverChanged += OnFreeSpaceIsOverChanged;
             OnLowEmptySpaceChanged(false);
             
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
@@ -96,6 +98,7 @@ namespace Core
             _data.GameProcessor.OnStepCompleted -= OnStepCompleted;
             _data.GameProcessor.OnBeforeStepStarted -= OnBeforeStepStarted;
             _data.GameProcessor.SessionProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
+            _data.GameProcessor.SessionProcessor.OnFreeSpaceIsOverChanged -= OnFreeSpaceIsOverChanged;
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency -= SaveController_OnConsumeCurrency;
 
             _data.GameProcessor.CastleSelector.OnCastleChanged -= CastleSelector_OnCastleChanged;
@@ -188,7 +191,15 @@ namespace Core
 
         private void OnLowEmptySpaceChanged(bool state)
         {
-            _lowSpaceWarning.SetActive(state);
+            
+        }
+        
+        private void OnFreeSpaceIsOverChanged(bool state, bool noAvailableSteps)
+        {   
+            var warningVisible = state && !noAvailableSteps;
+            _noSpaceWarning.gameObject.SetActive(warningVisible);
+            if (warningVisible)
+                _ = _noSpaceWarning.ShowTextAsync(_noSpaceWarningTextKey, false, Application.exitCancellationToken);
         }
         
         private void SaveController_OnConsumeCurrency(int amount)
@@ -236,7 +247,7 @@ namespace Core
             _coins.gameObject.SetActive(false);
             _anyGiftIndicator.gameObject.SetActive(false);
             _showPauseBtn.gameObject.SetActive(false);
-            _lowSpaceWarning.gameObject.SetActive(false);
+            _noSpaceWarning.gameObject.SetActive(false);
         }
 
         public void SetActiveElement(UIGameScreenElement element, bool active)

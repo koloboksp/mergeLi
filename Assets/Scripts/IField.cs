@@ -27,6 +27,7 @@ public interface IField
     Vector3 GetWorldPosition(Vector3 gridPosition);
     Vector3 GetWorldCellSize();
     int CalculateEmptySpacesCount();
+    bool HasMergeSteps(int[] availableValues);
     Vector3Int TransformToIntPosition(Vector3 gridPosition);
     List<Vector2Int> GetPath(Vector3Int from, Vector3Int to);
     void DestroyBall(Ball ball);

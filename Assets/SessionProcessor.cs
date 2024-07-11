@@ -30,7 +30,7 @@ public class SessionProcessor : MonoBehaviour,
     public event Action OnRestart;
     public event Action<int> OnScoreChanged;
     public event Action<bool> OnLowEmptySpaceChanged;
-    public event Action<bool> OnFreeSpaceIsOverChanged; 
+    public event Action<bool, bool> OnFreeSpaceIsOverChanged; 
     public event Action<Castle> OnCastleCompleted;
     
     [SerializeField] private bool _enableTutorial;
@@ -276,15 +276,24 @@ public class SessionProcessor : MonoBehaviour,
             restartToken.ThrowIfCancellationRequested();
             loseToken.ThrowIfCancellationRequested();
 
-            if (!_gameProcessor.Field.IsFullFilled && _notAllBallsGenerated)
+            var noAvailableSteps = false;
+            if (_notAllBallsGenerated)
             {
                 _loseTokenSource.Cancel();
+            }
+            else
+            {
+                noAvailableSteps = _gameProcessor.Field.IsFullFilled && !_gameProcessor.Field.HasMergeSteps(_gameProcessor.ActiveGameRulesSettings.GeneratedBallsPointsRange);
+                if (noAvailableSteps)
+                {
+                    _loseTokenSource.Cancel();
+                }
             }
             
             _userStepFinished = false;
             _notAllBallsGenerated = false;
 
-            CheckLowEmptySpace();
+            CheckLowEmptySpace(noAvailableSteps);
             
             if (CheckCastleCompetedState())
             {
@@ -424,7 +433,7 @@ public class SessionProcessor : MonoBehaviour,
         return _gameProcessor.CommonAnalytics;
     }
 
-    private void CheckLowEmptySpace()
+    private void CheckLowEmptySpace(bool noAvailableSteps)
     {
         var emptyCellsCount = _gameProcessor.Field.CalculateEmptySpacesCount();
         var threshold = Mathf.Max(
@@ -434,7 +443,7 @@ public class SessionProcessor : MonoBehaviour,
         var freeSpaceIsOver = emptyCellsCount <= 0;
 
         OnLowEmptySpaceChanged?.Invoke(lowSpace);
-        OnFreeSpaceIsOverChanged?.Invoke(freeSpaceIsOver);
+        OnFreeSpaceIsOverChanged?.Invoke(freeSpaceIsOver, noAvailableSteps);
     }
     
     private void CheckAndProcessFieldEmpty()

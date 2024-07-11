@@ -38,7 +38,7 @@ namespace Achievements
             
             Check();
         }
-        private void GameProcessor_OnFreeSpaceIsOverChanged(bool state)
+        private void GameProcessor_OnFreeSpaceIsOverChanged(bool state, bool noAvailableSteps)
         {
             _freeSpaceIsOverInThisStep = state;
             Check();

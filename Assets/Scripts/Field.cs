@@ -43,7 +43,7 @@ public class Field : MonoBehaviour, IField
     
     private readonly List<BallDesc> _nextBallsData = new();
 
-    public bool IsFullFilled => _balls.Count < _size.x * _size.y;
+    public bool IsFullFilled => _balls.Count >= _size.x * _size.y;
     public bool IsEmpty => _balls.Count == 0;
     public Vector2Int Size => _size;
     
@@ -298,8 +298,10 @@ public class Field : MonoBehaviour, IField
         var result = new List<T>();
         foreach (var ball in _balls)
         {
-            if(ball.IntGridPosition != intPosition) continue;
-            if(!(ball is T)) continue;
+            if (ball.IntGridPosition != intPosition) 
+                continue;
+            if (!(ball is T)) 
+                continue;
             
             result.Add(ball as T);
         }
@@ -320,26 +322,27 @@ public class Field : MonoBehaviour, IField
 
     List<List<Ball>> Check(Vector3Int position, int requiredCount)
     {
-        List<List<Ball>> ballsOnLines = new List<List<Ball>>();
+        var ballsOnLines = new List<List<Ball>>();
         
         var originBall = GetBall(position);
         for (int directionI = 0; directionI < Directions.Count; directionI++)
         {
-            List<Ball> ballsOnLine = new List<Ball>();
+            var ballsOnLine = new List<Ball>();
             ballsOnLine.Add(originBall);
             
-            for (int sideI = 0; sideI < Sides.Count; sideI++)
+            for (var sideI = 0; sideI < Sides.Count; sideI++)
             {
-                for (int distance = 1; ; distance++)
+                for (var distance = 1; ; distance++)
                 {
-                    Vector3Int checkingPosition = position + Directions[directionI] *  Sides[sideI] * distance;
-                    if (checkingPosition.x < 0 || checkingPosition.y < 0
-                                               || checkingPosition.x >= _size.x || checkingPosition.y >= _size.y)
+                    var checkingPosition = position + Directions[directionI] *  Sides[sideI] * distance;
+                    if (checkingPosition.x < 0 || checkingPosition.y < 0 || checkingPosition.x >= _size.x || checkingPosition.y >= _size.y)
                         break;
-                    
+
                     var foundBall = GetBall(checkingPosition);
-                    if(foundBall == null) break;
-                    if(originBall.Points != foundBall.Points) break;
+                    if (foundBall == null) 
+                        break;
+                    if (originBall.Points != foundBall.Points) 
+                        break;
                     
                     ballsOnLine.Add(foundBall);
                 }
@@ -396,5 +399,48 @@ public class Field : MonoBehaviour, IField
     {
         _nextBallsData.Clear();
         _nextBallsData.AddRange(nextBallsInfos);
+    }
+
+    public bool HasMergeSteps(int[] availableValues)
+    {
+        var ballsGrid = new Ball[_size.x,_size.y];
+        foreach (var ball in _balls)
+        {
+            var ballPosition = ball.IntGridPosition;
+            ballsGrid[ballPosition.x, ballPosition.y] = ball;
+        }
+
+        var checkingBallOffsets = new Vector2Int[]
+        {
+            Vector2Int.left,
+            Vector2Int.right,
+            Vector2Int.down,
+            Vector2Int.up,
+        };
+        var maxAvailablePoints = availableValues[availableValues.Length - 1];
+        for (var x = 0; x < ballsGrid.GetLength(0); x++)
+        {
+            for (var y = 0; y < ballsGrid.GetLength(1); y++)
+            {
+                var ballPosition = new Vector2Int(x, y);
+                var ball = ballsGrid[ballPosition.x, ballPosition.y];
+                if (ball.Points == maxAvailablePoints)
+                    continue;
+                for (var offsetI = 0; offsetI < checkingBallOffsets.Length; offsetI++)
+                {
+                    var checkingBallPosition = ballPosition + checkingBallOffsets[offsetI];
+                    if ((checkingBallPosition.x >= 0 && checkingBallPosition.x < ballsGrid.GetLength(0))
+                        && (checkingBallPosition.y >= 0 && checkingBallPosition.y < ballsGrid.GetLength(1)))
+                    {
+                        var checkingBall = ballsGrid[checkingBallPosition.x, checkingBallPosition.y];
+                        if (ball.Points == checkingBall.Points)
+                            return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+
     }
 }

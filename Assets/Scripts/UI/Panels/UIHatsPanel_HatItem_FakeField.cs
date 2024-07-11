@@ -95,6 +95,11 @@ namespace Core
             throw new System.NotImplementedException();
         }
 
+        public bool HasMergeSteps(int[] availableValues)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Vector3Int TransformToIntPosition(Vector3 gridPosition)
         {
             return new Vector3Int(Mathf.FloorToInt(gridPosition.x), Mathf.FloorToInt(gridPosition.y), 0);
