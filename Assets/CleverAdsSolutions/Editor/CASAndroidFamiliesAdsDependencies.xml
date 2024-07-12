@@ -2,10 +2,10 @@
 <dependencies>
   <androidPackages>
     <repositories>
+      <repository>https://cboost.jfrog.io/artifactory/chartboost-ads/</repository>
       <repository>https://android-sdk.is.com/</repository>
       <repository>https://aa-sdk.s3-eu-west-1.amazonaws.com/android_repo</repository>
-      <repository>https://cboost.jfrog.io/artifactory/chartboost-ads/</repository>
     </repositories>
-    <androidPackage spec="com.cleveradssolutions:cas-families:3.2.5" version="3.2.5"/>
+    <androidPackage spec="com.cleveradssolutions:cas-families:3.8.1" version="3.8.1"/>
   </androidPackages>
 </dependencies>
