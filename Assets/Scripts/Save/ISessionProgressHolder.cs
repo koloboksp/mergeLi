@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Analytics;
+using Core;
 using Core.Goals;
 
 namespace Save
