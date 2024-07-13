@@ -65,7 +65,8 @@ namespace Core
                 UIGameScreen gameScreen = null;
                 UIStartPanel startPanel = null;
             
-                if (_enableTutorial && _gameProcessor.TutorialController.CanStartTutorial(_forceTutorial))
+                if (_enableTutorial 
+                    && _gameProcessor.TutorialController.CanStartTutorial(_forceTutorial && Application.isEditor))
                 {
                     await _gameProcessor.TutorialController.TryStartTutorial(_forceTutorial, exitToken);
                     gameScreen = ApplicationController.Instance.UIPanelController.GetPanel<UIGameScreen>();
