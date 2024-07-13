@@ -27,6 +27,11 @@ namespace Core
        
         private UICastleCompletePanelData _data;
 
+        public override string GetLayerName()
+        {
+            return "gameScreenFrontLayer";
+        }
+        
         protected override void InnerActivate()
         {
             base.InnerActivate();

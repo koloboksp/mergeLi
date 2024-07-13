@@ -47,7 +47,8 @@ namespace Core
         private Model _model;
         private UIStartPanelData _data;
         private UIStartPanelChoice _choice;
-        
+        private DependencyHolder<UIPanelController> _panelController;
+
         public UIStartPanelChoice Choice => _choice;
         
         private void Awake()
@@ -73,7 +74,7 @@ namespace Core
         
         private void PlayBtn_OnClick()
         {
-            ApplicationController.Instance.UIPanelController.PopScreen(this);
+            _panelController.Value.PopScreen(this);
         }
         
         private void CastleBtn_OnClick()
@@ -84,7 +85,7 @@ namespace Core
                 Castles = _data.GameProcessor.CastleSelector.Library.Castles,
                 GameProcessor = _data.GameProcessor
             };
-            _ = ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastlesLibraryPanel>(
+            _ = _panelController.Value.PushPopupScreenAsync<UICastlesLibraryPanel>(
                 data,
                 Application.exitCancellationToken);
         }
@@ -98,7 +99,7 @@ namespace Core
             data.Hats = _data.GameProcessor.Scene.HatsLibrary.Hats;
             data.HatsChanger = _data.GameProcessor.Scene;
             
-            _ = ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIHatsPanel>(
+            _ = _panelController.Value.PushPopupScreenAsync<UIHatsPanel>(
                 data,
                 Application.exitCancellationToken);
         }
@@ -107,7 +108,7 @@ namespace Core
         {
             var panelData = new UISettingsPanelData();
             panelData.GameProcessor = _data.GameProcessor;
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UISettingsPanel>(
+            _ = _panelController.Value.PushPopupScreenAsync<UISettingsPanel>(
                 panelData,
                 Application.exitCancellationToken);
         }
@@ -117,7 +118,7 @@ namespace Core
         {
             if (!ApplicationController.Instance.ISocialService.IsAuthenticated())
             {
-                var waitingScreen = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIWaitingPanel>(
+                var waitingScreen = await _panelController.Value.PushPopupScreenAsync<UIWaitingPanel>(
                     null, 
                     Application.exitCancellationToken);
                 
@@ -125,8 +126,8 @@ namespace Core
                     Application.exitCancellationToken);
                 if (!authenticateResult)
                 {
-                    ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
-                    var errorMessageBox = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIMessageBoxPanel>(
+                    _panelController.Value.PopScreen(waitingScreen);
+                    var errorMessageBox = await _panelController.Value.PushPopupScreenAsync<UIMessageBoxPanel>(
                         new UIMessageBoxPanelData(Locale.MessageBoxAuthenticateError), 
                         Application.exitCancellationToken);
                     
@@ -134,7 +135,7 @@ namespace Core
                     return;
                 }
                 
-                ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
+                _panelController.Value.PopScreen(waitingScreen);
             }
         }
 
@@ -147,7 +148,7 @@ namespace Core
         {
             if (!ApplicationController.Instance.ISocialService.IsAuthenticated())
             {
-                var waitingScreen = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIWaitingPanel>(
+                var waitingScreen = await _panelController.Value.PushPopupScreenAsync<UIWaitingPanel>(
                     null,
                     Application.exitCancellationToken);
                 
@@ -155,8 +156,8 @@ namespace Core
                     Application.exitCancellationToken);
                 if (!authenticateResult)
                 {
-                    ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
-                    var errorMessageBox = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIMessageBoxPanel>(
+                    _panelController.Value.PopScreen(waitingScreen);
+                    var errorMessageBox = await _panelController.Value.PushPopupScreenAsync<UIMessageBoxPanel>(
                         new UIMessageBoxPanelData(Locale.MessageBoxAuthenticateError), 
                         Application.exitCancellationToken);
                     
@@ -164,7 +165,7 @@ namespace Core
                     return;
                 }
                 
-                ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
+                _panelController.Value.PopScreen(waitingScreen);
             }
             
             await ApplicationController.Instance.ISocialService.ShowAchievementsUIAsync(Application.exitCancellationToken);
@@ -174,7 +175,7 @@ namespace Core
         {
             if (!ApplicationController.Instance.ISocialService.IsAuthenticated())
             {
-                var waitingScreen = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIWaitingPanel>(
+                var waitingScreen = await _panelController.Value.PushPopupScreenAsync<UIWaitingPanel>(
                     null,
                     Application.exitCancellationToken);
                 
@@ -182,8 +183,8 @@ namespace Core
                     Application.exitCancellationToken);
                 if (!authenticateResult)
                 {
-                    ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
-                    var errorMessageBox = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIMessageBoxPanel>(
+                    _panelController.Value.PopScreen(waitingScreen);
+                    var errorMessageBox = await _panelController.Value.PushPopupScreenAsync<UIMessageBoxPanel>(
                         new UIMessageBoxPanelData(Locale.MessageBoxAuthenticateError), 
                         Application.exitCancellationToken);
                     
@@ -191,7 +192,7 @@ namespace Core
                     return;
                 }
                 
-                ApplicationController.Instance.UIPanelController.PopScreen(waitingScreen);
+                _panelController.Value.PopScreen(waitingScreen);
             }
             
             await ApplicationController.Instance.ISocialService.SetScoreForLeaderBoard(SessionProcessor.BEST_SESSION_SCORE_LEADERBOARD, ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore, Application.exitCancellationToken);
@@ -201,7 +202,7 @@ namespace Core
         private async void ShowCheatsBtn_OnClick()
         {
 #if DEBUG
-            ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICheatsPanel>(
+            _ = _panelController.Value.PushPopupScreenAsync<UICheatsPanel>(
                 new UICheatsPanelData()
                 {
                     GameProcessor = _data.GameProcessor,
@@ -214,7 +215,7 @@ namespace Core
         {
             _choice = UIStartPanelChoice.Continue;
 
-            ApplicationController.Instance.UIPanelController.PopScreen(this);
+            _panelController.Value.PopScreen(this);
         }
         
         public override void SetData(UIScreenData undefinedData)
