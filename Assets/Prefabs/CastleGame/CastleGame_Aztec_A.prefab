@@ -32,7 +32,6 @@ RectTransform:
   m_Children:
   - {fileID: 8436680243086271663}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -53,7 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _view: {fileID: 688872038090227178}
   initalCostOfPart: 4000
-  risingCostOfPart: 500
+  risingCostOfPart: 700
   _coinsAfterComplete: 100
   _nameKey:
     m03: 2651854377
