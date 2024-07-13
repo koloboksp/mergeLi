@@ -53,7 +53,7 @@ MonoBehaviour:
   _view: {fileID: 5625250844949784844}
   initalCostOfPart: 1000
   risingCostOfPart: 300
-  _coinsAfterComplete: 100
+  _coinsAfterComplete: 500
   _nameKey:
     m03: 318160782
     m47: 3835644239
