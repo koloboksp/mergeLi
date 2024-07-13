@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6376c1d7bb8d45c9aff044b2328f74b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isFree: 0
+  _isFree: 1
   _groupIndex: 0
   _extraPoints: 2
   _cost: 400
