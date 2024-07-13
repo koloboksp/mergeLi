@@ -220,7 +220,7 @@ namespace Skins.Custom
             }
         }
 
-        public override void ChangeUserInactiveHatsFilter()
+        public override void ChangeUserActiveHatsFilter()
         {
             SetHat(_view.Ball.HatName, _view.Ball.HatName, true);
         }

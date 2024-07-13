@@ -69,9 +69,9 @@ namespace Core
 
         private void EquipBtn_OnClick()
         {
-            _selectedItem.SetUserInactiveFilter(!_selectedItem.UserInactive);
+            _selectedItem.SetUserActiveFilter(!_selectedItem.UserActive);
             
-            var equipBtnTextKey = _selectedItem.UserInactive ? _equipTextKey : _unequipTextKey;
+            var equipBtnTextKey = _selectedItem.UserActive ? _equipTextKey : _unequipTextKey;
             _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
             
             SetEquipAllLabel();
@@ -79,11 +79,7 @@ namespace Core
 
         private void SetEquipAllLabel()
         {
-            var maxActiveHats = _data.GameProcessor.ActiveGameRulesSettings.MaxActiveHats;
-            var count = _data.Hats.Count(hat => hat.Available 
-                                                && _data.UserInactiveHatsFilter != null 
-                                                && _data.UserInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null);
-           
+            
         }
 
         public override void SetData(UIScreenData undefinedData)
@@ -98,7 +94,7 @@ namespace Core
             
             _model.SetData(
                 _data.Hats, 
-                _data.UserInactiveHatsFilter, 
+                _data.UserActiveHatsFilter, 
                 _data.HatsChanger, 
                 _data.GameProcessor.ActiveGameRulesSettings,
                 ApplicationController.Instance.SaveController.SaveProgress);
@@ -110,8 +106,6 @@ namespace Core
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
             _coins.MakeSingle();
             _coins.Set(_data.GameProcessor.CurrencyAmount);
-            
-           
         }
 
         protected override void InnerHide()
@@ -178,7 +172,7 @@ namespace Core
                     itemView.gameObject.SetActive(true);
                     itemView.SetModel(item, _data.GameProcessor);
 
-                    if (item.Available && !item.UserInactive)
+                    if (item.Available && !item.UserActive)
                     {
                         focusOnHatBlock = blockView.Root;
                     }    
@@ -229,7 +223,7 @@ namespace Core
         
         private void SetEquipLabel()
         {
-            var equipBtnTextKey = _selectedItem.UserInactive ? _equipTextKey : _unequipTextKey;
+            var equipBtnTextKey = _selectedItem.UserActive ? _unequipTextKey : _equipTextKey;
             _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
         }
         
@@ -253,16 +247,19 @@ namespace Core
             {
                 get
                 {
-                    var userInactiveHatsFilter = _changer.GetUserInactiveHatsFilter();
+                    var userActiveHatsFilter = _changer.GetUserActiveHatsFilter();
 
+                    if (userActiveHatsFilter == null)
+                        return 0;
+                    
                     return _items
-                        .Count(hat => hat.Available && userInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null);
+                        .Count(hat => hat.Available && userActiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) != null);
                 }
             }
             
             public void SetData(
                 IReadOnlyList<Hat> hats,
-                string[] userInactiveFilter, 
+                string[] userActiveFilter, 
                 IHatsChanger changer,
                 GameRulesSettings rulesSettings,
                 SaveProgress saveProgress)
@@ -275,30 +272,30 @@ namespace Core
                 {
                     var hat = hats[hatI];
                     var item = new UIHatsPanel_HatItem.Model(hat, this);
-                    item.OnUserInactiveFilterStateChanged += Item_OnUserInactiveFilterStateChanged;
+                    item.OnUserActiveFilterStateChanged += ItemOnUserActiveFilterStateChanged;
 
-                    var userInactive = false;
-                    if (userInactiveFilter != null)
-                        userInactive = Array.FindIndex(userInactiveFilter, i => i == hat.Id) >= 0;
+                    var userActive = false;
+                    if (userActiveFilter != null)
+                        userActive = Array.FindIndex(userActiveFilter, i => i == hat.Id) >= 0;
 
-                    item.SetData(userInactive);
+                    item.SetData(userActive);
                     _items.Add(item);
                 }
                 
                 OnItemsUpdated?.Invoke(_items);
             }
 
-            private void Item_OnUserInactiveFilterStateChanged(UIHatsPanel_HatItem.Model sender)
+            private void ItemOnUserActiveFilterStateChanged(UIHatsPanel_HatItem.Model sender)
             {
-                var inactiveFilter = new List<string>();
+                var activeFilter = new List<string>();
                 for (var itemI = 0; itemI < _items.Count; itemI++)
                 {
                     var item = _items[itemI];
-                    if (item.UserInactive)
-                        inactiveFilter.Add(item.Hat.Id);
+                    if (item.UserActive)
+                        activeFilter.Add(item.Hat.Id);
                 }
 
-                _changer.SetUserInactiveHatsFilter(inactiveFilter.ToArray());
+                _changer.SetUserActiveHatsFilter(activeFilter.ToArray());
                 OnEquipStateChanged?.Invoke(sender);
                 UpdateEquipRestrictions();
             }
@@ -318,7 +315,7 @@ namespace Core
                 {
                     await _selected.Buy();
                     OnBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
-                    BalanceActivateHats();
+                    _selected.SetUserActiveFilter(true);
                     UpdateEquipRestrictions();
                     
                     return true;
@@ -347,14 +344,14 @@ namespace Core
             {
                 if (ActiveHatsCount >= MaxActiveHats)
                 {
-                    var userInactiveHatsFilter = _changer.GetUserInactiveHatsFilter();
+                    var userActiveHatsFilter = _changer.GetUserActiveHatsFilter();
                     var hatWithMinimumExtraPoints = _items
                         .OrderBy(i => i.ExtraPoints)
-                        .FirstOrDefault(hat => hat.Available && userInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null);
+                        .FirstOrDefault(hat => hat.Available && userActiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) != null);
 
                     if (hatWithMinimumExtraPoints != null)
                     {
-                        hatWithMinimumExtraPoints.SetUserInactiveFilter(true);
+                        hatWithMinimumExtraPoints.SetUserActiveFilter(false);
                     }
                 }
 
@@ -367,7 +364,7 @@ namespace Core
     {
         public GameProcessor GameProcessor;
         public Hat Selected;
-        public string[] UserInactiveHatsFilter;
+        public string[] UserActiveHatsFilter;
         public IReadOnlyList<Hat> Hats;
         public IHatsChanger HatsChanger;
     }

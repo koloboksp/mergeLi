@@ -59,7 +59,7 @@ namespace Core
             try
             {
                 var activeSkinName = ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin;
-                var userInactiveHatsFilter = ApplicationController.Instance.SaveController.SaveSettings.UserInactiveHatsFilter;
+                var userInactiveHatsFilter = ApplicationController.Instance.SaveController.SaveSettings.UserActiveHatsFilter;
                 _gameProcessor.Scene.SetData(activeSkinName, userInactiveHatsFilter);
             
                 UIGameScreen gameScreen = null;

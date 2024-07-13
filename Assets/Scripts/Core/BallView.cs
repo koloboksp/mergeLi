@@ -64,11 +64,11 @@ namespace Core
             Ball_TransparencyChanged();
         }
         
-        public void ChangeUserInactiveHatsFilter()
+        public void ChangeUserActiveHatsFilter()
         {
             if (_ballSkin != null)
             {
-                _ballSkin.ChangeUserInactiveHatsFilter();
+                _ballSkin.ChangeUserActiveHatsFilter();
             }
         }
         

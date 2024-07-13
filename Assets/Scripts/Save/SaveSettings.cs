@@ -96,14 +96,14 @@ namespace Save
             }
         }
 
-        public string[] UserInactiveHatsFilter
+        public string[] UserActiveHatsFilter
         {
-            get => _settings.UserInactiveHatsFilter;
+            get => _settings.UserActiveHatsFilter;
             set
             {
-                if (value != _settings.UserInactiveHatsFilter)
+                if (value != _settings.UserActiveHatsFilter)
                 {
-                    _settings.UserInactiveHatsFilter = value;
+                    _settings.UserActiveHatsFilter = value;
                     _controller.Save(_settings, _fileName);
                 }
             }

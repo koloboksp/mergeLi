@@ -22,7 +22,7 @@ namespace Core
         [SerializeField] private Field _field;
         [SerializeField] private Transform _sceneRoot;
 
-        private readonly List<string> _userInactiveHatsFilter = new();
+        private readonly List<string> _userActiveHatsFilter = new();
         private SkinContainer _activeSkin;
     
         public GameProcessor GameProcessor => _gameProcessor;
@@ -35,24 +35,10 @@ namespace Core
 
         public void SetData(string skinName, string[] userInactiveHatsFilter)
         {
-            ChangeUserInactiveHatsFilter(userInactiveHatsFilter);
+            ChangeUserActiveHatsFilter(userInactiveHatsFilter);
             SetSkin(skinName);
         }
-    
-        //public string[] UserInactiveHatsFilter
-        //{
-        //    get => _userInactiveHatsFilter.ToArray();
-        //    set
-        //    {
-        //        _userInactiveHatsFilter.Clear();
-        //        if (value != null)
-        //            _userInactiveHatsFilter.AddRange(value);
-        //        
-        //        
-        //        _userInactiveHatsFilter
-        //    }
-        //}
-
+   
         public void SetSkin(string skinName)
         {
             _activeSkin = _skinsLibrary.GetContainer(skinName);
@@ -76,7 +62,7 @@ namespace Core
                     var hat = availableHats[hatI];
                     if (!hat.Available)
                         continue;
-                    if (_userInactiveHatsFilter != null && _userInactiveHatsFilter.Contains(hat.Id))
+                    if (_userActiveHatsFilter == null || !_userActiveHatsFilter.Contains(hat.Id))
                         continue;
                 
                     activeHatIndexes.Add(hat.Id);
@@ -99,39 +85,39 @@ namespace Core
                 return false;
             if (!foundHat.Available)
                 return false;
-            if (_userInactiveHatsFilter != null && _userInactiveHatsFilter.Contains(foundHat.Id))
+            if (_userActiveHatsFilter == null || !_userActiveHatsFilter.Contains(foundHat.Id))
                 return false;
 
             return true;
         }
 
-        public void SetUserInactiveHatsFilter(string[] userInactiveHatsFilter)
+        public void SetUserActiveHatsFilter(string[] userActiveHatsFilter)
         {
-            ChangeUserInactiveHatsFilter(userInactiveHatsFilter);
+            ChangeUserActiveHatsFilter(userActiveHatsFilter);
 
-            ApplicationController.Instance.SaveController.SaveSettings.UserInactiveHatsFilter = userInactiveHatsFilter;
+            ApplicationController.Instance.SaveController.SaveSettings.UserActiveHatsFilter = userActiveHatsFilter;
         }
 
-        private void ChangeUserInactiveHatsFilter(string[] userInactiveHatsFilter)
+        private void ChangeUserActiveHatsFilter(string[] userActiveHatsFilter)
         {
-            _userInactiveHatsFilter.Clear();
-            if (userInactiveHatsFilter != null)
-                _userInactiveHatsFilter.AddRange(userInactiveHatsFilter);
+            _userActiveHatsFilter.Clear();
+            if (userActiveHatsFilter != null)
+                _userActiveHatsFilter.AddRange(userActiveHatsFilter);
         
             var hatChangeables = _field.gameObject.GetComponentsInChildren<IHatChangeable>();
             foreach (var hatChangeable in hatChangeables)
-                hatChangeable.ChangeUserInactiveHatsFilter();
+                hatChangeable.ChangeUserActiveHatsFilter();
 
             var hatsExtraPoints = _hatsLibrary.Hats
-                .Where(hat => _userInactiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) == null)
+                .Where(hat => _userActiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) != null)
                 .Select(hat => (hat.Id, hat.ExtraPoints));
         
             _gameProcessor.PointsCalculator.UpdateHatsExtraPoints(hatsExtraPoints);
         }
 
-        public string[] GetUserInactiveHatsFilter()
+        public string[] GetUserActiveHatsFilter()
         {
-            return ApplicationController.Instance.SaveController.SaveSettings.UserInactiveHatsFilter;
+            return ApplicationController.Instance.SaveController.SaveSettings.UserActiveHatsFilter;
         }
     }
 
@@ -143,7 +129,7 @@ namespace Core
     public interface IHatsChanger
     {
         //  public void SetHat(string hatName);
-        public void SetUserInactiveHatsFilter(string[] userInactiveHatsFilter);
-        public string[] GetUserInactiveHatsFilter();
+        public void SetUserActiveHatsFilter(string[] userActiveHatsFilter);
+        public string[] GetUserActiveHatsFilter();
     }
 }
