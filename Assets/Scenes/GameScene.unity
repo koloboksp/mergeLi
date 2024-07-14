@@ -128,57 +128,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 8320595515866177968}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &23029530
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 23029531}
-  - component: {fileID: 23029532}
-  m_Layer: 0
-  m_Name: classicWithOneBallAfterMerge
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &23029531
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 23029530}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1959281468}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &23029532
+--- !u!114 &23029532 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 9012650027464536882, guid: 6906b57baa9d2e349adba73cedd01cb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 7287342703215847739}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 23029530}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minimalBallsInLine: 5
-  _generatedBallsCountAfterMerge: 1
-  _generatedBallsCountAfterMove: 3
-  _generatedBallsCountOnStart: 5
-  _maxBallPoints: 512
-  _generatedBallsPointsRange: 00000000010000000200000004000000080000001000000020000000
-  _maxActiveHats: 5
 --- !u!224 &37189758 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1086290939875040458, guid: f132e37d4bb42764dad06a6e7e7443ac,
@@ -1348,57 +1309,18 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!1 &563858730
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 563858731}
-  - component: {fileID: 563858732}
-  m_Layer: 0
-  m_Name: classic0-32
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &563858731
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 563858730}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1959281468}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &563858732
+--- !u!114 &563858732 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 6058076323649864085, guid: 6906b57baa9d2e349adba73cedd01cb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 7287342703215847739}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 563858730}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minimalBallsInLine: 5
-  _generatedBallsCountAfterMerge: 2
-  _generatedBallsCountAfterMove: 3
-  _generatedBallsCountOnStart: 5
-  _maxBallPoints: 512
-  _generatedBallsPointsRange: 00000000010000000200000004000000080000001000000020000000
-  _maxActiveHats: 5
 --- !u!224 &572637189 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1054850265026345782, guid: e637faaed2e1fe54d99bf76546865a9d,
@@ -2936,57 +2858,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347834841}
   m_CullTransparentMesh: 1
---- !u!1 &1367844224
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1367844225}
-  - component: {fileID: 1367844226}
-  m_Layer: 0
-  m_Name: classic0-16
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1367844225
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1367844224}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1959281468}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1367844226
+--- !u!114 &1367844226 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 4981010451653532204, guid: 6906b57baa9d2e349adba73cedd01cb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 7287342703215847739}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1367844224}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minimalBallsInLine: 5
-  _generatedBallsCountAfterMerge: 2
-  _generatedBallsCountAfterMove: 3
-  _generatedBallsCountOnStart: 5
-  _maxBallPoints: 512
-  _generatedBallsPointsRange: 000000000100000002000000040000000800000010000000
-  _maxActiveHats: 5
 --- !u!1 &1415252555
 GameObject:
   m_ObjectHideFlags: 0
@@ -3345,57 +3228,18 @@ MonoBehaviour:
   _bottomAnchor: {fileID: 282758559}
   _centerAnchor: {fileID: 763700165}
   _topAnchor: {fileID: 647366645}
---- !u!1 &1590278460
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1590278461}
-  - component: {fileID: 1590278462}
-  m_Layer: 0
-  m_Name: cheat0_512
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1590278461
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1590278460}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1959281468}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1590278462
+--- !u!114 &1590278462 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 8498603880982638274, guid: 6906b57baa9d2e349adba73cedd01cb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 7287342703215847739}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1590278460}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minimalBallsInLine: 5
-  _generatedBallsCountAfterMerge: 1
-  _generatedBallsCountAfterMove: 3
-  _generatedBallsCountOnStart: 5
-  _maxBallPoints: 512
-  _generatedBallsPointsRange: 0000000001000000020000000400000008000000100000002000000040000000800000000001000000020000
-  _maxActiveHats: 5
 --- !u!1 &1636435616
 GameObject:
   m_ObjectHideFlags: 0
@@ -3526,57 +3370,18 @@ MonoBehaviour:
   _randomizeDelay: 1
   _duration: 0.5
   _gotClip: {fileID: 8300000, guid: d3d0bce84b1494a409bd4c2de587aa61, type: 3}
---- !u!1 &1650489692
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1650489693}
-  - component: {fileID: 1650489694}
-  m_Layer: 0
-  m_Name: cheat32_64
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1650489693
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1650489692}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1959281468}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1650489694
+--- !u!114 &1650489694 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 8044541612849795485, guid: 6906b57baa9d2e349adba73cedd01cb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 7287342703215847739}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1650489692}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minimalBallsInLine: 5
-  _generatedBallsCountAfterMerge: 1
-  _generatedBallsCountAfterMove: 3
-  _generatedBallsCountOnStart: 5
-  _maxBallPoints: 512
-  _generatedBallsPointsRange: 2000000040000000
-  _maxActiveHats: 5
 --- !u!224 &1664368639 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1054850265026345782, guid: be35a59ada258094eacc96b04bbb32c3,
@@ -4093,42 +3898,12 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &1959281467
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1959281468}
-  m_Layer: 0
-  m_Name: rulesSettings
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1959281468
+--- !u!4 &1959281468 stripped
 Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 7287342703215847739}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959281467}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 563858731}
-  - {fileID: 1367844225}
-  - {fileID: 23029531}
-  - {fileID: 1650489693}
-  - {fileID: 1590278461}
-  m_Father: {fileID: 391481346}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &2044437760 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1054850265026345782, guid: 5b2ba56fe949318498b227aa439795dc,
@@ -6172,6 +5947,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f1339e6338a5f8e4b8a6c3cb4b286050, type: 3}
+--- !u!1001 &7287342703215847739
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 391481346}
+    m_Modifications:
+    - target: {fileID: 3032426352645289655, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_Name
+      value: rulesSettings
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7999040319894609632, guid: 6906b57baa9d2e349adba73cedd01cb1,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6906b57baa9d2e349adba73cedd01cb1, type: 3}
 --- !u!1001 &7498405346519467685
 PrefabInstance:
   m_ObjectHideFlags: 0

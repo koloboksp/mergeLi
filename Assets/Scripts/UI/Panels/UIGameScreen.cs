@@ -54,6 +54,7 @@ namespace Core
             _data.GameProcessor.OnBeforeStepStarted += OnBeforeStepStarted;
             _data.GameProcessor.SessionProcessor.OnLowEmptySpaceChanged += OnLowEmptySpaceChanged;
             _data.GameProcessor.SessionProcessor.OnFreeSpaceIsOverChanged += OnFreeSpaceIsOverChanged;
+            _data.GameProcessor.SessionProcessor.OnLose += OnLose;
             OnLowEmptySpaceChanged(false);
             
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
@@ -101,7 +102,8 @@ namespace Core
             _data.GameProcessor.SessionProcessor.OnLowEmptySpaceChanged -= OnLowEmptySpaceChanged;
             _data.GameProcessor.SessionProcessor.OnFreeSpaceIsOverChanged -= OnFreeSpaceIsOverChanged;
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency -= SaveController_OnConsumeCurrency;
-
+            _data.GameProcessor.SessionProcessor.OnLose -= OnLose;
+            
             _data.GameProcessor.CastleSelector.OnCastleChanged -= CastleSelector_OnCastleChanged;
             var activeCastle = _data.GameProcessor.CastleSelector.ActiveCastle;
             if (activeCastle != null)
@@ -201,6 +203,11 @@ namespace Core
             _noSpaceWarning.gameObject.SetActive(warningVisible);
             if (warningVisible)
                 _ = _noSpaceWarning.ShowTextAsync(_noSpaceWarningTextKey, false, Application.exitCancellationToken);
+        }
+
+        private void OnLose()
+        {
+            _noSpaceWarning.gameObject.SetActive(false);
         }
         
         private void SaveController_OnConsumeCurrency(int amount)
