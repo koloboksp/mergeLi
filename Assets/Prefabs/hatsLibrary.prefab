@@ -46,9 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
-  _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _groupIndex: 5
+  _extraPoints: 30
+  _cost: 2700
   _hatView: {fileID: 4447445992835790989}
   _nameKey:
     m03: 4142426259
@@ -103,7 +103,7 @@ MonoBehaviour:
   _isFree: 1
   _groupIndex: 0
   _extraPoints: 2
-  _cost: 400
+  _cost: 1
   _hatView: {fileID: 1193866018883370369}
   _nameKey:
     m03: 4142426259
@@ -330,8 +330,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 1
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 10
+  _cost: 700
   _hatView: {fileID: 220123522477541636}
   _nameKey:
     m03: 4142426259
@@ -534,9 +534,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
-  _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _groupIndex: 5
+  _extraPoints: 26
+  _cost: 2300
   _hatView: {fileID: 9037812808486449057}
   _nameKey:
     m03: 4142426259
@@ -710,8 +710,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 3
-  _extraPoints: 15
-  _cost: 8000
+  _extraPoints: 20
+  _cost: 1700
   _hatView: {fileID: 5049814846422710833}
   _nameKey:
     m03: 4142426259
@@ -1463,8 +1463,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 3
-  _extraPoints: 11
-  _cost: 4000
+  _extraPoints: 16
+  _cost: 1300
   _hatView: {fileID: 1605373915369103106}
   _nameKey:
     m03: 4142426259
@@ -1736,8 +1736,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 2
-  _extraPoints: 10
-  _cost: 4000
+  _extraPoints: 15
+  _cost: 1200
   _hatView: {fileID: 4363696877612381099}
   _nameKey:
     m03: 4142426259
@@ -1985,9 +1985,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
-  _groupIndex: 5
-  _extraPoints: 16
-  _cost: 12000
+  _groupIndex: 6
+  _extraPoints: 32
+  _cost: 3000
   _hatView: {fileID: 1177246496940669110}
   _nameKey:
     m03: 4142426259
@@ -2353,8 +2353,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 22
+  _cost: 1900
   _hatView: {fileID: 6973047109606583414}
   _nameKey:
     m03: 4142426259
@@ -2499,7 +2499,7 @@ MonoBehaviour:
   _isFree: 0
   _groupIndex: 0
   _extraPoints: 4
-  _cost: 1000
+  _cost: 150
   _hatView: {fileID: 1125517952438103446}
   _nameKey:
     m03: 4142426259
@@ -2553,8 +2553,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 2
-  _extraPoints: 6
-  _cost: 2000
+  _extraPoints: 11
+  _cost: 800
   _hatView: {fileID: 4378588590619398512}
   _nameKey:
     m03: 4142426259
@@ -2607,9 +2607,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
-  _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _groupIndex: 5
+  _extraPoints: 27
+  _cost: 2400
   _hatView: {fileID: 4388264060344893165}
   _nameKey:
     m03: 4142426259
@@ -2865,9 +2865,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
-  _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _groupIndex: 5
+  _extraPoints: 31
+  _cost: 2800
   _hatView: {fileID: 5791995138412782760}
   _nameKey:
     m03: 4142426259
@@ -3042,7 +3042,7 @@ MonoBehaviour:
   _isFree: 1
   _groupIndex: 0
   _extraPoints: 1
-  _cost: 200
+  _cost: 1
   _hatView: {fileID: 4486564716680309102}
   _nameKey:
     m03: 4142426259
@@ -3306,8 +3306,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 2
-  _extraPoints: 7
-  _cost: 2500
+  _extraPoints: 12
+  _cost: 900
   _hatView: {fileID: 5895934812818831964}
   _nameKey:
     m03: 4142426259
@@ -3405,9 +3405,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
-  _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _groupIndex: 5
+  _extraPoints: 28
+  _cost: 2500
   _hatView: {fileID: 1682350510904185467}
   _nameKey:
     m03: 4142426259
@@ -3462,7 +3462,7 @@ MonoBehaviour:
   _isFree: 0
   _groupIndex: 0
   _extraPoints: 3
-  _cost: 800
+  _cost: 100
   _hatView: {fileID: 5206318266294149188}
   _nameKey:
     m03: 4142426259
@@ -3592,7 +3592,7 @@ MonoBehaviour:
   _isFree: 0
   _groupIndex: 0
   _extraPoints: 5
-  _cost: 1200
+  _cost: 200
   _hatView: {fileID: 6326808365231917887}
   _nameKey:
     m03: 4142426259
@@ -3699,8 +3699,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 1
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 8
+  _cost: 500
   _hatView: {fileID: 197637734102769107}
   _nameKey:
     m03: 4142426259
@@ -3799,8 +3799,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 1
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 7
+  _cost: 400
   _hatView: {fileID: 7650069825117931239}
   _nameKey:
     m03: 4142426259
@@ -4005,6 +4005,12 @@ MonoBehaviour:
   - {fileID: 7245385846685480581}
   - {fileID: 1179951558459312160}
   - {fileID: 2115722632624801535}
+  - {fileID: 4612690802879095337}
+  - {fileID: 868246442764256350}
+  - {fileID: 8245138523736314282}
+  - {fileID: 1818962013182385879}
+  - {fileID: 8571199647478423186}
+  - {fileID: 6914875309689173263}
   - {fileID: 7522660964887716857}
   _hatGroups:
   - {fileID: 7321462975348440538}
@@ -4474,8 +4480,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 23
+  _cost: 2000
   _hatView: {fileID: 7736491787730919254}
   _nameKey:
     m03: 4142426259
@@ -4604,8 +4610,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 3
-  _extraPoints: 14
-  _cost: 7000
+  _extraPoints: 19
+  _cost: 1600
   _hatView: {fileID: 105675708796342364}
   _nameKey:
     m03: 4142426259
@@ -4659,8 +4665,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 25
+  _cost: 2200
   _hatView: {fileID: 6565301268201626694}
   _nameKey:
     m03: 4142426259
@@ -4834,8 +4840,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 24
+  _cost: 2100
   _hatView: {fileID: 5151465583892983686}
   _nameKey:
     m03: 4142426259
@@ -4889,8 +4895,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 3
-  _extraPoints: 12
-  _cost: 5000
+  _extraPoints: 17
+  _cost: 1400
   _hatView: {fileID: 7858261083044895429}
   _nameKey:
     m03: 4142426259
@@ -5034,8 +5040,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 1
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 9
+  _cost: 600
   _hatView: {fileID: 7301632445094209561}
   _nameKey:
     m03: 4142426259
@@ -5187,8 +5193,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 1
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 6
+  _cost: 300
   _hatView: {fileID: 4134481694220544720}
   _nameKey:
     m03: 4142426259
@@ -5362,8 +5368,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 2
-  _extraPoints: 8
-  _cost: 3000
+  _extraPoints: 13
+  _cost: 1000
   _hatView: {fileID: 8818113101109356345}
   _nameKey:
     m03: 4142426259
@@ -5536,9 +5542,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isFree: 0
-  _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _groupIndex: 5
+  _extraPoints: 29
+  _cost: 2600
   _hatView: {fileID: 3078438477214518424}
   _nameKey:
     m03: 4142426259
@@ -5787,8 +5793,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 3
-  _extraPoints: 13
-  _cost: 6000
+  _extraPoints: 18
+  _cost: 1500
   _hatView: {fileID: 5680988867401997597}
   _nameKey:
     m03: 4142426259
@@ -5842,8 +5848,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 2
-  _extraPoints: 9
-  _cost: 3500
+  _extraPoints: 14
+  _cost: 1100
   _hatView: {fileID: 5085898056264490832}
   _nameKey:
     m03: 4142426259
@@ -5972,8 +5978,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isFree: 0
   _groupIndex: 4
-  _extraPoints: 5
-  _cost: 1200
+  _extraPoints: 21
+  _cost: 1800
   _hatView: {fileID: 4074988733185166178}
   _nameKey:
     m03: 4142426259
