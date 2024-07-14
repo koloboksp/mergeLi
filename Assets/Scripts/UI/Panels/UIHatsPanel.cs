@@ -19,6 +19,7 @@ namespace Core
         [SerializeField] private ScrollRect _container;
         [SerializeField] private UIHatsPanel_HatItem _itemPrefab;
         [SerializeField] private UIHatsPanel_HatBlockItem _blockPrefab;
+        [SerializeField] private GameObject _blockSeparatorPrefab;
         [SerializeField] private Button _buyBtn;
         [SerializeField] private Text _buyBtnPriceLabel;
         [SerializeField] private Button _equipBtn;
@@ -156,33 +157,43 @@ namespace Core
 
             _itemPrefab.gameObject.SetActive(false);
             _blockPrefab.gameObject.SetActive(false);
+            _blockSeparatorPrefab.gameObject.SetActive(false);
+            
+            var hatsByGroupIndex = items
+                .GroupBy(i => i.Hat.GroupIndex)
+                .ToList();
 
-            var hatsByGroupIndex = items.GroupBy(i => i.Hat.GroupIndex);
-
-            foreach (var hatsGroup in hatsByGroupIndex)
+            for (var groupI = 0; groupI < hatsByGroupIndex.Count; groupI++)
             {
+                var hatsGroup = hatsByGroupIndex[groupI];
                 var hatGroup = _data.GameProcessor.Scene.HatsLibrary.GetHatGroup(hatsGroup.Key);
-                
+
                 var blockView = Instantiate(_blockPrefab, _container.content);
                 blockView.gameObject.SetActive(true);
                 blockView.SetData(hatGroup.NameKey);
-                
+
                 foreach (var item in hatsGroup)
                 {
                     var itemView = Instantiate(_itemPrefab, blockView.ContentRoot);
                     itemView.gameObject.SetActive(true);
                     itemView.SetModel(item, _data.GameProcessor);
 
-                    if (item.Available && !item.UserActive)
+                    if (item.Available && item.UserActive)
                     {
                         focusOnHatBlock = blockView.Root;
-                    }    
+                    }
                 }
-                
+
+                if (groupI != hatsByGroupIndex.Count - 1)
+                {   
+                    var blockSeparator = Instantiate(_blockSeparatorPrefab, _container.content);
+                    blockSeparator.gameObject.SetActive(true);
+                }
+
                 LayoutRebuilder.ForceRebuildLayoutImmediate(blockView.ContentRoot);
                 LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
             }
-            
+
             LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
             
             if (focusOnHatBlock != null)
