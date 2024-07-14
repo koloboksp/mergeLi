@@ -197,8 +197,13 @@ namespace Core
                 _panelController.Value.PopScreen(waitingScreen);
             }
             
-            await ApplicationController.Instance.ISocialService.SetScoreForLeaderBoard(SessionProcessor.BEST_SESSION_SCORE_LEADERBOARD, ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore, Application.exitCancellationToken);
-            await ApplicationController.Instance.ISocialService.ShowLeaderboardUIAsync(Application.exitCancellationToken);
+            await ApplicationController.Instance.ISocialService.SetScoreForLeaderBoard(
+                SessionProcessor.BEST_SESSION_SCORE_LEADERBOARD, 
+                ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore, 
+                Application.exitCancellationToken);
+            await ApplicationController.Instance.ISocialService.ShowLeaderboardUIAsync(
+                SessionProcessor.BEST_SESSION_SCORE_LEADERBOARD, 
+                Application.exitCancellationToken);
         }
 
         private async void ShowCheatsBtn_OnClick()

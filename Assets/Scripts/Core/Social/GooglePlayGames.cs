@@ -68,12 +68,12 @@ namespace Core.Social
             }
         }
 
-        public async Task<bool> ShowLeaderboardUIAsync(CancellationToken cancellationToken)
+        public async Task<bool> ShowLeaderboardUIAsync(string id, CancellationToken cancellationToken)
         {
             var completionSource = new TaskCompletionSource<bool>();
             var cancellationTokenRegistration = cancellationToken.Register(() => completionSource.TrySetCanceled(cancellationToken));
 
-            PlayGamesPlatform.Instance.ShowLeaderboardUI(null, (status) => { completionSource.TrySetResult(true); });
+            PlayGamesPlatform.Instance.ShowLeaderboardUI(id, (status) => { completionSource.TrySetResult(true); });
 
             try
             {
@@ -92,7 +92,7 @@ namespace Core.Social
             var completionSource = new TaskCompletionSource<bool>();
             var cancellationTokenRegistration = cancellationToken.Register(() => completionSource.TrySetCanceled(cancellationToken));
 
-            PlayGamesPlatform.Instance.UnlockAchievement(null, (status) =>
+            PlayGamesPlatform.Instance.UnlockAchievement(id, (status) =>
             {
                 if (status)
                     Debug.Log($"<color=#99ff99>Unlock achievement '{id}' success.</color>");
@@ -112,12 +112,12 @@ namespace Core.Social
             }
         }
         
-        public async Task<bool> SetScoreForLeaderBoard(string leaderBoard, long value, CancellationToken cancellationToken)
+        public async Task<bool> SetScoreForLeaderBoard(string id, long value, CancellationToken cancellationToken)
         {
             var completionSource = new TaskCompletionSource<bool>();
             var cancellationTokenRegistration = cancellationToken.Register(() => completionSource.TrySetCanceled(cancellationToken));
 
-            PlayGamesPlatform.Instance.ReportScore(value, leaderBoard, status =>
+            PlayGamesPlatform.Instance.ReportScore(value, id, status =>
             {
                 if (status)
                     Debug.Log($"Score: {value} was success set for the leaderboard.");

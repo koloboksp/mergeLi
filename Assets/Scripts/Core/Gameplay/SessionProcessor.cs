@@ -17,7 +17,7 @@ namespace Core.Gameplay
     public class SessionProcessor : MonoBehaviour, 
         ISessionProgressHolder
     {
-        public const string BEST_SESSION_SCORE_LEADERBOARD = "BestSessionScore";
+        public const string BEST_SESSION_SCORE_LEADERBOARD = "CgkIlqCktsMPEAIQEg";
     
         public static readonly List<StepTag> NonSaveTags = new()
         {

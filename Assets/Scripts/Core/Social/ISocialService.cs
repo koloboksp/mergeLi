@@ -10,8 +10,8 @@ namespace Core.Social
         bool IsAuthenticated();
 
         Task<bool> ShowAchievementsUIAsync(CancellationToken cancellationToken);
-        Task<bool> ShowLeaderboardUIAsync(CancellationToken cancellationToken);
+        Task<bool> ShowLeaderboardUIAsync(string id, CancellationToken cancellationToken);
         Task<bool> UnlockAchievementAsync(string id, CancellationToken cancellationToken);
-        Task<bool> SetScoreForLeaderBoard(string leaderBoard, long value, CancellationToken cancellationToken);
+        Task<bool> SetScoreForLeaderBoard(string id, long value, CancellationToken cancellationToken);
     }
 }
