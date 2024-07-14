@@ -122,6 +122,19 @@ namespace Save
             }
         }
 
+        public int ActiveRulesSettings
+        {
+            get => _settings.ActiveRulesSettings;
+            set
+            {
+                if (value != _settings.ActiveRulesSettings)
+                {
+                    _settings.ActiveRulesSettings = value;
+                    _controller.Save(_settings, _fileName);
+                }
+            }
+        }
+
         public async Task InitializeAsync(CancellationToken cancellationToken)
         {
             var loadedSettings = await _controller.LoadAsync<Settings>(_fileName, cancellationToken);

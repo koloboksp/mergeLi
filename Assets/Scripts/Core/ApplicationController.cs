@@ -63,7 +63,8 @@ namespace Core
             
             _instance._saveController = new SaveController();
             await _instance._saveController.InitializeAsync(baseStorage, Application.exitCancellationToken);
-            
+            DependenciesController.Instance.Set(_instance._saveController);
+
             _instance._localizationController = new LocalizationController();
             await _instance._localizationController.InitializeAsync(_instance._saveController.SaveSettings, Application.exitCancellationToken);
             if (!_instance._localizationController.ActiveLanguageDetected)

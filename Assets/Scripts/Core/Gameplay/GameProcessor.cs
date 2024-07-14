@@ -13,6 +13,7 @@ using Core.Steps;
 using Core.Steps.CustomOperations;
 using Core.Tutorials;
 using Core.Utils;
+using Save;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -118,9 +119,8 @@ namespace Core.Gameplay
         [SerializeField] private NoPathEffect _noPathEffectPrefab;
         [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
     
-        [FormerlySerializedAs("_rulesSettings")] [SerializeField] private GameRulesSettings[] _gameRulesSettings;
-        [SerializeField] private int _activeRulesSettings;
-
+        [SerializeField] private GameRulesSettings[] _gameRulesSettings;
+        
         [SerializeField] private RectTransform _uiScreensRoot;
    
         [SerializeField] private PurchasesLibrary _purchasesLibrary;
@@ -134,7 +134,7 @@ namespace Core.Gameplay
         [SerializeField] private GiveCoinsEffect _giveCoinsEffect;
     
         [SerializeField] private TutorialController _tutorialController;
-        [FormerlySerializedAs("_fxLayer")] [SerializeField] private UIFxLayer _uiFxLayer;
+        [SerializeField] private UIFxLayer _uiFxLayer;
 
         public GiveCoinsEffect GiveCoinsEffect => _giveCoinsEffect;
 
@@ -145,7 +145,8 @@ namespace Core.Gameplay
         private int _bestSessionScore;
 
         private DependencyHolder<UIPanelController> _panelController;
-    
+        private DependencyHolder<SaveController> _saveController;
+
         private readonly List<Buff> _buffs = new();
         private readonly List<Achievement> _achievements = new ();
         private readonly List<Hat> _hats = new ();
@@ -171,14 +172,26 @@ namespace Core.Gameplay
         public SoundsPlayer SoundsPlayer => _soundsPlayer;
         public IReadOnlyList<Hat> Hats => _hats;
     
-        public GameRulesSettings ActiveGameRulesSettings => _gameRulesSettings[_activeRulesSettings];
+        public GameRulesSettings ActiveGameRulesSettings
+        {
+            get
+            {
+                var activeRulesSettings = _saveController.Value.SaveSettings.ActiveRulesSettings;
+                if (activeRulesSettings < 0 || activeRulesSettings >= _gameRulesSettings.Length)
+                    return _gameRulesSettings[0];
+                
+                return _gameRulesSettings[activeRulesSettings];
+            }
+        }
+
         public List<Buff> Buffs => _buffs;
-        public int CurrencyAmount => ApplicationController.Instance.SaveController.SaveProgress.GetAvailableCoins();
+        public int CurrencyAmount => _saveController.Value.SaveProgress.GetAvailableCoins();
 
         public IPointsCalculator PointsCalculator => _pointsCalculator;
     
-        private void Awake()
+        private async void Awake()
         {
+            await ApplicationController.Instance.WaitForInitializationAsync(Application.exitCancellationToken);
             _pointsCalculator = new PointsCalculator(ActiveGameRulesSettings);
         
             _market.OnBought += Market_OnBought;
@@ -233,7 +246,7 @@ namespace Core.Gameplay
 
             foreach (var hat in _scene.HatsLibrary.Hats)
             {
-                hat.SetData(ApplicationController.Instance.SaveController.SaveProgress);
+                hat.SetData(_saveController.Value.SaveProgress);
                 _hats.Add(hat);
             }
         
@@ -540,12 +553,12 @@ namespace Core.Gameplay
 
         public void ConsumeCoins(int amount)
         {
-            ApplicationController.Instance.SaveController.SaveProgress.ConsumeCoins(amount);
+            _saveController.Value.SaveProgress.ConsumeCoins(amount);
         }
 
         public void AddCurrency(int amount)
         {
-            ApplicationController.Instance.SaveController.SaveProgress.AddCoins(amount);
+            _saveController.Value.SaveProgress.AddCoins(amount);
 
             OnAddCurrency?.Invoke(amount);
         }
@@ -557,20 +570,14 @@ namespace Core.Gameplay
 
         public void SetSkin(string skinName)
         {
-            ApplicationController.Instance.SaveController.SaveSettings.ActiveSkin = skinName;
+            _saveController.Value.SaveSettings.ActiveSkin = skinName;
             _scene.SetSkin(skinName);
         }
 
         public int ActiveGameRulesSettingsIndex
         {
-            get
-            {
-                return _activeRulesSettings;
-            }
-            set
-            {
-                _activeRulesSettings = value;
-            }
+            get => _saveController.Value.SaveSettings.ActiveRulesSettings;
+            set => _saveController.Value.SaveSettings.ActiveRulesSettings = value;
         }
     
         public GameRulesSettings[] GameRulesSettings => _gameRulesSettings;

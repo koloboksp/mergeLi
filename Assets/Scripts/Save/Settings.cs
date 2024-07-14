@@ -16,5 +16,7 @@ namespace Save
 
         public string ActiveSkin;
         public string[] UserActiveHatsFilter;
+
+        public int ActiveRulesSettings;
     }
 }
