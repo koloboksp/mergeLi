@@ -1057,7 +1057,6 @@ MonoBehaviour:
   - {fileID: 23029532}
   - {fileID: 1650489694}
   - {fileID: 1590278462}
-  _activeRulesSettings: 0
   _uiScreensRoot: {fileID: 1881252459}
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,
     type: 3}
@@ -6754,11 +6753,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4815326064289932281, guid: 7d8cfa57621208d44bc94e624f76aec8,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -116.52
       objectReference: {fileID: 0}
     - target: {fileID: 5449675933634488661, guid: 7d8cfa57621208d44bc94e624f76aec8,
         type: 3}
