@@ -95,7 +95,7 @@ MonoBehaviour:
   _controlPrefab: {fileID: 3897340319734333952, guid: d0f01e9d51de75a45b3d968d45e11506,
     type: 3}
   _cost: 15
-  _cooldown: 3
+  _cooldown: 5
 --- !u!1 &5226805990988137231
 GameObject:
   m_ObjectHideFlags: 0

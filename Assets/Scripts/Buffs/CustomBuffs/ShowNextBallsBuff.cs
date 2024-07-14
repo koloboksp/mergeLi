@@ -21,7 +21,7 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
     protected override void Inner_OnStepCompleted(Step step)
     {
         ClearBalls();
-        if(RestCooldown != 0)
+        if (RestCooldown != 0)
             ShowNextBalls();
     }
     
