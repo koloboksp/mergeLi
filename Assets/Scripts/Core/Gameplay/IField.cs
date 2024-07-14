@@ -15,12 +15,12 @@ namespace Core.Gameplay
         IEnumerable<T> GetSomething<T>(Vector3Int position) where T : class;
         List<List<Ball>> CheckCollapse(Vector3Int checkingPosition);
         void DestroyBalls(List<Ball> ballsToRemove, bool force);
-        List<BallDesc> GenerateBalls(int count, int[] availableValues, string[] availableHats);
+        List<BallDesc> GenerateBalls(int count, BallWeight[] availableValues, string[] availableHats);
         Vector3Int CreateBall(Vector3Int position, int points, string hat);
         public Vector3 GetPositionFromGrid(Vector3 gridPosition);
         Vector3 GetPositionFromGrid(Vector3Int gridPosition);
         public IFieldView View { get; }
-        void GenerateNextBallPositions(int count, int[] availableValues, string[] availableHats);
+        void GenerateNextBall(int count, BallWeight[] availableValues, string[] availableHats);
         IEnumerable<T> GetAll<T>();
         Vector2Int Size { get; }
         Vector3 CellSize();

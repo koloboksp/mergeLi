@@ -259,7 +259,7 @@ namespace Core.Gameplay
                 _gameProcessor.Field.Clear();
                 _gameProcessor.Field.GenerateBalls(
                     _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountOnStart, 
-                    _gameProcessor.ActiveGameRulesSettings.GeneratedBallsPointsRange, 
+                    _gameProcessor.ActiveGameRulesSettings.GeneratedBallWeightsRange, 
                     _gameProcessor.Scene.ActiveHats);
                 _gameProcessor.CastleSelector.ActiveCastle.ResetPoints(true);
             }
@@ -267,9 +267,9 @@ namespace Core.Gameplay
     
         private async Task ProcessSessionAsync(UIGameScreen gameScreen, CancellationToken restartToken, CancellationToken loseToken, CancellationToken cancellationToken)
         {
-            _gameProcessor.Field.GenerateNextBallPositions(
+            _gameProcessor.Field.GenerateNextBall(
                 _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountAfterMove, 
-                _gameProcessor.ActiveGameRulesSettings.GeneratedBallsPointsRange,
+                _gameProcessor.ActiveGameRulesSettings.GeneratedBallWeightsRange,
                 _gameProcessor.Scene.ActiveHats);
 
             while (true)
@@ -285,7 +285,7 @@ namespace Core.Gameplay
                 }
                 else
                 {
-                    noAvailableSteps = _gameProcessor.Field.IsFullFilled && !_gameProcessor.Field.HasMergeSteps(_gameProcessor.ActiveGameRulesSettings.GeneratedBallsPointsRange);
+                    noAvailableSteps = _gameProcessor.Field.IsFullFilled && !_gameProcessor.Field.HasMergeSteps(_gameProcessor.ActiveGameRulesSettings.GeneratedBallPointsRange);
                     if (noAvailableSteps)
                     {
                         _loseTokenSource.Cancel();
@@ -454,7 +454,7 @@ namespace Core.Gameplay
             {
                 _gameProcessor.Field.GenerateBalls(
                     _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountOnStart, 
-                    _gameProcessor.ActiveGameRulesSettings.GeneratedBallsPointsRange, 
+                    _gameProcessor.ActiveGameRulesSettings.GeneratedBallWeightsRange, 
                     _gameProcessor.Scene.ActiveHats);
             
                 _gameProcessor.ClearUndoSteps();

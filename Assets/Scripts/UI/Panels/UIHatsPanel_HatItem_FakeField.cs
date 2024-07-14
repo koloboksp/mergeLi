@@ -28,7 +28,7 @@ namespace Core
             throw new System.NotImplementedException();
         }
 
-        public List<BallDesc> GenerateBalls(int count, int[] availableValues, string[] availableHats)
+        public List<BallDesc> GenerateBalls(int count, BallWeight[] availableValues, string[] availableHats)
         {
             throw new System.NotImplementedException();
         }
@@ -61,7 +61,7 @@ namespace Core
         }
 
         public IFieldView View { get; }
-        public void GenerateNextBallPositions(int count, int[] availableValues, string[] availableHats)
+        public void GenerateNextBall(int count, BallWeight[] availableValues, string[] availableHats)
         {
             throw new System.NotImplementedException();
         }

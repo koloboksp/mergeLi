@@ -355,7 +355,7 @@ namespace Core.Gameplay
                         new GenerateOperation(
                             ActiveGameRulesSettings.GeneratedBallsCountAfterMerge,
                             ActiveGameRulesSettings.GeneratedBallsCountAfterMove, 
-                            ActiveGameRulesSettings.GeneratedBallsPointsRange,
+                            ActiveGameRulesSettings.GeneratedBallWeightsRange,
                             _scene.ActiveHats,
                             _field),
                         new CollapseOperation(_collapsePointsEffectPrefab,
@@ -380,7 +380,7 @@ namespace Core.Gameplay
                         new GenerateOperation(
                             ActiveGameRulesSettings.GeneratedBallsCountAfterMove,
                             ActiveGameRulesSettings.GeneratedBallsCountAfterMove,
-                            ActiveGameRulesSettings.GeneratedBallsPointsRange,
+                            ActiveGameRulesSettings.GeneratedBallWeightsRange,
                             _scene.ActiveHats,
                             _field),
                         new CollapseOperation(_collapsePointsEffectPrefab, _field,

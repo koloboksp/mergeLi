@@ -12,13 +12,13 @@ namespace Core.Steps.CustomOperations
         private readonly Vector3Int _position;
         private readonly int _amount;
         private readonly int _maxAmount;
-        private readonly int[] _availableValues;
+        private readonly BallWeight[] _availableValues;
         private readonly string[] _availableHats;
         private readonly IField _field;
 
         private readonly List<BallDesc> _generatedItems = new();
         
-        public GenerateOperation(int amount, int maxAmount, int[] availableValues, string[] availableHats, IField field)
+        public GenerateOperation(int amount, int maxAmount, BallWeight[] availableValues, string[] availableHats, IField field)
         {
             _amount = amount;
             _maxAmount = maxAmount;
@@ -30,7 +30,7 @@ namespace Core.Steps.CustomOperations
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             _generatedItems.AddRange(_field.GenerateBalls(_amount, _availableValues, _availableHats));
-            _field.GenerateNextBallPositions(_maxAmount, _availableValues, _availableHats);
+            _field.GenerateNextBall(_maxAmount, _availableValues, _availableHats);
             Owner.SetData(new GenerateOperationData()
             {
                 RequiredAmount = _amount,

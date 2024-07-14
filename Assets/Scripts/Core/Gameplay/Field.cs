@@ -115,7 +115,7 @@ namespace Core.Gameplay
             return CalculatePath(from, to);
         }
 
-        public List<BallDesc> GenerateBalls(int num, int[] availableValues, string[] availableHats)
+        public List<BallDesc> GenerateBalls(int num, BallWeight[] availableValues, string[] availableHats)
         {
             return AddBalls(num, availableValues, availableHats);
         }
@@ -139,7 +139,7 @@ namespace Core.Gameplay
             return newBall;
         }
     
-        public void GenerateNextBallPositions(int count, int[] availableValues, string[] availableHats)
+        public void GenerateNextBall(int count, BallWeight[] availableValues, string[] availableHats)
         {
             var freeIndexes = new List<Vector3Int>();
             var usedHats = new List<string>();
@@ -183,8 +183,29 @@ namespace Core.Gameplay
                     hat = hatsToAdd[0];
                     hatsToAdd.RemoveAt(0);
                 }
-            
-                _nextBallsData.Add(new BallDesc(freeIndex, availableValues[Random.Range(0, availableValues.Length)], hat));
+                
+                var sumWeight = 0;
+                for (var ballWeightI = 0; ballWeightI < availableValues.Length; ballWeightI++)
+                {
+                    var ballWeight = availableValues[ballWeightI];
+                    sumWeight += ballWeight.Weight;
+                }
+                var randomValue = Random.Range(0, sumWeight);
+
+                var currentWeight = 0;
+                var points = 0;
+                for (var ballWeightI = 0; ballWeightI < availableValues.Length; ballWeightI++)
+                {
+                    var ballWeight = availableValues[ballWeightI];
+                    currentWeight += ballWeight.Weight;
+                    if (randomValue < currentWeight)
+                    {
+                        points = ballWeight.Points;
+                        break;
+                    }
+                }
+                
+                _nextBallsData.Add(new BallDesc(freeIndex, points, hat));
             }
         }
 
@@ -200,13 +221,13 @@ namespace Core.Gameplay
             return _cellSize;
         }
 
-        public List<BallDesc> AddBalls(int amount, int[] availableValues, string[] availableHats)
+        public List<BallDesc> AddBalls(int amount, BallWeight[] availableValues, string[] availableHats)
         {
             foreach (var ball in _balls)
                 _nextBallsData.RemoveAll(i => i.GridPosition == ball.IntGridPosition);
 
             if (_nextBallsData.Count < amount)
-                GenerateNextBallPositions(amount - _nextBallsData.Count, availableValues, availableHats);
+                GenerateNextBall(amount - _nextBallsData.Count, availableValues, availableHats);
             else
             {
                 if (_nextBallsData.Count > amount)
