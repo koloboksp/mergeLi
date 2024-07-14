@@ -5083,11 +5083,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3126564381448173542, guid: ef7381295bf591143aac7999a2043d9a,
         type: 3}
-      propertyPath: m_RootOrder
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3126564381448173542, guid: ef7381295bf591143aac7999a2043d9a,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
