@@ -39,9 +39,9 @@ namespace Core.Market
                 StandardPurchasingModule.Instance().useFakeStoreAlways = true;
                 StandardPurchasingModule.Instance().useFakeStoreUIMode = FakeStoreUIMode.StandardUser;
 #elif UNITY_ANDROID || UNITY_IOS
-            _validator = new CrossPlatformValidator(UnityEngine.Purchasing.Security.GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
+                _validator = new CrossPlatformValidator(UnityEngine.Purchasing.Security.GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
 #elif UNITY_STANDALONE
-            return;            
+                return;            
 #endif
                 var configurationBuilder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
@@ -49,9 +49,9 @@ namespace Core.Market
 #if UNITY_ANDROID
                 storeName = GooglePlay.Name;
 #elif UNITY_IOS
-            storeName = AppleAppStore.Name;
+                storeName = AppleAppStore.Name;
 #elif UNITY_EDITOR
-            storeName = "Standalone";
+                storeName = "Standalone";
 #endif
                 foreach (var productId in _availableProducts)
                     configurationBuilder.AddProduct(productId, ProductType.Consumable, new IDs { { productId, storeName } });
@@ -68,13 +68,15 @@ namespace Core.Market
         
         public void OnInitialized(IStoreController store, IExtensionProvider extensions)
         {
+            Debug.Log("<color=#00CCFF>IAP initialization success start.</color>");
+
             _store = store;
             _extensions = extensions;
             _appleExtensions = extensions.GetExtension<IAppleExtensions>();
             _googleExtensions = extensions.GetExtension<IGooglePlayStoreExtensions>();
             _initialized = true;
         
-            Debug.Log("<color=#00CCFF>IAP initialization success.</color>");
+            Debug.Log("<color=#00CCFF>IAP initialization success end.</color>");
             
             /*
             foreach (var item in controller.products.all)
@@ -95,6 +97,7 @@ namespace Core.Market
         
         public void OnInitializeFailed(InitializationFailureReason error)
         {
+            Debug.LogException(new Exception( $"IAP initialize failed: {error}."));
         }
        
         private bool Validate(string receipt, out string orderId)

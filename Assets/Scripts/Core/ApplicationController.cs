@@ -79,7 +79,7 @@ namespace Core
             var purchasesLibrary = purchaseLibraryObject.GetComponent<PurchasesLibrary>();
             
             _instance._purchaseController = new PurchaseController();
-            await _instance._purchaseController.InitializeAsync(purchasesLibrary.Items.Select(i=>i.ProductId));
+            await _instance._purchaseController.InitializeAsync(purchasesLibrary.Items.Select(i => i.ProductId));
 
             _instance._analyticsController = new FirebaseAnalyticsController();
             await _instance._analyticsController.InitializeAsync(_instance._version);
