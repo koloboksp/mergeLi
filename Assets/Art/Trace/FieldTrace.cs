@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Core.Gameplay;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +24,7 @@ public class FieldTrace : MonoBehaviour
 
     private void Awake()
     {
-        Core.Ball.OnMovingStateChangedGlobal += Ball_OnMovingStateChangedGlobal;
+        Ball.OnMovingStateChangedGlobal += Ball_OnMovingStateChangedGlobal;
 
         texSquare = texSize.x * texSize.y;
         map = new byte[texSquare];
@@ -39,10 +40,10 @@ public class FieldTrace : MonoBehaviour
 
     private void OnDestroy()
     {
-        Core.Ball.OnMovingStateChangedGlobal -= Ball_OnMovingStateChangedGlobal;
+        Ball.OnMovingStateChangedGlobal -= Ball_OnMovingStateChangedGlobal;
     }
 
-    private void Ball_OnMovingStateChangedGlobal(Core.Ball ball, bool move)
+    private void Ball_OnMovingStateChangedGlobal(Ball ball, bool move)
     {
         this.move = move;
 

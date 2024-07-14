@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Core;
 using Core.Effects;
+using Core.Gameplay;
 using Core.Goals;
 using Unity.VisualScripting;
 using UnityEngine;

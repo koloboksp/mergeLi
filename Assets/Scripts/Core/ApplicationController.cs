@@ -4,7 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Assets.Scripts.Core.Localization;
 using Assets.Scripts.Core.Storage;
+using Core.Ads;
+using Core.Market;
+using Core.Social;
 using Core.Steps.CustomOperations;
+using Core.Utils;
 using Save;
 using Unity.Services.Core;
 using Unity.VisualScripting;
@@ -83,7 +87,7 @@ namespace Core
             await _instance._adsController.InitializeAsync();
 
 //#if UNITY_ANDROID
-            _instance._socialService = new GooglePlayGames();
+            _instance._socialService = new Social.GooglePlayGames();
 //#endif
             if(_instance._socialService.IsAutoAuthenticationAvailable())
                 _ = _instance._socialService.AuthenticateAsync(Application.exitCancellationToken);

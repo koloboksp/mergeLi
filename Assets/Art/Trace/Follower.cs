@@ -1,4 +1,5 @@
 
+using Core.Gameplay;
 using UnityEngine;
 
 public class Follower : MonoBehaviour
@@ -9,10 +10,10 @@ public class Follower : MonoBehaviour
 
     private void Awake()
     {
-        Core.Ball.OnMovingStateChangedGlobal += Ball_OnMovingStateChangedGlobal;
+        Ball.OnMovingStateChangedGlobal += Ball_OnMovingStateChangedGlobal;
     }
 
-    private void Ball_OnMovingStateChangedGlobal(Core.Ball ball, bool move)
+    private void Ball_OnMovingStateChangedGlobal(Ball ball, bool move)
     {
         if (!move)
             return;
