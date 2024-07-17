@@ -87,10 +87,12 @@ namespace Core
             _instance._adsController = new CASWrapper();
             await _instance._adsController.InitializeAsync();
 
-//#if UNITY_ANDROID
+#if UNITY_ANDROID
             _instance._socialService = new Social.GooglePlayGames();
-//#endif
-            if(_instance._socialService.IsAutoAuthenticationAvailable())
+#else
+            _instance._socialService = new Default();
+#endif
+            if(_instance._socialService != null && _instance._socialService.IsAutoAuthenticationAvailable())
                 _ = _instance._socialService.AuthenticateAsync(Application.exitCancellationToken);
             
             _instance._uiPanelController = new UIPanelController();

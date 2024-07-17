@@ -1,3 +1,4 @@
+#if UNITY_ANDROID
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,11 +45,7 @@ namespace Core.Social
 
         public bool IsAuthenticated()
         {
-#if UNITY_ANDROID
             return PlayGamesPlatform.Instance.IsAuthenticated();
-#else
-            throw new Exception("This platform is not supported.");
-#endif
         }
 
         public async Task<bool> ShowAchievementsUIAsync(CancellationToken cancellationToken)
@@ -138,3 +135,4 @@ namespace Core.Social
         }
     }
 }
+#endif
