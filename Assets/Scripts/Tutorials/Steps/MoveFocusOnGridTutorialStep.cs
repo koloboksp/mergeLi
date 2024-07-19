@@ -17,9 +17,9 @@ namespace Core.Tutorials
         {
             var field = Tutorial.Controller.GameProcessor.Field;
 
-            Vector3 from = _fromGridPosition;
-            Vector3 to = _toGridPosition;
-            Vector3 moveVector = _toGridPosition - _fromGridPosition;
+            var from = _fromGridPosition;
+            var to = _toGridPosition;
+            var moveVector = to - from;
 
             var moveTime = moveVector.magnitude / _speed;
             var moveTimer = 0.0f;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Core.Tutorials
 {
@@ -14,5 +15,16 @@ namespace Core.Tutorials
         }
 
         public RectTransform Root => _root;
+
+        public static UITutorialElement FindByTag(string tag)
+        {
+            var tutorialElements = FindObjectsOfType<UITutorialElement>();
+            var result = tutorialElements.FirstOrDefault(i => i.Tag == tag);
+
+            if (result == null)
+                Debug.LogError($"UITutorialElement with tag {tag} not found.");
+
+            return result;
+        }
     }
 }

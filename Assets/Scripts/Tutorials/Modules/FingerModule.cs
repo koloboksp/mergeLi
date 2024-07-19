@@ -4,24 +4,27 @@ using UnityEngine;
 
 namespace Core.Tutorials
 {
-    public interface IFocusedOnSomething
-    {
-        Rect GetFocusedRect();
-    }
-    
     public class FingerModule : ModuleTutorialStep
     {
-        [SerializeField] private FingerOrientation _fingerOrientation;
-        
         public override async Task OnExecuteAsync(TutorialStep step, CancellationToken cancellationToken)
         {
-            var focusedOnSomething = step as IFocusedOnSomething;
-            step.Tutorial.Controller.Finger.Show(focusedOnSomething.GetFocusedRect(), _fingerOrientation);
+            if (step is IClickOnSomething clickOnSomething)
+            {
+                step.Tutorial.Controller.Finger.Click();
+            }
         }
 
         public override async Task OnCompleteAsync(TutorialStep step, CancellationToken cancellationToken)
         {
-            step.Tutorial.Controller.Finger.Hide();
+           // step.Tutorial.Controller.Finger.Hide();
+        }
+        
+        public override void OnUpdate(TutorialStep step)
+        {
+            if (step is IFocusedOnSomething focusedOnSomething)
+            {
+                step.Tutorial.Controller.Finger.ForceFocusOn(focusedOnSomething.GetFocusedRect());
+            }
         }
     }
 }

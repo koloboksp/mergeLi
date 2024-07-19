@@ -19,8 +19,11 @@ namespace Core.Tutorials
 
         [SerializeField] private GameProcessor _gameProcessor;
         
+        [SerializeField] private AnimationCurve _focusMoveSpeedCurve;
+
         private readonly List<Tutorial> _availableTutorials = new List<Tutorial>();
         private DependencyHolder<UIPanelController> _panelController;
+        private Rect _focusedRect;
         
         public GameProcessor GameProcessor => _gameProcessor;
 
@@ -29,8 +32,9 @@ namespace Core.Tutorials
         public UITutorialFinger Finger => _tutorialFinger;
         public UITutorialDialog Dialog => _tutorialDialog;
         public UIExtendedButton SettingsBtn => _settingsBtn;
+        public Rect FocusedRect => _focusedRect;
+        public AnimationCurve FocusMoveSpeedCurve => _focusMoveSpeedCurve;
 
-        
         public void Awake()
         {
             gameObject.GetComponentsInChildren(_availableTutorials);
@@ -59,6 +63,11 @@ namespace Core.Tutorials
             _ = _panelController.Value.PushPopupScreenAsync<UISettingsPanel>(
                 panelData,
                 Application.exitCancellationToken);
+        }
+
+        public void SetFocusedRect(Rect focusedRect)
+        {
+            _focusedRect = focusedRect;
         }
     }
 }

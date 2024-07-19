@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Core.Tutorials
 {
-    public class MoveBallTutorialStep : TutorialStep
+    public class MoveBallTutorialStep : TutorialStep, IClickOnSomething
     {
         [SerializeField] public Vector3Int _from;
         [SerializeField] public Vector3Int _to;

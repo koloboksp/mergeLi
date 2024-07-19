@@ -7,27 +7,33 @@ namespace Core.Tutorials
 {
     public class FocusOnUITutorialStep : TutorialStep, IFocusedOnSomething
     {
+        private static readonly Vector3[] _noAllocCorners = new Vector3[4];
+
         [SerializeField] private string _tag;
 
         private UITutorialElement _target;
         
         protected override async Task<bool> InnerInitAsync(CancellationToken cancellationToken)
         {
-            var tutorialElements = FindObjectsOfType<UITutorialElement>();
-            _target = tutorialElements.FirstOrDefault(i => i.Tag == _tag);
+            _target = UITutorialElement.FindByTag(_tag);
 
-            if(_target == null)
-                Debug.LogError($"UITutorialElement with tag {_tag} not found.", this);
+            Tutorial.Controller.SetFocusedRect(GetFocusedRect());
+            
             return true;
         }
 
         public Rect GetFocusedRect()
         {
-            var corners = new Vector3[4];
-            _target.Root.GetWorldCorners(corners);
+            return GetRect(_target.Root);
+        }
 
-            var lb = corners[0];
-            var rt = corners[2];
+        
+        public static Rect GetRect(RectTransform rectTransform)
+        {
+            rectTransform.GetWorldCorners(_noAllocCorners);
+
+            var lb = _noAllocCorners[0];
+            var rt = _noAllocCorners[2];
             var min = Vector3.Min(lb, rt);
             var max = Vector3.Max(lb, rt);
 
