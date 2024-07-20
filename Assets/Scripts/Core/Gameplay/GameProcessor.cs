@@ -19,56 +19,6 @@ using UnityEngine.Serialization;
 
 namespace Core.Gameplay
 {
-    public interface IRules
-    {
-        GameRulesSettings RulesSettings { get; }
-    }
-
-    public interface IPointsChangeListener
-    {
-        void AddPoints(int points);
-        void RemovePoints(int points);
-    }
-
-    public enum ExplodeType
-    {
-        Explode1,
-        Explode3,
-        ExplodeHorizontal,
-        ExplodeVertical,
-    }
-
-    [Serializable]
-    public enum StepTag
-    {
-        Move,
-        Merge,
-        Explode1,
-        Explode3,
-        ExplodeHorizontal,
-        ExplodeVertical,
-        NextBalls,
-        Downgrade,
-        Undo,
-    
-        Select,
-        Deselect,
-        ChangeSelected,
-        NoPath,
-    
-        UndoMove,
-        UndoMerge,
-        UndoExplode1,
-        UndoExplode3,
-        UndoExplodeHorizontal,
-        UndoExplodeVertical,
-        UndoNextBalls,
-        UndoDowngrade,
-    
-        None,
-    }
-
-
     public class GameProcessor : MonoBehaviour, 
         ISkinChanger
     {
@@ -122,7 +72,8 @@ namespace Core.Gameplay
         [SerializeField] private GameRulesSettings[] _gameRulesSettings;
         
         [SerializeField] private RectTransform _uiScreensRoot;
-   
+        [SerializeField] private Canvas _uiScreensCanvas;
+
         [SerializeField] private PurchasesLibrary _purchasesLibrary;
         [SerializeField] private CastleSelector _castleSelector;
         [SerializeField] private GiftsLibrary _giftsLibrary;
@@ -171,7 +122,8 @@ namespace Core.Gameplay
         public MusicPlayer MusicPlayer => _musicPlayer;
         public SoundsPlayer SoundsPlayer => _soundsPlayer;
         public IReadOnlyList<Hat> Hats => _hats;
-    
+        public Canvas UIScreensCanvas => _uiScreensCanvas;
+
         public GameRulesSettings ActiveGameRulesSettings
         {
             get

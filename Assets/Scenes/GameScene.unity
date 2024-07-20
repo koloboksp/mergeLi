@@ -301,12 +301,12 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 936888029}
   - {fileID: 1636435617}
   - {fileID: 282758559}
   - {fileID: 763700165}
   - {fileID: 6006356480111834422}
   - {fileID: 647366645}
+  - {fileID: 936888029}
   - {fileID: 1136627426}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1070,6 +1070,7 @@ MonoBehaviour:
   - {fileID: 1650489694}
   - {fileID: 1590278462}
   _uiScreensRoot: {fileID: 1881252459}
+  _uiScreensCanvas: {fileID: 1881252458}
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,
     type: 3}
   _castleSelector: {fileID: 391481347}
@@ -3675,7 +3676,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -592.82214}
+  m_AnchoredPosition: {x: 117.81583, y: -303.88434}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1718292103
@@ -3709,6 +3710,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &1722095441 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6382516208069679379, guid: 97b7d052bd6c7aa45af0155fb69c4007,
+    type: 3}
+  m_PrefabInstance: {fileID: 9123919598539181965}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97736055eafd4b1c845e233b77ebdad6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1736155328 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1054850265026345782, guid: 2c5bf51886e65404fa6b6a6f50b4ce8c,
@@ -4224,6 +4237,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7062187560663751100}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2112104180 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4268722916648420275, guid: 97b7d052bd6c7aa45af0155fb69c4007,
+    type: 3}
+  m_PrefabInstance: {fileID: 9123919598539181965}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db36777c851343eebf0a0deb3bcaff00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2120872013
 GameObject:
   m_ObjectHideFlags: 0
@@ -4531,6 +4556,16 @@ PrefabInstance:
       propertyPath: _scene
       value: 
       objectReference: {fileID: 255974410}
+    - target: {fileID: 2512424619168036517, guid: bfd8dde4f020cfe4d9dddf27d219351e,
+        type: 3}
+      propertyPath: _target
+      value: 
+      objectReference: {fileID: 2112104180}
+    - target: {fileID: 3176070760368033879, guid: bfd8dde4f020cfe4d9dddf27d219351e,
+        type: 3}
+      propertyPath: _scene
+      value: 
+      objectReference: {fileID: 255974410}
     - target: {fileID: 3729957058961553979, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: m_Name
@@ -4546,6 +4581,11 @@ PrefabInstance:
       propertyPath: _scene
       value: 
       objectReference: {fileID: 255974410}
+    - target: {fileID: 4857521713780696715, guid: bfd8dde4f020cfe4d9dddf27d219351e,
+        type: 3}
+      propertyPath: _target
+      value: 
+      objectReference: {fileID: 1722095441}
     - target: {fileID: 6442096139751076360, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4601,6 +4641,21 @@ PrefabInstance:
       propertyPath: _field
       value: 
       objectReference: {fileID: 108162133}
+    - target: {fileID: 8200586798878961962, guid: bfd8dde4f020cfe4d9dddf27d219351e,
+        type: 3}
+      propertyPath: _field
+      value: 
+      objectReference: {fileID: 108162133}
+    - target: {fileID: 8632027896873549478, guid: bfd8dde4f020cfe4d9dddf27d219351e,
+        type: 3}
+      propertyPath: _field
+      value: 
+      objectReference: {fileID: 108162133}
+    - target: {fileID: 9151170741808383059, guid: bfd8dde4f020cfe4d9dddf27d219351e,
+        type: 3}
+      propertyPath: _scene
+      value: 
+      objectReference: {fileID: 255974410}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

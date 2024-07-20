@@ -25,6 +25,11 @@ namespace Core.Gameplay
         public int ExtraPoints => _extraPoints;
         public int GroupIndex => _groupIndex;
 
+        public void HackIsFree()
+        {
+            _isFree = true;
+        }
+        
         public bool Available
         {
             get

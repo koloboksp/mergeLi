@@ -18,7 +18,8 @@ namespace Core.Tutorials
         [SerializeField] private UIExtendedButton _settingsBtn;
 
         [SerializeField] private GameProcessor _gameProcessor;
-        
+
+        [SerializeField] private float _focusMoveSpeed = 8;
         [SerializeField] private AnimationCurve _focusMoveSpeedCurve;
 
         private readonly List<Tutorial> _availableTutorials = new List<Tutorial>();
@@ -34,6 +35,7 @@ namespace Core.Tutorials
         public UIExtendedButton SettingsBtn => _settingsBtn;
         public Rect FocusedRect => _focusedRect;
         public AnimationCurve FocusMoveSpeedCurve => _focusMoveSpeedCurve;
+        public float FocusMoveSpeed => _focusMoveSpeed;
 
         public void Awake()
         {

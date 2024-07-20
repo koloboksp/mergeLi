@@ -18,29 +18,36 @@ public class PropertyDrawerBallsMask : PropertyDrawer
         PointsHats
     }
     
+    public static readonly Vector2Int FieldSize = new Vector2Int(9, 9);
     private static readonly Vector2Int CellSize = new Vector2Int(15, 15);
     private const int CellTextSize = 8;
     
     public override VisualElement CreatePropertyGUI(SerializedProperty property)
     {
-        return VisualElement(ViewType.EnablePoints, property);
+        var container = new VisualElement();
+        container.style.flexDirection = new StyleEnum<FlexDirection>(FlexDirection.Row);
+        container.Add(CreateLabel(property));
+        container.Add(CreateField(ViewType.EnablePoints, property));
+        return container;
     }
 
-    protected virtual VisualElement VisualElement(ViewType viewType, SerializedProperty property)
+    protected virtual VisualElement CreateLabel(SerializedProperty property)
+    {
+        return new Label(property.displayName);
+    }
+    protected virtual VisualElement CreateField(ViewType viewType, SerializedProperty property)
     {
         var container = new VisualElement();
-        container.Add(new Label(property.displayName));
-
+       
         var ballInfoMask = property.boxedValue as BallsMask;
-        var fieldSize = new Vector2Int(9, 9);
         
-        for (var y = fieldSize.y - 1; y >= 0; y--)
+        for (var y = FieldSize.y - 1; y >= 0; y--)
         {
             var toggles = new List<Toggle>();
             var integerFields = new List<IntegerField>();
             var textFields = new List<TextField>();
             
-            for (var x = 0; x < fieldSize.x; x++)
+            for (var x = 0; x < FieldSize.x; x++)
             {
                 var gridPosition = new Vector3Int(x, y, 0);
                 var ballInfo = ballInfoMask.Balls.Find(i => i.GridPosition == gridPosition);

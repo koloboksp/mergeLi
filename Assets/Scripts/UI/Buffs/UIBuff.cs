@@ -7,6 +7,7 @@ using Core.Tutorials;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 public class UIBuff : MonoBehaviour
 {
@@ -25,7 +26,8 @@ public class UIBuff : MonoBehaviour
     [SerializeField] protected UITutorialElement _tutorialElement;
 
     public GameObject IconPanel => _iconPanel;
-    
+    public Buff Model => _model;
+
     public UIBuff SetModel(Buff model)
     {
         _model = model;

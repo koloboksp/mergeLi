@@ -13,6 +13,7 @@ namespace Core.Tutorials
         
         protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
+            _field.Clear();
             _field.AddBalls(_balls.Balls);
             _field.SetNextBalls(_nextBalls.Balls);
 

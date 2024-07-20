@@ -28,6 +28,8 @@ namespace Core.Tutorials
 
             var modules = gameObject.GetComponents<ModuleTutorialStep>();
             
+            foreach (var module in modules)
+                module.OnBeginUpdate(this);
             while (moveTimer < moveTime)
             {
                 moveTimer += Time.deltaTime;
@@ -42,7 +44,9 @@ namespace Core.Tutorials
                 
                 await Task.Yield();
             }
-
+            foreach (var module in modules)
+                module.OnEndUpdate(this);
+            
             return true;
         }
 

@@ -16,7 +16,17 @@ namespace Core.Tutorials
            
         }
 
+        public virtual void OnBeginUpdate(TutorialStep step)
+        {
+            
+        }
+        
         public virtual void OnUpdate(TutorialStep step)
+        {
+            
+        }
+        
+        public virtual void OnEndUpdate(TutorialStep step)
         {
             
         }

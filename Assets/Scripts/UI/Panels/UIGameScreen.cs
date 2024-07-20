@@ -32,6 +32,7 @@ namespace Core
         private UIGameScreenData _data;
 
         public UIGameScreenData Data => _data;
+        public List<UIBuff> UIBuffs => _uiBuffs;
 
         public void Awake()
         {

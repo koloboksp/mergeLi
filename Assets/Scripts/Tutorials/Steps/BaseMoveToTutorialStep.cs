@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -6,8 +7,6 @@ namespace Core.Tutorials
 {
     public abstract class BaseMoveToTutorialStep : TutorialStep, IFocusedOnSomething
     {
-        public float _speed = 8.0f;
-
         private Rect _focusedRect;
 
         protected abstract (Vector2 position, Vector2 size) GetToPose();
@@ -21,11 +20,13 @@ namespace Core.Tutorials
             
             var moveVector = fromMin - toPose.position;
 
-            var moveTime = moveVector.magnitude / _speed;
+            var moveTime = moveVector.magnitude / Tutorial.Controller.FocusMoveSpeed;
             var moveTimer = 0.0f;
             
             var modules = gameObject.GetComponents<ModuleTutorialStep>();
             
+            foreach (var module in modules)
+                module.OnBeginUpdate(this);
             while (moveTimer < moveTime)
             {
                 moveTimer += Time.deltaTime;
@@ -41,6 +42,8 @@ namespace Core.Tutorials
                 
                 await Task.Yield();
             }
+            foreach (var module in modules)
+                module.OnEndUpdate(this);
 
             return true;
         }
