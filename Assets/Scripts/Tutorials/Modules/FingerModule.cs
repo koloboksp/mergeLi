@@ -13,10 +13,7 @@ namespace Core.Tutorials
             }
         }
 
-        public override async Task OnCompleteAsync(TutorialStep step, CancellationToken cancellationToken)
-        {
-           // step.Tutorial.Controller.Finger.Hide();
-        }
+        
         
         public override void OnUpdate(TutorialStep step)
         {
