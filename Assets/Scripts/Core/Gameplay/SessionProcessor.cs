@@ -242,7 +242,11 @@ namespace Core.Gameplay
         
                 var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => new BallDesc(i.GridPosition, i.Points, i.HatHame));
                 _gameProcessor.Field.AddBalls(ballsProgressData);
-
+                _gameProcessor.Field.GenerateNextBall(
+                    _gameProcessor.ActiveGameRulesSettings.GeneratedBallsCountAfterMove, 
+                    _gameProcessor.ActiveGameRulesSettings.GeneratedBallWeightsRange,
+                    _gameProcessor.Scene.ActiveHats);
+                
                 foreach (var buffProgress in lastSessionProgress.Buffs)
                 {
                     var foundBuff = _gameProcessor.Buffs.Find(i => i.Id == buffProgress.Id);

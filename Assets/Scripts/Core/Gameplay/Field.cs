@@ -140,7 +140,7 @@ namespace Core.Gameplay
             return newBall;
         }
     
-        public void GenerateNextBall(int count, BallWeight[] availableValues, string[] availableHats)
+        public void GenerateNextBall(int minimalCount, BallWeight[] availableValues, string[] availableHats)
         {
             var freeIndexes = new List<Vector3Int>();
             var usedHats = new List<string>();
@@ -169,8 +169,9 @@ namespace Core.Gameplay
                     hatsToAdd.Add(activeHat);
                 }
             }
-        
-            for (var i = 0; i < count; i++)
+
+            var countToGenerate = Mathf.Max(minimalCount - _nextBallsData.Count, 0);
+            for (var i = 0; i < countToGenerate; i++)
             {
                 if (freeIndexes.Count <= 0) break;
             
@@ -228,23 +229,17 @@ namespace Core.Gameplay
                 _nextBallsData.RemoveAll(i => i.GridPosition == ball.IntGridPosition);
 
             if (_nextBallsData.Count < amount)
-                GenerateNextBall(amount - _nextBallsData.Count, availableValues, availableHats);
-            else
-            {
-                if (_nextBallsData.Count > amount)
-                {
-                    var numToRemove = _nextBallsData.Count - amount;
-                    for (var i = 0; i < numToRemove; i++)
-                        _nextBallsData.RemoveAt(_nextBallsData.Count - 1);
-                }
-            }
-        
+                GenerateNextBall(amount, availableValues, availableHats);
+            
             var newBallsData = new List<BallDesc>();
-            foreach (var ballData in _nextBallsData)
-                newBallsData.Add(new BallDesc(ballData.GridPosition, ballData.Points, ballData.HatName));
-        
-            _nextBallsData.Clear();
 
+            while (_nextBallsData.Count > 0 && newBallsData.Count < amount)
+            {
+                var ballData = _nextBallsData[0];
+                newBallsData.Add(new BallDesc(ballData.GridPosition, ballData.Points, ballData.HatName));
+                _nextBallsData.RemoveAt(0);
+            }
+          
             foreach (var ballData in newBallsData)
                 CreateBall(ballData.GridPosition, ballData.Points, ballData.HatName);
         
@@ -408,6 +403,8 @@ namespace Core.Gameplay
         {
             var ballsToRemove = new List<Ball>(_balls);
             DestroyBalls(ballsToRemove, true);
+            
+            _nextBallsData.Clear();
         }
 
         public void Init()

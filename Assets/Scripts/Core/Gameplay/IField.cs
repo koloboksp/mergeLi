@@ -20,7 +20,7 @@ namespace Core.Gameplay
         public Vector3 GetPositionFromGrid(Vector3 gridPosition);
         Vector3 GetPositionFromGrid(Vector3Int gridPosition);
         public IFieldView View { get; }
-        void GenerateNextBall(int count, BallWeight[] availableValues, string[] availableHats);
+        void GenerateNextBall(int minimalCount, BallWeight[] availableValues, string[] availableHats);
         IEnumerable<T> GetAll<T>();
         Vector2Int Size { get; }
         Vector3 CellSize();

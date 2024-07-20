@@ -61,7 +61,7 @@ namespace Core
         }
 
         public IFieldView View { get; }
-        public void GenerateNextBall(int count, BallWeight[] availableValues, string[] availableHats)
+        public void GenerateNextBall(int minimalCount, BallWeight[] availableValues, string[] availableHats)
         {
             throw new System.NotImplementedException();
         }

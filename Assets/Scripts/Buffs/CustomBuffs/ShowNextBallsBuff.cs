@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Core;
 using Core.Gameplay;
 using Core.Steps;
@@ -20,11 +21,22 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
     
     protected override void Inner_OnStepCompleted(Step step)
     {
-        ClearBalls();
-        if (RestCooldown != 0)
+        if (RestCooldown <= 0)
+            ClearBalls(); 
+        else
             ShowNextBalls();
     }
-    
+
+    protected override void Inner_OnRestCooldownChanged()
+    {
+        base.Inner_OnRestCooldownChanged();
+        
+        if (RestCooldown <= 0)
+            ClearBalls(); 
+        else
+            ShowNextBalls();
+    }
+
     private void ClearBalls()
     {
         foreach (var ball in _balls)
@@ -36,16 +48,34 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
     private void ShowNextBalls()
     {
         var nextBallsData = _gameProcessor.Scene.Field.NextBallsData;
-        for (var index = 0; index < nextBallsData.Count; index++)
+        var ballsToRemove = _balls
+            .Where(ball => nextBallsData
+                .All(i => ball.IntGridPosition != i.GridPosition))
+            .ToList();
+        
+        var ballsToAdd = nextBallsData
+            .Where(ballDesc => _balls
+                .All(ball => ball.IntGridPosition != ballDesc.GridPosition))
+            .ToList();
+
+        foreach (var ball in ballsToRemove)
         {
-            var nextBallData = nextBallsData[index];
+            _balls.Remove(ball);
+            Destroy(ball.gameObject);
+        }
+
+        for (var ballDescI = 0; ballDescI < ballsToAdd.Count; ballDescI++)
+        {
+            var nextBallData = ballsToAdd[ballDescI];
             var ball = _gameProcessor.Scene.Field.PureCreateBall(
                 nextBallData.GridPosition, 
                 nextBallData.Points,
                 nextBallData.HatName);
+            ball.name += "_next";
+            ball.View.ShowPoints(false);
             _balls.Add(ball);
 
-            if (index == 0)
+            if (ballDescI == 0)
             {
                 ball.transform.localScale = Vector3.one * 0.5f;
                 ball.Transparency = 0.2f;
