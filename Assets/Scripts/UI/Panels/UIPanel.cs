@@ -15,17 +15,10 @@ namespace Core
         [SerializeField] private CanvasGroup _canvasGroup;
 
         private bool _active;
-        
         public RectTransform Root => _root;
-
-        public virtual string GetLayerName()
-        {
-            return "defaultLayer";
-        }
         
         public virtual void SetData(UIScreenData undefinedData)
         {
-            
         }
 
         public void Activate()
@@ -75,6 +68,6 @@ namespace Core
 
     public class UIScreenData
     {
-        
+        public string Layer;
     }
 }

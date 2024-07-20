@@ -32,7 +32,7 @@ namespace Core
                     var screenObject = Object.Instantiate(result);
                     var screen = screenObject.GetComponent<TPanel>();
                     var panelLayers = _screensRoot.GetComponentsInChildren<PanelLayer>();
-                    var layerName = screen.GetLayerName();
+                    var layerName = data == null || string.IsNullOrEmpty(data.Layer) ? "defaultLayer" : data.Layer;
                     var layer = panelLayers.FirstOrDefault(i => i.name == layerName);
                     screen.Root.SetParent(layer.Root);
                     
@@ -70,7 +70,7 @@ namespace Core
                     var screenObject = Object.Instantiate(result);
                     var screen = screenObject.GetComponent<TPanel>();
                     var panelLayers = _screensRoot.GetComponentsInChildren<PanelLayer>();
-                    var layerName = screen.GetLayerName();
+                    var layerName = data == null || string.IsNullOrEmpty(data.Layer) ? "defaultLayer" : data.Layer;
                     var layer = panelLayers.FirstOrDefault(i => i.name == layerName);
                     screen.Root.SetParent(layer.Root);
                     

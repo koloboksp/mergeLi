@@ -69,6 +69,8 @@ namespace Core
 
         public override void SetData(UIScreenData undefinedData)
         {
+            base.SetData(undefinedData);
+
             _data = undefinedData as UIPausePanelData;
             _model = new Model();
         }

@@ -33,11 +33,6 @@ namespace Core
         private UIHatsPanelData _data;
         private HatItemModel _selectedItem;
 
-        public override string GetLayerName()
-        {
-            return "gameScreenFrontLayer";
-        }
-
         private void Awake()
         {
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
@@ -92,6 +87,8 @@ namespace Core
 
         public override void SetData(UIScreenData undefinedData)
         {
+            base.SetData(undefinedData);
+
             _data = undefinedData as UIHatsPanelData;
 
             _model = new Model();
@@ -384,25 +381,6 @@ namespace Core
                 }
 
                 return true;
-            }
-        }
-
-        public void StartAutoScrollContent(float nSpeed)
-        {
-            StartCoroutine(ScrollContent(nSpeed));
-        }
-
-        private IEnumerator ScrollContent(float nSpeed)
-        {
-            _container.verticalNormalizedPosition = 1.0f;
-            
-            var scroll = true;
-            while (scroll)
-            {
-                _container.verticalNormalizedPosition -= nSpeed * Time.deltaTime;
-                yield return null;
-                if(_container.verticalNormalizedPosition <= 0.0f)
-                    break;
             }
         }
 

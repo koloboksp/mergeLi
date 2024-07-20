@@ -52,9 +52,10 @@ namespace Core
 
         public override void SetData(UIScreenData undefinedData)
         {
+            base.SetData(undefinedData);
+
             _data = undefinedData as UIGameFailPanelData;
             _model = new Model();
-
             
             _ = ShowWithAnimation();
         }

@@ -28,11 +28,6 @@ namespace Core
         [SerializeField] private float _delayBeforeGiveCoins = 2.0f;
        
         private UICastleCompletePanelData _data;
-
-        public override string GetLayerName()
-        {
-            return "gameScreenFrontLayer";
-        }
         
         protected override void InnerActivate()
         {
@@ -43,6 +38,8 @@ namespace Core
 
         public override void SetData(UIScreenData undefinedData)
         {
+            base.SetData(undefinedData);
+            
             _data = undefinedData as UICastleCompletePanelData;
             ApplicationController.Instance.SaveController.SaveProgress.OnConsumeCurrency += SaveController_OnConsumeCurrency;
 

@@ -41,11 +41,6 @@ namespace Core
             _anyGiftIndicator.OnClick += AnyGiftIndicatorOnClick;
         }
 
-        public override string GetLayerName()
-        {
-            return "gameScreenLayer";
-        }
-
         public override void SetData(UIScreenData undefinedData)
         {
             base.SetData(undefinedData);

@@ -92,6 +92,7 @@ namespace Core.Gameplay
                     gameScreen = await _panelController.Value.PushPopupScreenAsync<UIGameScreen>(
                         new UIGameScreenData()
                         {
+                            Layer = "gameScreenLayer",
                             GameProcessor = _gameProcessor
                         },
                         exitToken);
@@ -206,7 +207,11 @@ namespace Core.Gameplay
                         
                             PrepareSession();
                             gameScreen = await _panelController.Value.PushPopupScreenAsync<UIGameScreen>(
-                                new UIGameScreenData() { GameProcessor = _gameProcessor },
+                                new UIGameScreenData()
+                                {
+                                    Layer = "gameScreenLayer",
+                                    GameProcessor = _gameProcessor
+                                },
                                 exitToken);
                         
                             gameScreen.LockInput(false);
@@ -383,6 +388,7 @@ namespace Core.Gameplay
             var castleCompletePanel = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UICastleCompletePanel>(
                 new UICastleCompletePanelData()
                 {
+                    Layer = "gameScreenFrontLayer",
                     GameProcessor = _gameProcessor, 
                     DialogAfterBuildEndingKey = dialogKeyAfterBuildEnding,
                     DialogOnBuildStartingKey = dialogKeyOnBuildStarting,

@@ -19,6 +19,7 @@ namespace Core.Tutorials
             }
             
             var data = new UIHatsPanelData();
+            data.Layer = "gameScreenFrontLayer";
             data.GameProcessor = gameProcessor;
             data.Selected = gameProcessor.Scene.HatsLibrary.Hats[0];
             data.UserActiveHatsFilter = gameProcessor.Scene.GetUserActiveHatsFilter();

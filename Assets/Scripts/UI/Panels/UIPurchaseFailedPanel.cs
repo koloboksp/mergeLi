@@ -27,6 +27,8 @@ namespace Core
         
         public override void SetData(UIScreenData undefinedData)
         {
+            base.SetData(undefinedData);
+
             var data = undefinedData as UIPurchaseFailedPanelData;
         }
         

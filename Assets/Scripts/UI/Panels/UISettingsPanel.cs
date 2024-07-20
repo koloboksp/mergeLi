@@ -98,6 +98,8 @@ namespace Core
 
         public override void SetData(UIScreenData undefinedData)
         {
+            base.SetData(undefinedData);
+
             _data = undefinedData as UISettingsPanelData;
             _model = new Model();
             

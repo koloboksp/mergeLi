@@ -33,6 +33,8 @@ namespace UI.Panels
         
         public override void SetData(UIScreenData undefinedData)
         {
+            base.SetData(undefinedData);
+            
             var data = undefinedData as UICheatsPanelData;
 
             var valueHolders = new List<(string, List<ValueHolder>)>();

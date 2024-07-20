@@ -8,7 +8,11 @@ namespace Core.Tutorials
         protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var gameScreen = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIGameScreen>(
-                new UIGameScreenData() { GameProcessor = Tutorial.Controller.GameProcessor }, 
+                new UIGameScreenData()
+                {
+                    Layer = "gameScreenLayer",
+                    GameProcessor = Tutorial.Controller.GameProcessor
+                }, 
                 cancellationToken);
             gameScreen.HideAllElements();
             ApplicationController.UnloadLogoScene();
