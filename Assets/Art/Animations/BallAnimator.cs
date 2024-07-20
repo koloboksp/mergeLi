@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Core;
@@ -45,7 +46,15 @@ public class BallAnimator : MonoBehaviour
             {
                 if (instant)
                 {
-                    anim.Play(item.clip.name);
+                    if (state == DefaultBallSkin.BallState.Born)
+                    {
+                        anim.Play(item.clip.name);
+                        anim.PlayQueued(idleClip.name);
+                    }
+                    else
+                    {
+                        anim.Play(item.clip.name);
+                    }
                 }
                 else
                 {
