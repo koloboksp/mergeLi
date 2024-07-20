@@ -8,7 +8,8 @@ namespace Core.Tutorials
         protected override async Task<bool> InnerExecuteAsync(CancellationToken cancellationToken)
         {
             var screen = ApplicationController.Instance.UIPanelController.GetPanel<UIGameScreen>();
-            ApplicationController.Instance.UIPanelController.PopScreen(screen);
+            if (screen != null)
+                ApplicationController.Instance.UIPanelController.PopScreen(screen);
             
             return true;
         }

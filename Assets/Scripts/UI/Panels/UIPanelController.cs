@@ -103,7 +103,11 @@ namespace Core
 
         public T GetPanel<T>() where T : UIPanel
         {
-            return _stack.GetByPanelType(typeof(T)).Screen as T;
+            var stackItem = _stack.GetByPanelType(typeof(T));
+            if (stackItem != null)
+                return stackItem.Screen as T;
+            
+            return null;
         }
 
         private class ScreenStack
@@ -158,9 +162,11 @@ namespace Core
 
             public StackItem GetByPanelType(Type type)
             {
-                var stackItem = _items.FindLast(i => i.Screen.GetType() == type);
-
-                return stackItem;
+                var itemIndex = _items.FindLastIndex(i => i.Screen.GetType() == type);
+                if (itemIndex >= 0)
+                    return _items[itemIndex];
+                
+                return null;
             }
 
             public class StackItem

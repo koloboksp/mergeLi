@@ -18,10 +18,10 @@ public class CastleSelector : MonoBehaviour
     
     [SerializeField] private Material _selectionMaterial;
 
-    private Castle _castleInstance;
+    private Castle _castle;
    
     public CastleLibrary Library => _library;
-    public Castle ActiveCastle => _castleInstance;
+    public Castle ActiveCastle => _castle;
     
     public void SetData()
     {
@@ -30,31 +30,30 @@ public class CastleSelector : MonoBehaviour
 
     public void SelectActiveCastle(string id)
     {
-        if (_castleInstance != null)
+        var previousCastle = _castle;
+        if (previousCastle != null)
         {
-            Destroy(_castleInstance.gameObject);
-            _castleInstance = null;
+            Destroy(previousCastle.gameObject);
+            previousCastle = null;
         }
         
         var castlePrefab = _library.GetCastle(id);
-        if (castlePrefab == null)
-            castlePrefab = _library.Castles[0];
+        if (castlePrefab != null)
+        {
+            _castle = Instantiate(castlePrefab, _castleRoot);
+            _castle.gameObject.name = castlePrefab.Id;
+            _castle.SetData(_gameProcessor);
+        }
+        else
+        {
+            _castle = null;
+        }
         
-        _castleInstance = Instantiate(castlePrefab, _castleRoot);
-        _castleInstance.gameObject.name = castlePrefab.Id;
-        // _castleInstance.View.Root.anchorMin = Vector2.zero;
-        // _castleInstance.View.Root.anchorMax = Vector2.one;
-        // _castleInstance.View.Root.offsetMin = Vector2.zero;
-        // _castleInstance.View.Root.offsetMax = Vector2.zero;
-        // _castleInstance.View.Root.localScale = Vector3.one;
-        
-        _castleInstance.SetData(_gameProcessor);
-        
-        OnCastleChanged?.Invoke(null);
+        OnCastleChanged?.Invoke(previousCastle);
     }
 
     public void ForceCompleteCastle()
     {
-        _castleInstance.ForceComplete();
+        _castle.ForceComplete();
     }   
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Atom;
 using Core.Gameplay;
+using Core.Tutorials;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -27,8 +28,12 @@ namespace Core
         [SerializeField] private UIHatsPanel_HatItem_FakeField _fakeField;
         [SerializeField] private UIHatsPanel_HatItem_FakeScene _fakeScene;
 
-        private Model _model;
+        [SerializeField] private UITutorialElement _tutorialElement;
+
+        private HatItemModel _model;
         private GameProcessor _gameProcessor;
+
+        public HatItemModel Model => _model;
         public RectTransform Root => _root;
 
         private void Awake()
@@ -36,7 +41,7 @@ namespace Core
             _button.onClick.AddListener(OnClick);
         }
         
-        public void SetModel(Model model, GameProcessor gameProcessor)
+        public void SetModel(HatItemModel model, GameProcessor gameProcessor)
         {
             _gameProcessor = gameProcessor;
 
@@ -57,6 +62,8 @@ namespace Core
             SetUserActiveIcon();
             SetLockIcon();
             SetExtraPoints();
+
+            _tutorialElement.Tag = _model.Id;
         }
 
         private void SetExtraPoints()
@@ -70,7 +77,7 @@ namespace Core
             SetUserActiveIcon();
         }
         
-        private void OnUserActiveStateChanged(Model model)
+        private void OnUserActiveStateChanged(HatItemModel model)
         {
             SetUserActiveIcon();
         }   
@@ -108,75 +115,75 @@ namespace Core
             _selectionFrame.SetActive(_model.Selected);
         }
         
-        public class Model
+        
+    }
+    
+    public class HatItemModel
+    {
+        public event Action OnSelectedStateChanged;
+        public event Action OnAvailableStateChanged;
+        public event Action<HatItemModel> OnUserActiveFilterStateChanged;
+
+        private readonly Hat _hat;
+        private readonly UIHatsPanel.Model _owner;
+        private bool _selected;
+        private bool _userActive;
+
+        public HatItemModel(Hat hat, UIHatsPanel.Model owner)
         {
-            public event Action OnSelectedStateChanged;
-            public event Action OnAvailableStateChanged;
-            public event Action<Model> OnUserActiveFilterStateChanged;
+            _hat = hat;
+            _owner = owner;
+        }
 
-            private readonly Hat _hat;
-            private readonly UIHatsPanel.Model _owner;
-            private bool _selected;
-            private bool _userActive;
+        public Hat Hat => _hat;
+        public bool Selected => _selected;
+        public string Id => _hat.Id;
+        public bool Available => _hat.Available;
+        public int Cost => _hat.Cost;
+        public int ExtraPoints => _hat.ExtraPoints;
+        public GuidEx NameKey => Hat.NameKey;
+        public bool UserActive => _userActive;
 
-            public Model(Hat hat, UIHatsPanel.Model owner)
+        public void SelectMe()
+        {
+            _owner.TrySelect(this);
+        }
+
+        public void SetData(bool userActive)
+        {
+            _userActive = userActive;
+        }
+        
+        public void SetUserActiveFilter(bool state)
+        {
+            if (state)
             {
-                _hat = hat;
-                _owner = owner;
-            }
-
-            public Hat Hat => _hat;
-            public bool Selected => _selected;
-            public string Id => _hat.Id;
-            public bool Available => _hat.Available;
-            public int Cost => _hat.Cost;
-            public int ExtraPoints => _hat.ExtraPoints;
-            public GuidEx NameKey => Hat.NameKey;
-            public bool UserActive => _userActive;
-
-            public void SelectMe()
-            {
-                _owner.TrySelect(this);
-            }
-
-            public void SetData(bool userActive)
-            {
-                _userActive = userActive;
-            }
-            
-            public void SetUserActiveFilter(bool state)
-            {
-                if (state)
+                if (_owner.BalanceActivateHats())
                 {
-                    if (_owner.BalanceActivateHats())
-                    {
-                        _userActive = true;
-                        OnUserActiveFilterStateChanged?.Invoke(this);
-                    }
-                }
-                else
-                {
-                    _userActive = false;
+                    _userActive = true;
                     OnUserActiveFilterStateChanged?.Invoke(this);
                 }
             }
-            
-            internal void SetSelectedState(bool newState)
+            else
             {
-                if (_selected != newState)
-                {
-                    _selected = newState;
-                    OnSelectedStateChanged?.Invoke();
-                }
+                _userActive = false;
+                OnUserActiveFilterStateChanged?.Invoke(this);
             }
-            
-            public async Task Buy()
+        }
+        
+        internal void SetSelectedState(bool newState)
+        {
+            if (_selected != newState)
             {
-                await Hat.Buy();
-                OnAvailableStateChanged?.Invoke();
+                _selected = newState;
+                OnSelectedStateChanged?.Invoke();
             }
-
-            
+        }
+        
+        public async Task Buy()
+        {
+            await Hat.Buy();
+            OnAvailableStateChanged?.Invoke();
         }
     }
 }

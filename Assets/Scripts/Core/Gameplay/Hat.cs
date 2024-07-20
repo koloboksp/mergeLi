@@ -30,6 +30,11 @@ namespace Core.Gameplay
             _isFree = true;
         }
         
+        public void HackGroupIndex(int groupIndex)
+        {
+            _groupIndex = groupIndex;
+        }
+        
         public bool Available
         {
             get
@@ -58,5 +63,7 @@ namespace Core.Gameplay
                 _saveProgress.BuyHat(Id);
             }
         }
+
+        
     }
 }

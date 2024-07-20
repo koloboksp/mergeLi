@@ -324,7 +324,9 @@ namespace Core.Gameplay
         private bool CheckCastleCompetedState()
         {
             var activeCastle = _gameProcessor.CastleSelector.ActiveCastle;
-            return activeCastle.Completed;
+            if (activeCastle != null)
+                return activeCastle.Completed;
+            return false;
         }
     
         private async Task ProcessCastleCompleting(UIGameScreen gameScreen)

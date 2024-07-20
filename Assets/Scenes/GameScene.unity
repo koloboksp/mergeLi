@@ -3676,7 +3676,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 116.194305, y: -266.2754}
+  m_AnchoredPosition: {x: 255.99998, y: -32.53467}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1718292103
@@ -4526,11 +4526,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1622655942483459013, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2025090940685713392, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: _settingsBtn
@@ -4556,26 +4551,16 @@ PrefabInstance:
       propertyPath: _tutorialFocuser
       value: 
       objectReference: {fileID: 1310526744}
-    - target: {fileID: 2055645590710858852, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _scene
-      value: 
-      objectReference: {fileID: 255974410}
-    - target: {fileID: 2381361843330056186, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2512424619168036517, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: _target
       value: 
       objectReference: {fileID: 2112104180}
-    - target: {fileID: 3176070760368033879, guid: bfd8dde4f020cfe4d9dddf27d219351e,
+    - target: {fileID: 2615215008121997327, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
-      propertyPath: _scene
+      propertyPath: _field
       value: 
-      objectReference: {fileID: 255974410}
+      objectReference: {fileID: 108162133}
     - target: {fileID: 3729957058961553979, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: m_Name
@@ -4586,16 +4571,6 @@ PrefabInstance:
       propertyPath: _field
       value: 
       objectReference: {fileID: 108162133}
-    - target: {fileID: 4482921480883409581, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4755491886056284319, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _scene
-      value: 
-      objectReference: {fileID: 255974410}
     - target: {fileID: 4857521713780696715, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: _target
@@ -4666,11 +4641,6 @@ PrefabInstance:
       propertyPath: _field
       value: 
       objectReference: {fileID: 108162133}
-    - target: {fileID: 9151170741808383059, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _scene
-      value: 
-      objectReference: {fileID: 255974410}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

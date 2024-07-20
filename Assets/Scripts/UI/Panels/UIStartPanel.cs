@@ -96,7 +96,7 @@ namespace Core
         {
             var data = new UIHatsPanelData();
             data.GameProcessor = _data.GameProcessor;
-            data.Selected = _data.GameProcessor.Scene.HatsLibrary.Hats[0];
+            data.Selected = _data.GameProcessor.Scene.HatsLibrary.Hats.LastOrDefault(i => i.Available);
             data.UserActiveHatsFilter = _data.GameProcessor.Scene.GetUserActiveHatsFilter();
             data.Hats = _data.GameProcessor.Scene.HatsLibrary.Hats;
             data.HatsChanger = _data.GameProcessor.Scene;

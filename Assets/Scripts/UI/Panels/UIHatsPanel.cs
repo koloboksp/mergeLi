@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,8 +31,13 @@ namespace Core
         
         private Model _model;
         private UIHatsPanelData _data;
-        private UIHatsPanel_HatItem.Model _selectedItem;
-        
+        private HatItemModel _selectedItem;
+
+        public override string GetLayerName()
+        {
+            return "gameScreenFrontLayer";
+        }
+
         private void Awake()
         {
             _closeBtn.onClick.AddListener(CloseBtn_OnClick);
@@ -100,8 +106,11 @@ namespace Core
                 _data.HatsChanger, 
                 _data.GameProcessor.ActiveGameRulesSettings,
                 ApplicationController.Instance.SaveController.SaveProgress);
+            OnItemsUpdated(_model.Items);
+            
             _model.Select(_data.Selected);
-
+            FocusOnBlock();
+            
             EquipRestrictionsChanged(_model.ActiveHatsCount, _model.MaxActiveHats);
             SetEquipAllLabel();
             
@@ -147,14 +156,12 @@ namespace Core
                 Application.exitCancellationToken);
         }
         
-        private void OnItemsUpdated(IEnumerable<UIHatsPanel_HatItem.Model> items)
+        private void OnItemsUpdated(IEnumerable<HatItemModel> items)
         {
             var oldViewBlocks = _container.content.GetComponents<UIHatsPanel_HatBlockItem>();
             foreach (var oldViewBlock in oldViewBlocks)
                 Destroy(oldViewBlock.gameObject);
-
-            RectTransform focusOnHatBlock = null;
-
+            
             _itemPrefab.gameObject.SetActive(false);
             _blockPrefab.gameObject.SetActive(false);
             _blockSeparatorPrefab.gameObject.SetActive(false);
@@ -177,11 +184,6 @@ namespace Core
                     var itemView = Instantiate(_itemPrefab, blockView.ContentRoot);
                     itemView.gameObject.SetActive(true);
                     itemView.SetModel(item, _data.GameProcessor);
-
-                    if (item.Available && item.UserActive)
-                    {
-                        focusOnHatBlock = blockView.Root;
-                    }
                 }
 
                 if (groupI != hatsByGroupIndex.Count - 1)
@@ -195,6 +197,21 @@ namespace Core
             }
 
             LayoutRebuilder.ForceRebuildLayoutImmediate(_container.content);
+        }
+
+        private void FocusOnBlock()
+        {
+            RectTransform focusOnHatBlock = null;
+
+            var hatItems = GetComponentsInChildren<UIHatsPanel_HatItem>();
+            foreach (var hatItem in hatItems)
+            {
+                if (hatItem.Model.Selected && hatItem.Model.Available && hatItem.Model.UserActive)
+                {
+                    var blockItem = hatItem.GetComponentInParent<UIHatsPanel_HatBlockItem>();
+                    focusOnHatBlock = blockItem.Root;
+                }
+            }
             
             if (focusOnHatBlock != null)
             {
@@ -205,7 +222,7 @@ namespace Core
             }
         }
 
-        private void OnBoughtButtonActiveChanged(bool active, UIHatsPanel_HatItem.Model selected)
+        private void OnBoughtButtonActiveChanged(bool active, HatItemModel selected)
         {
             _selectedItem = selected;
             
@@ -223,7 +240,7 @@ namespace Core
             }
         }
         
-        private void EquipStateChanged(UIHatsPanel_HatItem.Model sender)
+        private void EquipStateChanged(HatItemModel sender)
         {
             SetEquipLabel();
         }
@@ -241,19 +258,20 @@ namespace Core
         
         public class Model
         {
-            public Action<IEnumerable<UIHatsPanel_HatItem.Model>> OnItemsUpdated;
-            public Action<bool, UIHatsPanel_HatItem.Model> OnBoughtButtonActiveChanged;
-            public Action<UIHatsPanel_HatItem.Model> OnEquipStateChanged;
+            public Action<IEnumerable<HatItemModel>> OnItemsUpdated;
+            public Action<bool, HatItemModel> OnBoughtButtonActiveChanged;
+            public Action<HatItemModel> OnEquipStateChanged;
             public Action<int, int> OnEquipRestrictionsChanged;
 
-            private readonly List<UIHatsPanel_HatItem.Model> _items = new();
-            private UIHatsPanel_HatItem.Model _selected;
+            private readonly List<HatItemModel> _items = new();
+            private HatItemModel _selected;
             
             private IHatsChanger _changer;
             private GameRulesSettings _rulesSettings;
             private SaveProgress _saveProgress;
             
             public int MaxActiveHats => _rulesSettings.MaxActiveHats;
+            public IEnumerable<HatItemModel> Items => _items;
 
             public int ActiveHatsCount
             {
@@ -283,7 +301,7 @@ namespace Core
                 for (var hatI = 0; hatI < hats.Count; hatI++)
                 {
                     var hat = hats[hatI];
-                    var item = new UIHatsPanel_HatItem.Model(hat, this);
+                    var item = new HatItemModel(hat, this);
                     item.OnUserActiveFilterStateChanged += ItemOnUserActiveFilterStateChanged;
 
                     var userActive = false;
@@ -293,11 +311,9 @@ namespace Core
                     item.SetData(userActive);
                     _items.Add(item);
                 }
-                
-                OnItemsUpdated?.Invoke(_items);
             }
 
-            private void ItemOnUserActiveFilterStateChanged(UIHatsPanel_HatItem.Model sender)
+            private void ItemOnUserActiveFilterStateChanged(HatItemModel sender)
             {
                 var activeFilter = new List<string>();
                 for (var itemI = 0; itemI < _items.Count; itemI++)
@@ -342,7 +358,7 @@ namespace Core
                 TrySelect(item);
             }
             
-            internal void TrySelect(UIHatsPanel_HatItem.Model newSelected)
+            internal void TrySelect(HatItemModel newSelected)
             {
                 _selected = newSelected;
                 
@@ -369,6 +385,32 @@ namespace Core
 
                 return true;
             }
+        }
+
+        public void StartAutoScrollContent(float nSpeed)
+        {
+            StartCoroutine(ScrollContent(nSpeed));
+        }
+
+        private IEnumerator ScrollContent(float nSpeed)
+        {
+            _container.verticalNormalizedPosition = 1.0f;
+            
+            var scroll = true;
+            while (scroll)
+            {
+                _container.verticalNormalizedPosition -= nSpeed * Time.deltaTime;
+                yield return null;
+                if(_container.verticalNormalizedPosition <= 0.0f)
+                    break;
+            }
+        }
+
+        public void SetActiveHat(string hat)
+        {
+            var hatItems = _model.Items.FirstOrDefault(i => i.Hat.Id == hat);
+            hatItems.SelectMe();
+            hatItems.SetUserActiveFilter(true);
         }
     }
     
