@@ -8,6 +8,7 @@ namespace Core.Gameplay
 {
     public class Ball : MonoBehaviour, IBall
     {
+        public event Action OnBorn;
         public event Action OnSelectedChanged;
         public event Action OnMovingStateChanged;
         public event Action OnTransparencyChanged;
@@ -249,6 +250,11 @@ namespace Core.Gameplay
         public void Remove(bool force)
         {
             _view.Remove(force);
+        }
+
+        public void Born()
+        {
+            OnBorn?.Invoke();
         }
     }
     

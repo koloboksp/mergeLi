@@ -335,7 +335,7 @@ Animation:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4679713789989440165}
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: e88f4bbc42c95a140ae433617527212f, type: 2}
@@ -345,10 +345,10 @@ Animation:
   - {fileID: 7400000, guid: ea53f3d0287847042806291f35cee4c7, type: 2}
   - {fileID: 7400000, guid: 226a8cc97d078bd47875348c3ee7f41a, type: 2}
   - {fileID: 7400000, guid: ccf1711c3cb54ac4491bc96f086d562d, type: 2}
+  - {fileID: 7400000, guid: 947fa6c29275dd745a1a3208930157ac, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
-  m_UpdateMode: 0
   m_CullingType: 0
 --- !u!114 &8567942335583307820
 MonoBehaviour:
@@ -380,6 +380,8 @@ MonoBehaviour:
     clip: {fileID: 7400000, guid: ea53f3d0287847042806291f35cee4c7, type: 2}
   - state: 64
     clip: {fileID: 7400000, guid: ccf1711c3cb54ac4491bc96f086d562d, type: 2}
+  - state: 128
+    clip: {fileID: 7400000, guid: 947fa6c29275dd745a1a3208930157ac, type: 2}
 --- !u!114 &470944024834822428
 MonoBehaviour:
   m_ObjectHideFlags: 0

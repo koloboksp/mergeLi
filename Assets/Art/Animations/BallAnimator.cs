@@ -37,23 +37,29 @@ public class BallAnimator : MonoBehaviour
             ballSkin.ChangeStateEvent -= SetAnimationState;
     }
 
-    private void SetAnimationState(DefaultBallSkin.BallState state)
+    private void SetAnimationState(DefaultBallSkin.BallState state, bool instant)
     {
         foreach (var item in items)
         {
             if ((item.state & state) == state)
             {
-                anim.CrossFade(item.clip.name, CROSS_FADE);
-
-                if (item.clip.wrapMode == WrapMode.Loop)
+                if (instant)
                 {
-                    lastLoopClip = item.clip;
+                    anim.Play(item.clip.name);
                 }
-                else if (lastLoopClip != null)
+                else
                 {
-                    anim.CrossFadeQueued(lastLoopClip.name, CROSS_FADE);
-                }
+                    anim.CrossFade(item.clip.name, CROSS_FADE);
 
+                    if (item.clip.wrapMode == WrapMode.Loop)
+                    {
+                        lastLoopClip = item.clip;
+                    }
+                    else if (lastLoopClip != null)
+                    {
+                        anim.CrossFadeQueued(lastLoopClip.name, CROSS_FADE);
+                    }
+                }
                 break;
             }
         }

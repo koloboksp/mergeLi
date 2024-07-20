@@ -37,6 +37,7 @@ namespace Skins.Custom
             Upgrade = 16,
             Downgrade = 32,
             AutoDeselect = 1 << 6,
+            Born = 1 << 7,
         }
 
         [SerializeField] private Text _valueLabel;
@@ -62,7 +63,7 @@ namespace Skins.Custom
         private DependencyHolder<SoundsPlayer> _soundsPlayer;
         private Coroutine _hideFaceWithDelay;
         
-        public UnityAction<BallState> ChangeStateEvent;
+        public UnityAction<BallState, bool> ChangeStateEvent;
 
         public override void SetData(BallView view)
         {
@@ -70,11 +71,16 @@ namespace Skins.Custom
             _face = Instantiate(_facePrefab, _faceAnchor);
         }
 
+        public override void Born()
+        {
+            ChangeStateEvent?.Invoke(BallState.Born, true);
+        }
+        
         public override bool Selected
         {
             set
             {
-                ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle);
+                ChangeStateEvent?.Invoke(value ? BallState.Select : BallState.Idle, false);
                 _faceAnchor.gameObject.SetActive(value);
                 
                 if (value)
@@ -92,7 +98,7 @@ namespace Skins.Custom
         {
             set
             {
-                ChangeStateEvent?.Invoke(value ? BallState.Move : BallState.Idle);
+                ChangeStateEvent?.Invoke(value ? BallState.Move : BallState.Idle, false);
                 if (value)
                 {
                     _faceAnchor.gameObject.SetActive(true);
@@ -120,7 +126,7 @@ namespace Skins.Custom
             
             var ballState = points >= oldPoints ? BallState.Upgrade : BallState.Downgrade;
 
-            ChangeStateEvent?.Invoke(ballState);
+            ChangeStateEvent?.Invoke(ballState, false);
 
             if (ballState == BallState.Upgrade)
             {
@@ -158,7 +164,7 @@ namespace Skins.Custom
 
         public override void PathNotFount()
         {
-            ChangeStateEvent?.Invoke(BallState.PathNotFound);
+            ChangeStateEvent?.Invoke(BallState.PathNotFound, false);
             _soundsPlayer.Value.Play(_onPathNotFoundClip);
             
             _faceAnchor.gameObject.SetActive(true);
@@ -241,13 +247,15 @@ namespace Skins.Custom
             }
         }
 
+        
+
         private IEnumerator HideFaceWithDelayCoroutine(float delay)
         {
             yield return new WaitForSeconds(delay);
-            ChangeStateEvent?.Invoke(BallState.AutoDeselect);
+            ChangeStateEvent?.Invoke(BallState.AutoDeselect, false);
             
             yield return new WaitForSeconds(0.5f);
-            ChangeStateEvent?.Invoke(BallState.Idle);
+            ChangeStateEvent?.Invoke(BallState.Idle, false);
             _faceAnchor.gameObject.SetActive(false);
         }
 

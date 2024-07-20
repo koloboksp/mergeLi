@@ -135,7 +135,8 @@ namespace Core.Gameplay
             var subComponents = newBall.GetComponents<ISubComponent>();
             foreach (var subComponent in subComponents)
                 subComponent.SetData();
-        
+            newBall.Born();
+            
             return newBall;
         }
     

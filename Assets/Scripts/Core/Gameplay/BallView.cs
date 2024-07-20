@@ -31,6 +31,7 @@ namespace Core.Gameplay
         
         public void SetData()
         {
+            _ball.OnBorn += Ball_OnBorn;
             _ball.OnPointsChanged += Ball_OnPointsChanged;
             _ball.OnHatChanged += Ball_OnHatChanged;
             _ball.OnSelectedChanged += Ball_OnSelectedChanged;
@@ -39,7 +40,6 @@ namespace Core.Gameplay
             _ball.OnPathNotFound += Ball_OnPathNotFound;
             
             ChangeSkin(_ball.Field.Scene.ActiveSkin);
-            //ChangeHat(_ball.Field.Scene.ActiveHat);
         }
 
         private void Ball_OnMovingStateChanged()
@@ -77,6 +77,11 @@ namespace Core.Gameplay
             _ballSkin.Selected = _ball.Selected;
         }
 
+        void Ball_OnBorn()
+        {
+            _ballSkin.Born();
+        }
+        
         private void Ball_OnPointsChanged(int oldPoints, bool force)
         {
             _ballSkin.SetPoints(_ball.Points, oldPoints, force);

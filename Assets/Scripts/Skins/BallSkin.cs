@@ -7,6 +7,7 @@ namespace Skins
     public abstract class BallSkin : Skin
     {
         public abstract void SetData(BallView view);
+        public abstract void Born();
         public abstract bool Selected { set; }
         public abstract bool Moving { set; }
         public abstract void SetPoints(int points, int oldPoints, bool force);
