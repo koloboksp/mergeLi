@@ -1103,7 +1103,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8240068372584959469}
-  - component: {fileID: 7164473521992803293}
   - component: {fileID: 5417955171425936600}
   - component: {fileID: 8629407543651095252}
   m_Layer: 5
@@ -1133,22 +1132,6 @@ RectTransform:
   m_AnchoredPosition: {x: 110, y: 450}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!111 &7164473521992803293
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3550063729457154277}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &5417955171425936600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1189,7 +1172,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8418843552912642052}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -1216,7 +1199,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4470570264543057124}
-  - component: {fileID: 8740412265721323035}
   - component: {fileID: 14689734608157632}
   - component: {fileID: 4274669243685148973}
   m_Layer: 5
@@ -1246,22 +1228,6 @@ RectTransform:
   m_AnchoredPosition: {x: -110, y: 450}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!111 &8740412265721323035
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3557609554563142436}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &14689734608157632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1302,7 +1268,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8135585810270123027}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -2024,7 +1990,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6798883019517053566}
-  - component: {fileID: 5090353986712481393}
   - component: {fileID: 4096043834928726897}
   - component: {fileID: 2312827807027504196}
   m_Layer: 5
@@ -2054,22 +2019,6 @@ RectTransform:
   m_AnchoredPosition: {x: -330, y: 450}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!111 &5090353986712481393
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4832723497871449792}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &4096043834928726897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2110,7 +2059,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 2837313148184807653}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -2644,7 +2593,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8805461116560358601}
-  - component: {fileID: 6598376216704102313}
   - component: {fileID: 8472010477538634090}
   - component: {fileID: 9126803755710801499}
   m_Layer: 5
@@ -2674,22 +2622,6 @@ RectTransform:
   m_AnchoredPosition: {x: 330, y: 450}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!111 &6598376216704102313
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5809493746207648420}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &8472010477538634090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2730,7 +2662,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8361538747720831331}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
