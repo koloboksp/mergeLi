@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6990876459653922180}
   - component: {fileID: 7457091469613134630}
   m_Layer: 0
-  m_Name: showEyes (1)
+  m_Name: selectBlobs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1248,58 +1248,6 @@ MonoBehaviour:
   _tutorial: {fileID: 526122607883767943}
   _analyticsEventName: 
   _wait: 0
---- !u!1 &835461749015356584
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2906607292591115968}
-  - component: {fileID: 173010002038954670}
-  m_Layer: 0
-  m_Name: setActiveHats
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &2906607292591115968
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 835461749015356584}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5761487952316496272}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &173010002038954670
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 835461749015356584}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 246af80151c147deb9f65751e91044c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tutorial: {fileID: 3552134273189657137}
-  _analyticsEventName: 
-  _activeHats:
-  - tent_A
-  - aztec_A
-  - marsh_E
-  - wax_E
-  - pirat_A
 --- !u!1 &840955557497181221
 GameObject:
   m_ObjectHideFlags: 0
@@ -2524,7 +2472,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4833113920219117730
 Transform:
   m_ObjectHideFlags: 0
@@ -3802,7 +3750,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8199277461890621815
 Transform:
   m_ObjectHideFlags: 0
@@ -5877,53 +5825,6 @@ MonoBehaviour:
   _analyticsEventName: 
   _castleName: CastleGame_Mud_A
   _points: 650
---- !u!1 &3828122207489400017
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5149968847931388980}
-  - component: {fileID: 2131635362949875302}
-  m_Layer: 0
-  m_Name: scrollHats
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &5149968847931388980
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3828122207489400017}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5761487952316496272}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2131635362949875302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3828122207489400017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3305372bff46489fa66d254c15be56f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tutorial: {fileID: 3681005627758257415}
-  _analyticsEventName: 
-  _speed: 0.2
 --- !u!1 &3835424162989772486
 GameObject:
   m_ObjectHideFlags: 0
@@ -5974,11 +5875,9 @@ Transform:
   - {fileID: 1825193707292030796}
   - {fileID: 8958015514443529782}
   - {fileID: 6493065164243612485}
-  - {fileID: 7573075574336303905}
-  - {fileID: 5149968847931388980}
   - {fileID: 4013200518910462717}
+  - {fileID: 7573075574336303905}
   - {fileID: 3920069958872794451}
-  - {fileID: 2906607292591115968}
   - {fileID: 886510341900485011}
   - {fileID: 6990876459653922180}
   - {fileID: 6029425252439126210}
@@ -13841,7 +13740,7 @@ GameObject:
   - component: {fileID: 7273842220815390039}
   - component: {fileID: 735619022785380371}
   m_Layer: 0
-  m_Name: showEyes (2)
+  m_Name: selectBlobs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13896,7 +13795,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9155629248211113717
 Transform:
   m_ObjectHideFlags: 0
