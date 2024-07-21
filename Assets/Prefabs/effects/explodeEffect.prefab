@@ -115,6 +115,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_BombExplosion
       objectReference: {fileID: 0}
+    - target: {fileID: 3589905853828887945, guid: 62ad6a25f015d344a98418beefcb26dc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

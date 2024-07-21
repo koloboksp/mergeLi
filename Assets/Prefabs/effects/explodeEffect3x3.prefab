@@ -65,11 +65,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_BigBombExplosion
       objectReference: {fileID: 0}
-    - target: {fileID: 6074015274155414464, guid: a3ebc6b8ed1fb904d9c9e5f72ab3834e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6074015274155414465, guid: a3ebc6b8ed1fb904d9c9e5f72ab3834e,
         type: 3}
       propertyPath: m_LocalPosition.x

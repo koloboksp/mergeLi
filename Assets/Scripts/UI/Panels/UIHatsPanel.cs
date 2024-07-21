@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Atom;
 using Core.Gameplay;
+using Core.Utils;
 using Save;
 using Skins;
 using UnityEngine;
@@ -383,12 +384,15 @@ namespace Core
                 return true;
             }
         }
+        private DependencyHolder<SoundsPlayer> _soundsPlayer;
 
         public void SetActiveHat(string hat)
         {
             var hatItems = _model.Items.FirstOrDefault(i => i.Hat.Id == hat);
             hatItems.SelectMe();
             hatItems.SetUserActiveFilter(true);
+            
+            _soundsPlayer.Value.Play(UICommonSounds.Click);
         }
     }
     
