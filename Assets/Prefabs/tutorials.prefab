@@ -2659,7 +2659,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 3681005627758257415}
   _analyticsEventName: 
-  _wait: 1
+  _wait: 0.25
 --- !u!1 &1773827407116249199
 GameObject:
   m_ObjectHideFlags: 0
@@ -5842,7 +5842,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5761487952316496272
 Transform:
   m_ObjectHideFlags: 0
@@ -7054,7 +7054,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6645736417118610794
 Transform:
   m_ObjectHideFlags: 0

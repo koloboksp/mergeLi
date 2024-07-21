@@ -4526,11 +4526,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1622655942483459013, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2025090940685713392, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: _settingsBtn
@@ -4556,16 +4551,6 @@ PrefabInstance:
       propertyPath: _tutorialFocuser
       value: 
       objectReference: {fileID: 1310526744}
-    - target: {fileID: 2055750475943831352, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _wait
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 2381361843330056186, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2475599469231434502, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: _field
@@ -4586,21 +4571,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: tutorials
       objectReference: {fileID: 0}
-    - target: {fileID: 3835424162989772486, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: _field
       value: 
       objectReference: {fileID: 108162133}
-    - target: {fileID: 4482921480883409581, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4857521713780696715, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: _target
@@ -4666,11 +4641,6 @@ PrefabInstance:
       propertyPath: _field
       value: 
       objectReference: {fileID: 108162133}
-    - target: {fileID: 8438579618383832338, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8632027896873549478, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: _field
