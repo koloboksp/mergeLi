@@ -2839,7 +2839,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1779497695078365915}
-  - component: {fileID: 6632888472125965083}
   - component: {fileID: 1999683834701768808}
   - component: {fileID: 4867491099313124688}
   m_Layer: 5
@@ -2869,22 +2868,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!111 &6632888472125965083
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6099616958722680075}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &1999683834701768808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2925,7 +2908,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 2269326384948689833}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
@@ -3999,7 +3982,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 198446844664782131}
-  - component: {fileID: 4687599308633949259}
   - component: {fileID: 2744628790671189644}
   - component: {fileID: 9186572692810959261}
   m_Layer: 5
@@ -4029,22 +4011,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!111 &4687599308633949259
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8941290156135801890}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: de2311a0e53f9204d92149c756fb4b1f, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &2744628790671189644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4085,7 +4051,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1199386857607224810}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []

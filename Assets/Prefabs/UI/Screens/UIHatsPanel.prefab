@@ -288,6 +288,7 @@ GameObject:
   - component: {fileID: 5584430664457032669}
   - component: {fileID: 1917009544345206503}
   - component: {fileID: 4013970765743063570}
+  - component: {fileID: 851670359454646814}
   m_Layer: 5
   m_Name: UIHatsPanel
   m_TagString: Untagged
@@ -377,6 +378,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 6174549654922210249}
+--- !u!111 &851670359454646814
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305112124653678651}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 01d04ba08db004f4493dee683328c2fe, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 01d04ba08db004f4493dee683328c2fe, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &2537430552610864091
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,6 +550,7 @@ GameObject:
   - component: {fileID: 3553126238930314519}
   - component: {fileID: 972124252067442199}
   - component: {fileID: 1900128250428005029}
+  - component: {fileID: 7736103664047716388}
   m_Layer: 5
   m_Name: panel
   m_TagString: Untagged
@@ -602,6 +620,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &7736103664047716388
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3210633063786179470}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3548010689547023501
 GameObject:
   m_ObjectHideFlags: 0
