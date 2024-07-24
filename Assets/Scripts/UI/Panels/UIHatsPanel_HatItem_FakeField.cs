@@ -118,7 +118,7 @@ namespace Core
         }
 
         public IScene Scene => _scene;
-        public IReadOnlyList<BallDesc> NextBallsData { get; }
+        public IReadOnlyList<BallDesc> NextBallsDescs { get; }
         public bool IsFullFilled { get; }
         public bool IsEmpty { get; }
 

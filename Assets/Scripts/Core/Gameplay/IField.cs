@@ -33,7 +33,7 @@ namespace Core.Gameplay
         List<Vector2Int> GetPath(Vector3Int from, Vector3Int to);
         void DestroyBall(Ball ball);
         IScene Scene { get; }
-        IReadOnlyList<BallDesc> NextBallsData { get; }
+        IReadOnlyList<BallDesc> NextBallsDescs { get; }
         bool IsFullFilled { get; }
         bool IsEmpty { get; }
         Vector3 ScreenPointToWorld(Vector3 position);

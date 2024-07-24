@@ -47,7 +47,7 @@ public class ShowNextBallsBuff : Buff, INextBallsShower
     
     private void ShowNextBalls()
     {
-        var nextBallsData = _gameProcessor.Scene.Field.NextBallsData;
+        var nextBallsData = _gameProcessor.Scene.Field.NextBallsDescs;
         var ballsToRemove = _balls
             .Where(ball => nextBallsData
                 .All(i => ball.IntGridPosition != i.GridPosition))

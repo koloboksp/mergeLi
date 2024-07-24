@@ -39,7 +39,7 @@ namespace Core.Gameplay
     
         private Vector3 _cellSize;
     
-        private readonly List<BallDesc> _nextBallsData = new();
+        private readonly List<BallDesc> _nextBallsDescs = new();
 
         public bool IsFullFilled => _balls.Count >= _size.x * _size.y;
         public bool IsEmpty => _balls.Count == 0;
@@ -49,7 +49,7 @@ namespace Core.Gameplay
         public IFieldView View => _view;
 
     
-        public IReadOnlyList<BallDesc> NextBallsData => _nextBallsData;
+        public IReadOnlyList<BallDesc> NextBallsDescs => _nextBallsDescs;
    
         private void Awake()
         { 
@@ -143,10 +143,11 @@ namespace Core.Gameplay
         public void GenerateNextBall(int minimalCount, BallWeight[] availableValues, string[] availableHats)
         {
             var freeIndexes = new List<Vector3Int>();
-            var usedHats = new List<string>();
             for (var x = 0; x < _size.x; x++)
             for (var y = 0; y < _size.y; y++)
                 freeIndexes.Add(new Vector3Int(x, y, 0));
+            
+            var usedHats = new List<string>();
             foreach (var ball in _balls)
             {
                 freeIndexes.Remove(ball.IntGridPosition);
@@ -154,8 +155,12 @@ namespace Core.Gameplay
                     usedHats.Add(ball.HatName);
             }
 
-            foreach (var nextBall in _nextBallsData)
-                freeIndexes.Remove(nextBall.GridPosition);
+            foreach (var nextBallDesc in _nextBallsDescs)
+            {
+                freeIndexes.Remove(nextBallDesc.GridPosition);
+                if (!string.IsNullOrEmpty(nextBallDesc.HatName))
+                    usedHats.Add(nextBallDesc.HatName);
+            }
 
             var hatsToAdd = new List<string>();
             foreach (var activeHat in availableHats)
@@ -170,7 +175,7 @@ namespace Core.Gameplay
                 }
             }
 
-            var countToGenerate = Mathf.Max(minimalCount - _nextBallsData.Count, 0);
+            var countToGenerate = Mathf.Max(minimalCount - _nextBallsDescs.Count, 0);
             for (var i = 0; i < countToGenerate; i++)
             {
                 if (freeIndexes.Count <= 0) break;
@@ -207,7 +212,7 @@ namespace Core.Gameplay
                     }
                 }
                 
-                _nextBallsData.Add(new BallDesc(freeIndex, points, hat));
+                _nextBallsDescs.Add(new BallDesc(freeIndex, points, hat));
             }
         }
 
@@ -226,18 +231,18 @@ namespace Core.Gameplay
         public List<BallDesc> AddBalls(int amount, BallWeight[] availableValues, string[] availableHats)
         {
             foreach (var ball in _balls)
-                _nextBallsData.RemoveAll(i => i.GridPosition == ball.IntGridPosition);
+                _nextBallsDescs.RemoveAll(i => i.GridPosition == ball.IntGridPosition);
 
-            if (_nextBallsData.Count < amount)
+            if (_nextBallsDescs.Count < amount)
                 GenerateNextBall(amount, availableValues, availableHats);
             
             var newBallsData = new List<BallDesc>();
 
-            while (_nextBallsData.Count > 0 && newBallsData.Count < amount)
+            while (_nextBallsDescs.Count > 0 && newBallsData.Count < amount)
             {
-                var ballData = _nextBallsData[0];
+                var ballData = _nextBallsDescs[0];
                 newBallsData.Add(new BallDesc(ballData.GridPosition, ballData.Points, ballData.HatName));
-                _nextBallsData.RemoveAt(0);
+                _nextBallsDescs.RemoveAt(0);
             }
           
             foreach (var ballData in newBallsData)
@@ -404,7 +409,7 @@ namespace Core.Gameplay
             var ballsToRemove = new List<Ball>(_balls);
             DestroyBalls(ballsToRemove, true);
             
-            _nextBallsData.Clear();
+            _nextBallsDescs.Clear();
         }
 
         public void Init()
@@ -414,8 +419,8 @@ namespace Core.Gameplay
 
         public void SetNextBalls(IEnumerable<BallDesc> nextBallsInfos)
         {
-            _nextBallsData.Clear();
-            _nextBallsData.AddRange(nextBallsInfos);
+            _nextBallsDescs.Clear();
+            _nextBallsDescs.AddRange(nextBallsInfos);
         }
 
         public bool HasMergeSteps(int[] availableValues)
