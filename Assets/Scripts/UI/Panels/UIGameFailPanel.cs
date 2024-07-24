@@ -21,7 +21,8 @@ namespace Core
         [SerializeField] private Button _nextBtn;
         [SerializeField] private UIBubbleDialog _kingDialog;
         [SerializeField] private GuidEx[] _kingDialogKeys;
-        
+        [SerializeField] private GuidEx[] _kingDialogKeysIfScoreIsZero;
+
         [SerializeField] private UICalculatingScoreLabel _score;
         [SerializeField] private UICalculatingScoreLabel _collapsedLinesCount;
         [SerializeField] private UICalculatingScoreLabel _mergedBallsCount;
@@ -72,9 +73,10 @@ namespace Core
                 await AsyncExtensions.WaitForSecondsAsync(2.5f, inputTokenSource.Token, Application.exitCancellationToken);
                 
                 // Show score
+                var score = _data.GameProcessor.SessionProcessor.GetScore();
                 var saveController = ApplicationController.Instance.SaveController;
                 await _score.Show(
-                    _data.GameProcessor.SessionProcessor.GetScore(),
+                    score,
                     saveController.SaveProgress.BestSessionScore,
                     inputTokenSource.Token);
                 
@@ -94,6 +96,9 @@ namespace Core
 
                 // Show a motivating phrase
                 var kingDialogKey = _kingDialogKeys[Random.Range(0, _kingDialogKeys.Length)];
+                if(score <= 0)
+                    kingDialogKey = _kingDialogKeysIfScoreIsZero[Random.Range(0, _kingDialogKeysIfScoreIsZero.Length)];
+                
                 await _kingDialog.ShowTextAsync(kingDialogKey, false, inputTokenSource.Token);
                 // Wait for user reads motivational phrase
                 await AsyncExtensions.WaitForSecondsAsync(1.5f, inputTokenSource.Token, Application.exitCancellationToken);

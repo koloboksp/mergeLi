@@ -264,30 +264,11 @@ MonoBehaviour:
     m47: 3650898356
     m8B: 2502276445
     mCF: 3351234408
-  _animationSteps:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  _kingDialogKeysIfScoreIsZero:
+  - m03: 16916498
+    m47: 3879487599
+    m8B: 3065043673
+    mCF: 3248489353
   _score: {fileID: 5398225201333862073}
   _collapsedLinesCount: {fileID: 5554730142151691962}
   _mergedBallsCount: {fileID: 8915278985762129536}
