@@ -41,6 +41,8 @@ namespace Save
         public IReadOnlyList<SessionBuffProgress> Buffs => _session.Buffs;
 
         public SessionAnalyticsProgress Analytics => _session.Analytics;
+        public int CollapseLinesCount => _session.CollapseLinesCount;
+        public int MergedBallsCount => _session.MergedBallsCount;
 
         public void ChangeProgress(ISessionProgressHolder sessionProgressHolder)
         {
@@ -84,6 +86,9 @@ namespace Save
                 };
                 _session.Buffs.Add(buffProgress);
             }
+
+            _session.MergedBallsCount = sessionProgressHolder.GetMergedBallsCount();
+            _session.CollapseLinesCount = sessionProgressHolder.GetCollapseLinesCount();
 
             var commonAnalytics = sessionProgressHolder.GetCommonAnalyticsAnalytics();
             _session.Analytics = new SessionAnalyticsProgress();

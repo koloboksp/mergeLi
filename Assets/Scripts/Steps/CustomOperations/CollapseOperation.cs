@@ -18,7 +18,8 @@ namespace Core.Steps.CustomOperations
         private readonly IField _field;
         private readonly IPointsCalculator _pointsCalculator;
         private readonly CollapsePointsEffect _collapsePointsEffectPrefab;
-
+        private readonly ISessionStatisticsHolder _statisticsHolder;
+        
         private readonly List<(Ball ball, float distance)> _ballsToRemove = new();
         private readonly List<List<BallDesc>> _collapseLines = new();
         private int _pointsAdded;
@@ -27,24 +28,28 @@ namespace Core.Steps.CustomOperations
             Vector3Int position, 
             CollapsePointsEffect collapsePointsEffectPrefab,
             IField field, 
-            IPointsCalculator pointsCalculator)
+            IPointsCalculator pointsCalculator,
+            ISessionStatisticsHolder statisticsHolder)
         {
             _positionSource = PositionSource.Fixed;
             _position = position;
             _field = field;
             _pointsCalculator = pointsCalculator;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
+            _statisticsHolder = statisticsHolder;
         }
 
         public CollapseOperation(
             CollapsePointsEffect collapsePointsEffectPrefab,
             IField field, 
-            IPointsCalculator pointsCalculator)
+            IPointsCalculator pointsCalculator,
+            ISessionStatisticsHolder statisticsHolder)
         {
             _positionSource = PositionSource.FromData;
             _field = field;
             _pointsCalculator = pointsCalculator;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
+            _statisticsHolder = statisticsHolder;
         }
     
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
@@ -101,7 +106,8 @@ namespace Core.Steps.CustomOperations
                 pointsGroups.Add((collapseLine, lineCenterPosition));
             }
             _pointsAdded = sumPoints;
-
+            _statisticsHolder.ChangeCollapseLinesCount(_collapseLines.Count);
+            
             if (pointsGroups.Count > 0 && _pointsAdded > 0)
             {
                 var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
@@ -130,7 +136,7 @@ namespace Core.Steps.CustomOperations
         
         public override Operation GetInverseOperation()
         {
-            return new UncollapseOperation(_collapseLines, _pointsAdded, _field);
+            return new UncollapseOperation(_collapseLines, _pointsAdded, _field, _statisticsHolder);
         }
 
         public enum PositionSource

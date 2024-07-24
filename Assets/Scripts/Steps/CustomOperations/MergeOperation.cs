@@ -11,15 +11,15 @@ namespace Core.Steps.CustomOperations
     {
         private readonly Vector3Int _position;
         private readonly IField _field;
+        private readonly ISessionStatisticsHolder _statisticsHolder;
 
-        //private int _pointsBeforeMerge;
-        //private int _mergeablesCount;
-        private readonly List<BallDesc> _mergedBalls = new List<BallDesc>();
+        private readonly List<BallDesc> _mergedBalls = new();
         
-        public MergeOperation(Vector3Int position, IField field)
+        public MergeOperation(Vector3Int position, IField field, ISessionStatisticsHolder statisticsHolder)
         {
             _position = position;
             _field = field;
+            _statisticsHolder = statisticsHolder;
         }
     
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
@@ -37,13 +37,14 @@ namespace Core.Steps.CustomOperations
             });
             
             await targetMergeable.MergeAsync(otherMergeables, cancellationToken);
-
+            _statisticsHolder.ChangeMergeCount(1);
+            
             return null;
         }
         
         public override Operation GetInverseOperation()
         {
-            return new UnmergeOperation(_mergedBalls, _field);
+            return new UnmergeOperation(_mergedBalls, _field, _statisticsHolder);
         }
     }
     

@@ -12,7 +12,9 @@ namespace Save
         public List<SessionCastleProgress> CompletedCastles = new();
         public List<SessionBuffProgress> Buffs = new();
         public SessionAnalyticsProgress Analytics;
-        
+        public int CollapseLinesCount;
+        public int MergedBallsCount;
+
         public bool IsValid()
         {
             if (ActiveCastle == null || !ActiveCastle.IsValid)

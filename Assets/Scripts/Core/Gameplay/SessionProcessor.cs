@@ -14,7 +14,8 @@ using Random = UnityEngine.Random;
 
 namespace Core.Gameplay
 {
-    public class SessionProcessor : MonoBehaviour, 
+    public class SessionProcessor : MonoBehaviour,
+        ISessionStatisticsHolder,
         ISessionProgressHolder
     {
         public const string BEST_SESSION_SCORE_LEADERBOARD = "CgkIlqCktsMPEAIQEg";
@@ -43,10 +44,13 @@ namespace Core.Gameplay
         private CancellationTokenSource _restartTokenSource;
         private CancellationTokenSource _loseTokenSource;
         private readonly List<CompletedCastleDesc> _completedCastles = new();
-    
+        private int _collapsedLinesCount;
+        private int _mergedBallsCount;
+
         private GameProcessor _gameProcessor;
         private DependencyHolder<UIPanelController> _panelController;
-   
+        private DependencyHolder<SaveController> _saveController;
+        
         private bool _userStepFinished = false;
         private bool _notAllBallsGenerated = false;
     
@@ -125,10 +129,15 @@ namespace Core.Gameplay
                                 Debug.LogException(e);
                             }
                         
-                            ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(GetScore());
-                            ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
+                            _saveController.Value.SaveProgress.SetBestSessionResults(
+                                GetScore(),
+                                GetCollapseLinesCount(),
+                                GetMergedBallsCount());
+                            _saveController.Value.SaveLastSessionProgress.Clear();
                             _completedCastles.Clear();
-
+                            _collapsedLinesCount = 0;
+                            _mergedBallsCount = 0;
+                            
                             foreach (var buff in _gameProcessor.Buffs)
                                 buff.SetRestCooldown(0);
                         
@@ -185,10 +194,15 @@ namespace Core.Gameplay
                             _gameProcessor.MusicPlayer.PlayNext();
                             _gameProcessor.SoundsPlayer.StopPlayExclusive();
                         
-                            ApplicationController.Instance.SaveController.SaveProgress.SetBestSessionScore(GetScore());
-                            ApplicationController.Instance.SaveController.SaveLastSessionProgress.Clear();
+                            _saveController.Value.SaveProgress.SetBestSessionResults(
+                                GetScore(),
+                                GetCollapseLinesCount(),
+                                GetMergedBallsCount());
+                            _saveController.Value.SaveLastSessionProgress.Clear();
                             _completedCastles.Clear();
-
+                            _collapsedLinesCount = 0;
+                            _mergedBallsCount = 0;
+                            
                             foreach (var buff in _gameProcessor.Buffs)
                                 buff.SetRestCooldown(0);
                         
@@ -244,7 +258,9 @@ namespace Core.Gameplay
                 _completedCastles.AddRange(lastSessionProgress.CompletedCastles.Select(i => new CompletedCastleDesc(i.Id, i.Points)));
                 _gameProcessor.CastleSelector.SelectActiveCastle(lastSessionProgress.ActiveCastle.Id);
                 _gameProcessor.CastleSelector.ActiveCastle.SetPoints(lastSessionProgress.ActiveCastle.Points, true);
-        
+                _collapsedLinesCount = lastSessionProgress.CollapseLinesCount;
+                _mergedBallsCount = lastSessionProgress.MergedBallsCount;
+
                 var ballsProgressData = lastSessionProgress.Field.Balls.Select(i => new BallDesc(i.GridPosition, i.Points, i.HatHame));
                 _gameProcessor.Field.AddBalls(ballsProgressData);
                 _gameProcessor.Field.GenerateNextBall(
@@ -447,6 +463,16 @@ namespace Core.Gameplay
             return _gameProcessor.CommonAnalytics;
         }
 
+        public int GetMergedBallsCount()
+        {
+            return _mergedBallsCount;
+        }
+
+        public int GetCollapseLinesCount()
+        {
+            return _collapsedLinesCount;
+        }
+
         private void CheckLowEmptySpace(bool noAvailableSteps)
         {
             var emptyCellsCount = _gameProcessor.Field.CalculateEmptySpacesCount();
@@ -514,6 +540,16 @@ namespace Core.Gameplay
             return score;
         }
     
+        public void ChangeMergeCount(int delta)
+        {
+            _mergedBallsCount += delta;
+        }
+
+        public void ChangeCollapseLinesCount(int delta)
+        {
+            _collapsedLinesCount += delta;
+        }
+        
         public class CompletedCastleDesc : ICastle
         {
             public string Id { get; }
@@ -531,7 +567,5 @@ namespace Core.Gameplay
                 return Points;
             }
         }
-
-    
     }
 }

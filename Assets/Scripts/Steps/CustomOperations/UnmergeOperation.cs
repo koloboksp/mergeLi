@@ -11,11 +11,13 @@ namespace Core.Steps.CustomOperations
     {
         private readonly List<BallDesc> _sourceBalls;
         private readonly IField _field;
+        private readonly ISessionStatisticsHolder _statisticsHolder;
 
-        public UnmergeOperation(List<BallDesc> sourceBalls, IField field)
+        public UnmergeOperation(List<BallDesc> sourceBalls, IField field, ISessionStatisticsHolder statisticsHolder)
         {
             _sourceBalls = new List<BallDesc>(sourceBalls);
             _field = field;
+            _statisticsHolder = statisticsHolder;
         }
     
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
@@ -31,9 +33,10 @@ namespace Core.Steps.CustomOperations
                     var sourceBall = _sourceBalls[ballI];
                     _field.CreateBall(sourceBall.GridPosition, sourceBall.Points, sourceBall.HatName);
                 }
+                
+                _statisticsHolder.ChangeMergeCount(-1);
             }
             
-
             return null;
         }
     }

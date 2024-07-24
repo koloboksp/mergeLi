@@ -6,6 +6,8 @@ using Core.Goals;
 
 namespace Save
 {
+    
+    
     public interface ISessionProgressHolder
     {
         IReadOnlyList<ICastle> GetCompletedCastles();
@@ -16,5 +18,7 @@ namespace Save
         string GetFirstUncompletedCastleName();
 
         ICommonAnalytics GetCommonAnalyticsAnalytics();
+        int GetMergedBallsCount();
+        int GetCollapseLinesCount();
     }
 }

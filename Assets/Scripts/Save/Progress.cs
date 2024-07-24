@@ -12,5 +12,7 @@ namespace Save
         public List<TutorialProgress> Tutorials = new();
         public List<GiftProgress> Gifts = new();
         public List<HatProgress> Hats = new();
+        public int BestSessionCollapsedLines;
+        public int BestSessionMergedBalls;
     }
 }

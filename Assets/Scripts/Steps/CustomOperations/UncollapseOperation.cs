@@ -12,16 +12,21 @@ namespace Core.Steps.CustomOperations
     public class UncollapseOperation : Operation
     {
         private readonly IField _field;
-        
+        private readonly ISessionStatisticsHolder _statisticsHolder;
+
         private readonly List<List<BallDesc>> _uncollapseBallsLines;
         private readonly int _pointsToRemove;
         
-        public UncollapseOperation(List<List<BallDesc>> uncollapseBallsLines, int pointsToRemove,
-            IField field)
+        public UncollapseOperation(
+            List<List<BallDesc>> uncollapseBallsLines,
+            int pointsToRemove,
+            IField field,
+            ISessionStatisticsHolder statisticsHolder)
         {
             _uncollapseBallsLines = uncollapseBallsLines;
             _pointsToRemove = pointsToRemove;
             _field = field;
+            _statisticsHolder = statisticsHolder;
         }
 
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
@@ -34,6 +39,7 @@ namespace Core.Steps.CustomOperations
                 if (foundBallI < 0)
                     uniqueBalls.Add(uncollapseBall);
             }
+            _statisticsHolder.ChangeCollapseLinesCount(-_uncollapseBallsLines.Count);
             
             foreach (var uniqueBall in uniqueBalls)
                 _field.CreateBall(uniqueBall.GridPosition, uniqueBall.Points, uniqueBall.HatName);

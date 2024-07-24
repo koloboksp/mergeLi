@@ -52,16 +52,30 @@ namespace Save
             _controller.Save(_progress, _fileName);
         }
         
-        public void SetBestSessionScore(int score)
+        public void SetBestSessionResults(int score, int collapsedLinesCount, int mergedBallsCount)
         {
             if (_progress.BestSessionScore < score)
             {
                 _progress.BestSessionScore = score;
                 _controller.Save(_progress, _fileName);
             }
+            
+            if (_progress.BestSessionCollapsedLines < collapsedLinesCount)
+            {
+                _progress.BestSessionCollapsedLines = collapsedLinesCount;
+                _controller.Save(_progress, _fileName);
+            }
+            
+            if (_progress.BestSessionMergedBalls < mergedBallsCount)
+            {
+                _progress.BestSessionMergedBalls = mergedBallsCount;
+                _controller.Save(_progress, _fileName);
+            }
         }
 
         public int BestSessionScore => _progress.BestSessionScore;
+        public int BestSessionCollapsedLines => _progress.BestSessionCollapsedLines;
+        public int BestSessionMergedBalls => _progress.BestSessionMergedBalls;
 
         public bool IsTutorialComplete(string tutorialId)
         {

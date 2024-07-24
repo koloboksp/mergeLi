@@ -65,6 +65,61 @@ MonoBehaviour:
   - _points: 32
     _weight: 1
   _maxActiveHats: 5
+--- !u!1 &1713764976320749448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2320033156686440632}
+  - component: {fileID: 8707235075959711334}
+  m_Layer: 0
+  m_Name: fullField
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2320033156686440632
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713764976320749448}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7999040319894609632}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8707235075959711334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713764976320749448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _minimalBallsInLine: 5
+  _generatedBallsCountAfterMerge: 2
+  _generatedBallsCountAfterMove: 3
+  _generatedBallsCountOnStart: 76
+  _maxBallPoints: 512
+  _generatedBallWeightsRange:
+  - _points: 1
+    _weight: 1
+  - _points: 2
+    _weight: 1
+  _maxActiveHats: 5
 --- !u!1 &1806610442909832655
 GameObject:
   m_ObjectHideFlags: 0
@@ -174,6 +229,7 @@ Transform:
   - {fileID: 5108105568261394553}
   - {fileID: 5383111507397010594}
   - {fileID: 1938642246482220130}
+  - {fileID: 2320033156686440632}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3485751501357025135

@@ -297,9 +297,8 @@ namespace Core.Gameplay
                 new SelectOperation(from, false, _field)
                     .SubscribeCompleted(OnDeselectBall),
                 new MoveOperation(from, to, _field),
-                new MergeOperation(to, _field),
-                new CollapseOperation(to, _collapsePointsEffectPrefab,
-                    _field, _pointsCalculator),
+                new MergeOperation(to, _field, _sessionProcessor),
+                new CollapseOperation(to, _collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor),
                 new CheckIfGenerationIsNecessary(
                     null,
                     new List<Operation>()
@@ -310,8 +309,7 @@ namespace Core.Gameplay
                             ActiveGameRulesSettings.GeneratedBallWeightsRange,
                             _scene.ActiveHats,
                             _field),
-                        new CollapseOperation(_collapsePointsEffectPrefab,
-                            _field, _pointsCalculator)
+                        new CollapseOperation(_collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor)
                     })));
         }
 
@@ -323,8 +321,7 @@ namespace Core.Gameplay
                 new SelectOperation(from, false, _field)
                     .SubscribeCompleted(OnDeselectBall),
                 new MoveOperation(from, to, _field),
-                new CollapseOperation(to, _collapsePointsEffectPrefab,
-                    _field, _pointsCalculator),
+                new CollapseOperation(to, _collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor),
                 new CheckIfGenerationIsNecessary(
                     null,
                     new List<Operation>()
@@ -335,8 +332,7 @@ namespace Core.Gameplay
                             ActiveGameRulesSettings.GeneratedBallWeightsRange,
                             _scene.ActiveHats,
                             _field),
-                        new CollapseOperation(_collapsePointsEffectPrefab, _field,
-                            _pointsCalculator)
+                        new CollapseOperation(_collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor)
                     })));
         }
 
@@ -452,7 +448,7 @@ namespace Core.Gameplay
                     new SpendOperation(cost, this, true),
                     new GradeOperation(ballsIndexes, gradeLevel, _field),
                     new ConfirmBuffUseOperation(buff),
-                    new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _field, _pointsCalculator)));
+                    new CollapseOperation(ballsIndexes[0], _collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor)));
         }
     
         public void ClearUndoSteps()

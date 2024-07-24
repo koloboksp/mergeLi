@@ -1069,6 +1069,7 @@ MonoBehaviour:
   - {fileID: 23029532}
   - {fileID: 1650489694}
   - {fileID: 1590278462}
+  - {fileID: 1364713768}
   _uiScreensRoot: {fileID: 1881252459}
   _uiScreensCanvas: {fileID: 1881252458}
   _purchasesLibrary: {fileID: 5162631167047138032, guid: b59d464a4a8a41f47b7306921614d364,
@@ -3038,6 +3039,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1347834841}
   m_CullTransparentMesh: 1
+--- !u!114 &1364713768 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8707235075959711334, guid: 6906b57baa9d2e349adba73cedd01cb1,
+    type: 3}
+  m_PrefabInstance: {fileID: 7287342703215847739}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1367844226 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4981010451653532204, guid: 6906b57baa9d2e349adba73cedd01cb1,
