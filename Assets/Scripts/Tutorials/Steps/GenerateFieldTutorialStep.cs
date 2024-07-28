@@ -7,8 +7,6 @@ namespace Core.Tutorials
 {
     public class GenerateFieldTutorialStep : TutorialStep
     {
-        [SerializeField] private BallDesc[] _balls;
-        [SerializeField] private BallDesc[] _nextBalls;
         [SerializeField] private Field _field;
         [SerializeField] private BallsMaskPointsHats _ballsMask;
         [SerializeField] private BallsMaskPointsHats _nextBallsMask;

@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Gameplay;
 using Core.Utils;
+using UI.Common;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 namespace Core.Effects
 {
@@ -19,6 +16,7 @@ namespace Core.Effects
         [SerializeField] private float _duration = 0.5f;
         [SerializeField] private CollapsePointsEffectText _pointsText;
         [SerializeField] private AudioClip _gotClip;
+        [SerializeField] private CameraShakeSource _cameraShakeSource;
 
         private DependencyHolder<SoundsPlayer> _soundsPlayer;
         
@@ -81,7 +79,7 @@ namespace Core.Effects
                 receiver.ReceiveStart(points.Sum());
             
             _pointsEffect.Run(starsCount, destinationPosition);
-            
+            _cameraShakeSource.Activate();
             await AsyncExtensions.WaitForSecondsAsync(_duration * 0.5f, cancellationToken);
 
             _pointsText.gameObject.SetActive(true);
