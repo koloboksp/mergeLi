@@ -43,7 +43,7 @@ namespace Core
             var text = ApplicationController.Instance.LocalizationController.GetText(textKey);
             _speakEffect.Play(text);
             await _dialogText.ShowAsync(text, Application.exitCancellationToken, cancellationToken);
-            await AsyncExtensions.WaitForSecondsAsync(1, cancellationToken);
+//await AsyncExtensions.WaitForSecondsAsync(1, cancellationToken);
 
             if (_tapBtn != null)
             {

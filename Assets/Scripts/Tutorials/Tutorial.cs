@@ -35,7 +35,7 @@ namespace Core.Tutorials
             for (var stepI = startTutorialIndex; stepI < steps.Count; stepI++)
             {
                 var tutorialStep = steps[stepI];
-                if (tutorialStep.gameObject.activeSelf)
+                if (tutorialStep.gameObject.activeInHierarchy)
                     await tutorialStep.Execute(cancellationToken);
             }
         }
