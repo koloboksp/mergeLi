@@ -10,7 +10,11 @@ namespace UI.Common
 
         
         [SerializeField] private List<RectTransform> _targets = new List<RectTransform>();
-        
+        [SerializeField] private AnimationCurve _xAxis;
+        [SerializeField] private AnimationCurve _yAxis;
+        [SerializeField] private float _speedScale = 4.0f;
+        [SerializeField] private float _forceScale = 10.0f;
+
         readonly List<SourceInfo> _sources = new List<SourceInfo>();
 
         private void Awake()
@@ -72,14 +76,17 @@ namespace UI.Common
 
             if (maxAmount > 0.0f)
             {
-                var rotationAmount = Random.insideUnitSphere * maxAmount;
-                rotationAmount.z = 0.0f;
-                rotationAmount *= 10.0f;
+                var x = _xAxis.Evaluate(1 - Mathf.Clamp01(maxAmount));
+                var y = _yAxis.Evaluate(1 - Mathf.Clamp01(maxAmount));
+
+               // var rotationAmount = Random.insideUnitSphere * maxAmount;
+               // rotationAmount.z = 0.0f;
+               // rotationAmount *= 10.0f;
                 for (var targetI = 0; targetI < _targets.Count; targetI++)
                 {
                     var target = _targets[targetI];
                     
-                    target.anchoredPosition =  rotationAmount;
+                    target.anchoredPosition = new Vector2(x, y) * _forceScale;
                 }
             }
         }

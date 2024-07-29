@@ -68,9 +68,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3a53bec996a9a947a7e23e1487f3714, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _amount: 0.4
-  _duration: 1.5
-  _attenuation: 0.4
+  _amount: 1
+  _duration: 1
+  _attenuation: 2
 --- !u!1001 &2307439920533055943
 PrefabInstance:
   m_ObjectHideFlags: 0
