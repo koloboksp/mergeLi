@@ -143,8 +143,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: secondBallMerged
-  _from: {x: 5, y: 3, z: 0}
-  _to: {x: 8, y: 5, z: 0}
+  _from: {x: 6, y: 3, z: 0}
+  _to: {x: 2, y: 2, z: 0}
 --- !u!1 &88413406319572482
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +162,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1836768595077740263
 Transform:
   m_ObjectHideFlags: 0
@@ -927,7 +927,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _gridPosition: {x: 8, y: 5, z: 0}
+  _gridPosition: {x: 2, y: 2, z: 0}
 --- !u!114 &238986434535154789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1078,7 +1078,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _ballPosition: {x: 0, y: 2, z: 0}
+  _ballPosition: {x: 8, y: 7, z: 0}
 --- !u!1 &629217467696696338
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,7 +1170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1681822030548855819
 Transform:
   m_ObjectHideFlags: 0
@@ -1395,7 +1395,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7256798429445350967
 Transform:
   m_ObjectHideFlags: 0
@@ -1425,7 +1425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _wait: 2
+  _wait: 0.5
 --- !u!1 &782961822369962892
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,7 +1621,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &851110396122860706
 Transform:
   m_ObjectHideFlags: 0
@@ -1651,7 +1651,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _wait: 2
+  _wait: 0.5
 --- !u!1 &948821842030748733
 GameObject:
   m_ObjectHideFlags: 0
@@ -2139,6 +2139,67 @@ MonoBehaviour:
     Points: 32
     HatName: 
   _field: {fileID: 0}
+  _ballsMask:
+    Balls:
+    - GridPosition: {x: 1, y: 8, z: 0}
+      Points: 8
+      HatName: 
+    - GridPosition: {x: 3, y: 8, z: 0}
+      Points: 8
+      HatName: 
+    - GridPosition: {x: 4, y: 8, z: 0}
+      Points: 8
+      HatName: 
+    - GridPosition: {x: 5, y: 8, z: 0}
+      Points: 8
+      HatName: 
+    - GridPosition: {x: 5, y: 5, z: 0}
+      Points: 4
+      HatName: 
+    - GridPosition: {x: 4, y: 4, z: 0}
+      Points: 2
+      HatName: 
+    - GridPosition: {x: 3, y: 3, z: 0}
+      Points: 4
+      HatName: 
+    - GridPosition: {x: 2, y: 2, z: 0}
+      Points: 2
+      HatName: 
+    - GridPosition: {x: 6, y: 6, z: 0}
+      Points: 4
+      HatName: 
+    - GridPosition: {x: 7, y: 8, z: 0}
+      Points: 16
+      HatName: 
+    - GridPosition: {x: 8, y: 7, z: 0}
+      Points: 2
+      HatName: 
+    - GridPosition: {x: 6, y: 3, z: 0}
+      Points: 2
+      HatName: 
+    - GridPosition: {x: 8, y: 6, z: 0}
+      Points: 1
+      HatName: 
+    - GridPosition: {x: 8, y: 5, z: 0}
+      Points: 1
+      HatName: 
+    - GridPosition: {x: 8, y: 4, z: 0}
+      Points: 1
+      HatName: 
+    - GridPosition: {x: 8, y: 3, z: 0}
+      Points: 1
+      HatName: 
+    - GridPosition: {x: 0, y: 7, z: 0}
+      Points: 16
+      HatName: 
+    - GridPosition: {x: 0, y: 8, z: 0}
+      Points: 1
+      HatName: 
+  _nextBallsMask:
+    Balls:
+    - GridPosition: {x: 8, y: 8, z: 0}
+      Points: 8
+      HatName: 
 --- !u!1 &1138619604671598709
 GameObject:
   m_ObjectHideFlags: 0
@@ -2981,7 +3042,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _gridPosition: {x: 8, y: 5, z: 0}
+  _gridPosition: {x: 2, y: 2, z: 0}
 --- !u!114 &121555581520368422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2994,7 +3055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9258f7b257e841e7ace79b57a5e57fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fingerOrientation: 0
+  _fingerOrientation: 1
   _style: 0
 --- !u!114 &1912674113417001173
 MonoBehaviour:
@@ -3394,7 +3455,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4708999650331965689
 Transform:
   m_ObjectHideFlags: 0
@@ -3424,7 +3485,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _wait: 2
+  _wait: 0.5
 --- !u!1 &2037410660711040216
 GameObject:
   m_ObjectHideFlags: 0
@@ -5360,6 +5421,10 @@ MonoBehaviour:
     m47: 4251666846
     m8B: 2890527903
     mCF: 2155153696
+  - m03: 1285602199
+    m47: 1601257540
+    m8B: 2504215685
+    mCF: 2782659546
   _position: 0
   _tapRequired: 1
 --- !u!1 &3474434689793584349
@@ -5726,7 +5791,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6368579446861352234
 Transform:
   m_ObjectHideFlags: 0
@@ -6047,8 +6112,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: thirdBallMerged
-  _from: {x: 0, y: 2, z: 0}
-  _to: {x: 8, y: 3, z: 0}
+  _from: {x: 8, y: 7, z: 0}
+  _to: {x: 4, y: 4, z: 0}
 --- !u!1 &3805518982760987108
 GameObject:
   m_ObjectHideFlags: 0
@@ -6251,6 +6316,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textKeysT:
+  - m03: 1104012707
+    m47: 2560115587
+    m8B: 2926171037
+    mCF: 3780919947
   - m03: 1611318962
     m47: 397037223
     m8B: 2375851651
@@ -6499,7 +6568,6 @@ Transform:
   - {fileID: 5913469158906466185}
   - {fileID: 4079740019685753793}
   - {fileID: 4149957814144111494}
-  - {fileID: 9153586482064794296}
   - {fileID: 613860507279329831}
   - {fileID: 3053925730113655204}
   - {fileID: 5526871980745996160}
@@ -6531,7 +6599,6 @@ MonoBehaviour:
   _stepsAfterSelectNextCastle:
   - {fileID: 2900673439312220656}
   - {fileID: 606965055542604895}
-  - {fileID: 796129621514659062}
   - {fileID: 796129621514659062}
   - {fileID: 5473138154065280149}
   - {fileID: 2457923361975228500}
@@ -7179,7 +7246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _gridPosition: {x: 5, y: 3, z: 0}
+  _gridPosition: {x: 6, y: 3, z: 0}
 --- !u!114 &7834591942698300092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7514,7 +7581,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4537760690366912297
 Transform:
   m_ObjectHideFlags: 0
@@ -9453,7 +9520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _gridPosition: {x: 5, y: 3, z: 0}
+  _gridPosition: {x: 6, y: 3, z: 0}
 --- !u!114 &7827183306830730024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9466,7 +9533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9258f7b257e841e7ace79b57a5e57fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fingerOrientation: 0
+  _fingerOrientation: 1
   _style: 0
 --- !u!114 &2029383523794481099
 MonoBehaviour:
@@ -9679,7 +9746,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7253935738575997877
 Transform:
   m_ObjectHideFlags: 0
@@ -9709,7 +9776,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _wait: 2
+  _wait: 0.5
 --- !u!1 &5978122678910317492
 GameObject:
   m_ObjectHideFlags: 0
@@ -9915,7 +9982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6034655784330300275
 Transform:
   m_ObjectHideFlags: 0
@@ -10571,8 +10638,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _fromGridPosition: {x: 5, y: 3, z: 0}
-  _toGridPosition: {x: 8, y: 5, z: 0}
+  _fromGridPosition: {x: 6, y: 3, z: 0}
+  _toGridPosition: {x: 2, y: 2, z: 0}
   _speed: 16
 --- !u!114 &7118694925797216755
 MonoBehaviour:
@@ -11345,8 +11412,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _fromGridPosition: {x: 0, y: 2, z: 0}
-  _toGridPosition: {x: 8, y: 3, z: 0}
+  _fromGridPosition: {x: 8, y: 7, z: 0}
+  _toGridPosition: {x: 4, y: 4, z: 0}
   _speed: 16
 --- !u!114 &8801035443823694414
 MonoBehaviour:
@@ -11486,6 +11553,7 @@ GameObject:
   - component: {fileID: 5804568166813523469}
   - component: {fileID: 3384610339000820322}
   - component: {fileID: 808496278103474872}
+  - component: {fileID: 9198660224278137984}
   m_Layer: 0
   m_Name: focusOnBuffs
   m_TagString: Untagged
@@ -11536,6 +11604,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _smooth: 1
+--- !u!114 &9198660224278137984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7107481280512485100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc97df0fe8a425198fe6bdab0efde34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _textKeysT:
+  - m03: 2064243710
+    m47: 4236526029
+    m8B: 2437695002
+    mCF: 2883193838
+  _position: 1
+  _tapRequired: 1
 --- !u!1 &7141002832376912585
 GameObject:
   m_ObjectHideFlags: 0
@@ -12192,7 +12279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _gridPosition: {x: 0, y: 2, z: 0}
+  _gridPosition: {x: 8, y: 7, z: 0}
 --- !u!114 &7035018145995065986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12336,7 +12423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6203037111765852243
 Transform:
   m_ObjectHideFlags: 0
@@ -12380,14 +12467,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textKeysT:
-  - m03: 3310524119
-    m47: 664227095
-    m8B: 2151993301
-    mCF: 3497849821
-  - m03: 2713157021
-    m47: 3132244604
-    m8B: 2259375129
-    mCF: 1838924617
   - m03: 2572198362
     m47: 729894785
     m8B: 3115015704
@@ -12475,53 +12554,6 @@ MonoBehaviour:
     mCF: 1338774825
   _position: 0
   _tapRequired: 0
---- !u!1 &7562464223374183711
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9153586482064794296}
-  - component: {fileID: 8509364018819358177}
-  m_Layer: 0
-  m_Name: wait
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9153586482064794296
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7562464223374183711}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 252723805375165013}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8509364018819358177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7562464223374183711}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 609016f53ca54dfdab9c8cf790fc0e2f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _tutorial: {fileID: 7747690254940513010}
-  _analyticsEventName: 
-  _wait: 1
 --- !u!1 &7581738751654295380
 GameObject:
   m_ObjectHideFlags: 0
@@ -13213,7 +13245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _ballPosition: {x: 5, y: 3, z: 0}
+  _ballPosition: {x: 6, y: 3, z: 0}
 --- !u!1 &7898337284828267385
 GameObject:
   m_ObjectHideFlags: 0
@@ -13382,8 +13414,9 @@ GameObject:
   - component: {fileID: 5526871980745996160}
   - component: {fileID: 6030790847913058371}
   - component: {fileID: 2812811913195953744}
-  - component: {fileID: 7262536048082926339}
   - component: {fileID: 4258658437240999035}
+  - component: {fileID: 6144688057502671073}
+  - component: {fileID: 1261895783918100750}
   m_Layer: 0
   m_Name: focusOnCastle
   m_TagString: Untagged
@@ -13434,18 +13467,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _smooth: 1
---- !u!114 &7262536048082926339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8023994415235413481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d6c659217e94f9ab2c373e0f0a0dbd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4258658437240999035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13456,6 +13477,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f5faaee283c48dfac91cbcfbe385d8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6144688057502671073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8023994415235413481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9258f7b257e841e7ace79b57a5e57fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fingerOrientation: 0
+  _style: 0
+--- !u!114 &1261895783918100750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8023994415235413481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96288f2548364673af93bfd5b8e9ccdd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8134436099913695210
@@ -13593,7 +13640,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3751996826365696057
 Transform:
   m_ObjectHideFlags: 0
@@ -14179,7 +14226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _gridPosition: {x: 0, y: 2, z: 0}
+  _gridPosition: {x: 8, y: 7, z: 0}
 --- !u!114 &8620901108337542741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15479,7 +15526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 7747690254940513010}
   _analyticsEventName: 
-  _gridPosition: {x: 8, y: 3, z: 0}
+  _gridPosition: {x: 4, y: 4, z: 0}
 --- !u!114 &5227034927533961396
 MonoBehaviour:
   m_ObjectHideFlags: 0
