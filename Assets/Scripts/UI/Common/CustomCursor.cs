@@ -16,7 +16,7 @@ namespace Core
         
         private void OnEnable()
         {
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
             gameObject.SetActive(false);
 #else
             Cursor.visible = false;
@@ -25,7 +25,7 @@ namespace Core
 
         private void OnDisable()
         {
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
 #else
             Cursor.visible = true;
 #endif
