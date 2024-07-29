@@ -70,6 +70,19 @@ namespace Save
             }
         }
 
+        public bool VibrationEnable
+        {
+            get => _settings.VibrationEnable;
+            set
+            {
+                if (value != _settings.VibrationEnable)
+                {
+                    _settings.VibrationEnable = value;
+                    _controller.Save(_settings, _fileName);
+                }
+            }
+        }
+        
         public SystemLanguage ActiveLanguage
         {
             get => (SystemLanguage)_settings.ActiveLanguage;

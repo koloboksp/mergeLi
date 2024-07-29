@@ -5,7 +5,6 @@ namespace Core.Gameplay
 {
     public interface IBall : IFieldMovable, IFieldSelectable, IFieldMergeable
     {
-        public Vector3Int IntGridPosition { get; }
         public int Points { get; }
         public string HatName { get; }
     }

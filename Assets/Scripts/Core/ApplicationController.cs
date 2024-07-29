@@ -35,6 +35,7 @@ namespace Core
         private SoundController _soundController;
         private SaveController _saveController;
         private IAnalyticsController _analyticsController;
+        private IVibrationController _vibrationController;
         private TaskCompletionSource<bool> _initialization;
         private bool _initializated = false;
         private Atom.Version _version;
@@ -49,6 +50,7 @@ namespace Core
         public ISocialService ISocialService => _socialService;
         public SoundController SoundController => _soundController;
         public IAnalyticsController AnalyticsController => _analyticsController;
+        public IVibrationController VibrationController => _vibrationController;
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static async void Start()
@@ -87,6 +89,9 @@ namespace Core
             _instance._adsController = new CASWrapper();
             await _instance._adsController.InitializeAsync();
 
+            _instance._vibrationController = new VibrationController(_instance._saveController.SaveSettings);
+            await _instance._vibrationController.InitializeAsync();
+
 #if UNITY_ANDROID
             _instance._socialService = new Social.GooglePlayGames();
 #else
@@ -97,7 +102,8 @@ namespace Core
             
             _instance._uiPanelController = new UIPanelController();
             DependenciesController.Instance.Set(_instance._uiPanelController);
-            
+
+           
             _instance._initializated = true;
             _instance._initialization.SetResult(true);
         }
@@ -154,4 +160,6 @@ namespace Core
 #endif
         }
     }
+
+    
 }

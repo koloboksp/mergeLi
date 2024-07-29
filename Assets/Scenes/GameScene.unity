@@ -1061,6 +1061,10 @@ MonoBehaviour:
     type: 3}
   _collapsePointsEffectPrefab: {fileID: -5618361174370767863, guid: 6a50e804299be03449a816f343e09ec9,
     type: 3}
+  _mergeBallsEffectPrefab: {fileID: 8852415325626803418, guid: b9959309b35e5d144bdc9fb5593d58e8,
+    type: 3}
+  _moveBallEndEffectPrefab: {fileID: 8638785045924966022, guid: aeab309f37fc22840b2c522f1b9a7351,
+    type: 3}
   _gameRulesSettings:
   - {fileID: 7287342703215847740}
   - {fileID: 563858732}
@@ -1590,7 +1594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enableTutorial: 1
-  _forceTutorial: 1
+  _forceTutorial: 0
   _failClip: {fileID: 8300000, guid: 666fd8faa1cfd3046b080ff6df5a59a5, type: 3}
 --- !u!1 &623220713
 GameObject:
@@ -5706,7 +5710,7 @@ PrefabInstance:
     - target: {fileID: 5957255816287073239, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
       propertyPath: m_Volume
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7335857329322477467, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}

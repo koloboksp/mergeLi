@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5600580805448456364}
   - component: {fileID: -5618361174370767863}
+  - component: {fileID: 2179575023640919383}
   m_Layer: 5
   m_Name: collapsePointsEffect
   m_TagString: Untagged
@@ -54,6 +55,19 @@ MonoBehaviour:
   _duration: 0.5
   _pointsText: {fileID: 5283603634113744803}
   _gotClip: {fileID: 8300000, guid: 241776ae56a8b2f4ba3853529be0ed91, type: 3}
+--- !u!114 &2179575023640919383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5600580805448456363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de87172007ef404cb44fbb49c88daf1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _vibrationType: 1
 --- !u!1001 &2307439920533055943
 PrefabInstance:
   m_ObjectHideFlags: 0

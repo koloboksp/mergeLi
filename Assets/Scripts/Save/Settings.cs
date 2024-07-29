@@ -12,11 +12,12 @@ namespace Save
         public float SoundVolume = 0.5f;
         public bool SoundEnable = true;
         public float MusicVolume;
-        public bool MusicEnable;
+        public bool MusicEnable = true;
 
         public string ActiveSkin;
         public string[] UserActiveHatsFilter;
 
         public int ActiveRulesSettings;
+        public bool VibrationEnable = true;
     }
 }
