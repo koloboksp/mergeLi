@@ -108,7 +108,7 @@ namespace Core.Steps.CustomOperations
             _pointsAdded = sumPoints;
             _statisticsHolder.ChangeCollapseLinesCount(_collapseLines.Count);
             
-            if (pointsGroups.Count > 0 && _pointsAdded > 0)
+            if (pointsGroups.Count > 0)
             {
                 var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
                 var collapsePointsEffect = Object.Instantiate(

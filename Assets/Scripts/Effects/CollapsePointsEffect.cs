@@ -82,9 +82,12 @@ namespace Core.Effects
             
             await AsyncExtensions.WaitForSecondsAsync(_duration * 0.5f, cancellationToken);
 
-            _pointsText.gameObject.SetActive(true);
-            _pointsText.SetPoint(points);
-            
+            if (points.Sum() > 0)
+            {
+                _pointsText.gameObject.SetActive(true);
+                _pointsText.SetPoint(points);
+            }
+
             foreach (var receiver in receivers)
                 receiver.Receive(points.Sum());
             _soundsPlayer.Value.Play(_gotClip);
