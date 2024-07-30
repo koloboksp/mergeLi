@@ -25,6 +25,12 @@ namespace Core
         [SerializeField] private Sprite _musicDisableIcon;
         [SerializeField] private Slider _musicVolumeSlider;
         
+        [SerializeField] private Button _vibrationEnableBtn;
+        [SerializeField] private Image _vibrationEnableBtnIcon;
+        [SerializeField] private Sprite _vibrationEnableIcon;
+        [SerializeField] private Sprite _vibrationDisableIcon;
+
+        
         [SerializeField] private Button _changeLanguageBtn;
         [SerializeField] private Text _changeLanguageBtnText;
         [SerializeField] private Image _changeLanguageBtnImage;
@@ -41,6 +47,8 @@ namespace Core
             
             _musicEnableBtn.onClick.AddListener(MusicEnableBtn_OnClick);
             _musicVolumeSlider.onValueChanged.AddListener(MusicVolumeSlider_OnValueChanged);
+
+            _vibrationEnableBtn.onClick.AddListener(VibrationEnableBtn_OnClick);
 
             _changeLanguageBtn.onClick.AddListener(ChangeLanguageBtn_OnClick);
         }
@@ -113,6 +121,7 @@ namespace Core
             SetLanguageBtn();
             SetSound();
             SetMusic();
+            UpdateVibrationEnable();
         }
 
         private void SetSound()
@@ -154,10 +163,23 @@ namespace Core
                 : _musicDisableIcon;
         }
         
+        private void UpdateVibrationEnable()
+        {
+            _vibrationEnableBtnIcon.sprite = ApplicationController.Instance.VibrationController.Enable
+                ? _vibrationEnableIcon
+                : _vibrationDisableIcon;
+        }
+        
         private void MusicEnableBtn_OnClick()
         {
             ApplicationController.Instance.SoundController.MusicEnable = !ApplicationController.Instance.SoundController.MusicEnable;
             UpdateMusicEnable();
+        }
+        
+        private void VibrationEnableBtn_OnClick()
+        {
+            ApplicationController.Instance.VibrationController.Enable = !ApplicationController.Instance.VibrationController.Enable;
+            UpdateVibrationEnable();
         }
         
         private void MusicVolumeSlider_OnValueChanged(float value)

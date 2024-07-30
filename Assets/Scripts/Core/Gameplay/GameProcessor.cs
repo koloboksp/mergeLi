@@ -68,7 +68,9 @@ namespace Core.Gameplay
         [SerializeField] private DestroyBallEffect _destroyBallEffectPrefab;
         [SerializeField] private NoPathEffect _noPathEffectPrefab;
         [SerializeField] private CollapsePointsEffect _collapsePointsEffectPrefab;
-    
+        [SerializeField] private MergeBallsEffect _mergeBallsEffectPrefab;
+        [SerializeField] private MoveBallEndEffect _moveBallEndEffectPrefab;
+
         [SerializeField] private GameRulesSettings[] _gameRulesSettings;
         
         [SerializeField] private RectTransform _uiScreensRoot;
@@ -296,8 +298,8 @@ namespace Core.Gameplay
             _stepMachine.AddStep(new Step(StepTag.Merge,
                 new SelectOperation(from, false, _field)
                     .SubscribeCompleted(OnDeselectBall),
-                new MoveOperation(from, to, _field),
-                new MergeOperation(to, _field, _sessionProcessor),
+                new MoveOperation(from, to, _field, _moveBallEndEffectPrefab),
+                new MergeOperation(to, _field, _sessionProcessor, _mergeBallsEffectPrefab),
                 new CollapseOperation(to, _collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor),
                 new CheckIfGenerationIsNecessary(
                     null,
@@ -312,15 +314,13 @@ namespace Core.Gameplay
                         new CollapseOperation(_collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor)
                     })));
         }
-
-   
-
+        
         private void MoveStep(Vector3Int from, Vector3Int to)
         {
             _stepMachine.AddStep(new Step(StepTag.Move,
                 new SelectOperation(from, false, _field)
                     .SubscribeCompleted(OnDeselectBall),
-                new MoveOperation(from, to, _field),
+                new MoveOperation(from, to, _field, _moveBallEndEffectPrefab),
                 new CollapseOperation(to, _collapsePointsEffectPrefab, _field, _pointsCalculator, _sessionProcessor),
                 new CheckIfGenerationIsNecessary(
                     null,

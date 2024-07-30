@@ -24,8 +24,7 @@ namespace Core.Effects
             _points.text = points.Points.ToString();
             _extraPoints.text = points.ExtraPoints.ToString();
             _extraHatPoints.text = points.HatPoints.ToString();
-
-          
+            
             if (points.HatPoints > 0 && points.ExtraPoints > 0)
             {
                 _animation.Play(_extraAndExtraHatPointsClip.name);

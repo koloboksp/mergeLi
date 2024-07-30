@@ -3,7 +3,7 @@ guid: 944056e20f4624849a5fe10d9c4a01e6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -132,11 +132,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: note
+      name: music
       rect:
         serializedVersion: 2
         x: 0
@@ -157,7 +170,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: speaker
+      name: sound
       rect:
         serializedVersion: 2
         x: 128
@@ -199,7 +212,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Atlas2_3
+      name: sound_off
       rect:
         serializedVersion: 2
         x: 384
@@ -283,7 +296,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Atlas2_7
+      name: music_off
       rect:
         serializedVersion: 2
         x: 384
@@ -346,7 +359,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Atlas2_10
+      name: vibro
       rect:
         serializedVersion: 2
         x: 256
@@ -375,7 +388,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -383,6 +396,27 @@ TextureImporter:
       bones: []
       spriteID: 007287a30b23ffd4b9d80519559fdae1
       internalID: 794703034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: vibro_off
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 127
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c573b2cee96bd6478ab77bb8cf1e120
+      internalID: -265464643
       vertices: []
       indices: 
       edges: []
@@ -398,9 +432,6 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      UI_Atlas2_10: -1590828847
-      UI_Atlas2_3: -1859942788
-      UI_Atlas2_7: 1327535625
       ads: -572028860
       cross: -2104845018
       gamepad: 794703034
@@ -408,8 +439,12 @@ TextureImporter:
       man: -1515942131
       market: 1289461321
       menu: -1579830809
-      note: -1721905035
-      speaker: -957480366
+      music: -1721905035
+      music_off: 1327535625
+      sound: -957480366
+      sound_off: -1859942788
+      vibro: -1590828847
+      vibro_off: -265464643
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

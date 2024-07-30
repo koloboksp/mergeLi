@@ -182,7 +182,7 @@ namespace Core.Gameplay
         {
             await InnerMove(endPosition, cancellationToken);
         }
-    
+        
         public async Task<bool> MergeAsync(IEnumerable<IFieldMergeable> others, CancellationToken cancellationToken)
         {
             await InnerMerge(others, cancellationToken);
