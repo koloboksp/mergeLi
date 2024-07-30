@@ -6,11 +6,8 @@ namespace UI.Common
     public class CameraShakeSource : MonoBehaviour
     {
         [SerializeField] private float _amount = 0.4f;
-        [SerializeField] private float _duration = 1.5f;
         [SerializeField] private float _attenuation = 0.4f;
-
-        private float _timer;
-
+        
         public void Run()
         {
             for (var receiverI = 0; receiverI < CameraShakeReceiver.Receivers.Count; receiverI++)
