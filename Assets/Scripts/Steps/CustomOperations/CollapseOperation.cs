@@ -18,38 +18,54 @@ namespace Core.Steps.CustomOperations
         private readonly IField _field;
         private readonly IPointsCalculator _pointsCalculator;
         private readonly CollapsePointsEffect _collapsePointsEffectPrefab;
+        private readonly GiveCoinsEffect _giveCoinsEffect;
         private readonly ISessionStatisticsHolder _statisticsHolder;
-        
+        private readonly GameRulesSettings _gameRulesSettings;
+        private readonly GameProcessor _gameProcessor;
+
         private readonly List<(Ball ball, float distance)> _ballsToRemove = new();
         private readonly List<List<BallDesc>> _collapseLines = new();
         private int _pointsAdded;
+        private int _coinsAdded;
 
         public CollapseOperation(
             Vector3Int position, 
             CollapsePointsEffect collapsePointsEffectPrefab,
+            GiveCoinsEffect giveCoinsEffect,
             IField field, 
             IPointsCalculator pointsCalculator,
-            ISessionStatisticsHolder statisticsHolder)
+            ISessionStatisticsHolder statisticsHolder,
+            GameRulesSettings gameRulesSettings,
+            GameProcessor gameProcessor)
         {
             _positionSource = PositionSource.Fixed;
             _position = position;
             _field = field;
             _pointsCalculator = pointsCalculator;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
+            _giveCoinsEffect = giveCoinsEffect;
             _statisticsHolder = statisticsHolder;
+            _gameRulesSettings = gameRulesSettings;
+            _gameProcessor = gameProcessor;
         }
 
         public CollapseOperation(
             CollapsePointsEffect collapsePointsEffectPrefab,
+            GiveCoinsEffect giveCoinsEffect,
             IField field, 
             IPointsCalculator pointsCalculator,
-            ISessionStatisticsHolder statisticsHolder)
+            ISessionStatisticsHolder statisticsHolder,
+            GameRulesSettings gameRulesSettings,
+            GameProcessor gameProcessor)
         {
             _positionSource = PositionSource.FromData;
             _field = field;
             _pointsCalculator = pointsCalculator;
             _collapsePointsEffectPrefab = collapsePointsEffectPrefab;
+            _giveCoinsEffect = giveCoinsEffect;
             _statisticsHolder = statisticsHolder;
+            _gameRulesSettings = gameRulesSettings;
+            _gameProcessor = gameProcessor;
         }
     
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
@@ -78,9 +94,13 @@ namespace Core.Steps.CustomOperations
                 }
                 
                 foreach (var line in collapseLines)
+                {
                     foreach (var ball in line)
+                    {
                         if(_ballsToRemove.FindIndex(i=>i.ball == ball) < 0)
                             _ballsToRemove.Add((ball, (ball.IntGridPosition - checkingPosition).magnitude));
+                    }
+                }
             }
 
             
@@ -110,13 +130,21 @@ namespace Core.Steps.CustomOperations
             
             if (pointsGroups.Count > 0)
             {
-                var findObjectOfType = GameObject.FindObjectOfType<UIFxLayer>();
+                var worldGroupCenterPosition = _field.View.Root.TransformPoint(groupCenterPosition);
+                var fxLayer = GameObject.FindObjectOfType<UIFxLayer>();
                 var collapsePointsEffect = Object.Instantiate(
                     _collapsePointsEffectPrefab, 
-                    _field.View.Root.TransformPoint(groupCenterPosition), 
+                    worldGroupCenterPosition, 
                     Quaternion.identity, 
-                    findObjectOfType.transform);
+                    fxLayer.transform);
                 collapsePointsEffect.Run(pointsGroups);
+
+                var zeroLinesCount = pointsGroups.Count(g => g.ballPairs.All(i => i.points.Points == 0));
+                if (zeroLinesCount > 0)
+                {
+                    _coinsAdded = zeroLinesCount * _gameRulesSettings.CoinsForZeroLine;
+                    _ = _giveCoinsEffect.Show(_coinsAdded, worldGroupCenterPosition, Application.exitCancellationToken);
+                }
             }
             
             var removeBallTasks = new List<Task>();
@@ -136,7 +164,7 @@ namespace Core.Steps.CustomOperations
         
         public override Operation GetInverseOperation()
         {
-            return new UncollapseOperation(_collapseLines, _pointsAdded, _field, _statisticsHolder);
+            return new UncollapseOperation(_collapseLines, _pointsAdded, _coinsAdded, _field, _statisticsHolder, _gameProcessor);
         }
 
         public enum PositionSource

@@ -21,13 +21,13 @@ namespace Core
         [SerializeField] private float _duration = 0.5f;
         [SerializeField] private AudioClip _gotClip;
 
-        private Transform _from;
+        private Vector3 _fromPosition;
        
         private DependencyHolder<SoundsPlayer> _soundPlayer;
         
-        public async Task Show(int currencyAmount, Transform from, CancellationToken exitToken)
+        public async Task Show(int currencyAmount, Vector3 fromPosition, CancellationToken exitToken)
         {
-            _from = from;
+            _fromPosition = fromPosition;
             
             var receivers = SceneManager.GetActiveScene().GetRootGameObjects()
                 .SelectMany(i => i.GetComponentsInChildren<ICoinsReceiver>())
@@ -52,7 +52,7 @@ namespace Core
             var list = new List<Task>();
             for (int i = 0; i < splitCoins.Count; i++)
             {
-                var startPosition = _from.position + Random.insideUnitSphere * _randomizeStartPosition;
+                var startPosition = _fromPosition + Random.insideUnitSphere * _randomizeStartPosition;
                 var endPosition = receivers[0].Anchor.position;
                 var vecToReceiver = endPosition - startPosition;
                 var distanceToReceiver = vecToReceiver.magnitude;

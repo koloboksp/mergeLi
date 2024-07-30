@@ -148,7 +148,7 @@ namespace Core
             LockInput(true);
             var item = _items.Find(i => i.Model == sender);
             
-            await _data.GameProcessor.GiveCoinsEffect.Show(coinsAmount, item.Root, cancellationToken);
+            await _data.GameProcessor.GiveCoinsEffect.Show(coinsAmount, item.Root.position, cancellationToken);
             await AsyncExtensions.WaitForSecondsAsync(2.0f, Application.exitCancellationToken);
             LockInput(false);
             ApplicationController.Instance.UIPanelController.PopScreen(this);

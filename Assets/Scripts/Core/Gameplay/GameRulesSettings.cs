@@ -12,6 +12,7 @@ namespace Core.Gameplay
         [SerializeField] private int _maxBallPoints = 512;
         [SerializeField] private BallWeight[] _generatedBallWeightsRange;
         [SerializeField] private int _maxActiveHats = 5;
+        [SerializeField] private int _coinsForZeroLine = 1;
 
         public int GeneratedBallsCountAfterMerge => _generatedBallsCountAfterMerge;
         public int GeneratedBallsCountAfterMove => _generatedBallsCountAfterMove ;
@@ -31,5 +32,6 @@ namespace Core.Gameplay
         public int MaxBallPoints => _maxBallPoints;
         public int MinimalBallsInLine => _minimalBallsInLine;
         public int MaxActiveHats => _maxActiveHats;
+        public int CoinsForZeroLine => _coinsForZeroLine;
     }
 }

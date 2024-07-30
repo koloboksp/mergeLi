@@ -52,13 +52,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animation: {fileID: 1858058377771560607}
   _points: {fileID: 5689458090711537348}
-  _pointsClip: {fileID: 7400000, guid: 836367f59c6e4c14e975a34a6bf99de6, type: 2}
   _extraPoints: {fileID: 3209742710870279876}
-  _extraPointsClip: {fileID: 7400000, guid: 759d62f1ce88018428910d8f10c9408d, type: 2}
   _extraHatPoints: {fileID: 2230990297883038934}
-  _extraHatPointsClip: {fileID: 7400000, guid: 1d05c5c9ef662134dafaaf5c836f4fe6, type: 2}
-  _extraAndExtraHatPointsClip: {fileID: 7400000, guid: 218e5295a042fa44cb4acdc6f0ba5e5d,
-    type: 2}
+  _baseClip: {fileID: 7400000, guid: 836367f59c6e4c14e975a34a6bf99de6, type: 2}
+  _baseExtraClip: {fileID: 7400000, guid: 759d62f1ce88018428910d8f10c9408d, type: 2}
+  _baseHatClip: {fileID: 7400000, guid: 1d05c5c9ef662134dafaaf5c836f4fe6, type: 2}
+  _baseExtraHatClip: {fileID: 7400000, guid: 218e5295a042fa44cb4acdc6f0ba5e5d, type: 2}
+  _hatClip: {fileID: 7400000, guid: 2976cc69d10db7c41b7e7928e54ce993, type: 2}
 --- !u!114 &3010210032678323018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,6 +176,7 @@ Animation:
   - {fileID: 7400000, guid: 759d62f1ce88018428910d8f10c9408d, type: 2}
   - {fileID: 7400000, guid: 1d05c5c9ef662134dafaaf5c836f4fe6, type: 2}
   - {fileID: 7400000, guid: 218e5295a042fa44cb4acdc6f0ba5e5d, type: 2}
+  - {fileID: 7400000, guid: 2976cc69d10db7c41b7e7928e54ce993, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0

@@ -11,7 +11,7 @@ namespace Core.Tutorials
            
             await Tutorial.Controller.GameProcessor.GiveCoinsEffect.Show(
                 activeCastle.CoinsAfterComplete, 
-                Tutorial.Controller.Dialog.Speaker.IconRoot.transform, 
+                Tutorial.Controller.Dialog.Speaker.IconRoot.transform.position, 
                 cancellationToken);
             Tutorial.Controller.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
             

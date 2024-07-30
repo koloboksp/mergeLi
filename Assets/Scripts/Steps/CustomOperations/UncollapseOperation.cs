@@ -13,20 +13,25 @@ namespace Core.Steps.CustomOperations
     {
         private readonly IField _field;
         private readonly ISessionStatisticsHolder _statisticsHolder;
-
+        private readonly GameProcessor _gameProcessor;
+        
         private readonly List<List<BallDesc>> _uncollapseBallsLines;
         private readonly int _pointsToRemove;
-        
+        private readonly int _coinsToRemove;
+
         public UncollapseOperation(
             List<List<BallDesc>> uncollapseBallsLines,
             int pointsToRemove,
+            int coinsToRemove,
             IField field,
-            ISessionStatisticsHolder statisticsHolder)
+            ISessionStatisticsHolder statisticsHolder,
+            GameProcessor gameProcessor)
         {
             _uncollapseBallsLines = uncollapseBallsLines;
             _pointsToRemove = pointsToRemove;
             _field = field;
             _statisticsHolder = statisticsHolder;
+            _gameProcessor = gameProcessor;
         }
 
         protected override async Task<object> InnerExecuteAsync(CancellationToken cancellationToken)
@@ -50,6 +55,8 @@ namespace Core.Steps.CustomOperations
                 .ToList();
             foreach (var receiver in receivers)
                 receiver.Refund(_pointsToRemove);
+            
+            _gameProcessor.ConsumeCoins(_coinsToRemove);
             
             return null;
         }

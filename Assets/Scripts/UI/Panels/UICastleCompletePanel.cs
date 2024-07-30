@@ -95,7 +95,7 @@ namespace Core
 
                     await _data.GameProcessor.GiveCoinsEffect.Show(
                         activeCastle.CoinsAfterComplete,
-                        _speaker.IconRoot.transform,
+                        _speaker.IconRoot.transform.position,
                         exitToken);
                 
                     _data.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
