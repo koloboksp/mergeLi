@@ -79,7 +79,7 @@ namespace Core.Effects
                 receiver.ReceiveStart(points.Sum());
             
             _pointsEffect.Run(starsCount, destinationPosition);
-            _cameraShakeSource.Activate();
+            _cameraShakeSource.Run();
             await AsyncExtensions.WaitForSecondsAsync(_duration * 0.5f, cancellationToken);
 
             _pointsText.gameObject.SetActive(true);

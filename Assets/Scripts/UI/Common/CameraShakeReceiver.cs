@@ -7,15 +7,13 @@ namespace UI.Common
     {
         static readonly List<CameraShakeReceiver> _receivers = new List<CameraShakeReceiver>();
         public static List<CameraShakeReceiver> Receivers => _receivers;
-
         
         [SerializeField] private List<RectTransform> _targets = new List<RectTransform>();
         [SerializeField] private AnimationCurve _xAxis;
         [SerializeField] private AnimationCurve _yAxis;
-        [SerializeField] private float _speedScale = 4.0f;
         [SerializeField] private float _forceScale = 10.0f;
 
-        readonly List<SourceInfo> _sources = new List<SourceInfo>();
+        private readonly List<SourceInfo> _sources = new();
 
         private void Awake()
         {
@@ -27,119 +25,64 @@ namespace UI.Common
             _receivers.Remove(this);
         }
 
-        public void AddSource(CameraShakeSource value)
+        public void AddSource(SourceInfo source)
         {
-            var fIndex = -1;
-            for (var i = 0; i < _sources.Count; i++)
-                if (_sources[i].Source == value)
-                    fIndex = i;
-
-            if (fIndex >= 0)
-                _sources[fIndex].Reset(value);
-            else
-            {
-                var sourceInfo = new SourceInfo();
-                sourceInfo.Initialize(value);
-                _sources.Add(sourceInfo);
-            }
-        }
-
-        public void RemoveSource(CameraShakeSource value)
-        {
-            var fIndex = -1;
-            for (var i = 0; i < _sources.Count; i++)
-                if (_sources[i].Source == value)
-                    fIndex = i;
-
-            _sources[fIndex].SourceRemoved();
+            _sources.Add(source);
         }
 
         public void Update()
         {
-            var maxAmount = 0.0f;
+            var amount = 0.0f;
 
-            for (var sIndex = _sources.Count - 1; sIndex >= 0; sIndex--)
+            for (var sourceI = _sources.Count - 1; sourceI >= 0; sourceI--)
             {
-                var sourceInfo = _sources[sIndex];
+                var sourceInfo = _sources[sourceI];
+                
                 sourceInfo.Update();
                 if (sourceInfo.IsComplete)
                     _sources.Remove(sourceInfo);
             }
 
-            for (var sIndex = 0; sIndex < _sources.Count; sIndex++)
+            for (var sourceI = 0; sourceI < _sources.Count; sourceI++)
             {
-                var sourceInfo = _sources[sIndex];
-                var sourceAmount = sourceInfo.CurrentAmount;
+                var sourceInfo = _sources[sourceI];
+                var sourceAmount = sourceInfo.Amount;
 
-                maxAmount = Mathf.Max(maxAmount, sourceAmount);
+                amount = Mathf.Max(amount, sourceAmount);
             }
 
-            if (maxAmount > 0.0f)
+            if (amount >= 0.0f)
             {
-                var x = _xAxis.Evaluate(1 - Mathf.Clamp01(maxAmount));
-                var y = _yAxis.Evaluate(1 - Mathf.Clamp01(maxAmount));
-
-               // var rotationAmount = Random.insideUnitSphere * maxAmount;
-               // rotationAmount.z = 0.0f;
-               // rotationAmount *= 10.0f;
+                var iAmount = 1.0f - Mathf.Clamp01(amount);
+                var offset = new Vector2(
+                    _xAxis.Evaluate(iAmount),
+                    _yAxis.Evaluate(iAmount));
+               
                 for (var targetI = 0; targetI < _targets.Count; targetI++)
                 {
                     var target = _targets[targetI];
-                    
-                    target.anchoredPosition = new Vector2(x, y) * _forceScale;
+                    target.anchoredPosition = offset * _forceScale;
                 }
             }
         }
 
-        private class SourceInfo
+        public class SourceInfo
         {
-            public CameraShakeSource Source;
-
-            private float _timer;
-            private float _currentAmount;
-            private float _currentDuration;
+            private float _amount;
             private float _attenuation;
-            private float _distance;
-            private Vector3 _position;
-            private bool _isComplete;
             
-            public float CurrentAmount => _currentAmount;
-            public bool IsComplete => _isComplete;
+            public float Amount => _amount;
+            public bool IsComplete => _amount <= 0.0f;
 
-            public void Initialize(CameraShakeSource value)
+            public SourceInfo(float amount, float attenuation)
             {
-                Reset(value);
+                _amount = amount;
+                _attenuation = attenuation;
             }
-
-            public void Reset(CameraShakeSource source)
-            {
-                Source = source;
-
-                _timer = 0;
-                _isComplete = false;
-
-                _currentAmount = Source.Amount;
-                _currentDuration = Source.Duration;
-                _attenuation = source.Attenuation;
-                _currentDuration = source.Duration;
-            }
-
-            public void SourceRemoved()
-            {
-                Source = null;
-            }
-
+            
             public void Update()
             {
-                if (_timer <= _currentDuration)
-                {
-                    _timer += Time.deltaTime;
-                    _currentAmount -= _attenuation * Time.deltaTime;
-                }
-                else
-                {
-                    _isComplete = true;
-                }
+                _amount -= _attenuation * Time.deltaTime;
             }
         }
     }
