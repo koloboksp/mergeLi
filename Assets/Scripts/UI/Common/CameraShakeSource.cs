@@ -8,7 +8,7 @@ namespace UI.Common
         [SerializeField] private float _amount = 0.4f;
         [SerializeField] private float _attenuation = 0.4f;
         
-        public void Run()
+        private void OnEnable()
         {
             for (var receiverI = 0; receiverI < CameraShakeReceiver.Receivers.Count; receiverI++)
             {

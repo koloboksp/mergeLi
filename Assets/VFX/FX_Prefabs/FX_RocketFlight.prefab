@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7338051078193828672}
   - component: {fileID: 4241506260015445264}
+  - component: {fileID: 2040226856987420153}
   m_Layer: 0
   m_Name: vibration
   m_TagString: Untagged
@@ -45,6 +46,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _vibrationType: 1
+--- !u!114 &2040226856987420153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3293399566840978216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3a53bec996a9a947a7e23e1487f3714, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _amount: 1
+  _attenuation: 2
 --- !u!1 &3593941465915960102
 GameObject:
   m_ObjectHideFlags: 0
