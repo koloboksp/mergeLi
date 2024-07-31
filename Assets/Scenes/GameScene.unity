@@ -1413,7 +1413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enableTutorial: 1
-  _forceTutorial: 0
+  _forceTutorial: 1
   _failClip: {fileID: 8300000, guid: 666fd8faa1cfd3046b080ff6df5a59a5, type: 3}
 --- !u!1 &623220713
 GameObject:
@@ -4327,86 +4327,6 @@ PrefabInstance:
       propertyPath: _field
       value: 
       objectReference: {fileID: 108162133}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.size
-      value: 23
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _nextBallsMask.Balls.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[18].Points
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[19].Points
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[20].Points
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[21].Points
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[22].Points
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _nextBallsMask.Balls.Array.data[1].Points
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _nextBallsMask.Balls.Array.data[2].Points
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[18].GridPosition.x
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[19].GridPosition.x
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[20].GridPosition.x
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[21].GridPosition.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _ballsMask.Balls.Array.data[22].GridPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _nextBallsMask.Balls.Array.data[1].GridPosition.x
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3863141700337174883, guid: bfd8dde4f020cfe4d9dddf27d219351e,
-        type: 3}
-      propertyPath: _nextBallsMask.Balls.Array.data[2].GridPosition.x
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 4857521713780696715, guid: bfd8dde4f020cfe4d9dddf27d219351e,
         type: 3}
       propertyPath: _target
