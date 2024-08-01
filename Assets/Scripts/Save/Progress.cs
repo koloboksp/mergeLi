@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Atom.Protected;
+using System;
 using System.Collections.Generic;
 
 namespace Save
@@ -8,7 +9,7 @@ namespace Save
     {
         public List<string> CompletedCastles = new();
         public int BestSessionScore;
-        public int Coins;
+        public ProtectedInt Coins = new(0);
         public List<TutorialProgress> Tutorials = new();
         public List<GiftProgress> Gifts = new();
         public List<HatProgress> Hats = new();
