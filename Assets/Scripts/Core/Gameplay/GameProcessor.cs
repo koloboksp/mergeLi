@@ -94,9 +94,7 @@ namespace Core.Gameplay
         private Ball _selectedBall;
         private Ball _otherSelectedBall;
         private PointsCalculator _pointsCalculator;
-        private int _score;
-        private int _bestSessionScore;
-
+      
         private DependencyHolder<UIPanelController> _panelController;
         private DependencyHolder<SaveController> _saveController;
 

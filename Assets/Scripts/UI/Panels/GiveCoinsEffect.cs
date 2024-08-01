@@ -61,7 +61,8 @@ namespace Core
                                Vector3.Cross(dirToReceiver, Vector3.forward) *
                                Random.Range(-distanceToReceiver * _randomizeSideOffset, distanceToReceiver * _randomizeSideOffset);
 
-                list.Add(StartFx(splitCoins[i], Random.Range(0.0f, _randomizeDelay), startPosition, midPoint, endPosition, _duration, receivers, exitToken));
+                var delay = i == 0 ? 0.0f : Random.Range(0.0f, _randomizeDelay);
+                list.Add(StartFx(splitCoins[i], delay, startPosition, midPoint, endPosition, _duration, receivers, exitToken));
             }
             await Task.WhenAll(list);
         }
