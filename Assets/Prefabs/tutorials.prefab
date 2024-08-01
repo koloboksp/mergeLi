@@ -1771,7 +1771,7 @@ MonoBehaviour:
       HatName: 
     - GridPosition: {x: 8, y: 6, z: 0}
       Points: 1
-      HatName: 
+      HatName: tent_A
     - GridPosition: {x: 8, y: 5, z: 0}
       Points: 1
       HatName: 
