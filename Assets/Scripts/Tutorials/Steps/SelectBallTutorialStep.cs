@@ -15,7 +15,7 @@ namespace Core.Tutorials
         {
             Tutorial.Controller.GameProcessor.SelectBall(_ballPosition);
             
-            await AsyncExtensions.WaitForSecondsAsync(0.5f, cancellationToken);
+            await AsyncExtensions.WaitForSecondsAsync(0.25f, cancellationToken);
 
             return true;
         }

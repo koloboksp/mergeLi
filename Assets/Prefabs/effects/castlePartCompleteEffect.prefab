@@ -31,7 +31,6 @@ RectTransform:
   m_Children:
   - {fileID: 4159622236758740824}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -50,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b77bf2ee8844c12a268d17a0ecb185f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _duration: 2
+  _duration: 0.5
   _completeClip: {fileID: 8300000, guid: d0b1be7de1488b44c94b7fc59652ca2c, type: 3}
   _effectRoot: {fileID: 4159622236758740823}
 --- !u!1001 &2483962000451161020

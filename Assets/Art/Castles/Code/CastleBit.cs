@@ -8,9 +8,9 @@ using UnityEngine;
 
 public class CastleBit : MonoBehaviour
 {
-    private const float BORN_TIME = .5f;
-    private const float GROW_TIME = .5f;
-    private const float FULL_TIME = 1f;
+    private const float BORN_TIME = .25f;
+    private const float GROW_TIME = .25f;
+    private const float FULL_TIME = 0.25f;
     private const int ONE_BIT_DELAY = 50; // in ms
 
     private static readonly int pAlpha = Shader.PropertyToID("_Alpha");
