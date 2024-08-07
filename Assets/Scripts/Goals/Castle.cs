@@ -310,7 +310,7 @@ namespace Core.Goals
             await _view.WaitForAnimationsComplete(exitToken);
         }
         
-        public async Task WaitForCoinsReceiveEffectComplete(CancellationToken exitToken)
+        public async Task WaitForPointsReceiveEffectComplete(CancellationToken exitToken)
         {
             if (!_inPointsReceiveState)
                 return;

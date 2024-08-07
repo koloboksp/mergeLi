@@ -18,7 +18,7 @@ namespace Core.Tutorials
             Tutorial.Controller.GameProcessor.CastleSelector.ForceCompleteCastle();
             
             var activeCastle = Tutorial.Controller.GameProcessor.CastleSelector.ActiveCastle;
-            await activeCastle.WaitForCoinsReceiveEffectComplete(Application.exitCancellationToken);
+            await activeCastle.WaitForPointsReceiveEffectComplete(Application.exitCancellationToken);
             await activeCastle.WaitForAnimationsComplete(Application.exitCancellationToken);
 
             ApplicationController.Instance.SaveController.SaveProgress.MarkCastleCompleted(activeCastle.Id);
@@ -30,6 +30,7 @@ namespace Core.Tutorials
                 StepsBeforeGetCoins,
                 BeforeSelectNextCastle,
                 AfterSelectNextCastle,
+                null,
                 cancellationToken);
 
             return true;

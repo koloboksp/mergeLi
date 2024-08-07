@@ -97,8 +97,6 @@ namespace Core
                         activeCastle.CoinsAfterComplete,
                         _speaker.IconRoot.transform.position,
                         exitToken);
-                
-                    _data.GameProcessor.AddCurrency(activeCastle.CoinsAfterComplete);
                 }
                 
                 await AsyncExtensions.WaitForSecondsAsync(3.0f, exitToken);
@@ -140,7 +138,12 @@ namespace Core
                 activeCastle.transform.SetParent(castleOriginalParent);
 
                 _data.GameProcessor.ClearUndoSteps();
-                
+
+                if (_data.InTheEnd != null)
+                {
+                    await _data.InTheEnd();
+                }
+
                 ApplicationController.Instance.UIPanelController.PopScreen(this);
                 _data.GameProcessor.SoundsPlayer.StopPlayExclusive();
                 _data.GameProcessor.MusicPlayer.PlayNext();
@@ -167,5 +170,6 @@ namespace Core
         public Func<Task> BeforeGiveCoins;
         public Func<Task> BeforeSelectNextCastle;
         public Func<Task> AfterSelectNextCastle;
+        public Func<Task> InTheEnd;
     }
 }

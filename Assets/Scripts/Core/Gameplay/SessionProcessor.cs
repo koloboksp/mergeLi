@@ -378,15 +378,26 @@ namespace Core.Gameplay
             gameScreen.LockInput(true);
             _gameProcessor.Field.View.LockInput(true);
 
-            await activeCastle.WaitForCoinsReceiveEffectComplete(Application.exitCancellationToken);
+            await activeCastle.WaitForPointsReceiveEffectComplete(Application.exitCancellationToken);
             await activeCastle.WaitForAnimationsComplete(Application.exitCancellationToken);
-        
-            await ProcessCastleCompleteAsync(activeCastle.TextAfterBuildEndingKey, dialogKeyOnBuildStarting, false, null, null, null, Application.exitCancellationToken);
+
+            var coinsAfterComplete = activeCastle.CoinsAfterComplete;
+            await ProcessCastleCompleteAsync(
+                activeCastle.TextAfterBuildEndingKey, 
+                dialogKeyOnBuildStarting, 
+                false, 
+                null,
+                null,
+                null,
+                async () =>
+                {
+                    _gameProcessor.AddCurrency(coinsAfterComplete);
+                    ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
+                },
+                Application.exitCancellationToken);
         
             gameScreen.LockInput(false);
             _gameProcessor.Field.View.LockInput(false);
-
-            ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(this);
         }
     
         public async Task ProcessCastleCompleteAsync(
@@ -396,6 +407,7 @@ namespace Core.Gameplay
             Func<Task> beforeGiveCoins, 
             Func<Task> beforeSelectNextCastle,
             Func<Task> afterSelectNextCastle,
+            Func<Task> inTheEnd,
             CancellationToken exitToken)
         {
             //wait for last animation is playing 
@@ -412,6 +424,7 @@ namespace Core.Gameplay
                     BeforeGiveCoins = beforeGiveCoins,
                     BeforeSelectNextCastle = beforeSelectNextCastle,
                     AfterSelectNextCastle = afterSelectNextCastle,
+                    InTheEnd = inTheEnd,
                 }, 
                 exitToken);
 
