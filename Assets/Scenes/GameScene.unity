@@ -4002,7 +4002,7 @@ MonoBehaviour:
       HatName: 
     - GridPosition: {x: 6, y: 4, z: 0}
       Points: 4
-      HatName: 
+      HatName: marsh_E
     - GridPosition: {x: 8, y: 4, z: 0}
       Points: 4
       HatName: 
@@ -4041,7 +4041,7 @@ MonoBehaviour:
       HatName: 
     - GridPosition: {x: 2, y: 1, z: 0}
       Points: 16
-      HatName: 
+      HatName: aztec_A
     - GridPosition: {x: 1, y: 1, z: 0}
       Points: 1
       HatName: 
@@ -5578,7 +5578,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorial: {fileID: 455569729}
   _analyticsEventName: 
-  _castleName: CastleGame_Mud_C
+  _castleName: CastleGame_Stone_B
   _points: 1000
 --- !u!4 &2006331501
 Transform:
