@@ -58,6 +58,8 @@ namespace Core
             _instance = new ApplicationController();
             _instance._initialization = new TaskCompletionSource<bool>();
 
+            Application.logMessageReceived += _instance.Application_logMessageReceived;
+            
             var baseStorage = new BaseStorage();
             await baseStorage.InitializeAsync();
             
@@ -107,7 +109,14 @@ namespace Core
             _instance._initializated = true;
             _instance._initialization.SetResult(true);
         }
-        
+
+        private void Application_logMessageReceived(string condition, string stacktrace, LogType logType)
+        {
+            var time = Time.realtimeSinceStartup;
+
+            AppConsole.LogMessage(time,condition, stacktrace, logType);
+        }
+
         public static void LoadGameScene()
         {
             SceneManager.LoadSceneAsync(GAMESCENE_NAME, LoadSceneMode.Additive);

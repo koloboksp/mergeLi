@@ -65,6 +65,155 @@ MonoBehaviour:
   - _points: 32
     _weight: 1
   _maxActiveHats: 5
+  _coinsForZeroLine: 1
+--- !u!1 &537457166715813978
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 442483635652212725}
+  - component: {fileID: 2113271547555257830}
+  m_Layer: 0
+  m_Name: classic0-512_1_w0.5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &442483635652212725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537457166715813978}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7999040319894609632}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2113271547555257830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537457166715813978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _minimalBallsInLine: 5
+  _generatedBallsCountAfterMerge: 1
+  _generatedBallsCountAfterMove: 3
+  _generatedBallsCountOnStart: 5
+  _maxBallPoints: 512
+  _generatedBallWeightsRange:
+  - _points: 0
+    _weight: 32
+  - _points: 1
+    _weight: 32
+  - _points: 2
+    _weight: 32
+  - _points: 4
+    _weight: 32
+  - _points: 8
+    _weight: 32
+  - _points: 16
+    _weight: 32
+  - _points: 32
+    _weight: 16
+  - _points: 64
+    _weight: 16
+  - _points: 128
+    _weight: 16
+  - _points: 256
+    _weight: 8
+  - _points: 512
+    _weight: 4
+  _maxActiveHats: 5
+  _coinsForZeroLine: 1
+--- !u!1 &567072507843079393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9005514468348180070}
+  - component: {fileID: 7714495748514286566}
+  m_Layer: 0
+  m_Name: classic0-512_1_w0.25
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9005514468348180070
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567072507843079393}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7999040319894609632}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7714495748514286566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567072507843079393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bf977bfc2934b909d600c8ea9cf3d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _minimalBallsInLine: 5
+  _generatedBallsCountAfterMerge: 1
+  _generatedBallsCountAfterMove: 3
+  _generatedBallsCountOnStart: 5
+  _maxBallPoints: 512
+  _generatedBallWeightsRange:
+  - _points: 0
+    _weight: 32
+  - _points: 1
+    _weight: 32
+  - _points: 2
+    _weight: 32
+  - _points: 4
+    _weight: 32
+  - _points: 8
+    _weight: 32
+  - _points: 16
+    _weight: 32
+  - _points: 32
+    _weight: 32
+  - _points: 64
+    _weight: 32
+  - _points: 128
+    _weight: 32
+  - _points: 256
+    _weight: 16
+  - _points: 512
+    _weight: 8
+  _maxActiveHats: 5
+  _coinsForZeroLine: 1
 --- !u!1 &1713764976320749448
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,6 +269,7 @@ MonoBehaviour:
   - _points: 2
     _weight: 1
   _maxActiveHats: 5
+  _coinsForZeroLine: 1
 --- !u!1 &1806610442909832655
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,6 +343,7 @@ MonoBehaviour:
   - _points: 512
     _weight: 1
   _maxActiveHats: 5
+  _coinsForZeroLine: 1
 --- !u!1 &3032426352645289655
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,6 +374,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2222035650915295485}
+  - {fileID: 442483635652212725}
+  - {fileID: 9005514468348180070}
   - {fileID: 1695890808973029627}
   - {fileID: 4893189059139415559}
   - {fileID: 8282602945093106868}
@@ -287,6 +440,7 @@ MonoBehaviour:
   - _points: 64
     _weight: 1
   _maxActiveHats: 5
+  _coinsForZeroLine: 1
 --- !u!1 &5435898591578187296
 GameObject:
   m_ObjectHideFlags: 0
@@ -352,6 +506,7 @@ MonoBehaviour:
   - _points: 32
     _weight: 1
   _maxActiveHats: 5
+  _coinsForZeroLine: 1
 --- !u!1 &7102705653606055336
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,6 +570,7 @@ MonoBehaviour:
   - _points: 16
     _weight: 1
   _maxActiveHats: 5
+  _coinsForZeroLine: 1
 --- !u!1 &8188250764580973133
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,6 +644,7 @@ MonoBehaviour:
   - _points: 512
     _weight: 1
   _maxActiveHats: 5
+  _coinsForZeroLine: 1
 --- !u!1 &8349104507182156401
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,3 +718,4 @@ MonoBehaviour:
   - _points: 512
     _weight: 1
   _maxActiveHats: 5
+  _coinsForZeroLine: 1
