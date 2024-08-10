@@ -76,7 +76,7 @@ MonoBehaviour:
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
-    m_VerticalOverflow: 1
+    m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Message
 --- !u!1 &2949725947885737127
@@ -288,11 +288,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35efafc2368344328dfce616e93762fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Root: {fileID: 6251953141639018652}
-  TimeTxt: {fileID: 1629526585371763146}
-  MessageTypeTxt: {fileID: 8907125933222316135}
-  CanExpandIcon: {fileID: 3731598247833252925}
-  TextTxt: {fileID: 8225597394515298366}
+  _root: {fileID: 6251953141639018652}
+  _timeTxt: {fileID: 1629526585371763146}
+  _messageTypeTxt: {fileID: 8907125933222316135}
+  _canExpandIcon: {fileID: 3731598247833252925}
+  _textTxt: {fileID: 8225597394515298366}
 --- !u!222 &8609008001584083710
 CanvasRenderer:
   m_ObjectHideFlags: 0

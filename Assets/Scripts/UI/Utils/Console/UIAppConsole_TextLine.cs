@@ -2,125 +2,112 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class UIAppConsole_TextLine : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IDragHandlerPass
+namespace UI.Utils.Console
 {
-    static readonly Dictionary<LogType, KeyValuePair<string, Color>> mLogTypeTextAndColorAssociations = new Dictionary<LogType, KeyValuePair<string, Color>>()
+    public class UIAppConsole_TextLine : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IDragHandlerPass
     {
-        { LogType.Log, new KeyValuePair<string, Color>("log", Color.white)},
-        { LogType.Warning, new KeyValuePair<string, Color>("war", Color.yellow)},
-        { LogType.Assert,new KeyValuePair<string, Color>("a", Color.red)},
-        { LogType.Error, new KeyValuePair<string, Color>("er", Color.red)},
-        { LogType.Exception, new KeyValuePair<string, Color>("ex", Color.red)},
-    };
-
-    public event Action<UIAppConsole_TextLine> OnClick;
-
-    string mFullText;
-    string mCaption;
-    bool mDragged;
-    bool mCanExpand;
-       
-    public RectTransform Root;
-
-    public Text TimeTxt;
-    public Text MessageTypeTxt;
-    public Image CanExpandIcon;
-    public Text TextTxt;
-
-    public string FullText => mFullText;
-    public string Time { set => TimeTxt.text = value; }
-      
-    public void SetText(string text, LogType logType)
-    {  
-        var messageColor = mLogTypeTextAndColorAssociations[logType].Value;
-
-        mFullText = text;
-        mCaption = GetCaption(TextTxt, mFullText);
-
-        TextTxt.text = mCaption;
-        TextTxt.color = messageColor;
-
-        MessageTypeTxt.text = mLogTypeTextAndColorAssociations[logType].Key;
-        MessageTypeTxt.color = messageColor;
-
-        var preferredHeight = UIAppConsole.CalculatePreferredHeight(TextTxt, mFullText);
-        mCanExpand = preferredHeight > Root.rect.size.y;
-        CanExpandIcon.gameObject.SetActive(mCanExpand);
-    }
-
-    string GetCaption(Text target, string text)
-    {
-        target.font.RequestCharactersInTexture(text, target.fontSize, target.fontStyle);
-        float maxTextWidth = target.rectTransform.rect.size.x;
-
-        float textWidth = 0;
-        for (var cIndex = 0; cIndex < text.Length; cIndex++)
+        static readonly Dictionary<LogType, KeyValuePair<string, Color>> mLogTypeTextAndColorAssociations = new Dictionary<LogType, KeyValuePair<string, Color>>()
         {
-            var c = text[cIndex];
-            CharacterInfo charInfo;
-            target.font.GetCharacterInfo(c, out charInfo, target.fontSize, target.fontStyle);
-			
-            if (textWidth + charInfo.advance > maxTextWidth || c == '\n')
-            {
-                string caption = text.Substring(0, cIndex - 1);
-                return caption;
-            }
-            else
-            {
-                textWidth += charInfo.advance;
-            }
+            { LogType.Log, new KeyValuePair<string, Color>("log", Color.white)},
+            { LogType.Warning, new KeyValuePair<string, Color>("war", Color.yellow)},
+            { LogType.Assert,new KeyValuePair<string, Color>("a", Color.red)},
+            { LogType.Error, new KeyValuePair<string, Color>("er", Color.red)},
+            { LogType.Exception, new KeyValuePair<string, Color>("ex", Color.red)},
+        };
+        static readonly List<IDragHandler> _noAllocPassDragHandlers = new();
+        static readonly List<IBeginDragHandler> _noAllocPassBeginDragHandlers = new();
+        static readonly List<IEndDragHandler> _noAllocPassEndDragHandlers = new();
+
+        public event Action<UIAppConsole_TextLine> OnClick;
+
+        [SerializeField] private RectTransform _root;
+        [SerializeField] private Text _timeTxt;
+        [SerializeField] private Text _messageTypeTxt;
+        [SerializeField] private Image _canExpandIcon;
+        [SerializeField] private Text _textTxt;
+        
+        private string _fullText;
+        private string _caption;
+        private bool _dragged;
+        private bool _canExpand;
+        private Color _textColor;
+        private string _messageTypeText;
+
+        public RectTransform Root => _root;
+        public string FullText => _fullText;
+        public string Caption => _caption;
+        public Color TextColor => _textColor;
+        public string MessageTypeText => _messageTypeText;
+
+        public string Time
+        {
+            set => _timeTxt.text = value;
+            get => _timeTxt.text;
         }
-			
-        return text;
-    }
+      
+        public void SetText(string text, LogType logType)
+        {  
+            _textColor = mLogTypeTextAndColorAssociations[logType].Value;
+            _messageTypeText = mLogTypeTextAndColorAssociations[logType].Key;
+            _fullText = text;
+            _caption = _fullText;//GetCaption(_textTxt, _fullText);
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        if (!mDragged)
-        {   
-            OnClick?.Invoke(this);
-        }     
-    }
+            _textTxt.text = _caption;
+            _textTxt.color = _textColor;
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        mDragged = false;
-    }
+            _messageTypeTxt.text = _messageTypeText;
+            _messageTypeTxt.color = _textColor;
 
-    public void ActualizeWidth(float rectWidth)
-    {
-        Root.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rectWidth);
-    }
+            var preferredHeight = UIAppConsole.CalculatePreferredHeight(_textTxt, _fullText);
+            _canExpand = preferredHeight > _root.rect.size.y;
+            _canExpandIcon.gameObject.SetActive(_canExpand);
+        }
+        
+        public void OnPointerUp(PointerEventData eventData)
+        {
+            if (!_dragged)
+            {   
+                OnClick?.Invoke(this);
+            }     
+        }
 
-    static readonly List<IDragHandler> mNoAllocPassDragHandlers = new List<IDragHandler>();
-    static readonly List<IBeginDragHandler> mNoAllocPassBeginDragHandlers = new List<IBeginDragHandler>();
-    static readonly List<IEndDragHandler> mNoAllocPassEndDragHandlers = new List<IEndDragHandler>();
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            _dragged = false;
+        }
 
-    public void OnDrag(PointerEventData eventData)
-    {
-        mDragged = true;
+        public void ActualizeWidth(float rectWidth)
+        {
+            _root.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rectWidth);
+        }
+        
+        public void OnDrag(PointerEventData eventData)
+        {
+            _dragged = true;
 
-        mNoAllocPassDragHandlers.Clear();
-        gameObject.GetComponentsInParent<IDragHandler>(false, mNoAllocPassDragHandlers);
-        if (mNoAllocPassDragHandlers.Count >= 2)
-            mNoAllocPassDragHandlers[1].OnDrag(eventData);
-    }
+            _noAllocPassDragHandlers.Clear();
+            gameObject.GetComponentsInParent<IDragHandler>(false, _noAllocPassDragHandlers);
+            if (_noAllocPassDragHandlers.Count >= 2)
+                _noAllocPassDragHandlers[1].OnDrag(eventData);
+        }
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        mNoAllocPassBeginDragHandlers.Clear();
-        gameObject.GetComponentsInParent<IBeginDragHandler>(false, mNoAllocPassBeginDragHandlers);
-        if (mNoAllocPassBeginDragHandlers.Count >= 2)
-            mNoAllocPassBeginDragHandlers[1].OnBeginDrag(eventData);
-    }
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            _noAllocPassBeginDragHandlers.Clear();
+            gameObject.GetComponentsInParent<IBeginDragHandler>(false, _noAllocPassBeginDragHandlers);
+            if (_noAllocPassBeginDragHandlers.Count >= 2)
+                _noAllocPassBeginDragHandlers[1].OnBeginDrag(eventData);
+        }
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        mNoAllocPassEndDragHandlers.Clear();
-        gameObject.GetComponentsInParent<IEndDragHandler>(false, mNoAllocPassEndDragHandlers);
-        if (mNoAllocPassEndDragHandlers.Count >= 2)
-            mNoAllocPassEndDragHandlers[1].OnEndDrag(eventData);
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            _noAllocPassEndDragHandlers.Clear();
+            gameObject.GetComponentsInParent<IEndDragHandler>(false, _noAllocPassEndDragHandlers);
+            if (_noAllocPassEndDragHandlers.Count >= 2)
+                _noAllocPassEndDragHandlers[1].OnEndDrag(eventData);
+        }
     }
 }

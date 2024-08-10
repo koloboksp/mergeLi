@@ -1084,17 +1084,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d91814a596c41b98ae7524266f89773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Root: {fileID: 8279694261920428616}
-  TextLinePrefab: {fileID: 3345649009120831394, guid: 1ade259f49d511549bc3679e4e4578f9,
+  _root: {fileID: 6946300686222728848}
+  _textLinePrefab: {fileID: 3345649009120831394, guid: 1ade259f49d511549bc3679e4e4578f9,
     type: 3}
-  ContentRoot: {fileID: 4701718821929825565}
-  DetailedInfoPanel: {fileID: 6943421666812078384}
-  DetailedInfoTime: {fileID: 4437858479749636446}
-  DetailedInfoMessageType: {fileID: 4437858479749636435}
-  DetailedInfoTextScrollRect: {fileID: 1490677617335055779}
-  DetailedInfoText: {fileID: 4437858479749636434}
-  CloseDetailedInfoPanelBtn: {fileID: 1950325361139314306}
-  MaxMessagesCount: 100
+  _contentRoot: {fileID: 4701718821929825565}
+  _detailedInfoPanel: {fileID: 6943421666812078384}
+  _detailedInfoTime: {fileID: 4437858479749636446}
+  _detailedInfoMessageType: {fileID: 4437858479749636435}
+  _detailedInfoTextScrollRect: {fileID: 1490677617335055779}
+  _detailedInfoText: {fileID: 4437858479749636434}
+  _closeDetailedInfoPanelBtn: {fileID: 1950325361139314306}
+  _maxMessagesCount: 100
 --- !u!1 &9026774527737725656
 GameObject:
   m_ObjectHideFlags: 0
