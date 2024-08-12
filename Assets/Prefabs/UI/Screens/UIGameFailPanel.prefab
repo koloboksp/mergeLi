@@ -98,7 +98,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Great!
+  m_Text: Awesome!
 --- !u!114 &4571306219777785225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -657,7 +657,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Your score is
+  m_Text: Your Result
 --- !u!114 &3464901903997786159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -781,20 +781,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1457681077258456612, guid: 57d37d47e7c844a4da1de6dfb13123e6,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b107d2bdedb950647965f0db892d1838,
+        type: 3}
     - target: {fileID: 2665281154539762748, guid: 57d37d47e7c844a4da1de6dfb13123e6,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 61
       objectReference: {fileID: 0}
     - target: {fileID: 2665281154539762748, guid: 57d37d47e7c844a4da1de6dfb13123e6,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 7179471311806074262, guid: 57d37d47e7c844a4da1de6dfb13123e6,
         type: 3}
       propertyPath: m_Name
       value: mergedBallsScore
+      objectReference: {fileID: 0}
+    - target: {fileID: 8367410018913585990, guid: 57d37d47e7c844a4da1de6dfb13123e6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8600657039016662633, guid: 57d37d47e7c844a4da1de6dfb13123e6,
         type: 3}
@@ -1274,20 +1285,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1457681077258456612, guid: 57d37d47e7c844a4da1de6dfb13123e6,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b7089ff6dda09df4f8fd3e8f63a42649,
+        type: 3}
     - target: {fileID: 2665281154539762748, guid: 57d37d47e7c844a4da1de6dfb13123e6,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 61
       objectReference: {fileID: 0}
     - target: {fileID: 2665281154539762748, guid: 57d37d47e7c844a4da1de6dfb13123e6,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 7179471311806074262, guid: 57d37d47e7c844a4da1de6dfb13123e6,
         type: 3}
       propertyPath: m_Name
       value: collapsedLinesScore
+      objectReference: {fileID: 0}
+    - target: {fileID: 8367410018913585990, guid: 57d37d47e7c844a4da1de6dfb13123e6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8600657039016662633, guid: 57d37d47e7c844a4da1de6dfb13123e6,
         type: 3}
