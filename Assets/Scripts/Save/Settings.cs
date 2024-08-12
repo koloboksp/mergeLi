@@ -11,7 +11,7 @@ namespace Save
 
         public float SoundVolume = 0.5f;
         public bool SoundEnable = true;
-        public float MusicVolume;
+        public float MusicVolume = 0.5f;
         public bool MusicEnable = true;
 
         public string ActiveSkin;
