@@ -73,6 +73,8 @@ namespace Core.Gameplay
                 if (_enableTutorial 
                     && _gameProcessor.TutorialController.CanStartTutorial(_forceTutorial && Application.isEditor))
                 {
+                    _gameProcessor.MusicPlayer.PlayNext();
+
                     await _gameProcessor.TutorialController.TryStartTutorial(_forceTutorial, exitToken);
                     gameScreen = ApplicationController.Instance.UIPanelController.GetPanel<UIGameScreen>();
                 }
