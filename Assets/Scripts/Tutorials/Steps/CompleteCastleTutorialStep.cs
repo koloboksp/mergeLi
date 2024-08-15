@@ -30,7 +30,11 @@ namespace Core.Tutorials
                 StepsBeforeGetCoins,
                 BeforeSelectNextCastle,
                 AfterSelectNextCastle,
-                null,
+                async () =>
+                {
+                    ApplicationController.Instance.SaveController.SaveLastSessionProgress.ChangeProgress(
+                        Tutorial.Controller.GameProcessor.SessionProcessor);
+                },
                 cancellationToken);
 
             return true;

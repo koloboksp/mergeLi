@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Effects;
+using Core.Gameplay;
 using Core.Utils;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,7 +22,8 @@ namespace Core
         [SerializeField] private float _randomizeDelay = 1.0f;
         [SerializeField] private float _duration = 0.5f;
         [SerializeField] private AudioClip _gotClip;
-
+        [SerializeField] private CollapsePointsEffectText _pointsText;
+        
         private Vector3 _fromPosition;
        
         private DependencyHolder<SoundsPlayer> _soundPlayer;
@@ -28,6 +31,7 @@ namespace Core
         public async Task Show(int currencyAmount, Vector3 fromPosition, CancellationToken exitToken)
         {
             _fromPosition = fromPosition;
+            _pointsText.gameObject.SetActive(false);
             
             var receivers = SceneManager.GetActiveScene().GetRootGameObjects()
                 .SelectMany(i => i.GetComponentsInChildren<ICoinsReceiver>())
@@ -44,13 +48,13 @@ namespace Core
             if(restCoinsValue > 0)
                 splitCoins.Add(restCoinsValue);
             
-            await Run(splitCoins, receivers, exitToken);
+            await Run(currencyAmount, splitCoins, receivers, exitToken);
         }
         
-        private async Task Run(List<int> splitCoins, IReadOnlyList<ICoinsReceiver> receivers, CancellationToken exitToken)
+        private async Task Run(int currencyAmount, List<int> splitCoins, IReadOnlyList<ICoinsReceiver> receivers, CancellationToken exitToken)
         {
             var list = new List<Task>();
-            for (int i = 0; i < splitCoins.Count; i++)
+            for (var coinI = 0; coinI < splitCoins.Count; coinI++)
             {
                 var startPosition = _fromPosition + Random.insideUnitSphere * _randomizeStartPosition;
                 var endPosition = receivers[0].Anchor.position;
@@ -61,10 +65,17 @@ namespace Core
                                Vector3.Cross(dirToReceiver, Vector3.forward) *
                                Random.Range(-distanceToReceiver * _randomizeSideOffset, distanceToReceiver * _randomizeSideOffset);
 
-                var delay = i == 0 ? 0.0f : Random.Range(0.0f, _randomizeDelay);
-                list.Add(StartFx(splitCoins[i], delay, startPosition, midPoint, endPosition, _duration, receivers, exitToken));
+                var delay = coinI == 0 ? 0.0f : Random.Range(0.0f, _randomizeDelay);
+                list.Add(StartFx(splitCoins[coinI], delay, startPosition, midPoint, endPosition, _duration, receivers, exitToken));
             }
+
+            _pointsText.gameObject.SetActive(true);
+            _pointsText.transform.position = _fromPosition;
+            _pointsText.SetPoint(new PointsDesc(currencyAmount, 0, 0));
+
             await Task.WhenAll(list);
+            
+            _pointsText.gameObject.SetActive(false);
         }
 
         private async Task StartFx(
