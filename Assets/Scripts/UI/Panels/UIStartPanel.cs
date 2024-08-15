@@ -94,10 +94,12 @@ namespace Core
         
         private void HatsBtn_OnClick()
         {
+            var activeHatsFilter = _data.GameProcessor.Scene.GetUserActiveHatsFilter();
             var data = new UIHatsPanelData();
             data.GameProcessor = _data.GameProcessor;
-            data.Selected = _data.GameProcessor.Scene.HatsLibrary.Hats.LastOrDefault(i => i.Available);
-            data.UserActiveHatsFilter = _data.GameProcessor.Scene.GetUserActiveHatsFilter();
+            data.Selected = _data.GameProcessor.Scene.HatsLibrary.Hats.LastOrDefault(
+                i => i.Available && activeHatsFilter.Contains(i.Id));
+            data.UserActiveHatsFilter = activeHatsFilter;
             data.Hats = _data.GameProcessor.Scene.HatsLibrary.Hats;
             data.HatsChanger = _data.GameProcessor.Scene;
             

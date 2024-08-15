@@ -75,7 +75,7 @@ namespace Core
         {
             _selectedItem.SetUserActiveFilter(!_selectedItem.UserActive);
             
-            var equipBtnTextKey = _selectedItem.UserActive ? _equipTextKey : _unequipTextKey;
+            var equipBtnTextKey = _selectedItem.UserActive ? _unequipTextKey : _equipTextKey;
             _equipBtnLabel.text = ApplicationController.Instance.LocalizationController.GetText(equipBtnTextKey);
             
             SetEquipAllLabel();
