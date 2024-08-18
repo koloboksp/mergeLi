@@ -20,7 +20,7 @@ using Object = UnityEngine.Object;
 
 namespace Core
 {
-    public class ApplicationController : ILanguage, ILanguageChanger
+    public class ApplicationController : ILanguageChanger
     {
         private const string LOGOSCENE_NAME = "LogoScene";
         private const string GAMESCENE_NAME = "GameScene";
@@ -37,7 +37,7 @@ namespace Core
         private IAnalyticsController _analyticsController;
         private IVibrationController _vibrationController;
         private TaskCompletionSource<bool> _initialization;
-        private bool _initializated = false;
+        private bool _initialized = false;
         private Atom.Version _version;
 
         public static ApplicationController Instance => _instance;
@@ -106,7 +106,7 @@ namespace Core
             DependenciesController.Instance.Set(_instance._uiPanelController);
 
            
-            _instance._initializated = true;
+            _instance._initialized = true;
             _instance._initialization.SetResult(true);
         }
 
@@ -128,15 +128,6 @@ namespace Core
             if (scene.IsValid()) 
                 SceneManager.UnloadSceneAsync(scene, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
         }
-
-        public SystemLanguage Language
-        {
-            get => Application.systemLanguage;
-            set
-            {
-                
-            }
-        }
         
         public void SetLanguage(SystemLanguage language)
         {
@@ -145,7 +136,7 @@ namespace Core
 
         public async Task<bool> WaitForInitializationAsync(CancellationToken cancellationToken)
         {
-            if (_initializated)
+            if (_initialized)
                 return true;
             
             var cancellationTokenCompletion = new TaskCompletionSource<bool>();

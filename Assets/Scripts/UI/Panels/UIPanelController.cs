@@ -116,6 +116,11 @@ namespace Core
             
             public void PushPopup(AsyncOperationHandle<GameObject> handle, UIPanel screen, UIScreenData data)
             {
+                if (_items.Count > 0)
+                {
+                    _items[^1].Deactivate();
+                }
+                
                 var stackItem = new StackItem(handle, screen, data);
                 _items.Add(stackItem);
                 stackItem.SetDataAndActivate();
@@ -193,6 +198,11 @@ namespace Core
                 public void Activate()
                 {
                     _screen.Activate();
+                }
+                
+                public void Deactivate()
+                {
+                    _screen.Deactivate();
                 }
                 
                 public void Hide()

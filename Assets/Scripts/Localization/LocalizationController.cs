@@ -13,11 +13,6 @@ using SmallTimer = Atom.Timers.SmallTimer;
 
 namespace Assets.Scripts.Core.Localization
 {
-    public interface ILanguage
-    {
-        SystemLanguage Language { get; set; }
-    }
-
     public interface ILocalizationSupport
     {
         void ChangeLocalization();
@@ -179,7 +174,15 @@ namespace Assets.Scripts.Core.Localization
                 return $"{LanguagePackNotFoundValue}({guid})";
 
             var text = AvailableLanguagePacks[packIndex].Value.Asset.FindText(guid);
-            return text ?? $"{TextNotFoundValue}({guid})";
+
+            var s = text;
+            if (s != null)
+            {
+                s = s.ToUpper();
+                return s;
+            }
+
+            return $"{TextNotFoundValue}({guid})";
         }
         
         public static int LanguagesCountInEditorMode

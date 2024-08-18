@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Collections.Generic;
 using Atom;
+using Core.Ads;
 using Core.Gameplay;
 using Core.Goals;
 using Core.Steps;
-using Core.Steps.CustomOperations;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -27,7 +23,9 @@ namespace Core
         [SerializeField] private UIBubbleDialog _noSpaceWarning;
         [SerializeField] private GuidEx _noSpaceWarningTextKey;
         [SerializeField] private UIAnyGiftIndicator _anyGiftIndicator;
-
+        
+        [FormerlySerializedAs("_adsBannerRect")] [SerializeField] private AdsBanner _adsBanner;
+        
         private readonly List<UIBuff> _uiBuffs = new();
         private UIGameScreenData _data;
 
@@ -70,6 +68,8 @@ namespace Core
                 uiBuff.SetModel(buff);
                 _uiBuffs.Add(uiBuff);
             }
+
+            _adsBanner.SetData(_data.GameProcessor.AdsViewer);
         }
 
         protected override void InnerActivate()
@@ -80,6 +80,15 @@ namespace Core
             _coins.Set(_data.GameProcessor.CurrencyAmount);
             _anyGiftIndicator.Set(_data.GameProcessor.GiftsMarket);
             _data.GameProcessor.PauseGameProcess(false);
+            
+            _adsBanner.Activate();
+        }
+
+        protected override void InnerDeactivate()
+        {
+            _adsBanner.Deactivate();
+            
+            base.InnerDeactivate();
         }
 
         protected override void InnerHide()

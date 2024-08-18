@@ -513,7 +513,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: World In BOX
+  m_Text: WORLD IN BOX
 --- !u!114 &1557126445481172192
 MonoBehaviour:
   m_ObjectHideFlags: 0

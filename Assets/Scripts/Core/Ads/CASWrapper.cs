@@ -9,10 +9,11 @@ namespace Core.Ads
 {
     public class CASWrapper : IAdsController
     {
-        IMediationManager _manager;
-        bool _showing;
-        bool _errorsOnShowing;
+        private IMediationManager _manager;
+        private bool _showing;
+        private bool _errorsOnShowing;
         private float _waitTime = 3.0f;
+        private IAdView _adView;
         
         public async Task InitializeAsync()
         {
@@ -115,6 +116,58 @@ namespace Core.Ads
             }
             
             return !_errorsOnShowing;
+        }
+
+        public bool ShowBanner(Vector2Int position, BannerSize bannerSize)
+        {
+            try
+            {
+                AdSize adSize;
+                switch (bannerSize)
+                {
+                    case BannerSize.Height50:
+                        adSize = AdSize.Banner;
+                        break;
+                    case BannerSize.Height50_250:
+                        adSize = AdSize.AdaptiveFullWidth;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(bannerSize), bannerSize, null);
+                }
+
+                if (_adView != null)
+                {
+                    if (_adView.size != adSize)
+                    {
+                        _adView.SetActive(false);
+                        _adView.Dispose();
+                        _adView = null;
+                    }
+                }
+
+                if (_adView == null)
+                {
+                    _adView = _manager.GetAdView(adSize);
+                }
+                
+                _adView.SetActive(true);
+                _adView.SetPositionPx(position.x, position.y, AdPosition.BottomCenter);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                return false;
+            }
+            
+            return true;
+        }
+
+        public void HideBanner()
+        {
+            if (_adView != null)
+            {
+                _adView.SetActive(false);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Core.Ads
 {
@@ -7,11 +8,19 @@ namespace Core.Ads
     {
         Task InitializeAsync();
         Task<bool> Show(AdvertisingType adType, CancellationToken cancellationToken);
+        bool ShowBanner(Vector2Int position, BannerSize bannerSize);
+        void HideBanner();
     }
     
     public enum AdvertisingType
     {
         Rewarded,
         Interstitial,
+    }
+    
+    public enum BannerSize
+    {
+        Height50,
+        Height50_250,
     }
 }
