@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Assets.Scripts.Core;
+using Assets.Scripts.Core.Localization;
 using Atom;
 using Core.Utils;
 using UI.Common;
@@ -10,7 +11,7 @@ using UnityEngine.Serialization;
 
 namespace Core
 {
-    public class UIBubbleDialog : MonoBehaviour
+    public class UIBubbleDialog : MonoBehaviour, ILocalizationSupport
     {
         [SerializeField] private UIText _dialogText;
         [SerializeField] private GameObject _iconRoot;
@@ -18,6 +19,7 @@ namespace Core
         [FormerlySerializedAs("_nextBtn")] [SerializeField] private UIExtendedButton _tapBtn;
         [SerializeField] private GameObject _clickToContinuePanel;
 
+        private GuidEx _textKey;
         private TaskCompletionSource<bool> _tapCompletionSource;
         public GameObject IconRoot => _iconRoot;
 
@@ -25,6 +27,13 @@ namespace Core
         {
             if (_tapBtn != null)
                 _tapBtn.onClick.AddListener(TapBtn_OnClick);
+            
+            LocalizationController.Add(this);
+        }
+
+        public void OnDestroy()
+        {
+            LocalizationController.Remove(this);
         }
 
         private void TapBtn_OnClick()
@@ -39,11 +48,12 @@ namespace Core
         {
             _clickToContinuePanel.SetActive(false);
             _dialogText.gameObject.SetActive(true);
+
+            _textKey = textKey;
             
-            var text = ApplicationController.Instance.LocalizationController.GetText(textKey);
+            var text = ApplicationController.Instance.LocalizationController.GetText(_textKey);
             _speakEffect.Play(text);
             await _dialogText.ShowAsync(text, Application.exitCancellationToken, cancellationToken);
-//await AsyncExtensions.WaitForSecondsAsync(1, cancellationToken);
 
             if (_tapBtn != null)
             {
@@ -86,6 +96,12 @@ namespace Core
         {
             _dialogText.gameObject.SetActive(state);
             _clickToContinuePanel.gameObject.SetActive(state);
+        }
+
+        public void ChangeLocalization()
+        {
+            var text = ApplicationController.Instance.LocalizationController.GetText(_textKey);
+            _dialogText.SetText(text);
         }
     }
 }

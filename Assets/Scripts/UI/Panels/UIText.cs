@@ -15,6 +15,11 @@ namespace Core
 
         private StringBuilder _textBuilder;
 
+        public void SetText(string text)
+        {
+            _text.text = text;
+        }
+
         public async Task ShowAsync(
             string text,
             CancellationToken exitToken,
