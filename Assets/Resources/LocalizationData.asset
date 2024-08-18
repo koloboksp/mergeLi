@@ -17,7 +17,35 @@ MonoBehaviour:
     NativeName: English
     NativeFlag: {fileID: 1034422036, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
     Asset: {fileID: 4900000, guid: 8e3f6465de69f454a96ce4916070ce5c, type: 3}
+  - Language: 34
+    NativeName: "Espa\xF1ol"
+    NativeFlag: {fileID: 2007489168, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+    Asset: {fileID: 4900000, guid: 001eb28f9adcdb04686261322dc3a385, type: 3}
+  - Language: 14
+    NativeName: "Fran\xE7ais"
+    NativeFlag: {fileID: 710437322, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+    Asset: {fileID: 4900000, guid: 2ad5cf05182bece47800dbc2d7d540a1, type: 3}
+  - Language: 15
+    NativeName: Deutsch
+    NativeFlag: {fileID: 1956918986, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+    Asset: {fileID: 4900000, guid: 2e3abe5bc5f0c874bbb28958978d6599, type: 3}
+  - Language: 21
+    NativeName: Italiano
+    NativeFlag: {fileID: -1330792159, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+    Asset: {fileID: 4900000, guid: 96abbc36bf9f02545bd407924173d118, type: 3}
+  - Language: 28
+    NativeName: "Portugu\xEAs"
+    NativeFlag: {fileID: -381853699, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+    Asset: {fileID: 4900000, guid: 738326492a285b744be4af3d8ff52f81, type: 3}
   - Language: 30
     NativeName: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439"
     NativeFlag: {fileID: 886896726, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
     Asset: {fileID: 4900000, guid: b18d61b00e83c75419e85ca7bfd6ed16, type: 3}
+  - Language: 38
+    NativeName: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430"
+    NativeFlag: {fileID: -1000691953, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+    Asset: {fileID: 4900000, guid: 83663add99fb54043a801931e4450e89, type: 3}
+  - Language: 6
+    NativeName: "\u4E2D\u6587"
+    NativeFlag: {fileID: -54173772, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+    Asset: {fileID: 4900000, guid: 12e962dcdab7ad04480b7a79527e6b2a, type: 3}
