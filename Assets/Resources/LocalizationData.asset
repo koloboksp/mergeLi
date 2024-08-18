@@ -17,7 +17,7 @@ MonoBehaviour:
     NativeName: English
     NativeFlag: {fileID: 1034422036, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
     Asset: {fileID: 4900000, guid: 8e3f6465de69f454a96ce4916070ce5c, type: 3}
-  - Language: 29
+  - Language: 30
     NativeName: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439"
     NativeFlag: {fileID: 886896726, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
     Asset: {fileID: 4900000, guid: b18d61b00e83c75419e85ca7bfd6ed16, type: 3}

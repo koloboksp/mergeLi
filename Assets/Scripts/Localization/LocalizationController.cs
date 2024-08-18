@@ -13,11 +13,6 @@ using SmallTimer = Atom.Timers.SmallTimer;
 
 namespace Assets.Scripts.Core.Localization
 {
-    public interface ILanguage
-    {
-        SystemLanguage Language { get; set; }
-    }
-
     public interface ILocalizationSupport
     {
         void ChangeLocalization();
