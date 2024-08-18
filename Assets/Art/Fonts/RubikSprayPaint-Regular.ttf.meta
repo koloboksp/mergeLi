@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4924654afa431d7479646f27acdb23dc
+guid: 9642ca46441c5594ba007d8fe2c6c85e
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,10 +9,10 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - BubbleGum
+  - Rubik Spray Paint
   fallbackFontReferences: []
   customCharacters: 
-  fontRenderingMode: 0
+  fontRenderingMode: 1
   ascentCalculationMode: 1
   useLegacyBoundsCalculation: 0
   shouldRoundAdvanceValue: 1
