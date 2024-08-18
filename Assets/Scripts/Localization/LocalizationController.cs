@@ -174,7 +174,15 @@ namespace Assets.Scripts.Core.Localization
                 return $"{LanguagePackNotFoundValue}({guid})";
 
             var text = AvailableLanguagePacks[packIndex].Value.Asset.FindText(guid);
-            return text ?? $"{TextNotFoundValue}({guid})";
+
+            var s = text;
+            if (s != null)
+            {
+                s = s.ToUpper();
+                return s;
+            }
+
+            return $"{TextNotFoundValue}({guid})";
         }
         
         public static int LanguagesCountInEditorMode
