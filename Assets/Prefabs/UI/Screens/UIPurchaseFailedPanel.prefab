@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -60, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2886915627557311773
 MonoBehaviour:
@@ -481,7 +481,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -1.7953, y: -202.04749}
-  m_SizeDelta: {x: 566.1422, y: 339.0601}
+  m_SizeDelta: {x: 470, y: 339.0601}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &6030145878016153886
 MonoBehaviour:
@@ -542,8 +542,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: The store is not available. Please check your network connection or try
-    again later.
+  m_Text: Shop unavailable. Check your network connection or try again later.
 --- !u!114 &294675530366045055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -732,7 +731,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -40}
-  m_SizeDelta: {x: 620, y: 180}
+  m_SizeDelta: {x: 470, y: 180}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &756609296328646407
 MonoBehaviour:

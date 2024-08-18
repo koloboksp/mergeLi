@@ -86,7 +86,6 @@ namespace Core.Ads
                 {
                     ApplicationController.Instance.AdsController.HideBanner();
                 }
-                Debug.LogError(height);
             }
             else
             {
