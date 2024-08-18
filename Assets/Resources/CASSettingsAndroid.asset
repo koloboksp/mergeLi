@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testAdMode: 0
   managerIds:
-  - com.WiB.LiveFactory
+  - com.WiB.MergeLines
   allowedAdFlags: 4
   audienceTagged: 1
   bannerSize: 0
