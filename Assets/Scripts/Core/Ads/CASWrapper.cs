@@ -167,7 +167,6 @@ namespace Core.Ads
             if (_adView != null)
             {
                 _adView.SetActive(false);
-                //_adView.Dispose();
             }
         }
     }
