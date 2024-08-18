@@ -47,9 +47,14 @@ namespace Core
 
         public void Deactivate()
         {
+            InnerDeactivate();
+        }
+        
+        protected virtual void InnerDeactivate()
+        {
             
         }
-
+        
         public void LockInput(bool state)
         {
             _canvasGroup.interactable = !state;

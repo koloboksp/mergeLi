@@ -15,7 +15,7 @@ MonoBehaviour:
   testAdMode: 0
   managerIds:
   - com.WiB.MergeLines
-  allowedAdFlags: 4
+  allowedAdFlags: 5
   audienceTagged: 1
   bannerSize: 0
   bannerRefresh: 30
