@@ -208,7 +208,10 @@ namespace Core.Gameplay
                             foreach (var buff in _gameProcessor.Buffs)
                                 buff.SetRestCooldown(0);
                         
-                            _ = ApplicationController.Instance.ISocialService.SetScoreForLeaderBoard(BEST_SESSION_SCORE_LEADERBOARD, ApplicationController.Instance.SaveController.SaveProgress.BestSessionScore, Application.exitCancellationToken);
+                            _ = ApplicationController.Instance.ISocialService.SetScoreForLeaderBoard(
+                                BEST_SESSION_SCORE_LEADERBOARD, 
+                                _saveController.Value.SaveProgress.BestSessionScore, 
+                                Application.exitCancellationToken);
 
                             _gameProcessor.MusicPlayer.PlayNext();
                         
@@ -400,6 +403,11 @@ namespace Core.Gameplay
         
             gameScreen.LockInput(false);
             _gameProcessor.Field.View.LockInput(false);
+            
+            _ = ApplicationController.Instance.ISocialService.SetScoreForLeaderBoard(
+                BEST_SESSION_SCORE_LEADERBOARD, 
+                _saveController.Value.SaveProgress.BestSessionScore, 
+                Application.exitCancellationToken);
         }
     
         public async Task ProcessCastleCompleteAsync(
