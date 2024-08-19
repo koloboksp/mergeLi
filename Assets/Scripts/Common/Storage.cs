@@ -5,11 +5,12 @@ using System;
 using UnityEngine;
 using System.Threading.Tasks;
 using Atom.Timers;
+using Save;
 
 namespace Assets.Scripts.Core.Storage
 {
     //*********************************************************************************************
-    public class BaseStorage
+    public class BaseStorage : IStorage
     {
         public static readonly string ConfigurationsDirectory = Application.persistentDataPath + Path.DirectorySeparatorChar;
         private static readonly string mPath = ConfigurationsDirectory + "UserStorageInfo.dat";
@@ -110,7 +111,7 @@ namespace Assets.Scripts.Core.Storage
             return passSave;
         }
         //-----------------------------------------------------------------------------------------
-        public Var Load(string path)
+        public string Load(string path)
         {
             try
             {

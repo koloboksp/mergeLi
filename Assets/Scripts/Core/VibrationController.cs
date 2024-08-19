@@ -32,7 +32,9 @@ namespace Core
         {
             try
             {
+#if UNITY_ANDROID || UNITY_IOS
                 Vibration.Init();
+#endif
             }
             catch (Exception e)
             {
@@ -52,10 +54,14 @@ namespace Core
             switch (vibrationType)
             {
                 case VibrationType.Pop:
+#if UNITY_ANDROID || UNITY_IOS
                     Vibration.VibratePop();
+#endif
                     break;
                 case VibrationType.Peek:
+#if UNITY_ANDROID || UNITY_IOS
                     Vibration.VibratePeek();
+#endif
                     break;
             }
         }

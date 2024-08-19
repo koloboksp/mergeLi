@@ -2,21 +2,18 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Analytics;
 using Assets.Scripts.Core.Localization;
 using Assets.Scripts.Core.Storage;
 using Core.Ads;
 using Core.Market;
 using Core.Social;
-using Core.Steps.CustomOperations;
 using Core.Utils;
 using Save;
-using Unity.Services.Core;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
-using Object = UnityEngine.Object;
 
 namespace Core
 {
@@ -60,15 +57,18 @@ namespace Core
 
             Application.logMessageReceived += _instance.Application_logMessageReceived;
             
-            var baseStorage = new BaseStorage();
-            await baseStorage.InitializeAsync();
+            IStorage storage = null;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            storage = new UserDataManager();
+#else
+            storage = new BaseStorage();
+#endif
+            await storage.InitializeAsync();
             
             _instance._version = new(Application.version);
-            
             _instance._saveController = new SaveController();
-            await _instance._saveController.InitializeAsync(baseStorage, Application.exitCancellationToken);
+            await _instance._saveController.InitializeAsync(storage, Application.exitCancellationToken);
             DependenciesController.Instance.Set(_instance._saveController);
-
             _instance._localizationController = new LocalizationController();
             await _instance._localizationController.InitializeAsync(_instance._saveController.SaveSettings, Application.exitCancellationToken);
             if (!_instance._localizationController.ActiveLanguageDetected)
@@ -77,23 +77,29 @@ namespace Core
             }
             _instance._soundController = new SoundController(_instance._saveController.SaveSettings);
             await _instance._soundController.InitializeAsync(Application.exitCancellationToken);
-
             var handle = Addressables.LoadAssetAsync<GameObject>($"Assets/RequiredPrefabs/purchaseLibrary.prefab");
             var purchaseLibraryObject = await handle.Task;
             var purchasesLibrary = purchaseLibraryObject.GetComponent<PurchasesLibrary>();
             
             _instance._purchaseController = new PurchaseController();
             await _instance._purchaseController.InitializeAsync(purchasesLibrary.Items.Select(i => i.ProductId));
-
+            
+#if UNITY_ANDROID || UNITY_IOS
             _instance._analyticsController = new FirebaseAnalyticsController();
+#else
+            _instance._analyticsController = new DefaultAnalytics();
+#endif
             await _instance._analyticsController.InitializeAsync(_instance._version);
-
+#if UNITY_ANDROID || UNITY_IOS
             _instance._adsController = new CASWrapper();
+#else
+            _instance._adsController = new DefaultAdsController();
+#endif
+ 
             await _instance._adsController.InitializeAsync();
 
             _instance._vibrationController = new VibrationController(_instance._saveController.SaveSettings);
             await _instance._vibrationController.InitializeAsync();
-
 #if UNITY_ANDROID
             _instance._socialService = new Social.GooglePlayGames();
 #else
@@ -101,11 +107,9 @@ namespace Core
 #endif
             if(_instance._socialService != null && _instance._socialService.IsAutoAuthenticationAvailable())
                 _ = _instance._socialService.AuthenticateAsync(Application.exitCancellationToken);
-            
             _instance._uiPanelController = new UIPanelController();
             DependenciesController.Instance.Set(_instance._uiPanelController);
 
-           
             _instance._initialized = true;
             _instance._initialization.SetResult(true);
         }

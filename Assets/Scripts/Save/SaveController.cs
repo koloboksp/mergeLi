@@ -2,18 +2,25 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Assets.Scripts.Core.Storage;
 using UnityEngine;
 
 namespace Save
 {
+    public interface IStorage
+    {
+        void Save(string fullPath, string sData);
+        Task SaveAsync(string fullPath, string sData);
+        string Load(string fullPath);
+        Task InitializeAsync();
+    }
+    
     public class SaveController
     {
         const string PlayerSettingsFileName = "playerSettings";
         const string PlayerDataFileName = "playerData";
         const string PlayerLastSessionDataFileName = "playerLastSessionData";
 
-        private BaseStorage _storage;
+        private IStorage _storage;
         
         private SessionProgress _lastSessionProgress = null;
 
@@ -32,7 +39,7 @@ namespace Save
             _saveLastSessionProgress = new SaveSessionProgress(this, PlayerLastSessionDataFileName);
         }
 
-        public async Task InitializeAsync(BaseStorage storage, CancellationToken cancellationToken)
+        public async Task InitializeAsync(IStorage storage, CancellationToken cancellationToken)
         {
             _storage = storage;
             try
