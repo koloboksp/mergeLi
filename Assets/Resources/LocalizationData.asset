@@ -33,6 +33,10 @@ MonoBehaviour:
     NativeName: Italiano
     NativeFlag: {fileID: -1330792159, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
     Asset: {fileID: 4900000, guid: 96abbc36bf9f02545bd407924173d118, type: 3}
+  - Language: 22
+    NativeName: "\u65E5\u672C\u8A9E"
+    NativeFlag: {fileID: 180084035, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}
+    Asset: {fileID: 4900000, guid: cdac19378ed28f247a4e7cfc4f7a24c7, type: 3}
   - Language: 28
     NativeName: "Portugu\xEAs"
     NativeFlag: {fileID: -381853699, guid: 41ee2d1abb9bad2428b2487dd30eb051, type: 3}

@@ -16,7 +16,8 @@ namespace Core
         [SerializeField] private Button _closeBtn;
         [SerializeField] private ScrollRect _itemsContainer;
         [SerializeField] private UILanguagePanel_LanguageItem _itemPrefab;
-        
+        [SerializeField] private List<UILanguagePanel_LanguageItem> _items = new();
+
         private Model _model;
 
         private void Awake()
@@ -34,76 +35,104 @@ namespace Core
             base.SetData(undefinedData);
 
             var data = undefinedData as UILanguagePanelData;
-            
-            _model = new Model()
-                .OnItemsUpdated(OnItemsUpdated)
-                .OnItemsSelected(OnItemSelected);
-            
+
+            _model = new Model();
+            _model.OnItemsUpdated += OnItemsUpdated;
+            _model.OnItemSelected += OnItemSelected;
             _model.SetData(data.Available, data.Selected, data.Changer);
+            OnItemsUpdated(_model.Items);
+            FocusOnSelected();
         }
 
-        private void OnItemSelected(UILanguagePanel_LanguageItem.Model sender)
+        private void OnItemSelected(LanguageItemModel sender)
         {
             LockInput(true);
             ApplicationController.Instance.UIPanelController.PopScreen(this);
             LockInput(false);
         }
 
-        private void OnItemsUpdated(IEnumerable<UILanguagePanel_LanguageItem.Model> items)
+        private void OnItemsUpdated(IEnumerable<LanguageItemModel> itemModels)
         {
-            var oldViews = _itemsContainer.content.GetComponents<UISkinPanel_SkinItem>();
-            foreach (var oldView in oldViews)
-                Destroy(oldView.gameObject);
+            foreach (var item in _items)
+            {
+                Destroy(item.gameObject);
+            }
+            _items.Clear();
 
             _itemPrefab.gameObject.SetActive(false);
-            foreach (var item in items)
+            foreach (var itemModel in itemModels)
             {
-                var itemView = Instantiate(_itemPrefab, _itemsContainer.content);
-                itemView.gameObject.SetActive(true);
-                itemView.SetModel(item);
+                var item = Instantiate(_itemPrefab, _itemsContainer.content);
+                item.gameObject.SetActive(true);
+                item.SetModel(itemModel);
+                _items.Add(item);
+                
+                LayoutRebuilder.ForceRebuildLayoutImmediate(_itemsContainer.content);
+            }
+            
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_itemsContainer.content);
+        }
+        
+        private void FocusOnSelected()
+        {
+            RectTransform focusedRect = null;
+
+            var focusedItem = _items.Find(i => i.Model == _model.Selected);
+            if (focusedItem != null)
+            {
+                focusedRect = focusedItem.Root;
+            }
+            
+            if (focusedRect != null)
+            {
+                var focusOnPosition = focusedRect.anchoredPosition.y;
+                var focusOnNormalPosition = focusOnPosition / (_itemsContainer.content.rect.height - _itemsContainer.viewport.rect.height);
+                focusOnNormalPosition = 1.0f - Mathf.Clamp01(-focusOnNormalPosition);
+                _itemsContainer.normalizedPosition = new Vector2(0, focusOnNormalPosition);
             }
         }
         
         public class Model
         {
-            private Action<IEnumerable<UILanguagePanel_LanguageItem.Model>> _onItemsUpdated;
-            private Action<UILanguagePanel_LanguageItem.Model> _onItemSelected;
+            public Action<IEnumerable<LanguageItemModel>> OnItemsUpdated;
+            public Action<LanguageItemModel> OnItemSelected;
             
-            private readonly List<UILanguagePanel_LanguageItem.Model> _items = new ();
+            private readonly List<LanguageItemModel> _items = new ();
+            private LanguageItemModel _selected;
             private ILanguageChanger _changer;
-            public IEnumerable<UILanguagePanel_LanguageItem.Model> Items => _items;
-
+            
+            public IEnumerable<LanguageItemModel> Items => _items;
+            public LanguageItemModel Selected => _selected;
+            
             public void SetData(IEnumerable<UILanguagePanelLanguageData> languages, SystemLanguage selected, ILanguageChanger changer)
             {
                 _changer = changer;
                 
                 _items.AddRange(languages
-                    .Select(i => new UILanguagePanel_LanguageItem.Model(this)
+                    .Select(i => new LanguageItemModel(this)
                         .SetLanguage(i.Language)
                         .SetIcon(i.Icon)
                         .SetLabel(i.Label)));
-                _onItemsUpdated?.Invoke(_items);
 
                 foreach (var item in _items)
-                    item.SetSelectedState(item.Language == selected);
-            }
-
-            public Model OnItemsUpdated(Action<IEnumerable<UILanguagePanel_LanguageItem.Model>> onItemsUpdated)
-            {
-                _onItemsUpdated = onItemsUpdated;
-                return this;
+                {
+                    if (item.Language == selected)
+                    {
+                        _selected = item;
+                        item.SetSelectedState(true);
+                    }
+                    else
+                    {
+                        item.SetSelectedState(false);
+                    }
+                }
             }
             
-            public Model OnItemsSelected(Action<UILanguagePanel_LanguageItem.Model> onItemSelected)
+            internal void TrySelect(LanguageItemModel newSelected)
             {
-                _onItemSelected = onItemSelected;
-                return this;
-            }
-
-            internal void TrySelect(UILanguagePanel_LanguageItem.Model newSelected)
-            {
-                _changer.SetLanguage(newSelected.Language);
-                _onItemSelected?.Invoke(newSelected);
+                _selected = newSelected;
+                _changer.SetLanguage(_selected.Language);
+                OnItemSelected?.Invoke(_selected);
             }
         }
     }
