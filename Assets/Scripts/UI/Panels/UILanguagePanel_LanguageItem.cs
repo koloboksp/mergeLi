@@ -10,10 +10,10 @@ namespace Core
         [SerializeField] private Button _button;
         [SerializeField] private Image _icon;
         [SerializeField] private Text _name;
-        [SerializeField] private Color _selectedColor = Color.white;
-        [SerializeField] private Color _normalColor = Color.gray;
-        [SerializeField] private GameObject _selectionFrame;
-
+        [SerializeField] private Image _background;
+        [SerializeField] private Sprite _selectedIcon;
+        [SerializeField] private Sprite _normalIcon;
+       
         private LanguageItemModel _model;
         
         public LanguageItemModel Model => _model;
@@ -41,7 +41,7 @@ namespace Core
         
         private void OnSelectionChanged()
         {
-            _button.targetGraphic.color = _model.Selected ? _selectedColor : _normalColor;
+            _background.sprite = _model.Selected ? _selectedIcon : _normalIcon;
         }
     }
     

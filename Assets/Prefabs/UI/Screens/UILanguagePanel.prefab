@@ -740,9 +740,9 @@ MonoBehaviour:
   _button: {fileID: 2068638522926990273}
   _icon: {fileID: 8168524659875518328}
   _name: {fileID: 2482734764011359254}
-  _selectedColor: {r: 1, g: 1, b: 1, a: 1}
-  _normalColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  _selectionFrame: {fileID: 0}
+  _background: {fileID: 704234665230087458}
+  _selectedIcon: {fileID: 21300000, guid: 053f72a4d59e0154ca0e2226df8efe10, type: 3}
+  _normalIcon: {fileID: 21300000, guid: c9ea0b6040255844aad0be0cb8b1d3cc, type: 3}
 --- !u!222 &4916658141659869537
 CanvasRenderer:
   m_ObjectHideFlags: 0
