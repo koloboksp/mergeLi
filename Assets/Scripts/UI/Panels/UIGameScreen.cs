@@ -261,21 +261,30 @@ namespace Core
             _anyGiftIndicator.gameObject.SetActive(false);
             _showPauseBtn.gameObject.SetActive(false);
             _noSpaceWarning.gameObject.SetActive(false);
+            _adsBanner.gameObject.SetActive(false);
         }
 
         public void SetActiveElement(UIGameScreenElement element, bool active)
         {
-            if (element == UIGameScreenElement.ProgressBar)
-                _score.gameObject.SetActive(active);
-            if (element == UIGameScreenElement.Coins)
+            switch (element)
             {
-                _coins.gameObject.SetActive(active);
-                _anyGiftIndicator.gameObject.SetActive(active);
+                case UIGameScreenElement.ProgressBar:
+                    _score.gameObject.SetActive(active);
+                    break;
+                case UIGameScreenElement.Coins:
+                    _coins.gameObject.SetActive(active);
+                    _anyGiftIndicator.gameObject.SetActive(active);
+                    break;
+                case UIGameScreenElement.Buffs:
+                    _buffsContainerRoot.gameObject.SetActive(active);
+                    break;
+                case UIGameScreenElement.Settings:
+                    _showPauseBtn.gameObject.SetActive(active);
+                    break;
+                case UIGameScreenElement.Ads:
+                    _adsBanner.gameObject.SetActive(active);
+                    break;
             }
-            if (element == UIGameScreenElement.Buffs)
-                _buffsContainerRoot.gameObject.SetActive(active);
-            if (element == UIGameScreenElement.Settings)
-                _showPauseBtn.gameObject.SetActive(active);
         }
     }
 
@@ -290,5 +299,6 @@ namespace Core
         Coins,
         Buffs,
         Settings,
+        Ads,
     }
 }

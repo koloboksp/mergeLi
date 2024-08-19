@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Core.Ads
 {
@@ -10,6 +11,22 @@ namespace Core.Ads
 
         public RectTransform Root => _root;
 
+        private void OnEnable()
+        {
+            if (_adsViewer != null)
+            {
+                _adsViewer.AddBanner(this);
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (_adsViewer != null)
+            {
+                _adsViewer.RemoveBanner(this);
+            }
+        }
+
         public void SetData(IAdsViewer adsViewer)
         {
             _adsViewer = adsViewer;
@@ -17,7 +34,10 @@ namespace Core.Ads
 
         public void Activate()
         {
-            _adsViewer.AddBanner(this);
+            if (isActiveAndEnabled)
+            {
+                _adsViewer.AddBanner(this);
+            }
         }
         
         public void Deactivate()
