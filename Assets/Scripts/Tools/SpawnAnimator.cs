@@ -1,6 +1,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Utils;
 using UnityEngine;
 
 public class SpawnAnimator : MonoBehaviour
@@ -41,7 +42,8 @@ public class SpawnAnimator : MonoBehaviour
         }
         else
         {
-            await Task.Delay((int)(1000 * delay));
+            await AsyncExtensions.WaitForSecondsAsync(delay, Application.exitCancellationToken);
+
             exitToken.ThrowIfCancellationRequested();
             
             obj.gameObject.SetActive(true);

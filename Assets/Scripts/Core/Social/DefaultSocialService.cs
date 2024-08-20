@@ -7,17 +7,15 @@ using UnityEngine;
 
 namespace Core.Social
 {
-    public class Default : ISocialService
+    public class DefaultSocialService : ISocialService
     {
         public bool IsAutoAuthenticationAvailable()
         {
-            return true;
+            return false;
         }
 
         public async Task<bool> AuthenticateAsync(CancellationToken cancellationToken)
         {
-            var timer = new SmallTimer();
-
             return false;
         }
 

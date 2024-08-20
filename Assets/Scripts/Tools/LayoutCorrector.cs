@@ -1,9 +1,5 @@
-#if UNITY_EDITOR
-
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.UI;
 
 public class LayoutCorrector : MonoBehaviour
@@ -51,9 +47,6 @@ public class LayoutCorrector : MonoBehaviour
 
             CorrectText(b.GetComponentInChildren<Text>(), pattern.buttonTextSize);
         }
-        
-
-        // EditorUtility.SetDirty(gameObject);
     }
 
     private void CorrectText(Text text, int size)
@@ -78,8 +71,6 @@ public class LayoutCorrector : MonoBehaviour
             if (outline != null)
                 DestroyImmediate(outline);
         }
-
-        EditorUtility.SetDirty(text);
     }
 
     private void SetRT(RectTransform rt, Vector2 size, Vector2 pos, bool alignTop = true)
@@ -95,27 +86,3 @@ public class LayoutCorrector : MonoBehaviour
         rt.anchoredPosition = pos;
     }
 }
-
-[CustomEditor(typeof(LayoutCorrector))]
-public class LayoutCorrectorEditor : Editor
-{
-    private LayoutCorrector t;
-
-    private void OnEnable()
-    {
-        t = (LayoutCorrector)target;
-    }
-
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-
-        if (GUILayout.Button("Correct"))
-        {
-            t.Correct();
-           
-        }
-    }
-}
-
-#endif

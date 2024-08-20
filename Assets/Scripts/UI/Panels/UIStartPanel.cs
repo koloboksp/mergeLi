@@ -60,12 +60,21 @@ namespace Core
             _hatsBtn.onClick.AddListener(HatsBtn_OnClick);
             
             _settingsBtn.onClick.AddListener(SettingsBtn_OnClick);
+#if UNITY_WEBGL
+            _loginSocialBtn.gameObject.SetActive(false);
+            _achievementsBtn.gameObject.SetActive(false);
+            _leaderboardBtn.gameObject.SetActive(false);
+#elif UNITY_ANDROID
+            _loginSocialBtn.gameObject.SetActive(true);
+            _achievementsBtn.gameObject.SetActive(true);
+            _leaderboardBtn.gameObject.SetActive(true);
             
             _loginSocialBtn.onClick.AddListener(LoginSocialBtn_OnClick);
-            _rateUsBtn.onClick.AddListener(RateUsBtn_OnClick);
             _achievementsBtn.onClick.AddListener(ShowAchievementsBtn_OnClick);
             _leaderboardBtn.onClick.AddListener(ShowLeaderboardBtn_OnClick);
-            
+#endif
+            _rateUsBtn.onClick.AddListener(RateUsBtn_OnClick);
+
             _cheatsBtn.onClick.AddListener(ShowCheatsBtn_OnClick);
         }
         
@@ -235,7 +244,6 @@ namespace Core
             _model = new Model();
 
             SetPlayButton();
-
             _panelAnimator.Play(_data.Instant);
             if (_data.Instant)
             {
@@ -265,6 +273,8 @@ namespace Core
 
         private void SetupLoginSocialBtn()
         {
+#if UNITY_WEBGL
+#else
             if (ApplicationController.Instance.ISocialService.IsAuthenticated())
             {
                 _loginSocialBtn.gameObject.SetActive(false);
@@ -273,6 +283,7 @@ namespace Core
             {
                 _loginSocialBtn.gameObject.SetActive(true);
             }
+#endif
         }
         
         public class Model

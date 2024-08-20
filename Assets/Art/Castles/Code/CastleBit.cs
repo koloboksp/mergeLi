@@ -11,7 +11,7 @@ public class CastleBit : MonoBehaviour
     private const float BORN_TIME = .5f;
     private const float GROW_TIME = .5f;
     private const float FULL_TIME = 1f;
-    private const int ONE_BIT_DELAY = 50; // in ms
+    private const float ONE_BIT_DELAY = 0.05f;
 
     private static readonly int pAlpha = Shader.PropertyToID("_Alpha");
     private static readonly int pLevel = Shader.PropertyToID("_Level");
@@ -86,20 +86,18 @@ public class CastleBit : MonoBehaviour
     }
     public async Task PlayComplete(int delayIndex)
     {
-        await Task.Delay(delayIndex * ONE_BIT_DELAY);
-
+        await AsyncExtensions.WaitForSecondsAsync((float)delayIndex * ONE_BIT_DELAY, Application.exitCancellationToken);
         await Play(ShowMode.FullCastle, FULL_TIME);
     }
 
     private async Task Play(ShowMode showMode, float time)
     {
-        float timer = time;
-
-        while (timer > 0)
+        var timer = time;
+        while (timer > 0.0f)
         {
-            timer = timer > 0 ? timer - Time.deltaTime : 0;
+            timer -= Time.deltaTime;
 
-            SetMaterialPhase(showMode, 1f - timer / time);
+            SetMaterialPhase(showMode, Mathf.Clamp01(1f - timer / time));
 
             await Task.Yield();
         }

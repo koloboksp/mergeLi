@@ -26,7 +26,7 @@ namespace Core.Market
 
         private bool _initialized;
         private readonly List<string> _availableProducts = new List<string>();
-    
+        
         public async Task InitializeAsync(IEnumerable<string> availableProducts)
         {
             try
@@ -41,8 +41,14 @@ namespace Core.Market
 #elif UNITY_ANDROID || UNITY_IOS
                 _validator = new CrossPlatformValidator(UnityEngine.Purchasing.Security.GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
 #elif UNITY_STANDALONE
-                return;            
+                return; 
+#else
+
 #endif
+          
+#if UNITY_WEBGL && !UNITY_EDITOR
+
+#else
                 var configurationBuilder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
                 string storeName = null;
@@ -57,7 +63,7 @@ namespace Core.Market
                     configurationBuilder.AddProduct(productId, ProductType.Consumable, new IDs { { productId, storeName } });
            
                 UnityPurchasing.Initialize(this, configurationBuilder);
-            
+#endif
                 Debug.Log($"<color=#99ff99>Time initialize {nameof(PurchaseController)}: {timer.Update()}.</color>");
             }
             catch (Exception e)
@@ -245,6 +251,22 @@ namespace Core.Market
             }
 
             return "--";
+        }
+
+        public bool IsProductAvailable(string productId)
+        {
+            if (!_initialized)
+            {
+                return false;
+            }
+
+            var product = _store.products.WithID(productId);
+            if (product == null)
+            {
+                return false;
+            }
+
+            return product.availableToPurchase;
         }
     }
 }

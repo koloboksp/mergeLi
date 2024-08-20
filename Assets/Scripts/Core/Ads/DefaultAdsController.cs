@@ -9,6 +9,7 @@ namespace Core.Ads
     {
         public Task InitializeAsync()
         {
+            Debug.Log($"DefaultAdsController initialized.");
             return Task.CompletedTask;
         }
 
@@ -24,6 +25,11 @@ namespace Core.Ads
 
         public void HideBanner()
         {
+        }
+
+        public bool IsAdsAvailable(string adsId, AdvertisingType advertisingType)
+        {
+            return false;
         }
     }
 }

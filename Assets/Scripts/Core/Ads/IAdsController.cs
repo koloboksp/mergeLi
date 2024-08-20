@@ -10,6 +10,7 @@ namespace Core.Ads
         Task<bool> Show(AdvertisingType adType, CancellationToken cancellationToken);
         bool ShowBanner(Vector2Int position, BannerSize bannerSize);
         void HideBanner();
+        bool IsAdsAvailable(string adsId, AdvertisingType advertisingType);
     }
     
     public enum AdvertisingType

@@ -30,7 +30,6 @@ namespace Core
         [SerializeField] private Sprite _vibrationEnableIcon;
         [SerializeField] private Sprite _vibrationDisableIcon;
 
-        
         [SerializeField] private Button _changeLanguageBtn;
         [SerializeField] private Text _changeLanguageBtnText;
         [SerializeField] private Image _changeLanguageBtnImage;
@@ -48,8 +47,12 @@ namespace Core
             _musicEnableBtn.onClick.AddListener(MusicEnableBtn_OnClick);
             _musicVolumeSlider.onValueChanged.AddListener(MusicVolumeSlider_OnValueChanged);
 
+#if UNITY_WEBGL
+            _vibrationEnableBtn.gameObject.SetActive(false);
+#else
+            _vibrationEnableBtn.gameObject.SetActive(true);
             _vibrationEnableBtn.onClick.AddListener(VibrationEnableBtn_OnClick);
-
+#endif
             _changeLanguageBtn.onClick.AddListener(ChangeLanguageBtn_OnClick);
         }
         

@@ -169,5 +169,15 @@ namespace Core.Ads
                 _adView.SetActive(false);
             }
         }
+
+        public bool IsAdsAvailable(string adsId, AdvertisingType advertisingType)
+        {
+            if (advertisingType == AdvertisingType.Rewarded)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

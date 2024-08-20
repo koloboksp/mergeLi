@@ -35,6 +35,7 @@ namespace Core
 #if UNITY_ANDROID || UNITY_IOS
                 Vibration.Init();
 #endif
+                Debug.Log("VibrationController initialized.");
             }
             catch (Exception e)
             {

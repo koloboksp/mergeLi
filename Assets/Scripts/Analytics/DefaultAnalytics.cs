@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Atom;
 using Core;
 using Core.Gameplay;
+using UnityEngine;
 
 namespace Analytics
 {
@@ -10,6 +11,7 @@ namespace Analytics
     {
         public Task InitializeAsync(Version version)
         {
+            Debug.Log($"DefaultAnalytics initialized.");
             return Task.CompletedTask;
         }
 

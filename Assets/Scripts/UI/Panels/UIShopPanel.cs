@@ -206,12 +206,16 @@ namespace Core
             var items = new List<IShopPanelItem>();
 
             items.AddRange(gameProcessor.AdsLibrary.Items
+                .Where(i => ApplicationController.Instance.AdsController.IsAdsAvailable(i.name, i.AdvertisingType))
                 .Select(i => new ShopPanelAdsItem()
                     .Init(i.name, i.CurrencyAmount, gameProcessor.AdsViewer)));
+            
             items.AddRange(gameProcessor.PurchasesLibrary.Items
+                .Where(i => ApplicationController.Instance.PurchaseController.IsProductAvailable(i.ProductId))
                 .Select(i => new ShopPanelMarketItem()
                     .Init(i.name, i.ProductId, i.CurrencyAmount, gameProcessor.Market)
                     .SetIcon(i.Icon)));
+       
             items.AddRange(gameProcessor.GiftsMarket.Gifts
                 .Select(i => new ShopPanelGiftItem()
                     .Init(i.Id, i)));

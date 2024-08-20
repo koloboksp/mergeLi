@@ -103,15 +103,20 @@ namespace Core
 #if UNITY_ANDROID
             _instance._socialService = new Social.GooglePlayGames();
 #else
-            _instance._socialService = new Default();
+            _instance._socialService = new DefaultSocialService();
 #endif
-            if(_instance._socialService != null && _instance._socialService.IsAutoAuthenticationAvailable())
+            if (_instance._socialService != null && _instance._socialService.IsAutoAuthenticationAvailable())
+            {
                 _ = _instance._socialService.AuthenticateAsync(Application.exitCancellationToken);
+            }
+            
             _instance._uiPanelController = new UIPanelController();
             DependenciesController.Instance.Set(_instance._uiPanelController);
-
+            Debug.Log("<color=#99ff99>UIPanelController created.</color>");
+            
             _instance._initialized = true;
             _instance._initialization.SetResult(true);
+            Debug.Log("<color=#99ff99>ApplicationController initialized.</color>");
         }
 
         private void Application_logMessageReceived(string condition, string stacktrace, LogType logType)
