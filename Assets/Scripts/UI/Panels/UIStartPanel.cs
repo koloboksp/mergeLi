@@ -39,6 +39,9 @@ namespace Core
         [SerializeField] private Button _rateUsBtn;
         [SerializeField] private Button _achievementsBtn;
         [SerializeField] private Button _leaderboardBtn;
+        [SerializeField] private RectTransform _featureGroupRoot;
+        [SerializeField] private HorizontalLayoutGroup _featureGroupLayout;
+        [SerializeField] private ContentSizeFitter _featureGroupSizeFilter;
 
         [SerializeField] private SpawnAnimator _panelAnimator;
 
@@ -244,7 +247,12 @@ namespace Core
             _model = new Model();
 
             SetPlayButton();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_featureGroupRoot);
+            _featureGroupLayout.enabled = false;
+            _featureGroupSizeFilter.enabled = false;
+            
             _panelAnimator.Play(_data.Instant);
+            
             if (_data.Instant)
             {
                 

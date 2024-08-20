@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class SpawnAnimator : MonoBehaviour
 {
+    [SerializeField] private RectTransform[] _targets;
+    
     [SerializeField] private AnimationCurve curvePos;
     [SerializeField] private AnimationCurve curveScale;
     [SerializeField] private AnimationCurve fullScale;
@@ -22,8 +24,13 @@ public class SpawnAnimator : MonoBehaviour
     {
         dur = Mathf.Max(curvePos.keys[^1].time, curveScale.keys[^1].time, fullScale.keys[^1].time);
 
-        for (int i = 0; i < transform.childCount; i++)
-            Spawn(transform.GetChild(i), i * itemsDelay + startDelay, instant, Application.exitCancellationToken);
+        for (var i = 0; i < _targets.Length; i++)
+        {
+            if (_targets[i].gameObject.activeSelf)
+            {
+                Spawn(_targets[i], i * itemsDelay + startDelay, instant, Application.exitCancellationToken);
+            }
+        }
     }
     
     private async void Spawn(Transform obj, float delay, bool instant, CancellationToken exitToken)
