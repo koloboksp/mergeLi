@@ -1,0 +1,237 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &519135755067322534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7476362849299113946}
+  - component: {fileID: 4705920275863529921}
+  - component: {fileID: 4326237352688142815}
+  m_Layer: 5
+  m_Name: CastleGame_Mushroom_B
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7476362849299113946
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519135755067322534}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 480140811022374279}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 500, y: 400}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &4705920275863529921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519135755067322534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce26ccafb6794d3196b23089e4e0f49d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _view: {fileID: 8805534551533128898}
+  initalCostOfPart: 4000
+  risingCostOfPart: 700
+  _coinsAfterComplete: 1000
+  _nameKey:
+    m03: 2651854377
+    m47: 2387692476
+    m8B: 2911544855
+    mCF: 78741643
+  _root: {fileID: 7476362849299113946}
+  _pointsReceiver: {fileID: 4326237352688142815}
+  _textOnBuildStartingKey:
+    m03: 310194708
+    m47: 3181921197
+    m8B: 2379928084
+    mCF: 3960811456
+  _textAfterBuildEndingKey:
+    m03: 1811720556
+    m47: 526402153
+    m8B: 2553150564
+    mCF: 1876725992
+--- !u!114 &4326237352688142815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519135755067322534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c6b74ff6fb4f43b7e0a4fb36f9a57a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anchor: {fileID: 0}
+--- !u!1001 &3461080396855313759
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7476362849299113946}
+    m_Modifications:
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169806631353828745, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+        type: 3}
+      propertyPath: m_Name
+      value: CastleView_Mushroom_B
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2488a5d8d81b93444b09ec0d11dbde83, type: 3}
+--- !u!224 &480140811022374279 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3936700016026521816, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+    type: 3}
+  m_PrefabInstance: {fileID: 3461080396855313759}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8805534551533128898 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5349063930195904925, guid: 2488a5d8d81b93444b09ec0d11dbde83,
+    type: 3}
+  m_PrefabInstance: {fileID: 3461080396855313759}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d059af685b2dea4b82bf829b9304d61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
