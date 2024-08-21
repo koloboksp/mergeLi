@@ -55,22 +55,22 @@ MonoBehaviour:
   risingCostOfPart: 700
   _coinsAfterComplete: 1000
   _nameKey:
-    m03: 2651854377
-    m47: 2387692476
-    m8B: 2911544855
-    mCF: 78741643
+    m03: 1351650336
+    m47: 4057546772
+    m8B: 3108319427
+    mCF: 2856204048
   _root: {fileID: 5783490507875025472}
   _pointsReceiver: {fileID: 1049618658833023755}
   _textOnBuildStartingKey:
-    m03: 310194708
-    m47: 3181921197
-    m8B: 2379928084
-    mCF: 3960811456
+    m03: 1794493561
+    m47: 1175343098
+    m8B: 2743654890
+    mCF: 4202811150
   _textAfterBuildEndingKey:
-    m03: 1811720556
-    m47: 526402153
-    m8B: 2553150564
-    mCF: 1876725992
+    m03: 1067739187
+    m47: 1969046047
+    m8B: 2746503078
+    mCF: 384437386
 --- !u!114 &1049618658833023755
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -55,10 +55,10 @@ MonoBehaviour:
   risingCostOfPart: 700
   _coinsAfterComplete: 1000
   _nameKey:
-    m03: 2651854377
-    m47: 2387692476
-    m8B: 2911544855
-    mCF: 78741643
+    m03: 1155836927
+    m47: 3455602173
+    m8B: 2474419423
+    mCF: 4386194
   _root: {fileID: 4854934492964225558}
   _pointsReceiver: {fileID: 5381320098719112559}
   _textOnBuildStartingKey:
