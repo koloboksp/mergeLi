@@ -102,6 +102,8 @@ namespace Core
             await _instance._vibrationController.InitializeAsync();
 #if UNITY_ANDROID
             _instance._socialService = new Social.GooglePlayGames();
+#elif UNITY_IOS
+            _instance._socialService = new Social.AppleGameCenter();
 #else
             _instance._socialService = new DefaultSocialService();
 #endif
