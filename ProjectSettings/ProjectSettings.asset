@@ -165,6 +165,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.WiB.MergeLines
     Standalone: com.DefaultCompany.mergeLi
+    iPhone: com.WiB.MergeLines
   buildNumber:
     Bratwurst: 0
     Standalone: 0

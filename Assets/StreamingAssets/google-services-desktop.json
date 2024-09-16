@@ -7,20 +7,22 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:533495091222:android:9d73ff24f0444121be6537",
+        "mobilesdk_app_id": "1:533495091222:ios:3e55442d2e2484c9be6537",
         "android_client_info": {
           "package_name": "com.WiB.MergeLines"
         }
       },
-      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBO1BI4nBtkOSjOrreV128gvjo_eGXFrcc"
+          "current_key": "AIzaSyBcSRnV4FpXV1bdk2IDCwsPa5yMAgMAkc8"
         }
       ],
       "services": {
+        "analytics_service": {
+          "status": 0
+        },
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "status": 1
         }
       }
     }

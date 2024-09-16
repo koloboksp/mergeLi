@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>533495091222-3qj4th44cf18gabj3uq2k393jr5tdgru.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBcSRnV4FpXV1bdk2IDCwsPa5yMAgMAkc8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>533495091222</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.WiB.MergeLines</string>
+	<key>PROJECT_ID</key>
+	<string>mergelines</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mergelines.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:533495091222:ios:3e55442d2e2484c9be6537</string>
+</dict>
+</plist>
