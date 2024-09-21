@@ -51,14 +51,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _view: {fileID: 5219908472049287909}
-  initalCostOfPart: 4000
-  risingCostOfPart: 700
+  initalCostOfPart: 7000
+  risingCostOfPart: 4000
   _coinsAfterComplete: 1000
   _nameKey:
-    m03: 4174936418
-    m47: 1035751062
-    m8B: 2833671904
-    mCF: 2941409225
+    m03: 1189373018
+    m47: 206390630
+    m8B: 2407451374
+    mCF: 3700855201
   _root: {fileID: 1087462943273685312}
   _pointsReceiver: {fileID: 2263952635227217617}
   _textOnBuildStartingKey:

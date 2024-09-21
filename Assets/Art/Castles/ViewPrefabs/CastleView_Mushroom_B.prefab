@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image: {fileID: 9082746869373581881}
-  pattern: {fileID: 11400000, guid: db6014ee50495e141abcf62eb8b4f33d, type: 2}
+  pattern: {fileID: 11400000, guid: 59f287c5fc4691d41bb925f9eecb8c3e, type: 2}
   preset: {fileID: 11400000, guid: 5a91144ec0ed2c0438a9c8fb05b7beb3, type: 2}
   maxScore: 1000
   nowScore: 0
