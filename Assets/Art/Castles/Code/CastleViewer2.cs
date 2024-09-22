@@ -50,7 +50,8 @@ public class CastleViewer2 : MonoBehaviour
     {
         var tempCameraObject = new GameObject("CAAAAMERA1");
         var tempCamera = tempCameraObject.AddComponent<Camera>();
-        tempCamera.clearFlags = CameraClearFlags.Nothing;
+        tempCamera.clearFlags = CameraClearFlags.SolidColor;
+        tempCamera.backgroundColor = Color.black;
         tempCamera.orthographic = true;
         tempCamera.orthographicSize = 1;
         tempCamera.enabled = false;
@@ -135,10 +136,11 @@ public class CastleViewer2 : MonoBehaviour
             tmpMesh.SetVertices(vertices);
             tmpMesh.SetIndices(indices, MeshTopology.Triangles, 0);
             tmpMesh.UploadMeshData(false);
-           
+            
+            tempCamera.Render();
             preset.matCastleBit.SetPass(0);
             Graphics.DrawMeshNow(tmpMesh, new Vector3(0, 0, 1), Quaternion.identity);
-                
+           
             Destroy(tmpMesh);
             
             tempCamera.targetTexture = null;
