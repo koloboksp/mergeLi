@@ -48,7 +48,7 @@ public class CastleViewer2 : MonoBehaviour
 
     private void MakeCastleBits()
     {
-        var tempCameraObject = new GameObject("CAAAAMERA1");
+        var tempCameraObject = new GameObject("MakeBitsCamera");
         var tempCamera = tempCameraObject.AddComponent<Camera>();
         tempCamera.clearFlags = CameraClearFlags.SolidColor;
         tempCamera.backgroundColor = Color.black;
@@ -73,16 +73,14 @@ public class CastleViewer2 : MonoBehaviour
         int bh = (int)(pattern.image.height * BACK_SCALE);
         rTexBack = new RenderTexture(bw, bh, 0, RenderTextureFormat.ARGB32, 0);
         rTexBack.Create();
-        var rTexBackTemp = new RenderTexture(bw, bh, 0, RenderTextureFormat.ARGB32, 0);
-        rTexBackTemp.Create();
+        var rTexBackTemp = RenderTexture.GetTemporary(bw, bh, 0, RenderTextureFormat.ARGB32);
         Graphics.Blit(pattern.image, rTexBack);
         for (int i = 0; i < BACK_BLUR_COUNT; i++)
         {
             Graphics.Blit(rTexBack, rTexBackTemp, matBlur);
             Graphics.Blit(rTexBackTemp, rTexBack, matBlur);
         }
-        rTexBackTemp.Release();
-
+        RenderTexture.ReleaseTemporary(rTexBackTemp);
 
         int w = (int)(pattern.image.width * MASK_SCALE);
         int h = (int)(pattern.image.height * MASK_SCALE);
@@ -112,8 +110,8 @@ public class CastleViewer2 : MonoBehaviour
 
             // Render Mesh to RenderTexture
             var tris = ImagePatternSolver.PolyToTris(verts[i].ToArray());
-            var rTexTemp = new RenderTexture(w, h, 0, RenderTextureFormat.R8, 0);
-            rTexTemp.Create();
+            var rTexTemp = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.R8);
+            
             tempCamera.targetTexture = rTexTemp;
             var previousCurrentCamera = Camera.current;
             Camera.SetupCurrent(tempCamera);
@@ -155,14 +153,14 @@ public class CastleViewer2 : MonoBehaviour
             var scale = new Vector2(pw / (float)w, ph / (float)h);
             var offset = new Vector2(px / (float)w, 1f - (py + ph) / (float)h);
             Graphics.Blit(rTexTemp, rTex, scale, offset);
-            rTexTemp.Release();
-            
+            RenderTexture.ReleaseTemporary(rTexTemp);
+
             // Blur it a little time
-         //   var rTexBlur = new RenderTexture(pw, ph, 0, RenderTextureFormat.R8, 0);
-         //   Graphics.Blit(rTex, rTexBlur, matBlur);
-         //   Graphics.Blit(rTexBlur, rTex, matBlur);
-         //   rTexBlur.Release();
-            
+            var rTexBlurTmp = RenderTexture.GetTemporary(pw, ph, 0, RenderTextureFormat.R8);
+            Graphics.Blit(rTex, rTexBlurTmp, matBlur);
+            Graphics.Blit(rTexBlurTmp, rTex, matBlur);
+            RenderTexture.ReleaseTemporary(rTexBlurTmp);
+                
             // Make an object with this texture holder
             var newObj = new GameObject("Bit_" + i);
             var trans = newObj.transform;
