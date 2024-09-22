@@ -5218,11 +5218,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: musicPlayer
       objectReference: {fileID: 0}
-    - target: {fileID: 5957255816287073239, guid: 63254f711c2c0b04c97ae9a77a7f2187,
-        type: 3}
-      propertyPath: m_Volume
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7335857329322477467, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
       propertyPath: m_RootOrder

@@ -28,7 +28,7 @@ public class CastleViewer2 : MonoBehaviour
 
     private CastleBit[] bits;
     private RenderTexture rTexBack;
-
+    
     public RectTransform Root => _root;
     
     // Debug
@@ -48,6 +48,13 @@ public class CastleViewer2 : MonoBehaviour
 
     private void MakeCastleBits()
     {
+        var tempCameraObject = new GameObject("CAAAAMERA1");
+        var tempCamera = tempCameraObject.AddComponent<Camera>();
+        tempCamera.clearFlags = CameraClearFlags.Nothing;
+        tempCamera.orthographic = true;
+        tempCamera.orthographicSize = 1;
+        tempCamera.enabled = false;
+       
         bits = new CastleBit[pattern.bits.Count];
 
         RectTransform baseRectTrans = GetComponent<RectTransform>();
@@ -102,22 +109,40 @@ public class CastleViewer2 : MonoBehaviour
 
             // Render Mesh to RenderTexture
             var tris = ImagePatternSolver.PolyToTris(verts[i].ToArray());
-            var rTexTemp = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.R8);
-            RenderTexture.active = rTexTemp;
+           // var rTexTemp = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.R8);
+            var rTexTemp = new RenderTexture(w, h, 0, RenderTextureFormat.R8, 0);
+
+            tempCamera.targetTexture = rTexTemp;
+            var previousCurrentCamera = Camera.current;
+            Camera.SetupCurrent(tempCamera);
             
-            matVertColor.SetPass(0);
-            GL.PushMatrix();
-            GL.LoadPixelMatrix(0, 1, 1, 0);
+            var tmpMesh = new Mesh();
+            var vertices = new Vector3[tris.Length];
+            var indices = new int[tris.Length];
 
-            GL.Clear(true, true, Color.black);
-            GL.Begin(GL.TRIANGLES);
-            GL.Color(Color.white);
-            for (int j = 0; j < tris.Length; j++)
-                GL.Vertex(verts[i][tris[j]]);
-            GL.End();
-            GL.PopMatrix();
-            RenderTexture.active = null;
+            for (var j = 0; j < tris.Length; j++)
+            {
+                var v = verts[i][tris[j]];
+                v.y = 1.0f - v.y;
+                v -= new Vector2(0.5f, 0.5f);
+                v *= 2.0f;
+                v.x *= (float)w / (float)h;
+                vertices[j] = v;
+                indices[j] = j;
+            }
 
+            tmpMesh.SetVertices(vertices);
+            tmpMesh.SetIndices(indices, MeshTopology.Triangles, 0);
+            tmpMesh.UploadMeshData(false);
+           
+            preset.matCastleBit.SetPass(0);
+            Graphics.DrawMeshNow(tmpMesh, new Vector3(0, 0, 1), Quaternion.identity);
+                
+            Destroy(tmpMesh);
+            
+            tempCamera.targetTexture = null;
+            Camera.SetupCurrent(previousCurrentCamera);
+            
             // Mult with the main image of castle to use its alpha
             Graphics.Blit(pattern.image, rTexTemp, matMultAlpha);
 
@@ -127,15 +152,14 @@ public class CastleViewer2 : MonoBehaviour
             var scale = new Vector2(pw / (float)w, ph / (float)h);
             var offset = new Vector2(px / (float)w, 1f - (py + ph) / (float)h);
             Graphics.Blit(rTexTemp, rTex, scale, offset);
-            RenderTexture.ReleaseTemporary(rTexTemp);
-
+            rTexTemp.Release();
+            
             // Blur it a little time
             var rTexBlur = RenderTexture.GetTemporary(pw, ph, 0, RenderTextureFormat.R8);
             Graphics.Blit(rTex, rTexBlur, matBlur);
             Graphics.Blit(rTexBlur, rTex, matBlur);
             RenderTexture.ReleaseTemporary(rTexBlur);
-
-
+            
             // Make an object with this texture holder
             var newObj = new GameObject("Bit_" + i);
             var trans = newObj.transform;
@@ -168,6 +192,8 @@ public class CastleViewer2 : MonoBehaviour
         // Set Reversed bits order
         foreach (var bit in bits)
             bit.Rect.SetAsFirstSibling();
+        
+        Destroy(tempCameraObject);
     }
 
     private void CalcPrices()
