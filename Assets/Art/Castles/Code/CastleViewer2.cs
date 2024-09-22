@@ -71,8 +71,9 @@ public class CastleViewer2 : MonoBehaviour
         int bw = (int)(pattern.image.width * BACK_SCALE);
         int bh = (int)(pattern.image.height * BACK_SCALE);
         rTexBack = new RenderTexture(bw, bh, 0, RenderTextureFormat.ARGB32, 0);
+        rTexBack.Create();
         var rTexBackTemp = new RenderTexture(bw, bh, 0, RenderTextureFormat.ARGB32, 0);
-
+        rTexBackTemp.Create();
         Graphics.Blit(pattern.image, rTexBack);
         for (int i = 0; i < BACK_BLUR_COUNT; i++)
         {
@@ -111,7 +112,7 @@ public class CastleViewer2 : MonoBehaviour
             // Render Mesh to RenderTexture
             var tris = ImagePatternSolver.PolyToTris(verts[i].ToArray());
             var rTexTemp = new RenderTexture(w, h, 0, RenderTextureFormat.R8, 0);
-
+            rTexTemp.Create();
             tempCamera.targetTexture = rTexTemp;
             var previousCurrentCamera = Camera.current;
             Camera.SetupCurrent(tempCamera);
