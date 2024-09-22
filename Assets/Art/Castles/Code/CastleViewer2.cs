@@ -155,10 +155,10 @@ public class CastleViewer2 : MonoBehaviour
             rTexTemp.Release();
             
             // Blur it a little time
-            var rTexBlur = new RenderTexture(pw, ph, 0, RenderTextureFormat.R8, 0);
-            Graphics.Blit(rTex, rTexBlur, matBlur);
-            Graphics.Blit(rTexBlur, rTex, matBlur);
-            rTexBlur.Release();
+         //   var rTexBlur = new RenderTexture(pw, ph, 0, RenderTextureFormat.R8, 0);
+         //   Graphics.Blit(rTex, rTexBlur, matBlur);
+         //   Graphics.Blit(rTexBlur, rTex, matBlur);
+         //   rTexBlur.Release();
             
             // Make an object with this texture holder
             var newObj = new GameObject("Bit_" + i);
