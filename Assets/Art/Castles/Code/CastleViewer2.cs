@@ -71,14 +71,15 @@ public class CastleViewer2 : MonoBehaviour
         int bw = (int)(pattern.image.width * BACK_SCALE);
         int bh = (int)(pattern.image.height * BACK_SCALE);
         rTexBack = new RenderTexture(bw, bh, 0, RenderTextureFormat.ARGB32, 0);
-        var rTexBackTemp = RenderTexture.GetTemporary(bw, bh, 0, RenderTextureFormat.ARGB32);
+        var rTexBackTemp = new RenderTexture(bw, bh, 0, RenderTextureFormat.ARGB32, 0);
+
         Graphics.Blit(pattern.image, rTexBack);
         for (int i = 0; i < BACK_BLUR_COUNT; i++)
         {
             Graphics.Blit(rTexBack, rTexBackTemp, matBlur);
             Graphics.Blit(rTexBackTemp, rTexBack, matBlur);
         }
-        RenderTexture.ReleaseTemporary(rTexBackTemp);
+        rTexBackTemp.Release();
 
 
         int w = (int)(pattern.image.width * MASK_SCALE);
@@ -109,7 +110,6 @@ public class CastleViewer2 : MonoBehaviour
 
             // Render Mesh to RenderTexture
             var tris = ImagePatternSolver.PolyToTris(verts[i].ToArray());
-           // var rTexTemp = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.R8);
             var rTexTemp = new RenderTexture(w, h, 0, RenderTextureFormat.R8, 0);
 
             tempCamera.targetTexture = rTexTemp;
@@ -155,10 +155,10 @@ public class CastleViewer2 : MonoBehaviour
             rTexTemp.Release();
             
             // Blur it a little time
-            var rTexBlur = RenderTexture.GetTemporary(pw, ph, 0, RenderTextureFormat.R8);
+            var rTexBlur = new RenderTexture(pw, ph, 0, RenderTextureFormat.R8, 0);
             Graphics.Blit(rTex, rTexBlur, matBlur);
             Graphics.Blit(rTexBlur, rTex, matBlur);
-            RenderTexture.ReleaseTemporary(rTexBlur);
+            rTexBlur.Release();
             
             // Make an object with this texture holder
             var newObj = new GameObject("Bit_" + i);
