@@ -36,13 +36,18 @@ namespace Core
         [SerializeField] private Button _settingsBtn;
 
         [SerializeField] private Button _loginSocialBtn;
+        [SerializeField] private Image _loginSocialBtnIcon;
         [SerializeField] private Button _rateUsBtn;
+        [SerializeField] private Image _rateUsBtnIcon;
+        [SerializeField] private Sprite _playStoreIcon;
+        [SerializeField] private Sprite _appStoreIcon;
+        
         [SerializeField] private Button _achievementsBtn;
         [SerializeField] private Button _leaderboardBtn;
         [SerializeField] private RectTransform _featureGroupRoot;
         [SerializeField] private HorizontalLayoutGroup _featureGroupLayout;
         [SerializeField] private ContentSizeFitter _featureGroupSizeFilter;
-
+        
         [SerializeField] private SpawnAnimator _panelAnimator;
 
         [SerializeField] private UIAnyGiftIndicator _anyGiftIndicator;
@@ -63,21 +68,59 @@ namespace Core
             _hatsBtn.onClick.AddListener(HatsBtn_OnClick);
             
             _settingsBtn.onClick.AddListener(SettingsBtn_OnClick);
-#if UNITY_WEBGL
-            _loginSocialBtn.gameObject.SetActive(false);
-            _achievementsBtn.gameObject.SetActive(false);
-            _leaderboardBtn.gameObject.SetActive(false);
-#elif UNITY_ANDROID
-            _loginSocialBtn.gameObject.SetActive(true);
-            _achievementsBtn.gameObject.SetActive(true);
-            _leaderboardBtn.gameObject.SetActive(true);
-            
-            _loginSocialBtn.onClick.AddListener(LoginSocialBtn_OnClick);
-            _achievementsBtn.onClick.AddListener(ShowAchievementsBtn_OnClick);
-            _leaderboardBtn.onClick.AddListener(ShowLeaderboardBtn_OnClick);
-#endif
-            _rateUsBtn.onClick.AddListener(RateUsBtn_OnClick);
 
+            var loginBtnAvailable = false;
+            var achievementsBtnAvailable = false;
+            var leaderboardBtnAvailable = false;
+            Sprite socialIcon = null;
+            
+#if UNITY_WEBGL
+            
+#elif UNITY_ANDROID
+            loginBtnAvailable = true;
+            achievementsBtnAvailable = true;
+            leaderboardBtnAvailable = true;
+            socialIcon = _playStoreIcon;
+#elif UNITY_IOS
+            achievementsBtnAvailable = true;
+            leaderboardBtnAvailable = true;
+            socialIcon = _appStoreIcon;
+#endif
+            
+            if (leaderboardBtnAvailable)
+            {
+                _leaderboardBtn.gameObject.SetActive(true);
+                _leaderboardBtn.onClick.AddListener(ShowLeaderboardBtn_OnClick);
+            }
+            else
+            {
+                _leaderboardBtn.gameObject.SetActive(false);
+            }
+
+            if (achievementsBtnAvailable)
+            {
+                _achievementsBtn.gameObject.SetActive(true);
+                _achievementsBtn.onClick.AddListener(ShowAchievementsBtn_OnClick);
+            }
+            else
+            {
+                _achievementsBtn.gameObject.SetActive(false);
+            }
+            
+            
+            if (loginBtnAvailable)
+            {
+                _loginSocialBtnIcon.sprite = socialIcon;
+                _loginSocialBtn.gameObject.SetActive(true);
+                _loginSocialBtn.onClick.AddListener(LoginSocialBtn_OnClick);
+            }
+            else
+            {
+                _loginSocialBtn.gameObject.SetActive(false);
+            }
+
+            _rateUsBtnIcon.sprite = socialIcon;
+            _rateUsBtn.onClick.AddListener(RateUsBtn_OnClick);
             _cheatsBtn.onClick.AddListener(ShowCheatsBtn_OnClick);
         }
         
@@ -282,7 +325,7 @@ namespace Core
         private void SetupLoginSocialBtn()
         {
 #if UNITY_WEBGL
-#else
+#elif UNITY_ANDROID
             if (ApplicationController.Instance.ISocialService.IsAuthenticated())
             {
                 _loginSocialBtn.gameObject.SetActive(false);

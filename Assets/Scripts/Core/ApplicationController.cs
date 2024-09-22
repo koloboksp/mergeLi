@@ -166,8 +166,8 @@ namespace Core
         {
 #if UNITY_ANDROID
             Application.OpenURL($"market://details?id={Application.identifier}");
-#elif UNITY_IPHONE
-            Application.OpenURL("itms-apps://itunes.apple.com/app/id6443549299");
+#elif UNITY_IOS
+            Application.OpenURL("itms-apps://itunes.apple.com/app/id6686409348");
 #endif
         }
     }

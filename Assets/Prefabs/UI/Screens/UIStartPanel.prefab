@@ -337,7 +337,11 @@ MonoBehaviour:
   _hatsBtn: {fileID: 14689734608157632}
   _settingsBtn: {fileID: 1166285719891757890}
   _loginSocialBtn: {fileID: 2744628790671189644}
+  _loginSocialBtnIcon: {fileID: 1199386857607224810}
   _rateUsBtn: {fileID: 1999683834701768808}
+  _rateUsBtnIcon: {fileID: 2269326384948689833}
+  _playStoreIcon: {fileID: 21300000, guid: 78230a22d51db194d9f497ca8a123a97, type: 3}
+  _appStoreIcon: {fileID: 21300000, guid: 5c923a81211fa5341afab4e09758590a, type: 3}
   _achievementsBtn: {fileID: 5417955171425936600}
   _leaderboardBtn: {fileID: 8472010477538634090}
   _featureGroupRoot: {fileID: 8976778910201407025}
@@ -1348,7 +1352,7 @@ GameObject:
   - component: {fileID: 1199386857607224810}
   - component: {fileID: 6447150736072945599}
   m_Layer: 5
-  m_Name: body
+  m_Name: btnLoginBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1402,7 +1406,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 794703034, guid: 944056e20f4624849a5fe10d9c4a01e6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 78230a22d51db194d9f497ca8a123a97, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1606,7 +1610,7 @@ GameObject:
   - component: {fileID: 2269326384948689833}
   - component: {fileID: 8737592395841998213}
   m_Layer: 5
-  m_Name: body
+  m_Name: btnRateUsBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1660,7 +1664,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 794703034, guid: 944056e20f4624849a5fe10d9c4a01e6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 78230a22d51db194d9f497ca8a123a97, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3500,7 +3504,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 60, y: -60}
+  m_AnchoredPosition: {x: 60, y: -160}
   m_SizeDelta: {x: 600, y: 200}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &3881097485670554143
@@ -3720,7 +3724,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -139.99997, y: -140}
+  m_AnchoredPosition: {x: -140, y: -240}
   m_SizeDelta: {x: 160, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5432787709793459652
