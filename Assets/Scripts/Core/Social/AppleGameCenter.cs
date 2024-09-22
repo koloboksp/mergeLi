@@ -105,6 +105,7 @@ namespace Core.Social
                     ? $"<color=#99ff99>Unlock achievement '{id}' success.</color>"
                     : $"<color=#99ff99>Unlock achievement '{id}' failed.</color>");
 
+                GameCenterPlatform.ShowDefaultAchievementCompletionBanner(success);
                 completionSource.TrySetResult(success);
             });
             
