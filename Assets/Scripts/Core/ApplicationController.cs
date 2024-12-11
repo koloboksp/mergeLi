@@ -13,6 +13,7 @@ using Save;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
+using YG;
 using Debug = UnityEngine.Debug;
 
 namespace Core
@@ -48,7 +49,16 @@ namespace Core
         public SoundController SoundController => _soundController;
         public IAnalyticsController AnalyticsController => _analyticsController;
         public IVibrationController VibrationController => _vibrationController;
-        
+
+
+        public async static Task T()
+        {
+            while (!YG.YG2.isSDKEnabled)
+            {
+                await Task.Yield();
+            }
+            
+        }
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static async void Start()
         {
@@ -56,10 +66,17 @@ namespace Core
             _instance._initialization = new TaskCompletionSource<bool>();
 
             Application.logMessageReceived += _instance.Application_logMessageReceived;
+
+#if UNITY_WEBGL
+
+            await T();
+            YG.YG2.GameReadyAPI();
+           // YG.YG2.isSDKEnabled
+#endif
             
             IStorage storage = null;
-#if UNITY_WEBGL && !UNITY_EDITOR
-            storage = new UserDataManager();
+#if UNITY_WEBGL       
+            storage = new YGStorage();
 #else
             storage = new BaseStorage();
 #endif

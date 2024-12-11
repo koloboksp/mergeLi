@@ -10,7 +10,7 @@ namespace Save
     {
         void Save(string fullPath, string sData);
         Task SaveAsync(string fullPath, string sData);
-        string Load(string fullPath);
+        Task<string> Load(string fullPath);
         Task InitializeAsync();
     }
     
@@ -120,7 +120,7 @@ namespace Save
             try
             {
                 var fullPath = Path.Combine(Application.persistentDataPath, fileName);
-                string loadedData = _storage.Load(fullPath);
+                var loadedData = await _storage.Load(fullPath);
                 return JsonUtility.FromJson<T>(loadedData);
             }
             catch (Exception e)

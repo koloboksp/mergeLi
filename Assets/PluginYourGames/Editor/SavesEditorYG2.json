@@ -1,0 +1,12 @@
+{
+    "intExample": 0,
+    "strExample": "121",
+    "boolExample": [
+        false,
+        false,
+        false,
+        false
+    ],
+    "idSave": 5,
+    "Data": "{\"ActiveLanguageDetected\":true,\"ActiveLanguage\":30,\"SoundVolume\":0.5,\"SoundEnable\":true,\"MusicVolume\":0.5,\"MusicEnable\":true,\"ActiveSkin\":\"\",\"UserActiveHatsFilter\":[\"tent_A\"],\"ActiveRulesSettings\":0,\"VibrationEnable\":true}"
+}

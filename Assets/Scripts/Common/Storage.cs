@@ -111,11 +111,12 @@ namespace Assets.Scripts.Core.Storage
             return passSave;
         }
         //-----------------------------------------------------------------------------------------
-        public string Load(string path)
+        public Task<string> Load(string path)
         {
             try
             {
-                return !File.Exists(path) ? null : Unpacking(Conversion.FileToByteArray(path));
+                var data = !File.Exists(path) ? null : Unpacking(Conversion.FileToByteArray(path));
+                return Task.FromResult((string)data);
             }
             catch(Exception ex)
             {
