@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: CASEditorSettings
   m_EditorClassIdentifier: 
   autoCheckForUpdatesEnabled: 1
-  delayAppMeasurementGADInit: 1
+  optimizeGADLoading: 1
   buildPreprocessEnabled: 1
   includeAdDependencyVersions: 0
   permissionAdId: 0
   generateIOSDeepLinksForPromo: 1
   attributionReportEndpoint: 
+  overrideGradleWrapperVersion: 
+  overrideGradlePluginVersion: 
   userTrackingUsageDescription: []
