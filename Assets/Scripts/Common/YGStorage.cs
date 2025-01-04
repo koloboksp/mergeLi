@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Save;
 using YG;
@@ -29,31 +30,50 @@ namespace Assets.Scripts.Core.Storage
             return Task.CompletedTask;
         }
 
+        private TaskCompletionSource<string> _loadingDataCompletionSource;
         private TaskCompletionSource<string> _loadingCompletionSource;
+
         private CancellationTokenSource _loadingTimeoutCancellationTokenSource;
 
         public Task<string> Load(string fullPath)
         {
-            _loadingCompletionSource = new TaskCompletionSource<string>();
-            _loadingTimeoutCancellationTokenSource = new CancellationTokenSource();
-            _loadingTimeoutCancellationTokenSource.CancelAfter(15000);
-            var loadingTimeoutCancellationToken = _loadingTimeoutCancellationTokenSource.Token;
-            var loadingTimeoutCancellationTokenRegistration = loadingTimeoutCancellationToken.Register(() => _loadingCompletionSource.TrySetResult(null));
+            return LoadInternal();
+            // _loadingDataCompletionSource.Task.ContinueWith(_loadingCompletionSource.Task);
+            // _loadingCompletionSource = new TaskCompletionSource<string>();
+            // _loadingTimeoutCancellationTokenSource = new CancellationTokenSource();
+            // _loadingTimeoutCancellationTokenSource.CancelAfter(15000);
+            // var loadingTimeoutCancellationToken = _loadingTimeoutCancellationTokenSource.Token;
+            // var loadingTimeoutCancellationTokenRegistration = loadingTimeoutCancellationToken.Register(() => _loadingCompletionSource.TrySetResult(null));
+            //
+            // return _loadingCompletionSource.Task;
+        }
+
+        public async Task<string> LoadInternal()
+        {
+            var result = await _loadingDataCompletionSource.Task;
             
-            return _loadingCompletionSource.Task;
+            return result;
         }
 
         public Task InitializeAsync()
         {
-            YG2.onGetSDKData += GetData;
+            _loadingDataCompletionSource = new TaskCompletionSource<string>();
+
+            if (!YG2.isSDKEnabled)
+            {
+                YG2.onGetSDKData += GetData;
+            }
+            else
+            {
+                GetData();
+            }
 
             return Task.CompletedTask;
         }
 
         private void GetData()
         {
-            _loadingTimeoutCancellationTokenSource.Dispose();
-            _loadingCompletionSource.TrySetResult(YG2.saves.Data);
+            _loadingDataCompletionSource.TrySetResult(YG2.saves.Data);
         }
     }
 }

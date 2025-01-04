@@ -704,7 +704,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1881252458}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3786616523567888353, guid: d33d11ca88ec9454f991757ba8bdbeb8, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d33d11ca88ec9454f991757ba8bdbeb8, type: 3}
@@ -5218,6 +5219,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: musicPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 5957255816287073239, guid: 63254f711c2c0b04c97ae9a77a7f2187,
+        type: 3}
+      propertyPath: m_Volume
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7335857329322477467, guid: 63254f711c2c0b04c97ae9a77a7f2187,
         type: 3}
       propertyPath: m_RootOrder
@@ -5783,6 +5789,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 91.20996
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098948184423234948, guid: f132e37d4bb42764dad06a6e7e7443ac,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7098948184423234948, guid: f132e37d4bb42764dad06a6e7e7443ac,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8665804798946087983, guid: f132e37d4bb42764dad06a6e7e7443ac,
         type: 3}
