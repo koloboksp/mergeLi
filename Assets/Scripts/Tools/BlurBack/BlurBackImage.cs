@@ -24,11 +24,22 @@ public class BlurBackImage : MonoBehaviour
         if (image == null)
             return;
 
-        if (s_rt == null)
-            s_rt = new RenderTexture((int)(Screen.width * SHOT_SCALE), (int)(Screen.height * SHOT_SCALE), 16)
+        var newWidth = (int)(Screen.width * SHOT_SCALE);
+        var newHeight = (int)(Screen.height * SHOT_SCALE);
+        
+        if (s_rt == null ||
+            (newWidth != s_rt.width || newHeight != s_rt.height))
+        {
+            if (s_rt != null)
+            {
+                s_rt.Release();
+            }
+            
+            s_rt = new RenderTexture(newWidth, newHeight, 16)
             {
                 name = rtName
             };
+        }
 
         if (s_mat == null)
             s_mat = new Material(Shader.Find(shaderName))

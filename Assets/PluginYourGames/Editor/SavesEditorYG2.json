@@ -1,12 +1,25 @@
 {
-    "intExample": 0,
-    "strExample": "121",
+    "intExample": 5,
+    "strExample": "Hello!",
     "boolExample": [
         false,
         false,
         false,
         false
     ],
-    "idSave": 5,
-    "Data": "{\"ActiveLanguageDetected\":true,\"ActiveLanguage\":30,\"SoundVolume\":0.5,\"SoundEnable\":true,\"MusicVolume\":0.5,\"MusicEnable\":true,\"ActiveSkin\":\"\",\"UserActiveHatsFilter\":[\"tent_A\"],\"ActiveRulesSettings\":0,\"VibrationEnable\":true}"
+    "idSave": 13,
+    "Data": [
+        {
+            "Key": "C:/Users/Misha/AppData/LocalLow/wib/Merge Lines\\playerSettings",
+            "Value": "{\"ActiveLanguageDetected\":true,\"ActiveLanguage\":30,\"SoundVolume\":0.5,\"SoundEnable\":true,\"MusicVolume\":0.5,\"MusicEnable\":true,\"ActiveSkin\":\"\",\"UserActiveHatsFilter\":[\"tent_A\"],\"ActiveRulesSettings\":0,\"VibrationEnable\":true}"
+        },
+        {
+            "Key": "C:/Users/Misha/AppData/LocalLow/wib/Merge Lines\\playerLastSessionData",
+            "Value": "{\"Field\":{\"Balls\":[{\"GridPosition\":{\"x\":7,\"y\":8,\"z\":0},\"Points\":16,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":8,\"y\":6,\"z\":0},\"Points\":1,\"HatHame\":\"tent_A\"},{\"GridPosition\":{\"x\":8,\"y\":5,\"z\":0},\"Points\":1,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":8,\"y\":4,\"z\":0},\"Points\":1,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":8,\"y\":3,\"z\":0},\"Points\":1,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":0,\"y\":7,\"z\":0},\"Points\":16,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":1,\"y\":7,\"z\":0},\"Points\":1,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":8,\"y\":0,\"z\":0},\"Points\":4,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":7,\"y\":0,\"z\":0},\"Points\":16,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":6,\"y\":0,\"z\":0},\"Points\":4,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":1,\"y\":0,\"z\":0},\"Points\":16,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":0,\"y\":1,\"z\":0},\"Points\":16,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":2,\"y\":0,\"z\":0},\"Points\":4,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":3,\"y\":0,\"z\":0},\"Points\":4,\"HatHame\":\"\"},{\"GridPosition\":{\"x\":2,\"y\":4,\"z\":0},\"Points\":4,\"HatHame\":\"\"}]},\"ActiveCastle\":{\"IsValid\":true,\"Id\":\"CastleGame_Tent_B\",\"Points\":10},\"CompletedCastles\":[],\"Buffs\":[{\"Id\":\"Undo\",\"RestCooldown\":0},{\"Id\":\"Downgrade\",\"RestCooldown\":0},{\"Id\":\"ShowNextBalls\",\"RestCooldown\":0},{\"Id\":\"Explode1\",\"RestCooldown\":0},{\"Id\":\"Explode3\",\"RestCooldown\":0},{\"Id\":\"ExplodeHorizontal\",\"RestCooldown\":0},{\"Id\":\"ExplodeVertical\",\"RestCooldown\":0}],\"Analytics\":{\"Step\":4,\"StepsTakenInto\":[{\"StepTag\":0,\"Count\":2},{\"StepTag\":1,\"Count\":2},{\"StepTag\":8,\"Count\":0},{\"StepTag\":7,\"Count\":0},{\"StepTag\":6,\"Count\":0},{\"StepTag\":2,\"Count\":0},{\"StepTag\":3,\"Count\":0},{\"StepTag\":4,\"Count\":0},{\"StepTag\":5,\"Count\":0}]},\"CollapseLinesCount\":2,\"MergedBallsCount\":2}"
+        },
+        {
+            "Key": "C:/Users/Misha/AppData/LocalLow/wib/Merge Lines\\playerData",
+            "Value": "{\"CompletedCastles\":[\"CastleGame_Tent_A\"],\"BestSessionScore\":0,\"Coins\":{\"_seed\":1030,\"_value\":1230},\"Tutorials\":[{\"Id\":\"startTutorial\",\"IsComplted\":true}],\"Gifts\":[],\"Hats\":[],\"BestSessionCollapsedLines\":0,\"BestSessionMergedBalls\":0}"
+        }
+    ]
 }

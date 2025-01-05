@@ -109,6 +109,8 @@ namespace Core
             await _instance._analyticsController.InitializeAsync(_instance._version);
 #if UNITY_ANDROID || UNITY_IOS
             _instance._adsController = new CASWrapper();
+#elif UNITY_WEBGL
+            _instance._adsController = new YGAdsController();
 #else
             _instance._adsController = new DefaultAdsController();
 #endif
