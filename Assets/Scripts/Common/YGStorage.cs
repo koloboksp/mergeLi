@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Save;
@@ -8,7 +9,20 @@ namespace YG
 {
     public partial class SavesYG
     {
-        public string Data;
+        public List<StringsPair> Data = new();
+    }
+
+    [Serializable]
+    public class StringsPair
+    {
+        public string Key;
+        public string Value;
+
+        public StringsPair(string key, string value)
+        {
+            Key = key;
+            Value = value;
+        }
     }
 }
 
@@ -18,46 +32,57 @@ namespace Assets.Scripts.Core.Storage
     {
         public void Save(string fullPath, string sData)
         {
-            YG2.saves.Data = sData;
+            var pairI = YG2.saves.Data.FindIndex(i => i.Key == fullPath);
+            if (pairI < 0)
+            {
+                YG2.saves.Data.Add(new StringsPair(fullPath, sData));
+            }
+            else
+            {
+                YG2.saves.Data[pairI] = new StringsPair(fullPath, sData);
+            }
             YG2.SaveProgress();
         }
 
         public Task SaveAsync(string fullPath, string sData)
         {
-            YG2.saves.Data = sData;
+            var pairI = YG2.saves.Data.FindIndex(i => i.Key == fullPath);
+            if (pairI < 0)
+            {
+                YG2.saves.Data.Add(new StringsPair(fullPath, sData));
+            }
+            else
+            {
+                YG2.saves.Data[pairI] = new StringsPair(fullPath, sData);
+            }
             YG2.SaveProgress();
             
             return Task.CompletedTask;
         }
 
-        private TaskCompletionSource<string> _loadingDataCompletionSource;
-        private TaskCompletionSource<string> _loadingCompletionSource;
-
-        private CancellationTokenSource _loadingTimeoutCancellationTokenSource;
-
+        private TaskCompletionSource<List<StringsPair>> _loadingDataCompletionSource;
+      
         public Task<string> Load(string fullPath)
         {
-            return LoadInternal();
-            // _loadingDataCompletionSource.Task.ContinueWith(_loadingCompletionSource.Task);
-            // _loadingCompletionSource = new TaskCompletionSource<string>();
-            // _loadingTimeoutCancellationTokenSource = new CancellationTokenSource();
-            // _loadingTimeoutCancellationTokenSource.CancelAfter(15000);
-            // var loadingTimeoutCancellationToken = _loadingTimeoutCancellationTokenSource.Token;
-            // var loadingTimeoutCancellationTokenRegistration = loadingTimeoutCancellationToken.Register(() => _loadingCompletionSource.TrySetResult(null));
-            //
-            // return _loadingCompletionSource.Task;
+            return LoadInternal(fullPath);
         }
 
-        public async Task<string> LoadInternal()
+        public async Task<string> LoadInternal(string fullPath)
         {
             var result = await _loadingDataCompletionSource.Task;
+
+            var pairI = result.FindIndex(i => i.Key == fullPath);
+            if (pairI >= 0)
+            {
+                return result[pairI].Value;
+            }
             
-            return result;
+            return null;
         }
 
         public Task InitializeAsync()
         {
-            _loadingDataCompletionSource = new TaskCompletionSource<string>();
+            _loadingDataCompletionSource = new TaskCompletionSource<List<StringsPair>>();
 
             if (!YG2.isSDKEnabled)
             {

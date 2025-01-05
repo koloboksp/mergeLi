@@ -50,15 +50,18 @@ namespace Core
         public IAnalyticsController AnalyticsController => _analyticsController;
         public IVibrationController VibrationController => _vibrationController;
 
-
-        public async static Task T()
+#if UNITY_WEBGL
+        public static async Task WaitYGInitializationCompletedAsync()
         {
             while (!YG.YG2.isSDKEnabled)
             {
                 await Task.Yield();
             }
             
+            YG.YG2.GameReadyAPI();
         }
+#endif
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static async void Start()
         {
@@ -68,10 +71,7 @@ namespace Core
             Application.logMessageReceived += _instance.Application_logMessageReceived;
 
 #if UNITY_WEBGL
-
-            await T();
-            YG.YG2.GameReadyAPI();
-           // YG.YG2.isSDKEnabled
+            _ = WaitYGInitializationCompletedAsync();
 #endif
             
             IStorage storage = null;

@@ -47,15 +47,16 @@ namespace YG
         {
 #if UNITY_EDITOR
             // Reset static for ESC
-            _SDKEnabled = false;
-            sendMessage = null;
-            nowInterAdv = false;
-            nowRewardAdv = false;
-            onGetSDKData = null;
-            onAdvNotification = null;
-            onOpenAnyAdv = null;
-            onCloseAnyAdv = null;
-            onErrorAnyAdv = null;
+            // DISABLED
+            // _SDKEnabled = false;
+            // sendMessage = null;
+            // nowInterAdv = false;
+            // nowRewardAdv = false;
+            // onGetSDKData = null;
+            // onAdvNotification = null;
+            // onOpenAnyAdv = null;
+            // onCloseAnyAdv = null;
+            // onErrorAnyAdv = null;
 #endif
             if (LocalStorage.GetKey("WasFirstGameSession_YG", "false") == "false")
             {

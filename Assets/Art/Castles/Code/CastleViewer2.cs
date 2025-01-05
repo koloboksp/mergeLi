@@ -440,7 +440,7 @@ public class CastleViewer2 : MonoBehaviour
         for (var bitI = 0; bitI < bits.Length; bitI++)
         {
             tasks.Add(bits[bitI].PlayComplete(bitI));
-            Debug.Log($"Bit {bitI}");
+            //Debug.Log($"Bit {bitI}");
         }
 
         await Task.WhenAll(tasks);

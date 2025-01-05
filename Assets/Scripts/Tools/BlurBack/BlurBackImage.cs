@@ -43,7 +43,7 @@ public class BlurBackImage : MonoBehaviour
         var rawImage = go.AddComponent<RawImage>();
         rawImage.texture = s_rt;
         rawImage.color = Color.white;
-
+        rawImage.uvRect = Camera.main.rect;
         var btn = go.GetComponent<Button>();
         if (btn != null)
             btn.targetGraphic = rawImage;
@@ -58,7 +58,6 @@ public class BlurBackImage : MonoBehaviour
         cam.targetTexture = s_rt;
         cam.Render();
         cam.targetTexture = null;
-
         cam.cullingMask |= layer;
 
         LazyBlur();
