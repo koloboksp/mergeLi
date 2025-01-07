@@ -189,6 +189,8 @@ namespace Core
             Application.OpenURL($"market://details?id={Application.identifier}");
 #elif UNITY_IOS
             Application.OpenURL("itms-apps://itunes.apple.com/app/id6686409348");
+#elif UNITY_WEBGL
+            Application.OpenURL("https://yandex.ru/games/app/391675");
 #endif
         }
     }

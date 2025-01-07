@@ -213,6 +213,11 @@ namespace Assets.Scripts.Core.Localization
                 return $"{LanguagePackNotFoundValue}({guid})";
 
             var text = AvailableLanguagePacks[packIndex].Value.Asset.FindText(guid);
+            if (text != null)
+            {
+                text = text.ToUpper();
+            }
+            
             return text ?? $"{TextNotFoundValue}({guid})";
         }
 

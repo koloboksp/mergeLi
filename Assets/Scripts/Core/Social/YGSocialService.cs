@@ -47,7 +47,6 @@ namespace Core.Social
         
         public async Task<bool> SetScoreForLeaderBoard(string id, long value, CancellationToken cancellationToken)
         {
-            
             YG2.SetLeaderboard(id, (int)value);
             return true;
         }
