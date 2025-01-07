@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Core.Utils
 {
-    public class NtpClient
+    public class NtpClient : IServerTime
     {
         private TimeSpan _timeout = new TimeSpan(0,0,30);
         private UdpClient _client = null;
@@ -21,7 +21,7 @@ namespace Core.Utils
             ("time.google.com", 123),
         };
         
-        public async Task<(bool success, DateTime time)> GetNetworkTimeAsync(CancellationToken externalCancellationToken)
+        public async Task<(bool success, DateTime time)> GetTimeAsync(CancellationToken externalCancellationToken)
         {
             foreach (var host in _hosts)
             {

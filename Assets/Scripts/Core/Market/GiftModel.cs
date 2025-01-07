@@ -29,8 +29,12 @@ namespace Core.Market
         
         public async Task<(bool success, int amount)> CollectAsync( CancellationToken cancellationToken)
         {
-            var ntpClient = new NtpClient();
-            var networkTime = await ntpClient.GetNetworkTimeAsync(cancellationToken);
+#if UNITY_WEBGL
+            var serverTime = new YGServerTime();
+#else
+            var serverTime = new NtpClient();
+#endif
+            var networkTime = await serverTime.GetTimeAsync(cancellationToken);
 
             if (!networkTime.success)
             {

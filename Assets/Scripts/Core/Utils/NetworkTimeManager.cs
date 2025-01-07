@@ -38,8 +38,12 @@ namespace Core.Utils
 
         private static async Task UpdateTime(CancellationToken cancellationToken)
         {
-            var ntpClient = new NtpClient();
-            var networkTime = await ntpClient.GetNetworkTimeAsync(cancellationToken);
+#if UNITY_WEBGL
+            var serverTime = new YGServerTime();
+#else
+            var serverTime = new NtpClient();
+#endif
+            var networkTime = await serverTime.GetTimeAsync(cancellationToken);
 
             TimeUpdated = networkTime.success;
             if (networkTime.success)

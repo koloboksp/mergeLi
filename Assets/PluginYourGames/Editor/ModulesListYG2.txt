@@ -2,4 +2,5 @@ Authorization v1.0
 InterstitialAdv v1.0
 Leaderboards v1.0
 RewardedAdv v1.0
+ServerTime v1.0
 Storage v1.0
