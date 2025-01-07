@@ -1,3 +1,6 @@
 ExampleYG2
 Authorization
+InterstitialAdv
+Leaderboards
+RewardedAdv
 Storage
