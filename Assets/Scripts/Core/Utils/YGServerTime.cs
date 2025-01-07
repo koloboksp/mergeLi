@@ -9,7 +9,14 @@ namespace Core.Utils
     {
         public async Task<(bool success, DateTime time)> GetTimeAsync(CancellationToken externalCancellationToken)
         {
-            return (true, new DateTime(YG2.ServerTime()));
+            while (!YG2.isSDKEnabled)
+            {
+                await Task.Yield();
+            }
+            
+            var fromMilliseconds = TimeSpan.FromMilliseconds(YG2.ServerTime());
+            var current = DateTime.UnixEpoch + fromMilliseconds;
+            return (true, current);
         }
     }
 }

@@ -2,6 +2,8 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Atom;
+using Core.Utils;
 using UnityEngine;
 
 namespace Save
@@ -41,6 +43,10 @@ namespace Save
 
         public async Task InitializeAsync(IStorage storage, CancellationToken cancellationToken)
         {
+            var timer = new SmallTimer();
+            timer.Start();
+            Debug.Log($"<color=#99ff99>Initialize started. System: '{nameof(SaveController)}'.</color>");
+            
             _storage = storage;
             try
             {
@@ -52,6 +58,8 @@ namespace Save
             {
                 Debug.LogError(e);
             }
+            
+            Debug.Log($"<color=#99ff99>Initialize completed. System: '{nameof(SaveController)}' time: '{Conversion.ToString((float)timer.Update(), 2)}'.</color>");
         }
 
         public void Clear()
