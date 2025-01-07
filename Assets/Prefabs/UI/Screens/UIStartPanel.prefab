@@ -342,6 +342,7 @@ MonoBehaviour:
   _rateUsBtnIcon: {fileID: 2269326384948689833}
   _playStoreIcon: {fileID: 21300000, guid: 78230a22d51db194d9f497ca8a123a97, type: 3}
   _appStoreIcon: {fileID: 21300000, guid: 5c923a81211fa5341afab4e09758590a, type: 3}
+  _ygStoreIcon: {fileID: 21300000, guid: fccd9ee4734edfc4295b49d8d894b683, type: 3}
   _achievementsBtn: {fileID: 5417955171425936600}
   _leaderboardBtn: {fileID: 8472010477538634090}
   _featureGroupRoot: {fileID: 8976778910201407025}

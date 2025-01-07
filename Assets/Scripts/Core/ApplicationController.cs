@@ -123,6 +123,8 @@ namespace Core
             _instance._socialService = new Social.GooglePlayGames();
 #elif UNITY_IOS
             _instance._socialService = new Social.AppleGameCenter();
+#elif UNITY_WEBGL
+            _instance._socialService = new YGSocialService();
 #else
             _instance._socialService = new DefaultSocialService();
 #endif

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 namespace Core
 {
+    
+
     public class UIPausePanel : UIPanel
     {
         [SerializeField] private Button _closeBtn;

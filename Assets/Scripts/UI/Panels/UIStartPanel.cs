@@ -41,6 +41,7 @@ namespace Core
         [SerializeField] private Image _rateUsBtnIcon;
         [SerializeField] private Sprite _playStoreIcon;
         [SerializeField] private Sprite _appStoreIcon;
+        [SerializeField] private Sprite _ygStoreIcon;
         
         [SerializeField] private Button _achievementsBtn;
         [SerializeField] private Button _leaderboardBtn;
@@ -75,7 +76,8 @@ namespace Core
             Sprite socialIcon = null;
             
 #if UNITY_WEBGL
-            
+            leaderboardBtnAvailable = true;
+            socialIcon = _ygStoreIcon;
 #elif UNITY_ANDROID
             loginBtnAvailable = true;
             achievementsBtnAvailable = true;
@@ -260,6 +262,7 @@ namespace Core
                 Application.exitCancellationToken);
             await ApplicationController.Instance.ISocialService.ShowLeaderboardUIAsync(
                 SessionProcessor.BEST_SESSION_SCORE_LEADERBOARD, 
+                _data.GameProcessor,
                 Application.exitCancellationToken);
         }
 

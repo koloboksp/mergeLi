@@ -1,14 +1,11 @@
-
-using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Core.Gameplay;
-using Core.Utils;
-using UnityEngine;
+using YG;
 
 namespace Core.Social
 {
-    public class DefaultSocialService : ISocialService
+    public class YGSocialService : ISocialService
     {
         public bool IsAutoAuthenticationAvailable()
         {
@@ -22,7 +19,7 @@ namespace Core.Social
 
         public bool IsAuthenticated()
         {
-            return false;
+            return true;
         }
 
         public async Task<bool> ShowAchievementsUIAsync(CancellationToken cancellationToken)
@@ -32,7 +29,15 @@ namespace Core.Social
 
         public async Task<bool> ShowLeaderboardUIAsync(string id, GameProcessor gameProcessor, CancellationToken cancellationToken)
         {
-            return false;
+            var panelData = new UIYGLeaderboardPanelData();
+            panelData.Id = id;
+            panelData.GameProcessor = gameProcessor;
+            var pushPopupScreenAsync = await ApplicationController.Instance.UIPanelController.PushPopupScreenAsync<UIYGLeaderboardPanel>(
+                panelData,
+                cancellationToken);
+            await pushPopupScreenAsync.ShowAsync(cancellationToken);
+            
+            return true;
         }
 
         public async Task<bool> UnlockAchievementAsync(string id, CancellationToken cancellationToken)
@@ -42,7 +47,9 @@ namespace Core.Social
         
         public async Task<bool> SetScoreForLeaderBoard(string id, long value, CancellationToken cancellationToken)
         {
-            return false;
+            
+            YG2.SetLeaderboard(id, (int)value);
+            return true;
         }
     }
 }
