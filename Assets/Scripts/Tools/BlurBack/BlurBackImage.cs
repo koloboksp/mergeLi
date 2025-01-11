@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class BlurBackImage : MonoBehaviour
@@ -7,8 +8,8 @@ public class BlurBackImage : MonoBehaviour
     private const float SHOT_SCALE = .2f;
     private const int BLUR_COUNT = 5;
 
-    [SerializeField] private Image image;
     [SerializeField] private Material matBlur;
+    [SerializeField] private RawImage image;
 
     private static Texture2D tex;
     private static Sprite sprite;
@@ -22,8 +23,8 @@ public class BlurBackImage : MonoBehaviour
     {
         if (image == null || matBlur == null)
         {
-            enabled = false;
-            return;
+           enabled = false;
+           return;
         }
         
         image.enabled = false;
@@ -39,12 +40,9 @@ public class BlurBackImage : MonoBehaviour
 
         if (tex == null || tex.width != w || tex.height != h)
             tex = new Texture2D(w, h, TextureFormat.RGB24, false);
-
-        if (sprite == null || sprite.texture != tex)
-            sprite = Sprite.Create(tex, rect, Vector2.one / 2f);
-
-        image.sprite = sprite;
         
+        image.texture = tex;
+        image.uvRect = cam.rect;
         var rt0 = RenderTexture.GetTemporary(w, h, 24, RenderTextureFormat.ARGB32);
         var rt1 = RenderTexture.GetTemporary(w, h, 0, RenderTextureFormat.ARGB32);
 
