@@ -2033,8 +2033,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2962c9f8282495c9f57db29df23ec3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Width: 1920
-  Height: 1080
+  Width: 768
+  Height: 1024
   _camera: {fileID: 963194227}
   _canvasScaler: {fileID: 1881252457}
 --- !u!1 &978546854

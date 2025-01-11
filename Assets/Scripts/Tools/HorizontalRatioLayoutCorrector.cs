@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class HorizontalRatioLayoutCorrector : MonoBehaviour
 {
-    public int Width = 1080;
-    public int Height = 1920;
+    [SerializeField] public int _referenceWidth = 768;
+    [SerializeField] public int _referenceHeight = 1024;
 
     [SerializeField] private Camera _camera;
     [SerializeField] private CanvasScaler _canvasScaler;
@@ -12,7 +13,7 @@ public class HorizontalRatioLayoutCorrector : MonoBehaviour
     public void Update()
     {
         var ratio = (float)Screen.width / Screen.height;
-        var referenceRatio = (float)Width / Height;
+        var referenceRatio = (float)_referenceWidth / _referenceHeight;
         
         if (ratio > referenceRatio)
         {
