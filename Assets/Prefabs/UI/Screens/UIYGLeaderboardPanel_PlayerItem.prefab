@@ -411,7 +411,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -60, y: -60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7442660658336639956
 CanvasRenderer:
@@ -463,6 +463,7 @@ GameObject:
   - component: {fileID: 7442660658427018935}
   - component: {fileID: 7442660658427018934}
   - component: {fileID: 7442660658427018933}
+  - component: {fileID: 9066305080161466986}
   m_Layer: 5
   m_Name: Photo
   m_TagString: Untagged
@@ -546,6 +547,20 @@ MonoBehaviour:
   spriteImage: {fileID: 1338964851561685547}
   loadAnimObj: {fileID: 0}
   log: 0
+--- !u!114 &9066305080161466986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7442660658427018939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding: {x: 30, y: 30, z: 30, w: 30}
+  m_Softness: {x: 10, y: 10}
 --- !u!1 &7442660658558515371
 GameObject:
   m_ObjectHideFlags: 0

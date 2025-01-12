@@ -42,7 +42,8 @@ namespace Core
         [SerializeField] private Sprite _playStoreIcon;
         [SerializeField] private Sprite _appStoreIcon;
         [SerializeField] private Sprite _ygStoreIcon;
-        
+        [SerializeField] private RectTransform _loginAndStoreGroup;
+
         [SerializeField] private Button _achievementsBtn;
         [SerializeField] private Button _leaderboardBtn;
         [SerializeField] private RectTransform _featureGroupRoot;
@@ -72,21 +73,26 @@ namespace Core
 
             var loginBtnAvailable = false;
             var achievementsBtnAvailable = false;
+            var rateUsBtnAvailable = false;
+            
             var leaderboardBtnAvailable = false;
             Sprite socialIcon = null;
             
 #if UNITY_WEBGL
             leaderboardBtnAvailable = true;
             socialIcon = _ygStoreIcon;
+            rateUsBtnAvailable = false;
 #elif UNITY_ANDROID
             loginBtnAvailable = true;
             achievementsBtnAvailable = true;
             leaderboardBtnAvailable = true;
             socialIcon = _playStoreIcon;
+            rateUsBtnAvailable = true;
 #elif UNITY_IOS
             achievementsBtnAvailable = true;
             leaderboardBtnAvailable = true;
             socialIcon = _appStoreIcon;
+            rateUsBtnAvailable = true;
 #endif
             
             if (leaderboardBtnAvailable)
@@ -121,8 +127,26 @@ namespace Core
                 _loginSocialBtn.gameObject.SetActive(false);
             }
 
-            _rateUsBtnIcon.sprite = socialIcon;
-            _rateUsBtn.onClick.AddListener(RateUsBtn_OnClick);
+            if (rateUsBtnAvailable)
+            {
+                _rateUsBtnIcon.sprite = socialIcon;
+                _rateUsBtn.onClick.AddListener(RateUsBtn_OnClick);
+                _rateUsBtn.gameObject.SetActive(true);   
+            }
+            else
+            {
+                _rateUsBtn.gameObject.SetActive(false);   
+            }
+
+            if (rateUsBtnAvailable || loginBtnAvailable)
+            {
+                _loginAndStoreGroup.gameObject.SetActive(true);
+            }
+            else
+            {
+                _loginAndStoreGroup.gameObject.SetActive(false);
+            }
+            
             _cheatsBtn.onClick.AddListener(ShowCheatsBtn_OnClick);
         }
         

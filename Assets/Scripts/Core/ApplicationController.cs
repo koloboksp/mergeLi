@@ -57,8 +57,6 @@ namespace Core
             {
                 await Task.Yield();
             }
-            
-            YG.YG2.GameReadyAPI();
         }
 #endif
         
@@ -151,9 +149,18 @@ namespace Core
 
         public static void LoadGameScene()
         {
-            SceneManager.LoadSceneAsync(GAMESCENE_NAME, LoadSceneMode.Additive);
+            var loadSceneAsync = SceneManager.LoadSceneAsync(GAMESCENE_NAME, LoadSceneMode.Additive);
+            
+            loadSceneAsync.completed += LoadGameScene_OnCompleted;
         }
-        
+
+        private static void LoadGameScene_OnCompleted(AsyncOperation obj)
+        {
+#if UNITY_WEBGL
+            YG.YG2.GameReadyAPI();
+#endif
+        }
+
         public static void UnloadLogoScene()
         {
             var scene = SceneManager.GetSceneByName(LOGOSCENE_NAME);
