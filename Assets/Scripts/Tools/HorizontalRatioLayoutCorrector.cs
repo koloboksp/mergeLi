@@ -2,6 +2,7 @@
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
+[ExecuteInEditMode]
 public class HorizontalRatioLayoutCorrector : MonoBehaviour
 {
     [SerializeField] public int _referenceWidth = 768;
