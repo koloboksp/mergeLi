@@ -52,12 +52,15 @@ namespace Core
             
             if (NetworkTimeManager.TimeUpdated)
             {
-                _timer.gameObject.SetActive(true);
-                _timer.Set(minRestTimeForCollect);
+                _noInternetIcon.gameObject.SetActive(false);
 
                 var available = minRestTimeForCollect <= 0;
-                _noInternetIcon.gameObject.SetActive(false);
-               
+                if (!available)
+                {
+                    _timer.Set(minRestTimeForCollect);
+                }
+                
+                _timer.gameObject.SetActive(!available);
                 _presentAnimation.Play(available ? _presentAvailableClip.name : _presentNotAvailableClip.name);
             }
             else
