@@ -4,6 +4,6 @@
 Мета игры - собрать все доступные замки, которые разрушили хитрые блобы.
 Про техническую часть: тут проявляется любовь к асинкам.
 
-В сторах:
+В сторах:  
 GooglePlay https://play.google.com/store/apps/details?id=com.WiB.MergeLines  
 AppStore https://apps.apple.com/us/app/merge-lines/id6686409348
