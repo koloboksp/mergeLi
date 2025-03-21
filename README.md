@@ -8,7 +8,7 @@
 GooglePlay https://play.google.com/store/apps/details?id=com.WiB.MergeLines  
 AppStore https://apps.apple.com/us/app/merge-lines/id6686409348
 
-Кто вообще любит читать?! Гифки:
+Кто вообще любит читать?! Гифки:  
 ![mergeLiMain](https://github.com/user-attachments/assets/2c0d51ec-88ce-4463-b71b-a25ca1ad1e18)
 ![mergeLiMain2](https://github.com/user-attachments/assets/9f5249c0-e1d4-4ac6-8421-5dad8b35e285)
 ![mergeLiHats](https://github.com/user-attachments/assets/685bdecd-a723-4cd3-8518-8da5cbac0587)
