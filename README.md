@@ -5,8 +5,5 @@
 Про техническую часть: тут проявляется любовь к асинкам.
 
 В сторах:
-GooglePlay https://play.google.com/store/apps/details?id=com.WiB.MergeLines
+GooglePlay https://play.google.com/store/apps/details?id=com.WiB.MergeLines  
 AppStore https://apps.apple.com/us/app/merge-lines/id6686409348
-
-Конечтно же видео:
-https://github.com/user-attachments/assets/11f97dcf-a673-4724-be20-cfa3fa2d91ff
