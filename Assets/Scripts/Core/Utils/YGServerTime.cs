@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_WEBGL
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using YG;
@@ -20,3 +21,4 @@ namespace Core.Utils
         }
     }
 }
+#endif

@@ -5,6 +5,7 @@
 /UserSettings
 /Temp
 /.vs
+/.vscode
 /Logs
 /obj
 /.idea/.idea.OnceUponATime/.idea/workspace.xml
@@ -18,3 +19,4 @@ Keys/localization.json
 /ks.keystore
 /Google.Play.Games.csproj
 /Google.Play.Games.Editor.csproj
+/YGWrapper.csproj

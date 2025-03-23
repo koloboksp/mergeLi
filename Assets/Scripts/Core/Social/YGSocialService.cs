@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿#if UNITY_WEBGL
+using System.Threading;
 using System.Threading.Tasks;
 using Core.Gameplay;
 using YG;
@@ -52,3 +53,4 @@ namespace Core.Social
         }
     }
 }
+#endif

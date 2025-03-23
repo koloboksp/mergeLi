@@ -1,30 +1,10 @@
-﻿using System;
+﻿#if UNITY_WEBGL  
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Save;
 using YG;
 
-namespace YG
-{
-    public partial class SavesYG
-    {
-        public List<StringsPair> Data = new();
-    }
-
-    [Serializable]
-    public class StringsPair
-    {
-        public string Key;
-        public string Value;
-
-        public StringsPair(string key, string value)
-        {
-            Key = key;
-            Value = value;
-        }
-    }
-}
 
 namespace Assets.Scripts.Core.Storage
 {
@@ -102,3 +82,4 @@ namespace Assets.Scripts.Core.Storage
         }
     }
 }
+#endif

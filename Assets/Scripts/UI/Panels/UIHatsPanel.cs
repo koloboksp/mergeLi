@@ -224,17 +224,25 @@ namespace Core
         {
             _selectedItem = selected;
             
-            if (active)
+            if (_selectedItem == null)
             {
-                _buyBtn.gameObject.SetActive(true);
-                _buyBtnPriceLabel.text = _selectedItem.Cost.ToString();
+                _buyBtn.gameObject.SetActive(false);
                 _equipBtn.gameObject.SetActive(false);
             }
             else
             {
-                _buyBtn.gameObject.SetActive(false);
-                _equipBtn.gameObject.SetActive(true);
-                SetEquipLabel();
+                if (active)
+                {
+                    _buyBtn.gameObject.SetActive(true);
+                    _buyBtnPriceLabel.text = _selectedItem.Cost.ToString();
+                    _equipBtn.gameObject.SetActive(false);
+                }
+                else
+                {
+                    _buyBtn.gameObject.SetActive(false);
+                    _equipBtn.gameObject.SetActive(true);
+                    SetEquipLabel();
+                }
             }
         }
         
@@ -363,7 +371,13 @@ namespace Core
                 foreach (var item in _items)
                     item.SetSelectedState(item == _selected);
                 
-                OnBoughtButtonActiveChanged?.Invoke(!_selected.Available, _selected);
+                var active = false;
+                if (_selected != null)
+                {
+                    active = !_selected.Available;
+                }
+
+                OnBoughtButtonActiveChanged?.Invoke(active, _selected);
             }
 
             internal bool BalanceActivateHats()
@@ -373,7 +387,10 @@ namespace Core
                     var userActiveHatsFilter = _changer.GetUserActiveHatsFilter();
                     var hatWithMinimumExtraPoints = _items
                         .OrderBy(i => i.ExtraPoints)
-                        .FirstOrDefault(hat => hat.Available && userActiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) != null);
+                        .FirstOrDefault(hat => 
+                            hat.Available 
+                            && userActiveHatsFilter != null 
+                            && userActiveHatsFilter.FirstOrDefault(hatName => hatName == hat.Id) != null);
 
                     if (hatWithMinimumExtraPoints != null)
                     {

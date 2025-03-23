@@ -13,7 +13,6 @@ using Save;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
-using YG;
 using Debug = UnityEngine.Debug;
 
 namespace Core

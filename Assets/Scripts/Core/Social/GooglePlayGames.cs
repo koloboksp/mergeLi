@@ -2,6 +2,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Gameplay;
 using Core.Utils;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
@@ -65,7 +66,7 @@ namespace Core.Social
             }
         }
 
-        public async Task<bool> ShowLeaderboardUIAsync(string id, CancellationToken cancellationToken)
+        public async Task<bool> ShowLeaderboardUIAsync(string id, GameProcessor gameProcessor, CancellationToken cancellationToken)
         {
             var completionSource = new TaskCompletionSource<bool>();
             var cancellationTokenRegistration = cancellationToken.Register(() => completionSource.TrySetCanceled(cancellationToken));

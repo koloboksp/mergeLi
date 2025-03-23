@@ -1,4 +1,5 @@
-﻿using Core.Gameplay;
+﻿#if UNITY_WEBGL
+using Core.Gameplay;
 using UnityEngine;
 using UnityEngine.UI;
 using YG;
@@ -37,3 +38,4 @@ namespace Core
     }
 
 }
+#endif
