@@ -5,8 +5,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
     implementation 'androidx.lifecycle:lifecycle-process:2.6.2' // Packages/com.cleversolutions.ads.unity/Editor/CASBaseDependencies.xml:5
-    implementation 'com.cleveradssolutions:cas:3.9.3' // Assets/CleverAdsSolutions/Editor/CASAndroidOptimalAdsDependencies.xml:10
-    implementation 'com.cleveradssolutions:cas-families:3.9.3' // Assets/CleverAdsSolutions/Editor/CASAndroidFamiliesAdsDependencies.xml:9
+    implementation 'com.cleveradssolutions:cas-families:3.9.8' // Assets/CleverAdsSolutions/Editor/CASAndroidFamiliesAdsDependencies.xml:9
     implementation 'com.cleveradssolutions:cas-sdk:3.9.8' // Packages/com.cleversolutions.ads.unity/Editor/CASBaseDependencies.xml:4
     implementation 'com.google.android.gms:play-services-base:18.5.0' // Assets/firebase/Editor/AppDependencies.xml:17
     implementation 'com.google.firebase:firebase-analytics:22.0.2' // Assets/firebase/Editor/CrashlyticsDependencies.xml:15

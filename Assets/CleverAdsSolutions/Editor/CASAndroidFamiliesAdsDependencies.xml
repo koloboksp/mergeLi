@@ -6,6 +6,6 @@
       <repository>https://android-sdk.is.com/</repository>
       <repository>https://aa-sdk.s3-eu-west-1.amazonaws.com/android_repo</repository>
     </repositories>
-    <androidPackage spec="com.cleveradssolutions:cas-families:3.9.3" version="3.9.3"/>
+    <androidPackage spec="com.cleveradssolutions:cas-families:3.9.8" version="3.9.8"/>
   </androidPackages>
 </dependencies>
