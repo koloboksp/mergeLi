@@ -60,7 +60,7 @@ namespace Core.Market
                 storeName = "Standalone";
 #endif
                 foreach (var productId in _availableProducts)
-                    configurationBuilder.AddProduct(productId, ProductType.Consumable, new IDs { { productId, storeName } });
+                    configurationBuilder.AddProduct(productId, ProductType.Consumable, new StoreSpecificIds() { { productId, storeName } });
            
                 UnityPurchasing.Initialize(this, configurationBuilder);
 #endif
@@ -189,7 +189,7 @@ namespace Core.Market
         
         public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
         {
-            Debug.Log($"OnPurchaseFailed: product {failureDescription.productId}, reason {failureDescription.reason}, message {failureDescription.message}.");
+            Debug.Log($"OnPurchaseFailed: product {failureDescription.item.Product}, reason {failureDescription.reason}, message {failureDescription.message}.");
             
             _purchaseInProgress = false;
             _purchaseResult = false;
