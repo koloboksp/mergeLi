@@ -144,8 +144,8 @@ PlayerSettings:
   tvOSBundleVersion: 1.0
   bundleVersion: 2.3
   preloadedAssets:
-  - {fileID: 3550075976116427544, guid: 32eb155f3d4cb6044a5198ab8b954ec7, type: 2}
   - {fileID: 11400000, guid: a849565eca6b5a84082effcb17e090e9, type: 2}
+  - {fileID: 3550075976116427544, guid: 32eb155f3d4cb6044a5198ab8b954ec7, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -154,7 +154,7 @@ PlayerSettings:
   vrSettings:
     enable360StereoCapture: 0
   isWsaHolographicRemotingEnabled: 0
-  enableFrameTimingStats: 0
+  enableFrameTimingStats: 1
   enableOpenGLProfilerGPURecorders: 1
   allowHDRDisplaySupport: 0
   useHDRDisplay: 0
