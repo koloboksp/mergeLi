@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -10,15 +11,10 @@ using Product = UnityEngine.Purchasing.Product;
 
 namespace Core.Market
 {
-    public class PurchaseController : IDetailedStoreListener
+    public class PurchaseController
     {
-        public event Action<string> OnBought;
+        private StoreController _storeController;
         
-        private IStoreController _store;
-        private IExtensionProvider _extensions;
-        private IAppleExtensions _appleExtensions;
-        private IGooglePlayStoreExtensions _googleExtensions;
-
         private bool _purchaseInProgress;
         private bool _purchaseResult;
         
@@ -36,8 +32,7 @@ namespace Core.Market
 
                 _availableProducts.AddRange(availableProducts);
 #if UNITY_EDITOR
-                StandardPurchasingModule.Instance().useFakeStoreAlways = true;
-                StandardPurchasingModule.Instance().useFakeStoreUIMode = FakeStoreUIMode.StandardUser;
+               
 #elif UNITY_ANDROID || UNITY_IOS
                 _validator = new CrossPlatformValidator(UnityEngine.Purchasing.Security.GooglePlayTangle.Data(), AppleTangle.Data(), Application.identifier);
 #elif UNITY_STANDALONE
@@ -49,20 +44,25 @@ namespace Core.Market
 #if UNITY_WEBGL && !UNITY_EDITOR
 
 #else
-                var configurationBuilder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
+                _storeController = UnityIAPServices.StoreController();
+                _storeController.OnPurchasePending += OnPurchasePending;
+                _storeController.OnPurchaseConfirmed += OnPurchaseConfirmed;
+                _storeController.OnPurchaseFailed += OnPurchaseFailed;
+               
+                _storeController.OnStoreDisconnected += OnStoreDisconnected;
+                
+                _storeController.OnProductsFetched += OnProductsFetched;
+                _storeController.OnProductsFetchFailed += OnProductsFetchedFailed;
+                
+                await _storeController.Connect();
 
-                string storeName = null;
-#if UNITY_ANDROID
-                storeName = GooglePlay.Name;
-#elif UNITY_IOS
-                storeName = AppleAppStore.Name;
-#elif UNITY_EDITOR
-                storeName = "Standalone";
-#endif
+                var initialProductsToFetch = new List<ProductDefinition>();
                 foreach (var productId in _availableProducts)
-                    configurationBuilder.AddProduct(productId, ProductType.Consumable, new StoreSpecificIds() { { productId, storeName } });
-           
-                UnityPurchasing.Initialize(this, configurationBuilder);
+                {
+                    initialProductsToFetch.Add(new(productId, ProductType.Consumable));
+                }
+                
+                _storeController.FetchProducts(initialProductsToFetch);
 #endif
                 Debug.Log($"<color=#99ff99>Time initialize {nameof(PurchaseController)}: {timer.Update()}.</color>");
             }
@@ -72,40 +72,101 @@ namespace Core.Market
             }
         }
         
-        public void OnInitialized(IStoreController store, IExtensionProvider extensions)
+        private void OnProductsFetched(List<Product> products)
         {
-            Debug.Log("<color=#00CCFF>IAP initialization success start.</color>");
+            Debug.Log("<color=#00CCFF>Products fetched.</color>");
+            _initialized = true;
+        }
 
-            _store = store;
-            _extensions = extensions;
-            _appleExtensions = extensions.GetExtension<IAppleExtensions>();
-            _googleExtensions = extensions.GetExtension<IGooglePlayStoreExtensions>();
-            _initialized = true;
+        private void OnProductsFetchedFailed(ProductFetchFailed failure)
+        {
+            Debug.LogException(new Exception( $"Products fetch failed for {failure.FailedFetchProducts.Count} products: {failure.FailureReason}"));
+        }
         
-            Debug.Log("<color=#00CCFF>IAP initialization success end.</color>");
-            
-            /*
-            foreach (var item in controller.products.all)
-            {     
-                Debug.Log($"id: {item.definition.id}.");
-                Debug.Log($"availableToPurchase: {item.availableToPurchase}.");
-                Debug.Log($"item.hasReceipt: {item.hasReceipt}.");
-                Debug.Log($"item.transactionId: {item.transactionID}.");
+        private void OnPurchasePending(PendingOrder order)
+        {
+            var product = GetFirstProductInOrder(order);
+            if (product is null)
+            {
+                Debug.LogError("Could not find product in order.");
+                return;
             }
-            */
-        }
-       
-        public void OnInitializeFailed(InitializationFailureReason error, string message)
-        {
-            _initialized = true;
-            Debug.LogException(new Exception( $"IAP initialize failed: {error}. Message: {message}"));
+
+            _purchaseResult = Validate(product.receipt, out var orderId);
+            _purchaseInProgress = false;
+            
+            Debug.Log($"Purchase complete. Product: {product.definition.id}, Result: {_purchaseResult}");
+
+            _storeController.ConfirmPurchase(order);
         }
         
-        public void OnInitializeFailed(InitializationFailureReason error)
+        private void OnPurchaseConfirmed(Order order)
         {
-            Debug.LogException(new Exception( $"IAP initialize failed: {error}."));
+            switch (order)
+            {
+                case ConfirmedOrder confirmedOrder:
+                    OnPurchaseConfirmed(confirmedOrder);
+                    break;
+                case FailedOrder failedOrder:
+                    OnPurchaseConfirmationFailed(failedOrder);
+                    break;
+                default:
+                    Debug.Log("Unknown OnPurchaseConfirmed result.");
+                    break;
+            }
         }
-       
+        
+        private void OnPurchaseConfirmed(ConfirmedOrder order)
+        {
+            var product = GetFirstProductInOrder(order);
+            if (product == null)
+            {
+                Debug.LogError("Could not find product in purchase confirmation.");
+                return;
+            }
+
+            Debug.Log($"Purchase confirmed. Product: {product?.definition.id}");
+        }
+        
+        private void OnPurchaseConfirmationFailed(FailedOrder order)
+        {
+            var product = GetFirstProductInOrder(order);
+            if (product == null)
+            {
+                Debug.LogError("Could not find product in failed confirmation.");
+            }
+
+            Debug.LogError($"Confirmation failed - Product: '{product?.definition.id}'," +
+                           $"PurchaseFailureReason: {order.FailureReason.ToString()},"
+                           + $"Confirmation Failure Details: {order.Details}");
+        }
+        
+        private void OnPurchaseFailed(FailedOrder order)
+        {
+            _purchaseResult = false;
+            _purchaseInProgress = false;
+            
+            var product = GetFirstProductInOrder(order);
+            if (product == null)
+            {
+                Debug.LogError("Could not find product in failed order.");
+            }
+
+            Debug.LogError($"Purchase failed - Product: '{product?.definition.id}'," +
+                           $"PurchaseFailureReason: {order.FailureReason.ToString()},"
+                           + $"Purchase Failure Details: {order.Details}");
+        }
+        
+        private  Product GetFirstProductInOrder(Order order)
+        {
+            return order.CartOrdered.Items().First()?.Product;
+        }
+        
+        private void OnStoreDisconnected(StoreConnectionFailureDescription description)
+        {
+            Debug.LogWarning($"Store disconnected details: {description.message}");
+        }
+        
         private bool Validate(string receipt, out string orderId)
         {
 #if UNITY_EDITOR
@@ -171,30 +232,7 @@ namespace Core.Market
             return false;
 #endif
         }
-        
-        public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
-        {
-            Debug.Log($"ProcessPurchase: {args.purchasedProduct.definition.id}.");
 
-            _purchaseResult = Validate(args.purchasedProduct.receipt, out var orderId);
-            _purchaseInProgress = false;
-
-            return PurchaseProcessingResult.Complete;
-        }
-        
-        public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
-        {
-            Debug.Log($"OnPurchaseFailed: product {failureReason}.");
-        }
-        
-        public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
-        {
-            Debug.Log($"OnPurchaseFailed: product {failureDescription.item.Product}, reason {failureDescription.reason}, message {failureDescription.message}.");
-            
-            _purchaseInProgress = false;
-            _purchaseResult = false;
-        }
-       
         public async Task<bool> Buy(string productId, CancellationToken cancellationToken)
         {
 #if UNITY_EDITOR || UNITY_ANDROID || UNITY_IOS
@@ -202,15 +240,17 @@ namespace Core.Market
             while (!_initialized)
                 await Task.Yield();
 
-            if (_store == null || _purchaseInProgress)
+            if (_purchaseInProgress)
                 return false;
 
             _purchaseInProgress = true;
             _purchaseResult = false;
 
-            var product = _store.products.WithID(productId);
-            if(product != null)
-                _store.InitiatePurchase(productId);
+            var product = _storeController.GetProductById(productId);
+            if (product != null)
+            {
+                _storeController.PurchaseProduct(productId);
+            }
             else
             {
                 Debug.LogError($"Product with id '{productId} not found.'. Purchase operation break.");
@@ -220,12 +260,10 @@ namespace Core.Market
         
             while (_purchaseInProgress)
                 await Task.Yield();
-
-            OnBought?.Invoke(productId);
-        
+            
             return _purchaseResult;
 #else
-        return await Task.FromException<bool>(new Exception("This platform is not supported."));
+            return await Task.FromException<bool>(new Exception("This platform is not supported."));
 #endif
         }
 
@@ -235,17 +273,12 @@ namespace Core.Market
             {
                 return String.Empty;
             }
-
-            if (_store.products != null)
+            
+            var product = _storeController.GetProductById(productId);
+            if (product != null)
             {
-                var product = _store.products.WithID(productId);
-                if (product != null)
-                {
-                    if (product.metadata != null)
-                        return product.metadata.localizedPriceString;
-
-                    return "--";
-                }
+                if (product.metadata != null)
+                    return product.metadata.localizedPriceString;
 
                 return "--";
             }
@@ -260,7 +293,7 @@ namespace Core.Market
                 return false;
             }
 
-            var product = _store.products.WithID(productId);
+            var product = _storeController.GetProductById(productId);
             if (product == null)
             {
                 return false;
