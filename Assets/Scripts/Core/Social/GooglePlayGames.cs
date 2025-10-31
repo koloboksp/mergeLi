@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Core.Social
 {
-    public class GooglePlayGames : ISocialService
+    public class GooglePlayGames1 : ISocialService
     {
         public bool IsAutoAuthenticationAvailable()
         {
@@ -25,7 +25,7 @@ namespace Core.Social
             cancellationToken.Register(() => cancellationTokenCompletion.SetResult(true));
 
             var signInCompletion = new TaskCompletionSource<SignInStatus>();
-
+            
             PlayGamesPlatform.Instance.Authenticate(status => { signInCompletion.SetResult(status); });
 
             await Task.WhenAny(signInCompletion.Task, cancellationTokenCompletion.Task);
